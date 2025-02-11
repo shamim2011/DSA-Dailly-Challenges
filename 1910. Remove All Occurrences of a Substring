@@ -1,0 +1,73 @@
+// // Approach - 1 Brute Forch 
+ class Solution {
+     public String removeOccurrences(String s, String part) {
+         int m=s.length();
+         int n=part.length();
+
+         while(true){
+             int ind=s.indexOf(part);
+
+             if(ind==-1){
+                 break;
+             }
+
+             s=s.substring(0,ind)+s.substring(ind+n);
+         }
+         return s;
+     }
+ }
+
+
+// // Approach - 2 (Using stack) 
+class Solution {
+    private static boolean check(Stack<Character>st,String part,int n){
+        Stack<Character> tempst=new Stack<>();
+        tempst.addAll(st);
+
+        for(int i=n-1;i>=0;i--){
+            if(tempst.peek()!=part.charAt(i)){
+                return false;
+            }
+            tempst.pop();
+        }
+        return true;
+    }
+    public String removeOccurrences(String s, String part) {
+        Stack<Character> st = new Stack<>(); // Creates an empty stack
+
+        int m=s.length();
+        int n=part.length();
+
+        for(int i=0;i<m;i++){
+            st.push(s.charAt(i));
+
+            if(st.size()>=n && check(st,part,n)){
+                for(int j=0;j<n;j++){
+                    st.pop();
+                }
+            }
+        }
+        StringBuilder sb=new StringBuilder();
+        while(!st.isEmpty()){
+            sb.append(st.pop());
+        }
+        return sb.reverse().toString();
+
+    }
+}
+
+
+// Approach - 3 (Using String as a stack) 
+class Solution {
+    public String removeOccurrences(String s, String part) {
+        StringBuilder sb=new StringBuilder();
+        int n=part.length();
+        for(char c:s.toCharArray()){
+            sb.append(c);
+            if(sb.length()>=n && sb.substring(sb.length()-n).equals(part)){
+                sb.delete(sb.length()-n,sb.length());
+            }
+        }
+        return sb.toString();
+    }
+}
