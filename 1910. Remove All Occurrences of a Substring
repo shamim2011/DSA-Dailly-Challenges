@@ -1,4 +1,4 @@
-// // Approach - 1 Brute Forch 
+// // Approach - 1 Brute Force 
  class Solution {
      public String removeOccurrences(String s, String part) {
          int m=s.length();
