@@ -1,0 +1,58 @@
+//Approach-1 (Brute Force)
+//T.C : O(n^2 * m), m = number of digits
+//S.C : O(1)
+class Solution {
+    public static int getSum(int n){
+        int sum=0;
+        while(n>0){
+            sum=sum+n%10;
+            n/=10;
+        }
+        return sum;
+    }
+    public int maximumSum(int[] nums) {
+        int res=-1;
+        for(int i=0;i<nums.length;i++)
+        {
+            int digitSumi=getSum(nums[i]);
+            for(int j=i+1;j<nums.length;j++){
+                int digitSumj=getSum(nums[j]);
+                if(digitSumi==digitSumj){
+                    res=Math.max(res,nums[i]+nums[j]);
+                }
+            }
+        }
+        return res;
+    }
+}
+
+
+
+
+
+//Approach-2 (Optimal using Map)
+//T.C : O(n*m), m = number of digits
+//S.C : O(n)
+class Solution {
+    public static int getSum(int n){
+        int sum=0;
+        while(n>0){
+            sum=sum+n%10;
+            n/=10;
+        }
+        return sum;
+    }
+    public int maximumSum(int[] nums) {
+        int res=-1;
+        int n=nums.length;
+        Map<Integer,Integer> map=new HashMap<>();
+        for(int i=0;i<n;i++){
+            int digitSum=getSum(nums[i]);
+            if(map.containsKey(digitSum)){
+                res=Math.max(res,nums[i]+map.get(digitSum));
+            }
+            map.put(digitSum, Math.max(map.getOrDefault(digitSum, 0), nums[i]));
+        }
+        return res;
+    }
+}
