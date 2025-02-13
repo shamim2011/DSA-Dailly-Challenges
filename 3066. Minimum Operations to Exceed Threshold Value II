@@ -1,0 +1,21 @@
+//Approach (Using PriorityQueue)
+//T.C : Onlogn)
+//S.C : O(n)
+
+class Solution {
+    public int minOperations(int[] nums, int k) {
+        PriorityQueue<Long> pq=new PriorityQueue<>();
+        for(int num:nums){
+            pq.add((long)num);   
+        }
+        int count=0;
+        //check the condition pq isEmpty and top element is greater than k or not
+        while(!pq.isEmpty() && pq.peek()<k){       
+            long smallest=pq.poll();  // firstSmallest element of pq
+            long secondSmallest=pq.poll();   // secondSmallest element of pq
+            pq.add(Math.min(smallest,secondSmallest)*2+Math.max(secondSmallest,smallest));
+            count++;
+        }
+        return count;
+    }
+}
