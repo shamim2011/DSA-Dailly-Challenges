@@ -1,0 +1,37 @@
+// Brute Force method
+// T.C=O(k)-getProduct(int k),    O(1)-add(num)
+// S.C=O(n)   for the stream
+class ProductOfNumbers {
+    ArrayList<Integer>list=new ArrayList<>();
+
+    public ProductOfNumbers() {
+        
+    }
+    
+    public void add(int num) {
+        list.add(num);
+    }
+    
+    public int getProduct(int k) {
+        int n=list.size();
+        int pro=1;
+        for(int i=n-k;i<n;i++){
+            pro=pro*list.get(i);
+        }
+        return pro;
+    }
+}
+
+/**
+ * Your ProductOfNumbers object will be instantiated and called as such:
+ * ProductOfNumbers obj = new ProductOfNumbers();
+ * obj.add(num);
+ * int param_2 = obj.getProduct(k);
+ */
+
+
+// Optimal Solution
+// T.C=O(1)-getProduct(int k),    O(1)-add(num)
+// S.C=O(n)   for the stream
+
+
