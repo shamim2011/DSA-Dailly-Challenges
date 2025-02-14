@@ -33,5 +33,38 @@ class ProductOfNumbers {
 // Optimal Solution
 // T.C=O(1)-getProduct(int k),    O(1)-add(num)
 // S.C=O(n)   for the stream
+class ProductOfNumbers {
+    ArrayList<Integer>list=new ArrayList<>();
+    int n=0;
+    public ProductOfNumbers() {
+
+    } 
+    public void add(int num) {
+        if(num==0){
+            list.clear();
+            n=0;
+        }
+        else{
+            if(list.isEmpty()){
+                list.add(num);
+            }
+            else{
+                list.add(num*list.get(n-1));
+            }
+            n++;
+        }
+    }
+    public int getProduct(int k) {
+        if(k>n){
+            return 0;
+        }
+        else if(k==n){
+            return list.get(n-1);
+        }
+        return list.get(n-1)/list.get(n-k-1);
+    }
+}
+
+
 
 
