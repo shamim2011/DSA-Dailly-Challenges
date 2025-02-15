@@ -1,0 +1,25 @@
+// Time Complexity: O(n⋅3^(logn))  --> (Exponential growth due to recursion)
+// Space Complexity :  O(logn) --->  (Recursive depth)
+
+class Solution {
+    public int punishmentNumber(int n) {
+        int res=0;
+        for(int i=1;i<=n;i++){
+            int sq=i*i;
+            // String s=Integer.toString(sq);
+            if(check(sq,i)){
+                res+=sq;
+            }
+        }
+        return res;
+    }
+    public static boolean check(int num,int i){
+        if(num < i || i < 0)
+          return false;
+
+        if(num == i)
+          return true;
+
+        return (check(num/10,i-(num%10)) || check(num/100,i-  (num%100)) || check(num/1000,i-(num%1000)));
+    }
+}
