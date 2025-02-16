@@ -1,0 +1,52 @@
+// Approach- Recursion+Backtracking
+// T.C-- O(n!)
+// S.C -- O(n)
+
+class Solution {
+    public boolean solve(int i, int n, int[] result, boolean[] used) {
+        if (i >= result.length) {
+            return true;
+        }
+        if (result[i] != -1) {
+            return solve(i + 1, n, result, used);
+        }
+
+        for (int num = n; num >= 1; num--) {
+            if (used[num]) {
+                continue;
+            }
+            // Trying
+            used[num] = true;
+            result[i] = num;
+
+            // Explore
+            if (num == 1) {  // If number is 1, move to next index
+                if (solve(i + 1, n, result, used)) {
+                    return true;
+                }
+            } else {
+                int j = i + num;
+                if (j < result.length && result[j] == -1) {
+                    result[j] = num;
+                    if (solve(i + 1, n, result, used)) {
+                        return true;
+                    }
+                    result[j] = -1;  // Undo
+                }
+            }
+            // Undo
+            used[num] = false;
+            result[i] = -1;
+        }
+        return false;
+    }
+
+    public int[] constructDistancedSequence(int n) {
+        int[] result = new int[2 * n - 1];
+        Arrays.fill(result, -1);
+        boolean[] used = new boolean[n + 1];
+        solve(0, n, result, used);
+        return result;
+    }
+}
+
