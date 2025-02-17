@@ -1,0 +1,31 @@
+// Approach-1 (Using simple backtracking Khandani Template)
+// T.C : O(n!)
+// S.C : O(n * n!), total possible sequences = n! and each having n length
+class Solution {
+    int n;
+    public int numTilePossibilities(String tiles) {
+        n=tiles.length();
+        Set<String> result=new HashSet<>();
+        boolean[] used=new boolean[n];
+        StringBuilder curr=new StringBuilder();
+        solve(tiles,used,result,curr);
+        return result.size()-1;
+    }
+    public void solve(String tiles,boolean[] used,Set<String> result,StringBuilder curr)
+    {
+        result.add(curr.toString());
+        for(int i=0;i<n;i++){
+            if(used[i]){
+                continue;
+            }
+            // Do the backtracking
+            curr.append(tiles.charAt(i));
+            used[i]=true;
+            // Explore the backtracking
+            solve(tiles,used,result,curr);
+            // Undo the backtracking
+            used[i]=false;
+            curr.deleteCharAt(curr.length()-1);
+        }
+    }
+}
