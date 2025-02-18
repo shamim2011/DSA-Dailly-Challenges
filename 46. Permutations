@@ -1,0 +1,31 @@
+// MIK
+class Solution {
+    List<List<Integer>> result=new ArrayList<>();
+    Set<Integer> st=new HashSet<>();
+    int n;
+    public List<List<Integer>> permute(int[] nums) {
+        n=nums.length;
+        List<Integer> temp=new ArrayList<>();
+        solve(temp,nums);
+        return result;
+    }
+    public void solve(List<Integer> temp,int[] nums){
+        if(temp.size()==n){
+            result.add(new ArrayList<>(temp));
+            return;
+        }
+        for(int i=0;i<n;i++){
+            if(!st.contains(nums[i])){
+                // Do Something
+                temp.add(nums[i]);
+                st.add(nums[i]);
+                // Explore 
+                solve(temp,nums);
+                // Revert step -1 and further explore ----> (UNDO)
+                st.remove(nums[i]);
+                temp.remove(temp.size()-1);
+
+            }
+        }
+    }
+}
