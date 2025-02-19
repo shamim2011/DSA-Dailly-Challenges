@@ -1,0 +1,32 @@
+// Approach-1 (Khandani Backtracking Template - storing all possible strings)
+// T.C : O(n * 3 * 2^(n-1)) ~= O(n*2^n)
+// S.C : O(n * 2^n), total 2^n strings each having length n
+class Solution {
+    public void solve(int n,List<String> result,StringBuilder hString){
+        if(hString.length()==n){
+            result.add(hString.toString());
+            return;
+        }
+
+        for(char ch='a';ch<='c';ch++){
+            if(hString.length()>0 && hString.charAt(hString.length()-1)==ch){
+                continue;
+            }
+            // Do
+            hString.append(ch);
+            // Explore
+            solve(n,result,hString);
+            // Undo
+            hString.deleteCharAt(hString.length()-1);
+        }
+    }
+    public String getHappyString(int n, int k) {
+        StringBuilder hString=new StringBuilder();
+        List<String> result=new ArrayList<>();
+        solve(n,result,hString);
+        if(result.size()<k){
+            return "";
+        }
+        return result.get(k-1);
+    }
+}
