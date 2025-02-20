@@ -1,0 +1,67 @@
+// Approach-1 - (Simple brute force)
+// T.C : O(n * (n+1)!), (n+1)! permutations and n for matchesPattern()
+// S.C : O(n+1) for result
+class Solution {
+    public boolean matchesPattern(StringBuilder num,String pattern){
+        for(int i=0;i<pattern.length();i++){
+            if((pattern.charAt(i)=='I' && num.charAt(i) > num.charAt(i+1)) ||
+                (pattern.charAt(i)=='D' && num.charAt(i) < num.charAt(i+1)))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+    public String smallestNumber(String pattern) {
+        int n=pattern.length();
+        StringBuilder num=new StringBuilder();
+        for(int i=0;i<=n;i++){
+            num.append((char)('1'+i));
+        }
+        while(!matchesPattern(num,pattern)){ //executes the loop body until returns true.
+            nextPermutation(num);
+        }
+        return num.toString();
+    }
+    private void nextPermutation(StringBuilder num) {
+        int n=num.length();
+        int gola_idx=-1;
+        for(int i=n-1;i>0;i--){
+            if(num.charAt(i)>num.charAt(i-1)){
+                gola_idx=i-1;
+                break;
+            }
+        }
+        if(gola_idx!=-1){
+            int swap_idx=gola_idx;
+            for(int j=n-1;j>=gola_idx+1;j--){
+                if(num.charAt(j)>num.charAt(gola_idx)){
+                    swap_idx=j;
+                    break;
+                }
+            }
+            swap(num,gola_idx,swap_idx);
+        }
+        reverse(num, gola_idx + 1, n - 1);
+    }
+
+    private void swap(StringBuilder num, int i, int j) {
+        char temp=num.charAt(i);
+        num.setCharAt(i, num.charAt(j));  // Corrected assignment
+        num.setCharAt(j, temp); 
+
+        // num.setCharAt(i)=num.getCharAt(j);  // In Corrected assignment
+        // num.setCharAt(j)=temp;
+        // num.setCharAt(j, temp);
+        // num.charAt(i)=num.charAt(j);
+        // num.charAt(j)=temp;;
+    }
+
+    private void reverse(StringBuilder num, int left,int right) {
+        while(left<right){
+            swap(num, left, right);
+            left++;
+            right--;
+        }
+    }
+}
