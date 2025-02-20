@@ -1,4 +1,42 @@
-// MIK
+//Approach-1 (Swapping elements in nums)
+class Solution {
+    List<List<Integer>> result=new ArrayList<>();
+    int n;
+    public List<List<Integer>> permute(int[] nums) {
+        n=nums.length;
+        solve(0,nums);
+        return result;
+    }
+    public void solve(int idx,int[] nums){
+        if(idx==n){
+            List<Integer> currentPermutation = new ArrayList<>();
+            for (int num : nums) {
+                currentPermutation.add(num);
+            }
+            result.add(currentPermutation);
+            return;
+        }
+        for(int i=idx;i<n;i++){
+            // Do
+            swap(nums,i,idx);
+            // Explore
+            solve(idx+1,nums);
+            // Undo
+            swap(nums,i,idx);
+        }
+    }
+    public void swap(int[] nums, int i,int j){
+        int temp=nums[i];
+        nums[i]=nums[j];
+        nums[j]=temp;
+    }
+}
+
+
+
+
+
+// MIK   //Approach-2 (A very general Backtracking pattern which can help solve subsets, Subsets II, Permutations, Permutations II,  Combination Sum, Combination Sum II as well.
 class Solution {
     List<List<Integer>> result=new ArrayList<>();
     Set<Integer> st=new HashSet<>();
