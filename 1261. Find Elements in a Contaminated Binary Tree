@@ -1,0 +1,59 @@
+// Approach-1 (Using DFS)
+// T.C : O(n)           Here n is the number of nodes
+// S.C : O(n)
+
+class FindElements {
+    Set<Integer> st = new HashSet<>();
+
+    private void dfs(TreeNode root, int x) {
+        if (root == null)
+            return;
+
+        root.val = x;
+        st.add(x);
+        dfs(root.left, 2 * x + 1);
+        dfs(root.right, 2 * x + 2);
+    }
+
+    public FindElements(TreeNode root) {
+        st.clear();
+        dfs(root, 0);
+    }
+
+    public boolean find(int target) {
+        return st.contains(target);
+    }
+}
+
+// Approach-2 (Using BFS)
+// T.C : O(n)        Here n is the number of nodes
+// S.C : O(n)
+
+class FindElements {
+    Set<Integer> st = new HashSet<>();
+    private void bfs(TreeNode root, int x) {
+        Queue<TreeNode> que=new LinkedList<>();
+        root.val = x;
+        que.add(root);
+        
+        while(!que.isEmpty()){
+            TreeNode temp=que.poll();
+            st.add(temp.val);
+            if (temp.left != null) {
+                temp.left.val = 2 * temp.val + 1;
+                que.add(temp.left);
+            }
+            if (temp.right != null) {
+                temp.right.val = 2 * temp.val + 2;
+                que.add(temp.right);
+            }
+        }
+    }
+    public FindElements(TreeNode root) {
+        st.clear();
+        bfs(root, 0);
+    }
+    public boolean find(int target) {
+        return st.contains(target);
+    }
+}
