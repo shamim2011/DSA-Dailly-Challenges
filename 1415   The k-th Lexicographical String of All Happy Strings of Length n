@@ -30,3 +30,43 @@ class Solution {
         return result.get(k-1);
     }
 }
+
+
+
+
+// Approach-2 (Khandani Backtracking Template - Without storing all possible strings)
+// T.C : O(n * 3 * 2^(n-1)) ~= O(n*2^n)
+// S.C : O(n) by recursion system stack
+class Solution {
+    int count = 0;
+    String result = "";
+
+    private void solve(int n, StringBuilder curr, int k) {
+        if (curr.length() == n) {
+            count++;
+            if (count == k) {
+                result = curr.toString(); // Store only the k-th string
+            }
+            return;
+        }
+        for (char ch = 'a'; ch <= 'c'; ch++) {
+            if (curr.length() > 0 && curr.charAt(curr.length() - 1) == ch)
+                continue;
+            // Do
+            curr.append(ch);
+            // Explore
+            solve(n, curr, k);
+            // If result is found, exit early
+            if (!result.isEmpty()) return;
+            // Undo
+            curr.deleteCharAt(curr.length() - 1);
+        }
+    }
+    public String getHappyString(int n, int k) {
+        StringBuilder curr = new StringBuilder();
+        count = 0;
+        result = "";
+        solve(n, curr, k);
+        return result;
+    }
+}
