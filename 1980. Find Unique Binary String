@@ -25,6 +25,14 @@ class Solution {
     }
 }
 
+******* Explanation of line 19*******8
+Integer.toBinaryString(number) converts the number into its binary representation, but it may not always have n bits. For example, if n = 3:
+
+5 in binary is "101", which has 3 bits (no change needed).
+3 in binary is "11", which has only 2 bits (needs a leading zero to become "011").
+1 in binary is "1", which has only 1 bit (needs two leading zeros to become "001").
+
+
 
 //Approach-2 (Improving above code)
 //We no need to check from 0 to 65536. Only need to check from 0 to n
