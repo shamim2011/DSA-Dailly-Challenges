@@ -1,0 +1,52 @@
+//T.C : O(n)
+//S.C : O(n) for System Stack used for Recursion
+
+class Solution {
+    private int n;
+    private TreeNode solve(String traversal, int[] index, int depth) {
+        if (index[0] >= n) {
+            return null;
+        }
+        int j = index[0];
+        while (j < n && traversal.charAt(j) == '-') {
+            j++;
+        }
+        int dash = j - index[0];
+        if (depth != dash) {
+            return null;
+        }
+        index[0] += dash;
+        int value = 0;
+        while (index[0] < n && Character.isDigit(traversal.charAt(index[0]))) {
+            value = value * 10 + (traversal.charAt(index[0]) - '0');
+            index[0]++;
+        }
+        TreeNode root = new TreeNode(value);
+        root.left = solve(traversal, index, depth + 1);
+        root.right = solve(traversal, index, depth + 1);
+        return root;
+    }
+    public TreeNode recoverFromPreorder(String traversal) {
+        n = traversal.length();
+        int[] index = {0}; // Using an array to pass by reference
+        return solve(traversal, index, 0);
+    }
+}
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+
+
+
