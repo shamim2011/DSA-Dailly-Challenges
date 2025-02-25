@@ -72,3 +72,31 @@ class Solution {
         return count;
     }
 }
+
+
+//Approach-4 (Optimal using constant space)
+//T.C : O(n)
+//S.C : O(1)
+
+class Solution {
+    int M= (int) 1e9 +7;
+    public int numOfSubarrays(int[] arr) {
+        int odd=0;
+        int even=1;
+        int n=arr.length;
+        int count=0;
+        int sum=0;
+        for(int i=0;i<n;i++){
+            sum+=arr[i];
+            if(sum%2==0){  // odd + even = odd
+                count=(count+odd)%M;
+                even++;
+            }
+            else{   // even + odd = odd
+                count=(count+even)%M;
+                odd++;
+            }
+        }
+        return count;
+    }
+}
