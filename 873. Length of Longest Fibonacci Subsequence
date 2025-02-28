@@ -8,6 +8,36 @@ Fibonacci-like subsequence of arr. If one does not exist, return 0.
 A subsequence is derived from another sequence arr by deleting any number of elements (including none) from arr,
 without changing the order of the remaining elements. For example, [3, 5, 8] is a subsequence of [3, 4, 5, 6, 7, 8].
 
+//Approach-1 (Recursion + Memoization)
+//T.C : O(n^3) without Memoization, and O(n^2) with memoization
+//S.C : O(n^2)
+class Solution {
+    public int lenLongestFibSubseq(int[] arr) {
+        int n=arr.length;
+        Map<Integer,Integer> mp=new HashMap<>();
+        for(int i=0;i<n;i++){
+            mp.put(arr[i],i);
+        }
+        int max_length=0;
+        for(int j=1;j<n;j++){
+            for(int k=j+1;k<n;k++){
+                int length=solve(j,k,arr,mp);
+                if(length>=3){
+                    max_length=Math.max(max_length,length);
+                }
+            }
+        }
+        return max_length;
+    }
+    public int solve(int j,int k,int[]  arr,Map<Integer,Integer> mp){
+        int target=arr[k]-arr[j];
+        if(mp.containsKey(target) && mp.get(target)<j){ // i<j<k
+            int i=mp.get(target);
+            return solve(i,j,arr,mp)+1;
+        }
+        return 2;
+    }
+}
 
 
 //Approach-2 (Bottom Up)
