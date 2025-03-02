@@ -1,0 +1,46 @@
+You are given a 0-indexed, strictly increasing integer array nums and a positive integer diff. A triplet (i, j, k) is an arithmetic triplet if the following conditions are met:
+
+i < j < k,
+nums[j] - nums[i] == diff, and
+nums[k] - nums[j] == diff.
+Return the number of unique arithmetic triplets.
+
+// Tc=O(n^3)
+// S.C=O(1)
+class Solution {
+    public int arithmeticTriplets(int[] nums, int diff) {
+        int count=0;
+        int n=nums.length;
+        for(int i=0;i<n-2;i++){
+            for(int j=i+1;j<n-1;j++){
+                for(int k=j+1;k<n;k++){
+                    if(nums[j]-nums[i]==diff && nums[k]-nums[j]==diff){
+                        count++;
+                    }
+                }
+            }
+        }
+        return count;
+    }
+}
+
+
+// Approach -2
+// Tc=O(n)
+// S.C=O(1)
+class Solution {
+    public int arithmeticTriplets(int[] nums, int diff) {
+        int count=0;
+        int n=nums.length;
+        Map<Integer,Integer> mp=new HashMap<>();
+        for(int i=0;i<n;i++){
+            mp.put(nums[i],i);
+        }
+        for(int i=0;i<n;i++){
+            if(mp.containsKey(nums[i]+diff) && mp.containsKey(nums[i]+2*diff)){
+                count++;
+            }
+        }
+        return count;
+    }
+}
