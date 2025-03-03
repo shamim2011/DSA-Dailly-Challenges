@@ -1,0 +1,101 @@
+//Approach-1 (Using extra space of 3 vectors)
+//T.C : O(n)
+//S.C : O(n)
+class Solution {
+    public int[] pivotArray(int[] nums, int pivot) {
+        int n=nums.length;
+        // return new int[];
+        List<Integer> less=new ArrayList<>();
+        List<Integer> equal=new ArrayList<>();
+        List<Integer> greater=new ArrayList<>();
+        List<Integer> result=new ArrayList<>();
+
+        for(int i=0;i<n;i++){
+            if(nums[i]<pivot){
+                less.add(nums[i]);
+            }
+            else if(nums[i]>pivot){
+                greater.add(nums[i]);
+            }
+            else{
+                equal.add(nums[i]);
+            }
+        } 
+        result.addAll(less);
+        result.addAll(equal);
+        result.addAll(greater);
+        
+        int[] res = new int[result.size()];
+        for (int i = 0; i < result.size(); i++) {
+            res[i] = result.get(i);
+        }
+        return res;
+    }
+}
+
+
+//Approach-2 (Using pointers only)
+//T.C : O(n)
+//S.C : O(n)
+class Solution {
+    public int[] pivotArray(int[] nums, int pivot) {
+        int n=nums.length;
+        int countLess=0;
+        int equal=0;
+        for(int i=0;i<n;i++){
+            if(nums[i]<pivot){
+                countLess++;
+            }
+            else if(nums[i]==pivot){
+                equal++;
+            }
+        }
+        int i=0;
+        int j=countLess;
+        int k=countLess+equal;
+        int[] result=new int[n];
+        for(int num:nums){
+            if(num<pivot){
+                result[i]=num;
+                i++;
+            }
+            else if(num==pivot){
+                result[j]=num;
+                j++;
+            }
+            else{
+                result[k]=num;
+                k++;
+            }
+        }
+        return result;
+    }
+}
+//Approach-3 (Using pointers only)
+//T.C : O(n)
+//S.C : O(n)
+class Solution {
+    public int[] pivotArray(int[] nums, int pivot) {
+        int n=nums.length;
+        int i=0,j=n-1; // pointers for original array
+        int[] result=new int[n];
+        int start=0,end=n-1; // pointers for result array
+        while(i<n && j>=0){
+            if(nums[i]<pivot){
+                result[start]=nums[i];
+                start++;
+            }
+            if(nums[j]>pivot){
+                result[end]=nums[j];
+                end--;
+            }
+            i++;j--;
+        }
+        // Fill pivot in the remaining positions
+        for (int k = start; k <= end; k++) {
+            result[k] = pivot;
+        }
+        return result;
+    }
+}
+
