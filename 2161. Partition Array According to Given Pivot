@@ -1,4 +1,4 @@
-//Approach-1 (Using extra space of 3 vectors)
+//Approach-1 (Using extra space of 3 List)
 //T.C : O(n)
 //S.C : O(n)
 class Solution {
