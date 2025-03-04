@@ -1,0 +1,57 @@
+// Approach-1 (Using School Maths)
+// T.C : O(log3(n))
+// S.C : O(1)
+class Solution {
+    public boolean checkPowersOfThree(int n) {
+        int p=0;
+        while(Math.pow(3,p)<=n){
+            p++;
+        }
+        while(n>0){
+            if(Math.pow(3,p)<=n){
+                n-=Math.pow(3,p);
+            }
+            if(Math.pow(3,p)<=n){
+                return false;
+            }
+            p--;
+        }
+        return true;
+    }
+}
+// Approach-2 (Using Ternary Representation)
+// T.C : O(log3(n))
+// S.C : O(1)
+class Solution {
+    public boolean checkPowersOfThree(int n) {
+        // Using ternary representation
+        while(n>0){
+            int reminder=n%3;
+            if(reminder==2){
+                return false;
+            }
+            n=n/3;
+        }
+        return true;
+    }
+}
+
+// Approach-3 (Using take and not take power)
+// T.C : O(2^(log3(n)))
+// S.C : O(log3(n)) system recursion stack space
+class Solution {
+    public boolean checkPowersOfThree(int n) {
+        return solve(n,0);
+    }
+    private boolean solve(int n, int p) {
+        if (n == 0) {
+            return true;
+        }
+        if (Math.pow(3, p) > n) {
+            return false;
+        }
+        boolean take_p = solve(n - (int)Math.pow(3, p), p + 1);
+        boolean not_take_p = solve(n, p + 1);
+        return take_p || not_take_p;
+    }
+}
