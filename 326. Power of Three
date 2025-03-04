@@ -1,0 +1,36 @@
+Given an integer n, return true if it is a power of three. Otherwise, return false.
+
+An integer n is a power of three, if there exists an integer x such that n == 3x
+
+
+//Approach-1 (Simplest for loop)
+//T.C : log(n) to base 3
+class Solution {
+    public boolean isPowerOfThree(int n) {
+        if(n<0 || n==0){
+            return false;
+        }
+        while(n%3==0){
+            n=n/3;
+        }
+        if(n==1){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+}
+//Approach-2 (Using Maths)
+//T.C : O(log(a)) -> pow(3, a),the exponentiation operation still requires logarithmic time with respect to the value of a.
+class Solution {
+    public boolean isPowerOfThree(int n) {
+        if (n <= 0) {
+            return false;
+        }
+        // Check if log(n) / log(3) is an integer
+        double a = Math.log(n) / Math.log(3);
+        // Verify if a is an integer by checking if it's very close to the nearest integer
+        return Math.abs(a - Math.round(a)) < 1e-10;
+    }
+}
