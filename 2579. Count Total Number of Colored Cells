@@ -19,7 +19,7 @@ class Solution {
 //S.C : O(1)
 class Solution {
     public long coloredCells(int n) {
-        return (long)(1+(long)2*(n-1)*n);
+        return (long)(1+(long)2*(n-1)*n);    // 1 + 2*(n-1)*n
     }
 }
 
