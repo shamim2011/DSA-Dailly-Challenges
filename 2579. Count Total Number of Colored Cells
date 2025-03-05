@@ -1,0 +1,31 @@
+//Approach-1 (Using simulation)
+// T.C : O(n)
+// S.C : O(1)
+class Solution {
+    public long coloredCells(int n) {
+
+        long cells=1;
+        int t=1;
+        // traverse the time upto n
+        while(t<=n){
+            cells+=(long)(4*(t-1));
+            t++;
+        }
+        return cells;
+    }
+}
+//Approach-2 (Using Mathematical derivation)
+//T.C : O(1)
+//S.C : O(1)
+class Solution {
+    public long coloredCells(int n) {
+        return (long)(1+(long)2*(n-1)*n);
+    }
+}
+
+// Simple Mathematical Formula
+class Solution {
+    public long coloredCells(int n) {
+        return (long)(Math.pow(n,2) + Math.pow((n-1),2)); //Total = n^2 + (n-1)^2
+    }
+}
