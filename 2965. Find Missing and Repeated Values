@@ -1,0 +1,68 @@
+//Approach-1 (Simple using map)
+//T.C : O(n^2)
+//S.C : O(n^2)
+
+class Solution {
+    public int[] findMissingAndRepeatedValues(int[][] grid) {
+        int n = grid.length;
+        int N=n*n;  // total element
+        int a=-1,b=-1;
+
+        // Order wise store value in map
+        TreeMap<Integer,Integer> mp=new TreeMap<>();
+        
+        for(int i=0;i<n;i++){
+            for(int j=0;j<grid[i].length;j++){
+                // Stroring ley - value pair in map
+                mp.put(grid[i][j],mp.getOrDefault(grid[i][j],0)+1);
+            }
+        }
+
+        // storing the missing number into list 1 to N
+        for(int i=1;i<=N;i++){
+            if(!mp.containsKey(i)){
+                // li.add(i);
+                b=i;
+            }
+            // if 'a' is present at mst twice
+            else if(mp.get(i)==2){
+                a=i;
+            }
+            if(a!=-1 && b!=-1){
+                break;
+            }
+        }
+        
+        // return the list as output
+        return new int[]{a,b};
+    }
+}
+
+//Approach-2 (using maths)
+//T.C : O(n^2)
+//S.C : O(n^2)
+
+class Solution {
+    public int[] findMissingAndRepeatedValues(int[][] grid) {
+        int n=grid.length;
+        long N=(long)n*n;
+        long gridSum = 0;
+        long gridSqSum = 0;
+        for(int i=0;i<n;i++){
+            for(int j=0;j<n;j++){
+                gridSum+=grid[i][j];
+                gridSqSum+=grid[i][j]*grid[i][j];
+            }
+        }
+        long sum = (N * (N+1))/2;  // 'N' natural sum
+        long sqSum = (N * (N+1) * (2*N + 1))/6; // 'N' natuaral square sum
+        
+        long sqDiff = (gridSqSum - sqSum);
+        long sumDiff = (gridSum - sum);
+
+        int a =(int) (sqDiff/sumDiff + sumDiff)/2;
+        int b =(int) (sqDiff/sumDiff - sumDiff)/2;
+
+        return new int[]{a,b};
+    }
+}
