@@ -40,7 +40,7 @@ class Solution {
 
 //Approach-2 (using maths)
 //T.C : O(n^2)
-//S.C : O(n^2)
+//S.C : O(1)
 
 class Solution {
     public int[] findMissingAndRepeatedValues(int[][] grid) {
