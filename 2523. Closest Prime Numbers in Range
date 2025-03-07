@@ -1,0 +1,74 @@
+//Approach-1 (Using Sieve Of Eratosthenes)
+//T.C : O(Rlog(log(R)) + (R-L))
+//S.C : O(R)
+class Solution {
+    public int[] closestPrimes(int left, int right) {
+        List<Integer> primes = new ArrayList<>();
+        for (int num = left; num <= right; num++) {
+            if (isPrime(num)) {
+                primes.add(num);
+            }
+        }
+        if (primes.size() < 2) {
+            return new int[]{-1, -1}; // If there are less than two primes, return -1.
+        }
+        // Find the closest pair
+        int minDiff = Integer.MAX_VALUE;
+        int num1 = -1, num2 = -1;
+        for (int i = 1; i < primes.size(); i++) {
+            int diff = primes.get(i) - primes.get(i - 1);
+            if (diff < minDiff) {
+                minDiff = diff;
+                num1 = primes.get(i - 1);
+                num2 = primes.get(i);
+            }
+        }
+
+        return new int[]{num1, num2};  
+    }
+    private boolean isPrime(int n) {
+        if (n < 2) return false;
+        for (int i = 2; i * i <= n; i++) {
+            if (n % i == 0) return false;
+        }
+        return true;
+    }
+}
+
+//Approach-2 (Using Sieve Of Eratosthenes)
+//T.C : O((R-L) * sqrt(R))
+//S.C : O(R-L)
+class Solution {
+    public int[] closestPrimes(int left, int right) {
+        List<Integer> primes=new ArrayList<>();
+        for(int num=left;num<=right;num++){
+            if (isPrime(num)){
+                if (!primes.isEmpty() && num - primes.get(primes.size() - 1) <= 2) {
+                    return new int[]{primes.get(primes.size() - 1), num}; // Early return
+                }
+                primes.add(num);
+            }
+        }
+        int minDiff=Integer.MAX_VALUE;
+        int num1=-1;
+        int num2=-1;
+        for(int i=1;i<primes.size();i++){
+            int diff=primes.get(i)-primes.get(i-1);
+            if(diff<minDiff){
+                minDiff=diff;
+                num1=primes.get(i-1);
+                num2=primes.get(i);
+            }
+        }
+        return new int[]{num1,num2};
+    }
+    private static boolean isPrime(int n){
+        if(n<2) return false;
+        for(int div=2;div<=Math.sqrt(n);div++){
+            if(n%div==0){
+                return false;
+            }
+        }
+        return true;
+    }
+}
