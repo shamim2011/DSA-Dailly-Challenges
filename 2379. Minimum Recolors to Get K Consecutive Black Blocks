@@ -1,0 +1,47 @@
+//Approach-1 (Brute Force)
+//T.C : O(n*k)
+//S.C : O(1)
+class Solution {
+    public int minimumRecolors(String blocks, int k) {
+        int n=blocks.length();
+        int oper=Integer.MAX_VALUE;
+        for(int i=0;i<=n-k;i++){
+            // Taking a substring
+            String s=blocks.substring(i,i+k);
+            int w=0;
+            // counting forthe 'w' character
+            for(int j=0;j<s.length();j++){
+                if(s.charAt(j)=='W'){
+                    w++;
+                }
+            }
+            // Min of w and oper
+            oper=Math.min(w,oper);
+        }
+        return oper;
+    }
+}
+
+//Approach-2 (Sliding Window)
+//T.C : O(n)
+//S.C : O(1)
+
+class Solution {
+    public int minimumRecolors(String blocks, int k) {
+        int i=0,j=0; int n=blocks.length(); int ops=k; int w=0;
+        while(j<n){
+            if(blocks.charAt(j) == 'W'){
+                w++;
+            }
+            if(j-i+1==k){
+                ops=Math.min(ops,w);
+                if(blocks.charAt(i)=='W'){
+                    w--;
+                }
+                i++;
+            }
+            j++;
+        }
+        return ops;
+    }
+}
