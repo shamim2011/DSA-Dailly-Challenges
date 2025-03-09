@@ -1,3 +1,38 @@
+// Approach-1 (Brute Force)
+// T.C : O(n*k)
+// S.C : O(1)
+
+class Solution {
+    public int numberOfAlternatingGroups(int[] colors, int k) {
+        int n = colors.length;
+        int N = n + k - 1;
+        int[] extended = new int[N];
+        // Copy original array to extended array
+        System.arraycopy(colors, 0, extended, 0, n);
+        // Handle wrap-around by copying first (k-1) elements
+        for (int i = 0; i < k - 1; i++) {
+            extended[n + i] = colors[i];
+        }
+        int count = 0;
+        // Iterate through every possible subarray of length k
+        for (int i = 0; i <= N - k; i++) {
+            boolean isValid = true;
+            // Check if the subarray of length k is alternating
+            for (int j = i + 1; j < i + k; j++) {
+                if (extended[j] == extended[j - 1]) {
+                    isValid = false;
+                    break;
+                }
+            }   
+            if (isValid) {
+                count++;
+            }
+        }
+        return count;
+    }
+}
+
+
 // Approach-2 (Sliding Window using Khandani Template)
 // T.C : O(n+k)
 // S.C : O(1) (But you can mention you have to add k-1 extra elements so space complexity ideally should be O(k-1))
@@ -29,3 +64,8 @@ class Solution {
         return result;
     }
 }
+
+
+// Approach-3 (Using simple counting in 2 Pass)
+// T.C : O(n+k)
+// S.C : O(1)
