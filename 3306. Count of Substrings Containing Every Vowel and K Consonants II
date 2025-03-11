@@ -1,3 +1,38 @@
+// Approach -1 (Brute force)  TLE
+//T.C : O(n^3)
+//S.C : O(n^2)
+class Solution {
+    public long countOfSubstrings(String word, int k) {
+        int n=word.length();
+        int result=0;
+        for(int i=0;i<n;i++){
+            for(int j=i;j<n;j++){
+                String sub=word.substring(i,j+1);
+                if(isValid(sub,k)){
+                    result++;
+                }
+            }
+        }
+        return result;
+    }
+    private static boolean isValid(String s,int k){
+        Set<Character> vowels=new HashSet<>();
+        int consonant=0;
+        for(char c:s.toCharArray()){
+            if(isVowels(c)){
+                vowels.add(c);
+            }
+            else{
+                consonant++;
+            }
+        }
+        return vowels.size()==5 && consonant==k;
+    }
+    private static boolean isVowels(char ch){
+        return ch == 'a' || ch == 'e' || ch == 'i' || ch == 'o' || ch == 'u'; 
+    }
+}
+
 //Approach (Sliding Window)
 //T.C : O(2*n) ~ O(n)
 //S.C : O(n)
