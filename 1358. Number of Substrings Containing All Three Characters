@@ -1,0 +1,52 @@
+// Approach - 1 (Brute Force) show TLE
+//T.C : O(n^3)
+//S.C : O(n^2)
+class Solution {
+    public int numberOfSubstrings(String s) {
+        int n=s.length();
+        int result=0;
+        for(int i=0;i<n;i++){
+            for(int j=i;j<n;j++){
+                String str=s.substring(i,j+1);
+                if(containsAll(str)){
+                    result++;
+                }
+            }
+        }
+        return result;
+    }
+    private static boolean containsAll(String sub){
+        return sub.contains("a") && sub.contains("b") && sub.contains("c");
+    }
+}
+
+
+//Approach (Sliding Window Khandani Template)
+//T.C : O(2*n) ~ O(n)
+//S.C : O(1)
+
+class Solution {
+    public int numberOfSubstrings(String s) {
+        int n=s.length();
+        int result=0;
+        int[] mp=new int[3]; // 0-a,1-b,2-c
+        // Sliding windows Khandani templete
+        int i=0,j=0;
+        while(j<n){
+            // Taking the first character of j in=dx
+            char ch=s.charAt(j);
+            // Store and increase character present in array
+            mp[ch - 'a']++;
+            // size of each character > 0 in array
+            while(mp[0]>0 && mp[1]>0 && mp[2]>0){
+                // count the number of substring contain all character
+                result += (n-j);
+                // trverse 'i'th idx and remove size of char present in arr
+                mp[s.charAt(i)-'a']--;
+                i++;
+            }
+            j++;
+        }
+        return result;
+    }
+}
