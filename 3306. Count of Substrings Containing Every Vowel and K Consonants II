@@ -3,8 +3,8 @@
 //S.C : O(n^2)
 class Solution {
     public long countOfSubstrings(String word, int k) {
-        int n=word.length();
-        int result=0;
+        long n=word.length();
+        long result=0;
         for(int i=0;i<n;i++){
             for(int j=i;j<n;j++){
                 String sub=word.substring(i,j+1);
