@@ -1,0 +1,64 @@
+// Approach - 1  SIMPLE BRUTE FORCE
+// T.CC - O(N)
+// S.C - O(1)
+class Solution {
+    public int maximumCount(int[] nums) {
+        int n=nums.length;
+        int maxPositive=0;
+        int maxNegetive=0;
+        for(int i=0;i<n;i++){
+            if(nums[i]<0){
+                maxNegetive++;
+            }
+            if(nums[i]>0){
+                maxPositive++;
+            }
+        }
+        return Math.max(maxPositive,maxNegetive);
+    }
+}
+//Approach-2 (Using stream , filter and count)
+//T.C : O(n)
+//S.C : O(1)
+class Solution {
+    public int maximumCount(int[] nums) {
+        // Lambda expressions to define predicates for positive and negative numbers
+        IntPredicate lambdaP=num -> num > 0;
+        IntPredicate lambdaN=num -> num < 0;
+        // Count positive & negative numbers using stream and filter
+        int p=(int)Arrays.stream(nums).filter(lambdaP).count();
+        int n=(int)Arrays.stream(nums).filter(lambdaN).count();
+        
+        return Math.max(p,n);
+    }
+}
+
+//Approach-3 (Using lowerbound)
+//T.C : O(log(n))
+//S.C : O(1)
+class Solution {
+    public int maximumCount(int[] nums) {
+        int n=nums.length;
+        int firstP=lowerBinarySearch(nums,1);  // >=1
+        int firstN=lowerBinarySearch(nums,0);  //>=0
+        return Math.max(n-firstP,firstN);  
+    }
+    public static int lowerBinarySearch(int[] nums,int target){
+        int l=0;int r=nums.length-1;
+        int result=nums.length;
+        while(l<=r){
+            int mid=l+(r-l)/2;
+            if(nums[mid]<target){
+                // Target is greater, move right
+                l=mid+1;
+            }else{
+                // Found a candidate, move left to find the first occurrence
+                result=mid;
+                r=mid-1;
+            }
+        }
+        // {0,0,0,0,0,0,0,0,0} -> test cases
+        return result; // Returns the first index where nums[i] >= target
+
+    }
+}
