@@ -1,0 +1,105 @@
+//Approach-1 - Difference Array Technique with Linear Query Check
+//T.C : O(q^2 + qn)  ~ O(q^2)
+//S.C : O(n)
+
+class Solution {
+    private int n;
+    private int q;
+    
+    public boolean checkWithDifferenceArrayTeq(int[] nums, int[][] queries,int k){
+        int[] diff=new int[n];
+
+        for (int i = 0; i <= k; i++) {
+            int l = queries[i][0];
+            int r = queries[i][1];
+            int x = queries[i][2];
+
+            diff[l]+=x;
+            if(r+1<n){
+                diff[r+1]-=x;
+            }
+        }
+        int cumSum=0;
+        for(int i=0;i<n;i++){
+            cumSum += diff[i];
+            diff[i] = cumSum;
+
+            if(nums[i]-diff[i]>0){
+                return false;
+            }
+        }
+        return true;
+    }
+    public int minZeroArray(int[] nums, int[][] queries) {
+        n=nums.length;
+        q=queries.length;
+        // given nums already '0'
+        if (Arrays.stream(nums).allMatch(x -> x == 0)) {
+            return 0; //no query required because all are already zero
+        }
+        //  Travarse all the queries
+        for(int i=0;i<q;i++){
+            if(checkWithDifferenceArrayTeq(nums, queries, i)){
+                return (i+1);
+            }
+        }
+        return -1;
+    }
+}
+
+
+//Approach-2 - Difference Array Technique with Binary Search for Query Check
+//T.C : O(log(Q) * (Q + n))
+//S.C : O(n)
+
+class Solution {
+    private int n;
+    private int q;
+
+    public boolean checkWithDifferenceArrayTeq(int[] nums, int[][] queries,int k){
+        int[] diff=new int[n];
+
+        for (int i = 0; i <= k; i++) {
+            int l = queries[i][0];
+            int r = queries[i][1];
+            int x = queries[i][2];
+
+            diff[l]+=x;
+            if(r+1<n){
+                diff[r+1]-=x;
+            }
+        }
+        int cumSum=0;
+        for(int i=0;i<n;i++){
+            cumSum += diff[i];
+            diff[i] = cumSum;
+
+            if(nums[i]-diff[i]>0){
+                return false;
+            }
+        }
+        return true;
+    }
+    public int minZeroArray(int[] nums, int[][] queries) {
+        n = nums.length;
+        q = queries.length;
+
+        if (Arrays.stream(nums).allMatch(x -> x == 0)) {
+            return 0; //no query required because all are already zero
+        }
+        int l = 0;
+        int r = q - 1;
+        int k = -1;
+        while (l <= r) {
+            int mid = l + (r - l) / 2;
+
+            if (checkWithDifferenceArrayTeq(nums, queries, mid)) {
+                k = mid + 1; //possible answer
+                r = mid - 1;
+            } else {
+                l = mid + 1;
+            }
+        }
+        return k;
+    }
+}
