@@ -1,0 +1,72 @@
+//Approach-1 (Brute Force)
+//T.C : O(n * maxC), maxC = maximum candy value
+//S.C : O(1)
+
+class Solution {
+    public int maximumCandies(int[] candies, long k) {
+        int n=candies.length;
+        int maxC=0;
+        // taking of the max Candies from candies Array
+        for(int i=0;i<n;i++){
+            maxC=Math.max(maxC,candies[i]);
+        }
+        // Try from maxC to 1 to find candies
+        for(int c=maxC;c>=1;c--){
+            long count=0;
+            for(int i=0;i<n;i++){
+                count+=candies[i]/c; // how many child canget c candies from this pile
+            }
+            // check if all child get same amount of candies
+            if(count>=k){
+                return c;
+            }
+        }
+        return 0;
+    }
+}
+
+//Approach-2 (Binary Search on answer)
+//T.C : O(n * log(maxC)), maxC = maximum candy value
+//S.C : O(1)
+
+class Solution {
+    public int maximumCandies(int[] candies, long k) {
+        int n=candies.length;
+        int maxC=0;
+        long total=0;
+        // taking of the max Candies from candies Array
+        for(int i=0;i<n;i++){
+            total+=candies[i];
+            maxC=Math.max(maxC,candies[i]);
+        }
+        // if total candies are less than k
+        if(total<k){
+            return 0;
+        }
+        // Do binary search on maxC to 1
+        int l=1;
+        int r=maxC;
+        int result=0;
+        while(l<=r){  // T.C=O(n*log(maxC))
+            int mid=l+(r-l)/2;
+            if(canDistribute(candies, mid, k)){
+                result=mid;
+                l=mid+1;
+            }
+            else{
+                r=mid-1;
+            }
+        }
+        return result;
+    }
+    public boolean canDistribute(int[] candies,int mid,long k){
+        int n=candies.length;
+        for(int i=0;i<n;i++){
+            k-=candies[i]/mid;
+            if(k<=0){  // all child got mid candies
+                return true; // early return 
+            }
+        }
+        return k<=0;  // all child got mid candies
+    }
+}
