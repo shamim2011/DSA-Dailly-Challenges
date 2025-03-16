@@ -45,3 +45,60 @@ class Solution {
         return postOrder;
     }
 }
+
+// Approach 2 using 1 stack
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public List<Integer> postorderTraversal(TreeNode root) {
+        // Using Single Stack STRIVER SOLUTION (6 5 4 3 2 8 7 1)
+        List<Integer> postOrder = new ArrayList<>();
+        if (root == null) return postOrder;
+        Stack<TreeNode> st = new Stack<>();
+        TreeNode curr = root;
+        // Traversing from root to end level and check curr & st.isEmpty
+        while (curr != null || !st.isEmpty()) {
+            // if curr is null push curr into st and shift curr to left 
+            if (curr != null) {
+                st.push(curr);
+                curr = curr.left;
+            } 
+            // if curr is null
+            else {
+                // take a temp of top of the st and go to right
+                TreeNode temp = st.peek().right;
+                // if last level temp.right is null
+                if (temp == null) {
+                    // take st.top from the stack and store in List
+                    temp = st.pop();
+                    postOrder.add(temp.val);
+                    // st is not empty and temp=6 and (st.peek=5).right=6
+                    while (!st.isEmpty() && temp == st.peek().right) {
+                        // temp=5  -> due to st.peek()=5
+                        temp = st.pop();
+                        // strore the 5 into List
+                        postOrder.add(temp.val);
+                    }
+                } 
+                // if last level temp.right is not null the asign temp into curr
+                else {
+                    curr = temp;
+                }
+            }
+        }
+        return postOrder;
+    }
+}
