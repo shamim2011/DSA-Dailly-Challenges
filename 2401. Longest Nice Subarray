@@ -1,0 +1,84 @@
+//Approach-1 (Brute Force)
+//T.C : O(n^3)
+//S.C : O(1)
+
+class Solution {
+    public int longestNiceSubarray(int[] nums) {
+        int res=0;
+        int n=nums.length;
+        for(int i=0;i<n;i++){
+            for(int j=i;j<n;j++){
+                if(isSubArray(nums,i,j)){
+                    res=Math.max(res,j-i+1);
+                }
+                else{
+                    break;
+                }
+            }
+        }
+        return res;
+    }
+    boolean isSubArray(int[] nums,int start,int end){
+        int mask=0;
+        for(int i=start;i<=end;i++){
+            if((mask & nums[i]) != 0){
+                return false;
+            }
+            mask |= nums[i];
+        }
+        return true;
+    }
+}
+
+//Approach-2 (Better)
+//T.C : O(n^2)
+//S.C : O(1)
+
+class Solution {
+    public int longestNiceSubarray(int[] nums) {
+        int res=0;
+        int n=nums.length;
+        for(int i=0;i<n;i++){
+            int mask=0;
+            for(int j=i;j<n;j++){
+                if((mask & nums[j]) != 0){
+                    break;
+                }
+                mask |=nums[j];
+                res=Math.max(res,j-i+1);
+            }
+        }
+        return res;
+    }
+}
+
+//Approach-3 (Sliding Window Khandani Template)
+//T.C : O(2*n) ~ O(n)
+//S.C : O(1)
+
+class Solution {
+    public int longestNiceSubarray(int[] nums) {
+        int n=nums.length;
+        int i=0;
+        int j=0;
+        int res=1;
+        int mask=0;
+        // Sliding windows
+        while(j<n){
+            // Shrink the window if nums[j] has common bits with mask
+            while((mask & nums[j]) !=0){
+                // Remove nums[i] from mask
+                mask=mask ^ nums[i];
+                // Move left pointer
+                i++;
+            }
+             // Update max length
+            res=Math.max(res,j-i+1);
+            // Add nums[j] to mask
+            mask=(mask | nums[j]);
+            // Expand the window
+            j++;
+        }
+        return res;
+    }
+}
