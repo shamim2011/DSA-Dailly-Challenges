@@ -1,0 +1,67 @@
+// Approach GRAPH DSU
+// T.C  = O(n+m+q)
+// S.C = O(n+q)
+
+class Solution {
+    // DSU Code in the Graph
+    private int find(int x,int[] parent){
+        if(parent[x] == x){
+            return x;
+        }
+        return parent[x] = find(parent[x],parent);
+    }
+    // do parent to '0' of other v or u
+    private void union(int x,int y,int[] parent) {
+        parent[y] = x;
+    }
+    public int[] minimumCost(int n, int[][] edges, int[][] query) {
+        // Taking parent,cost,result array
+        int[] parent=new int[n];
+        int[] cost=new int[n];
+        int[] result=new int[query.length];// it will be result
+
+        // Fill the cost initially -1 of all
+        Arrays.fill(cost,-1);
+        // Initially fill the parent with i value 
+        for(int i=0;i<n;i++){
+            parent[i] = i;
+        }
+        // Taking the u,v,w from edge
+        for(int[] edge : edges){
+            int u=edge[0];
+            int v=edge[1];
+            int w=edge[2];
+
+            // finding of parent of u & v
+            int parent_u = find(u,parent);
+            int parent_v=find(v,parent);
+            // Check both parent
+            if(parent_u != parent_v){
+                // like all AND operation and find min value at '0' parent
+                cost[parent_u] &= cost[parent_v];
+                union(parent_u,parent_v,parent);
+            }
+            // store in head parent of all value
+            cost[parent_u] &=w;
+        }
+        // process the whole query
+        for(int i=0;i<query.length;i++){
+            int s = query[i][0]; // sourse
+            int d = query[i][1];  // destination
+            // finding the both parent
+            int parent_s = find(s,parent);
+            int parent_d = find(d,parent);
+
+            if(s == d){
+                result[i] = 0;
+            }
+            else if(parent_s != parent_d){
+                result[i] = -1;
+            }
+            else{
+                result[i] = cost[parent_s];
+            }
+        }
+        return result;
+    }
+}
