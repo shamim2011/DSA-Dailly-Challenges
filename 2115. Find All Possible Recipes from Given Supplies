@@ -1,0 +1,139 @@
+// Approach-1 - Brute Force   ✔✔✔ (But Wrong answer)
+// T.C : O(n * k + m)  // n=recipes.length(), k=number of ingredients per recipe is k, m=set stores supplies (m)
+// S.C : O(n + m)
+
+class Solution {
+    public List<String> findAllRecipes(String[] recipes, List<List<String>> ingredients, String[] supplies) {
+        int n=recipes.length;
+        List<String> res=new ArrayList<>();
+        Set<String> set=new HashSet<>(Arrays.asList(supplies));
+        for(int i=0;i<n;i++){
+            set.add(recipes[i]);
+        }
+        for(int i=0;i<n;i++){
+            boolean makesureRecipe = true;
+            //ingredients is a List<List<String>>
+            for(int j=0;j<ingredients.get(i).size();j++){
+                // ingredients is a list of lists, use ingredients.get(i).get(j).
+                if(!set.contains(ingredients.get(i).get(j))){
+                    makesureRecipe=false;
+                    break;
+                }
+            }
+            if(makesureRecipe){
+                res.add(recipes[i]);
+            }
+        }
+        return res;
+    }
+}
+
+
+// Approach-2 - Brute Force
+// T.C : (n^2 * m)
+// S.C : O(n+S)
+
+class Solution {
+    public List<String> findAllRecipes(String[] recipes, List<List<String>> ingredients, String[] supplies) {
+        int n = recipes.length;
+        // List to store the valid recipes that can be made
+        List<String> result = new ArrayList<>();
+        // HashSet to store available ingredients (initially filled with supplies)
+        Set<String> set = new HashSet<>(Arrays.asList(supplies));
+        // Boolean array to track which recipes have already been cooked
+        boolean[] cooked=new boolean[n];
+        int count = n;
+
+        // Continue looping until we either process all recipes or get stuck
+        while(count > 0){    // (count-- > 0)
+            // Iterate through all recipes
+            for(int j=0;j<n;j++){
+                // Skip the recipe if it has already been cooked
+                if(cooked[j]){
+                    continue;
+                }
+                // Flag to check if we can make this recipe
+                boolean canMake = true;
+                // Check if all required ingredients are available in the set
+                for(String ing:ingredients.get(j)){
+                    if(!set.contains(ing)){
+                        // If any ingredient is missing, we can't make this recipe
+                        canMake = false;
+                        break;
+                    }
+                }
+                // If we can make this recipe, add it to the result and mark it as cooked
+                if(canMake){
+                    // Add the newly cooked recipe to the set of available ingredients
+                    set.add(recipes[j]);
+                    // Add to the final result
+                    result.add(recipes[j]);
+                    // Mark that we made progress
+                    cooked[j] = true;
+                }
+            }
+            count--;
+        }
+        return result;
+    }
+}
+
+// Approach-2 - Using Topological Sorting
+// T.C : (n + m + S)
+// S.C : O(n+S)
+
+class Solution {
+    public List<String> findAllRecipes(String[] recipes, List<List<String>> ingredients, String[] supplies) {
+        int n = recipes.length;
+        // Store initial available ingredients
+        Set<String> st = new HashSet<>(Arrays.asList(supplies));
+        
+        // Adjacency list to store dependencies 
+        // (ingredient → list of recipes that depend on it)
+        Map<String, List<Integer>> adj = new HashMap<>(); // ing ---> recipe
+        // Array to store the in-degree (number of required ingredients not available)
+        // for each recipe
+        int[] indegree = new int[n];
+        // Build the adjacency list and compute the in-degree of each recipe
+        for (int i = 0; i < n; i++) {
+            for (String ing : ingredients.get(i)) {
+                // If ingredient is not initially available
+                if (!st.contains(ing)) {
+                    adj.putIfAbsent(ing, new ArrayList<>());
+                    // Mark that this ingredient is required by recipe[i]
+                    adj.get(ing).add(i);
+                    indegree[i]++;   // Increase in-degree of the recipe
+                }
+            }
+        }
+        // Queue to store recipes that can be made (i.e., in-degree = 0)
+        Queue<Integer> que = new LinkedList<>();
+        // Add all recipes that can be made immediately (in-degree = 0)
+        for (int i = 0; i < n; i++) {
+            if (indegree[i] == 0) {
+                que.add(i);
+            }
+        }
+        // List to store the valid recipes that can be made
+        List<String> result = new ArrayList<>();
+        // Process the queue (Topological Sorting / Kahn's Algorithm)
+        while (!que.isEmpty()) {
+            // Get the next available recipe
+            int i = que.poll();
+            String recipe = recipes[i];
+            // Add it to the result list
+            result.add(recipe);
+            // If this recipe is an ingredient for other recipes, update their dependencies
+            if (adj.containsKey(recipe)) {
+                for (int idx : adj.get(recipe)) {
+                    indegree[idx]--;  // Reduce the dependency count
+                    if (indegree[idx] == 0) {   // If all dependencies are met, add to queue
+                        que.add(idx);
+                    }
+                }
+            }
+        }
+        
+        return result;
+    }
+}
