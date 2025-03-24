@@ -1,0 +1,31 @@
+//Approach (Simple sorting based on starting point)
+//T.C : O(nlogn)
+//S.C : O(1)
+
+class Solution {
+    public int countDays(int days, int[][] meetings) {
+        // Step 1: Sort meetings by their start day in ascending order
+        Arrays.sort(meetings, (a, b) -> Integer.compare(a[0], b[0]));
+        // Variable to store the count of non-meeting days
+        int result = 0;
+        // Tracks the last occupied day (end of the last meeting)
+        int end = 0;
+         // Step 2: Iterate through the sorted meetings
+        for (int[] meet : meetings) {
+            // If there's a gap between the last meeting and the current meeting, count the free days
+            if (meet[0] > end) {
+                // Count the gap days (exclusive)
+                result += meet[0] - end - 1;
+            }
+            // Update the end day to track the latest occupied day
+            end = Math.max(end, meet[1]);
+        }
+        // Step 3: If there are remaining free days after the last meeting, count them
+        if (days > end) {
+            // Add remaining days after the last meeting
+            result += days - end;
+        }
+        // Return the total number of free days
+        return result;
+    }
+}
