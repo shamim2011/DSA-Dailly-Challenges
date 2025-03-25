@@ -1,0 +1,29 @@
+import java.util.*;
+
+class Solution {
+    public int[][] merge(int[][] intervals) {
+        // Sort the intervals based on the start time
+        Arrays.sort(intervals, (a, b) -> Integer.compare(a[0], b[0]));
+        // List to store the merged intervals
+        List<int[]> result = new ArrayList<>();
+        // Add the first interval to the result list
+        result.add(intervals[0]);
+        // Iterate through the remaining intervals
+        for (int i = 1; i < intervals.length; i++) {
+            int curr_start = intervals[i][0]; // Start time of current interval
+            int curr_end = intervals[i][1];   // End time of current interval
+            // Check for overlap with the last interval in the result list
+            // If the start of the current interval is less than or equal to the end of the last interval
+            if (curr_start <= result.get(result.size() - 1)[1]) {
+                // Merge the intervals by updating the end time of the last interval
+                result.get(result.size() - 1)[1] = Math.max(result.get(result.size() - 1)[1], curr_end);
+            } 
+            // If no overlap, add the current interval to the result list
+            else {
+                result.add(intervals[i]);
+            }
+        }
+        // Convert the result list to a 2D array and return
+        return result.toArray(new int[result.size()][]);
+    }
+}
