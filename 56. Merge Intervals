@@ -1,3 +1,7 @@
+// Sorting Approach
+// T.C = O(nlogn)
+// S.C = O(n)
+
 import java.util.*;
 
 class Solution {
