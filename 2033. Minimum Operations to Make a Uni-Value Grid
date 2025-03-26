@@ -1,0 +1,36 @@
+//Approach (Using Median and Maths)
+//T.C : O(m*nlog(m*n))
+//S.C : O(m*n)
+
+import java.util.*;  // Importing necessary libraries
+
+class Solution {
+    public int minOperations(int[][] grid, int x) {
+        ArrayList<Integer> list = new ArrayList<>();  // Create a list to store grid values
+        
+        // Traverse the grid and add all elements to the list
+        for(int i = 0; i < grid.length; i++) {
+            for(int j = 0; j < grid[0].length; j++) {
+                list.add(grid[i][j]);
+            }
+        }
+        
+        // Sort the list to easily find the median
+        Collections.sort(list);
+        int N = list.size();  // Get the total number of elements
+        int target = list.get(N / 2);  // Choose the median as the target value
+        int result = 0;  // Variable to store the total operations
+        
+        // Iterate through the list to calculate the required operations
+        for(int li : list) {
+            // If the remainder when divided by x is different, return -1 (operation not possible)
+            if ((target) % x != li % x) {
+                return -1;
+            }
+            // Add the number of steps needed to make each value equal to the target
+            result += Math.abs((target - li) / x);
+        }
+        
+        return result;  // Return the total number of operations
+    }
+}
