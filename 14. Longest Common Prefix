@@ -1,0 +1,42 @@
+class Solution {
+    public String longestCommonPrefix(String[] strs) {
+        Arrays.sort(strs);
+        char[] ch1=strs[0].toCharArray();
+        char[] ch2=strs[strs.length-1].toCharArray();
+
+        StringBuilder sb=new StringBuilder();
+        for(int i=0;i<ch1.length;i++){
+            if(ch1[i]!=ch2[i]){
+                return sb.toString();
+            }
+            sb.append(ch1[i]);
+        }
+        return sb.toString();
+    }
+}
+
+
+
+/**
+ * @param {string[]} strs
+ * @return {string}
+ */
+var longestCommonPrefix = function(strs) {
+    if (!strs.length) return "";
+
+    strs.sort(); // Sort the array lexicographically
+
+    let first = strs[0];
+    let last = strs[strs.length - 1];
+
+    let sb = [];
+    
+    for (let i = 0; i < first.length; i++) {
+        if (first[i] !== last[i]) {
+            return sb.join(""); // Convert array to string and return
+        }
+        sb.push(first[i]);
+    }
+
+    return sb.join(""); // Convert array to string
+};
