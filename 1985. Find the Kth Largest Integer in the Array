@@ -1,0 +1,24 @@
+// O(M × N log N)
+// O(M × N)
+
+class Solution {
+    public String kthLargestNumber(String[] nums, int k) {
+        // long[] arr = new long[nums.length];
+        // int i=0;
+        // for(String s : nums){                  // ERROR NOT PASS ALL TEST CASES
+        //     arr[i++] = Long.parseLong(s);
+        // }
+        // Arrays.sort(arr);
+        // long num = arr[arr.length - k];
+        // return Long.toString(num);   
+
+        Arrays.sort(nums, (a, b) -> {
+            if (a.length() == b.length()) {
+                return b.compareTo(a); // Compare lexicographically if lengths are same
+            }
+            return Integer.compare(b.length(), a.length()); // Compare based on length
+        });
+
+        return nums[k - 1]; // Return the K-th largest number as a string
+    }
+}
