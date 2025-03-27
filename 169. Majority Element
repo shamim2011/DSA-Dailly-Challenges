@@ -1,0 +1,17 @@
+class Solution {
+    public int majorityElement(int[] nums) {
+        int n=nums.length;
+        int key=0;
+        Map<Integer,Integer> mp=new HashMap<>();
+        for(int i=0;i<nums.length;i++){
+            int e=nums[i];
+            mp.put(e,mp.getOrDefault(e,0)+1);
+        }
+        for(Map.Entry<Integer,Integer> entry:mp.entrySet()){
+            if(entry.getValue()> Math.abs(n/2)){
+                key=entry.getKey();
+            }
+        }
+        return key;
+    }
+}
