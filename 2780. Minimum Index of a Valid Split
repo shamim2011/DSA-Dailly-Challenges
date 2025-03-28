@@ -1,0 +1,92 @@
+//Approach-1 (Brute Force using 2 Maps)
+//T.C : O(n)
+//S.C : O(n)
+
+class Solution {
+    public int minimumIndex(List<Integer> nums) {
+        int n = nums.size(); // Get the size of the list
+
+        // HashMaps to store frequency of elements in two parts:
+        // mp1 -> Stores frequency of elements in the first half (left side)
+        // mp2 -> Stores frequency of elements in the second half (right side)
+        Map<Integer, Integer> mp1 = new HashMap<>();
+        Map<Integer, Integer> mp2 = new HashMap<>();
+
+        // Populate mp2 with the frequency of all elements in nums
+        for (int num : nums) {
+            mp2.put(num, mp2.getOrDefault(num, 0) + 1);
+        }
+
+        // Traverse the array to find the minimum index satisfying the condition
+        for (int i = 0; i < n; i++) {
+            int num = nums.get(i); // Current number
+
+            // Move the current number from mp2 (right side) to mp1 (left side)
+            mp1.put(num, mp1.getOrDefault(num, 0) + 1);
+            mp2.put(num, mp2.get(num) - 1);
+
+            // Lengths of left and right subarrays
+            int n1 = i + 1;    // Length of left partition
+            int n2 = n - i - 1; // Length of right partition
+
+            // Check if the current number is the "dominant" element in both halves
+            if (mp1.get(num) > n1 / 2 && mp2.get(num) > n2 / 2) {
+                return i; // Return the smallest index where this condition holds
+            }
+        }
+        return -1; // If no valid index is found, return -1
+    }
+}
+
+
+//Approach-2 (Using Majority Element Concept)
+//T.C : O(n)
+//S.C : O(1)
+
+class Solution {
+    public int minimumIndex(List<Integer> nums) {
+        int n = nums.size(); // Get the size of the list
+
+        int maj = -1; // Variable to store the majority element
+        int count = 0; // Count to track the majority element
+
+        // **Step 1: Find the Majority Element using Boyer-Moore Voting Algorithm**
+        for (int i = 0; i < n; i++) {
+            if (count == 0) { 
+                maj = nums.get(i); // Set current element as majority candidate
+                count++;
+            } else if (nums.get(i) == maj) {
+                count++; // If the same element appears, increase count
+            } else {
+                count--; // If a different element appears, decrease count
+            }
+        }
+
+        // **Step 2: Count the occurrences of the majority element**
+        int majCount = 0;
+        for (int num : nums) {
+            if (num == maj) {
+                majCount++; // Count how many times majority element occurs
+            }
+        }
+
+        // **Step 3: Check every possible partitioning index**
+        count = 0; // Reset count to track occurrences in the left part
+        for (int i = 0; i < n; i++) {
+            if (nums.get(i) == maj) {
+                count++; // Increase count for the left partition
+            }
+            int remainingCount = majCount - count; // Remaining occurrences in the right partition
+
+            int n1 = i + 1;    // Size of left partition
+            int n2 = n - i - 1; // Size of right partition
+
+            // Check if 'maj' is the dominant element in both partitions
+            if (count * 2 > n1 && remainingCount * 2 > n2) {
+                return i; // Return the minimum index satisfying the condition
+            }
+        }
+
+        return -1; // If no valid index is found, return -1
+    }
+}
