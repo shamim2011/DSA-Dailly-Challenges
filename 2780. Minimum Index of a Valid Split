@@ -90,3 +90,27 @@ class Solution {
         return -1; // If no valid index is found, return -1
     }
 }
+
+//// Approach  Majority Element using Boyer-Moore Voting Algorithm
+
+class Solution {
+    public int majorityElement(int[] nums) {
+        int n = nums.length; // Get the size of the Array
+
+        int maj = -1; // Variable to store the majority element
+        int count = 0; // Count to track the majority element
+
+        // **Step 1: Find the Majority Element using Boyer-Moore Voting Algorithm**
+        for (int i = 0; i < n; i++) {
+            if (count == 0) { 
+                maj = nums[i]; // Set current element as majority candidate
+                count++;
+            } else if (nums[i] == maj) {
+                count++; // If the same element appears, increase count
+            } else {
+                count--; // If a different element appears, decrease count
+            }
+        }
+        return maj;
+    }
+}
