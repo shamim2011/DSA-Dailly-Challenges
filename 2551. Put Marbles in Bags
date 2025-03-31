@@ -1,0 +1,30 @@
+//T.C : O(nlog(n))
+//S.C : O(n)
+
+class Solution {
+    public long putMarbles(int[] weights, int k) {
+        int n = weights.length; // Get the length of the weights array
+        
+        int[] pairSum = new int[n - 1]; // Array to store sum of adjacent pairs
+        
+        // Calculate sum of adjacent pairs and store in pairSum array
+        for (int i = 0; i < n - 1; i++) {
+            pairSum[i] = weights[i] + weights[i + 1];
+        }
+        
+        // Sort the pairSum array to easily find min and max k-1 sums
+        Arrays.sort(pairSum);
+        long maxSum = 0;
+        long minSum = 0;
+        
+        // Calculate minSum by summing first (k-1) elements
+        // and maxSum by summing last (k-1) elements
+        for (int i = 0; i < k - 1; i++) {
+            minSum += pairSum[i]; // Sum of the smallest (k-1) elements
+            maxSum += pairSum[(n -1) - i - 1]; // Sum of the largest (k-1) elements
+        }
+        
+        // Return the difference between maxSum and minSum
+        return maxSum - minSum;
+    }
+}
