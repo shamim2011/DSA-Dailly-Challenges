@@ -1,0 +1,16 @@
+class Solution {
+    public int minPairSum(int[] nums) {
+        int n = nums.length;
+        Arrays.sort(nums);
+        int left = 0;
+        int right = n-1;
+        int minMaxPairSum  = Integer.MIN_VALUE;
+        while(left < right){
+            int currSum = nums[left] + nums[right];
+            minMaxPairSum  = Math.max(minMaxPairSum ,currSum);
+            left++;
+            right--;
+        }
+        return minMaxPairSum;
+    }
+}
