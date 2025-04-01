@@ -1,0 +1,21 @@
+class Solution {
+    int l;
+    public int kthSmallest(int[][] matrix, int k) {
+        int[] array = new int[matrix.length * matrix[0].length];
+        l = 0;
+
+        // Flatten the 2D matrix into a 1D array
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                array[l] = matrix[i][j];
+                l++;
+            }
+        }
+
+        // Sort the array
+        Arrays.sort(array);
+
+        
+        return array[k-1];
+    }
+}
