@@ -1,0 +1,5 @@
+class Solution {
+    public int strStr(String h, String n) {
+        return h.contains(n) ? h.indexOf(n):-1;
+    }
+}
