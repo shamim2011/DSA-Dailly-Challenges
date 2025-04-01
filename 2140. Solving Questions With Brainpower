@@ -1,0 +1,83 @@
+//Approach-1 (Using Simple Recursion )  TLE
+class Solution {
+    private int n;
+    
+    private long solve(int i, int[][] q) {
+        if (i >= n) {
+            return 0;
+        }
+
+        long taken = q[i][0] + solve(i + q[i][1] + 1, q);
+        long notTaken = solve(i + 1, q);
+
+        return Math.max(taken, notTaken);
+    }
+    
+    public long mostPoints(int[][] q) {
+        n = q.length;
+        return solve(0, q);
+    }
+}
+
+//Approach-2 (Using Simple Recursion + Memo) - Knapsack variant
+
+
+import java.util.Arrays;
+
+class Solution {
+    private int n;
+
+    // Recursive function to solve the problem with memoization
+    private long solve(int i, int[][] q, long[] t) {
+        // Base case: If index goes out of bounds, return 0
+        if (i >= n) {
+            return 0;
+        }
+
+        // If the result is already computed, return it from the memoization array
+        if (t[i] != -1) {
+            return t[i];
+        }
+
+        // Option 1: Take the current question and jump to the next valid index
+        long taken = q[i][0] + solve(i + q[i][1] + 1, q, t);
+
+        // Option 2: Skip the current question and move to the next one
+        long notTaken = solve(i + 1, q, t);
+
+        // Store the maximum points possible at index i in the memoization array
+        return t[i] = Math.max(taken, notTaken);
+    }
+
+    // Main function to initiate the solving process
+    public long mostPoints(int[][] q) {
+        n = q.length; // Store the total number of questions
+        long[] t = new long[n + 1]; // Memoization array to store computed values
+        Arrays.fill(t, -1); // Initialize the memoization array with -1
+
+        // Start solving from the first question
+        return solve(0, q, t);
+    }
+}
+
+
+//Approach-2 (Using Bottom Up DP)
+
+class Solution {
+    public long mostPoints(int[][] q) {
+        int n = q.length;
+
+        if(n == 1){
+            return q[0][0];
+        }
+        
+        long[] t = new long[2000001];
+        Arrays.fill(t,0);
+        // t[i] means max points gained by Qns from i to n-1
+        // return t[0] -> 0 to n-1
+        for(int i=n-1;i>=0;i--){
+            t[i] = Math.max(q[i][0] + t[i + q[i][1] + 1], t[i+1]);  // 1st part taken & 2nd not taken
+        }
+        return t[0];
+    }
+}
