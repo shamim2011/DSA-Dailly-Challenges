@@ -61,7 +61,7 @@ class Solution {
 }
 
 
-//Approach-2 (Using Bottom Up DP)
+//Approach-3 (Using Bottom Up DP)
 
 class Solution {
     public long mostPoints(int[][] q) {
