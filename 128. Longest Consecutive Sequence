@@ -1,0 +1,62 @@
+// Approach -1 Using sort method 
+// T.C - O(nlogn)
+// S.c - O(1)
+
+class Solution {
+    public int longestConsecutive(int[] nums) {
+        if (nums.length == 0) return 0;
+
+        Arrays.sort(nums);  // Step 1: Sort the array (O(n log n))
+        int maxLength = 1;
+        int currentLength = 1;
+
+        for (int i = 1; i < nums.length; i++) {
+            if (nums[i] == nums[i - 1]) {
+                continue;  // Skip duplicate elements
+            }
+            if (nums[i] == nums[i - 1] + 1) {
+                currentLength++;  // Increase streak if consecutive
+            } else {
+                maxLength = Math.max(maxLength, currentLength);
+                currentLength = 1;  // Reset streak
+            }
+        }
+        
+        return Math.max(maxLength, currentLength);
+    }
+}
+
+ // // Approach - Using HashSet method 
+// T.C - O(n)
+// S.c - O(1)
+
+class Solution {
+    public int longestConsecutive(int[] nums) {
+        
+        
+        if (nums.length == 0) return 0;
+
+        HashSet<Integer> set = new HashSet<>();
+        for (int num : nums) {
+            set.add(num);  // Store all numbers in the HashSet
+        }
+
+        int maxLength = 0;
+
+        for (int num : set) {  // Iterate directly over the HashSet (avoids duplicate checks)
+            if (!set.contains(num - 1)) {  // Start counting only if it's the beginning of a sequence
+                int currNum = num;
+                int currLength = 1;
+
+                while (set.contains(currNum + 1)) {  // Count consecutive numbers
+                    currNum++;
+                    currLength++;
+                }
+
+                maxLength = Math.max(maxLength, currLength);
+            }
+        }
+
+        return maxLength;
+ }
+}
