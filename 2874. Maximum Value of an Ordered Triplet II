@@ -1,6 +1,30 @@
-Approach - 1 ()   ---> Same code of 2874
-// T.C O(n)
+// Approach -1 (Brute force)
+// T.C - O(n^3)
 // S.C - O(1)
+
+class Solution {
+    public long maximumTripletValue(int[] nums) {
+        int n = nums.length;
+        long value = 0;
+        for(int i=0;i<n-2;i++){
+            for(int j=i+1;j<n-1;j++){
+                long res1 = nums[i]-nums[j];
+                for(int k=j+1;k<n;k++){
+                    long res2 = res1 * nums[k];
+                    value  = Math.max(value,res2);
+                }
+            }
+        }
+        return value;
+    }
+}
+
+
+
+
+// Approach -2  (Using prefix and suffix storage)
+// T.C - O(n)
+// S.C - O(n)
 
 class Solution {
     public long maximumTripletValue(int[] nums) {
@@ -21,9 +45,9 @@ class Solution {
 }
 
 
-Approach - 2 ()   ---> Same code of 2874
+Approach - 3 (Keeping track of maxDiff and maxi)   ---> Same code of 2873
 // T.C O(n)
-// S.C - O(n)
+// S.C - O(1)
 
 class Solution {
     public long maximumTripletValue(int[] nums) {
