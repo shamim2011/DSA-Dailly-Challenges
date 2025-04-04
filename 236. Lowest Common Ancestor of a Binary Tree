@@ -1,0 +1,39 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        // Base case: if the root is null, there's nothing to search
+        if (root == null) {
+            return null;
+        }
+        // If the current node is equal to either p or q, return it
+        // because this node might be the LCA
+        if (root == p || root == q) {
+            return root;
+        }
+        // Recursively search for p and q in the left subtree
+        TreeNode leftN = lowestCommonAncestor(root.left, p, q);
+        // Recursively search for p and q in the right subtree
+        TreeNode rightN = lowestCommonAncestor(root.right, p, q);
+        // If both left and right recursive calls return non-null,
+        // it means p and q are found in different subtrees, so root is the LCA
+        if (leftN != null && rightN != null) {
+            return root;
+        }
+        // If only one of the subtrees returns a non-null value,
+        // it means both p and q are in that subtree
+        // So, we return that non-null node upwards
+        if (leftN != null) {
+            return leftN;
+        }
+        // If neither subtree contains p or q, return rightN (could be null)
+        return rightN;
+    }
+}
