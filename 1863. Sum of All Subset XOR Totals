@@ -1,0 +1,99 @@
+//Approach-1 (Using simple backtracking to generate subsets)
+//T.C : O(n * 2^n)
+//S.C : O(n * 2^n)
+
+class Solution {
+    // Recursive function to generate all subsets
+    void solve(int[] nums, int i, List<Integer> temp,List<List<Integer>> result) {
+        // Base case: if index reaches the end of the array
+        if (i >= nums.length) {
+            // Add a copy of the current subset (temp) to result
+            result.add(new ArrayList<>(temp));
+            return;
+        }
+
+        // ------- Include current element -------
+        temp.add(nums[i]);           // Choose to take nums[i]
+        solve(nums, i + 1, temp, result);    // Recurse for next index
+
+        // ------- Exclude current element -------
+        temp.remove(temp.size() - 1); // Backtrack: remove the last element
+        solve(nums, i + 1, temp,result);     // Recurse again without taking nums[i]
+    }
+    public int subsetXORSum(int[] nums) {
+        // This list will store all the subsets (final result)
+        List<List<Integer>> result = new ArrayList<>();
+        List<Integer> li = new ArrayList<>(); // Temp list to build current subset
+        solve(nums, 0, li, result);                   // Start from index 0
+        int sum = 0;
+        // Performing the xor operation in 2D array result
+        for(int i=0;i<result.size();i++){
+            int x = 0;
+            // Perform xor of each elem present in each row
+            for(int j=0;j<result.get(i).size();j++){
+                x = x ^ result.get(i).get(j);
+            }
+            sum += x;
+            
+        }
+        return sum;
+    }
+}
+
+//Approach-2 (Using optimal backtracking)
+//T.C : O(2^n)
+//S.C : O(n)
+
+class Solution {
+
+    // Recursive function to compute the XOR sum of all subsets
+    int solve(int[] nums, int i, int xor) {
+        // Base case: if index reaches the end of the array,
+        // we've formed a complete subset, so return its XOR value
+        if (i >= nums.length) {
+            return xor;
+        }
+
+        // ------- Include current element in the subset -------
+        // XOR the current element with the accumulated xor
+        int include = solve(nums, i + 1, nums[i] ^ xor);
+
+        // ------- Exclude current element from the subset -------
+        // Don't change the XOR since we're not including nums[i]
+        int exclude = solve(nums, i + 1, xor);
+
+        // Return the sum of XORs from both choices (include + exclude)
+        return include + exclude;
+    }
+
+    // Main function that starts the recursion
+    public int subsetXORSum(int[] nums) {
+        // Start from index 0 with initial XOR value of 0
+        return solve(nums, 0, 0);
+    }
+}
+
+
+//Approach-3 (Observing pattern)
+//T.C : O(n)
+//S.C : O(1)
+
+
+class Solution {
+    public int subsetXORSum(int[] nums) {
+        int result = 0;
+
+        // Step 1: OR all the elements in the array
+        // This is based on the observation that in all subsets,
+        // each bit position contributes equally in 2^(n-1) subsets
+        for (int num : nums) {
+            result |= num;  // Bitwise OR accumulates all set bits across elements
+        }
+
+        // Step 2: Multiply the result by 2^(n-1)
+        // Why? Because each bit that is set in `result` 
+        // contributes to exactly half of the subsets
+        // So total XOR sum = result * (2^(n - 1))
+        return result << (nums.length - 1);  // Shifting left by (n-1) = multiply by 2^(n-1)
+    }
+}
