@@ -1,0 +1,139 @@
+//Approach-1 (Using Brute Force same as LIS)
+//T.C : O(2^n) without memoization
+//S.C : O(n)
+
+class Solution {
+    // Recursive helper function to find the largest divisible subset
+    void solve(int[] nums, int i, List<Integer> res, List<Integer> temp, int prev) {
+        // Base case: if we've considered all elements
+        if (i >= nums.length) {
+            // Update the result if the current subset is larger
+            if (temp.size() > res.size()) {
+                res.clear();
+                res.addAll(temp);
+            }
+            return;
+        }
+        // Option 1: Take nums[i] if it's divisible by the last element in temp (prev)
+        if (prev == -1 || nums[i] % prev == 0) {
+            temp.add(nums[i]); // Take the current number
+            solve(nums, i + 1, res, temp, nums[i]); // Move to the next index with updated prev
+            temp.remove(temp.size() - 1); // Backtrack: remove the current number
+        }
+        // Option 2: Don't take nums[i], move to the next index
+        solve(nums, i + 1, res, temp, prev);
+    }
+    public List<Integer> largestDivisibleSubset(int[] nums) {
+        // Sort the array to ensure we can find divisible pairs easier
+        Arrays.sort(nums);
+        // List to store the result (largest divisible subset)
+        List<Integer> res = new ArrayList<>();
+        // Temporary list to hold current subset
+        List<Integer> temp = new ArrayList<>();
+        // Start recursive search from index 0, with no previous element (-1)
+        solve(nums, 0, res, temp, -1);
+        // Return the final result
+        return res;
+    }
+}
+
+----------  Same code But WITH MEMORIZATION ------
+
+class Solution {
+    // Memoization map: key = (i, prevIndex), value = list representing max subset from that point
+    Map<String, List<Integer>> memo = new HashMap<>();
+
+    List<Integer> solve(int[] nums, int i, int prevIndex) {
+        // Base case
+        if (i == nums.length) {
+            return new ArrayList<>();
+        }
+
+        // Create a unique key for memoization
+        String key = i + "," + prevIndex;
+
+        // If result is already computed, return it
+        if (memo.containsKey(key)) {
+            return new ArrayList<>(memo.get(key));
+        }
+
+        // Option 1: Skip the current number
+        List<Integer> notTake = solve(nums, i + 1, prevIndex);
+
+        // Option 2: Take the current number if divisible by previous (or if no previous)
+        List<Integer> take = new ArrayList<>();
+        if (prevIndex == -1 || nums[i] % nums[prevIndex] == 0) {
+            take = solve(nums, i + 1, i);
+            take.add(0, nums[i]); // Add current number at the beginning
+        }
+
+        // Choose the longer list between take and notTake
+        List<Integer> result = take.size() > notTake.size() ? take : notTake;
+
+        // Memoize and return
+        memo.put(key, new ArrayList<>(result));
+        return result;
+    }
+
+    public List<Integer> largestDivisibleSubset(int[] nums) {
+        Arrays.sort(nums); // Sort to ensure divisibility ordering
+        memo.clear(); // Clear memo before each run
+        return solve(nums, 0, -1); // Start from index 0 with no previous element
+    }
+}
+
+
+----------------------------------------------------           -----------------------------
+
+//Approach-2 (Using Bottom Up same as LIS) - Just need to keep track of how to print LIS
+//T.C : O(n^2)
+//S.C : O(n)
+
+class Solution {
+    public List<Integer> largestDivisibleSubset(int[] nums) {
+        int n = nums.length;
+
+        // Step 1: Sort the array so that we can build subsets where nums[i] % nums[j] == 0 is easier to check
+        Arrays.sort(nums);
+
+        // Step 2: Initialize the DP array `t` where t[i] stores the size of the largest divisible subset ending at index i
+        int[] t = new int[n];
+        Arrays.fill(t, 1); // Every number is a subset of itself
+
+        // Step 3: prevIdx[i] stores the index of the previous element in the largest subset ending at i
+        int[] prevIdx = new int[n];
+        Arrays.fill(prevIdx, -1); // Initialize with -1 meaning no previous index
+
+        int maxL = 1; // Length of the largest subset found so far
+        int lastChoseIdx = 0; // Index of the last element of the largest subset
+
+        // Step 4: DP approach to find the length of the largest divisible subset
+        for (int i = 1; i < n; i++) {
+            for (int j = 0; j < i; j++) {
+                // If nums[i] is divisible by nums[j], it can extend the subset ending at j
+                if (nums[i] % nums[j] == 0) {
+                    // Update t[i] if a longer subset ending at i is found
+                    if (t[i] < t[j] + 1) {
+                        t[i] = t[j] + 1;
+                        prevIdx[i] = j; // Store the index to trace back the subset
+                    }
+
+                    // Update max subset length and last chosen index
+                    if (t[i] > maxL) {
+                        maxL = t[i];
+                        lastChoseIdx = i;
+                    }
+                }
+            }
+        }
+
+        // Step 5: Reconstruct the largest divisible subset from the DP info
+        List<Integer> result = new ArrayList<>();
+        while (lastChoseIdx >= 0) {
+            result.add(nums[lastChoseIdx]); // Add current number to the result
+            lastChoseIdx = prevIdx[lastChoseIdx]; // Move to the previous element in the subset
+        }
+
+        return result; // This will be in reverse order, which is fine unless sorting is needed
+    }
+}
