@@ -34,3 +34,94 @@ class Solution {
         return maxLIS;
     }
 }
+
+
+// Approach -2 (Using Recursion) T.C = O(2^n)  TLE
+class Solution {
+    // Store the size of the input array as a class variable
+    private int n;
+
+    // Recursive helper function to find LIS
+    // nums      : the input array
+    // prevIdx   : index of the previous element
+    // in the current subsequence (-1 means start)
+    // currIdx   : index of the current element being considered
+    public int lis(int[] nums, int prevIdx, int currIdx) {
+        // Base case: if we reach the end of the array, return 0
+        if (currIdx == n)
+            return 0;
+
+        int taken = 0;
+
+        // If we can take the current element 
+        // (i.e., it's greater than the previous one)
+        if (prevIdx == -1 || nums[currIdx] > nums[prevIdx]) {
+            // Include nums[currIdx] in the subsequence and move to next index
+            taken = 1 + lis(nums, currIdx, currIdx + 1);
+        }
+
+        // Option to skip the current element
+        int notTaken = lis(nums, prevIdx, currIdx + 1);
+
+        // Return the maximum of taking or not taking the current element
+        return Math.max(taken, notTaken);
+    }
+
+    // Main function that initializes parameters and starts the recursion
+    public int lengthOfLIS(int[] nums) {
+        n = nums.length; // Store array length
+        return lis(nums, -1, 0); // Start recursion from 
+                                 // index 0 with no previous element selected
+    }
+}
+
+
+// Approach -3 (Using Recursion + Memorisation)  T.C = O(n^2)
+// memoized (top-down DP) 
+
+class Solution {
+    private int n;
+    private int[][] t;
+
+    // Recursive helper function with memoization
+    public int lis(int[] nums, int p, int i) {
+        // Base case: reached the end of array
+        if (i == n)
+            return 0;
+
+        // Adjust p by +1 to handle -1 case in array indexing
+        if (t[p + 1][i] != -1)
+            return t[p + 1][i];
+
+        // Option 1: take the current number if it's greater than the last taken
+        int taken = 0;
+        if (p == -1 || nums[i] > nums[p]) {
+            taken = 1 + lis(nums, i, i + 1);
+        }
+
+        // Option 2: skip the current number
+        int notTaken = lis(nums, p, i + 1);
+
+        // Store the result in memoization table and return it
+        t[p + 1][i] = Math.max(taken, notTaken);
+        return t[p + 1][i];
+    }
+
+    public int lengthOfLIS(int[] nums) {
+        n = nums.length;
+
+        // Initialize memoization table with -1
+        // Size is (n+1) x n to handle p = -1 by shifting index
+        t = new int[n + 1][n];
+        for (int[] row : t) {
+            Arrays.fill(row, -1);
+        }
+
+        // Start the recursive function with p = -1 and i = 0
+        return lis(nums, -1, 0);
+    }
+}
+
+
+
+
