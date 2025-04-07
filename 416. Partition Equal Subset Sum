@@ -1,0 +1,125 @@
+//Approach-1 (Recursion)   TLE
+//T.C : O(2^n), where x = totalSum/2
+//S.C : O(n)
+
+class Solution {
+    // Recursive helper function to check if a subset starting from index 'i'
+    // can sum up to 'x'
+    boolean solve(int[] nums, int i, int x) {
+        // If target sum is reached, a valid subset has been found
+        if (x == 0) {
+            return true;
+        }
+
+        // If we've gone through all elements and haven't reached 0, return false
+        if (i >= nums.length) {
+            return false;
+        }
+
+        boolean take = false;
+
+        // If the current element is less than or equal to remaining sum x,
+        // we can choose to include it
+        if (x >= nums[i]) {
+            take = solve(nums, i + 1, x - nums[i]); // take nums[i]
+        }
+
+        // Option to skip the current element
+        boolean not_take = solve(nums, i + 1, x); // don't take nums[i]
+
+        // Return true if any of the two choices lead to a valid subset
+        return take || not_take;
+    }
+
+    // Main function
+    public boolean canPartition(int[] nums) {
+        int S = 0;
+
+        // Calculate total sum of elements
+        for (int num : nums) {
+            S += num;
+        }
+
+        // If the total sum is odd, we can't divide it equally
+        if (S % 2 != 0) {
+            return false;
+        }
+
+        // Try to find a subset with sum equal to half of total sum
+        int x = S / 2;
+        return solve(nums, 0, x);
+    }
+}
+
+
+//Approach-2 (Recursion + Memo)
+//T.C : O(n*x), where x = totalSum/2
+//S.C : O(n*x)
+
+import java.util.Arrays;
+
+class Solution {
+    // Memoization table:
+    // t[i][x] stores whether a subset starting at index 'i' can achieve sum 'x'
+    // Initialized with -1 (unvisited), 1 (true), or 0 (false)
+    int[][] t = new int[201][20001]; // Max 200 elements, Max sum = 200 * 100 = 20000
+
+    // Recursive helper function
+    boolean solve(int[] nums, int i, int x) {
+        // Base case: If target sum is 0, subset found
+        if (x == 0) {
+            return true;
+        }
+
+        // Base case: If no more elements and x not reached, return false
+        if (i >= nums.length) {
+            return false;
+        }
+
+        // If already computed, return stored result
+        if (t[i][x] != -1) {
+            return t[i][x] == 1;
+        }
+
+        boolean take = false;
+
+        // If current element can be included (doesn't exceed target sum)
+        if (x >= nums[i]) {
+            take = solve(nums, i + 1, x - nums[i]); // Include nums[i]
+        }
+
+        // Option to skip the current element
+        boolean not_take = solve(nums, i + 1, x); // Don't include nums[i]
+
+        // Store result in memo table: 1 for true, 0 for false
+        t[i][x] = (take || not_take) ? 1 : 0;
+
+        return t[i][x] == 1;
+    }
+
+    // Main function
+    public boolean canPartition(int[] nums) {
+        int S = 0;
+
+        // Step 1: Calculate total sum of the array
+        for (int num : nums) {
+            S += num;
+        }
+
+        // Step 2: If sum is odd, can't partition into equal subsets
+        if (S % 2 != 0) {
+            return false;
+        }
+
+        // Step 3: Initialize memo table with -1 (unvisited)
+        for (int[] row : t) {
+            Arrays.fill(row, -1);
+        }
+
+        // Step 4: Try to find a subset with sum = S / 2
+        int x = S / 2;
+        return solve(nums, 0, x);
+    }
+}
+
+
