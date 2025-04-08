@@ -1,0 +1,67 @@
+// Approach -1 Greedy + HashSet-based Uniqueness Check.
+// T.C = O(n*n)
+// S.C = O(n)
+
+class Solution {
+    
+    // Helper method to check if all elements from index i to n-1 are distinct
+    boolean checkDistinct(int[] nums, int i, int n) {
+        Set<Integer> st = new HashSet<>();  // Create a set to store unique elements
+
+        // Iterate from index i to end of array
+        for (int j = i; j < n; j++) {
+            // If current element is already in the set, it's a duplicate
+            if (st.contains(nums[j])) {
+                return false;  // Not all elements are distinct
+            }
+            // Add the element to the set
+            st.add(nums[j]);
+        }
+
+        return true;  // All elements from i to n-1 are distinct
+    }
+
+    // Main method to calculate the minimum number of operations
+    public int minimumOperations(int[] nums) {
+        int n = nums.length;  // Get the length of the array
+        int res = 0;  // Initialize result (number of operations)
+
+        // Iterate through the array in steps of 3
+        for (int i = 0; i < n; i += 3) {
+            // Check if all elements from index i to end are distinct
+            if (checkDistinct(nums, i, n)) {
+                return res;  // If yes, return the current number of operations
+            }
+            
+            res++;  // Otherwise, increment operations
+        }
+
+        return res;  // Return total operations needed (if loop completes)
+    }
+}
+
+
+// Approach -2 Reverse Traversal + HashSet-based Duplicate Detection.
+// T.C = O(n)
+// S.C = O(n)
+
+class Solution {
+    public int minimumOperations(int[] nums) {
+        int n = nums.length;  // Get the length of the array
+        Set<Integer> st = new HashSet<>();  // Create a HashSet to track unique elements
+
+        // Traverse the array from the end to the beginning
+        for (int i = n - 1; i >= 0; i--) {
+            // If we find a duplicate, calculate and return the number of operations
+            if (st.contains(nums[i])) {
+                // The number of operations is (i / 3) + 1
+                return (i / 3 + 1);
+            }
+            // Otherwise, add the current element to the set
+            st.add(nums[i]);
+        }
+
+        // If all elements are unique, no operations are needed
+        return 0;
+    }
+}
