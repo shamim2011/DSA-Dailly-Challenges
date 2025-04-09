@@ -1,0 +1,84 @@
+Approach - 1 Using hashSet   TLE
+// T.C - O(n*n)
+// S.C = O(n*n)
+
+class Solution {
+    public int minIncrementForUnique(int[] nums) {
+        HashSet<Integer> used = new HashSet<>();
+        int moves = 0;
+
+        for (int num : nums) {
+            int current = num;
+            while (used.contains(current)) {
+                current++;
+                moves++;
+            }
+            used.add(current);
+        }
+
+        return moves;
+    }
+}
+
+Approach - 2 Normal Traversing
+// T.C - O(n)
+// S.C = O(n)
+
+class Solution {
+    public int minIncrementForUnique(int[] nums) {
+        int max = 0;
+        for (int num : nums) {
+            max = Math.max(max, num);
+        }
+
+        int[] count = new int[max + nums.length]; // Extend size to handle possible increments
+        for (int num : nums) {
+            count[num]++;
+        }
+
+        int moves = 0;
+        for (int i = 0; i < count.length; i++) {
+            if (count[i] > 1) {
+                int excess = count[i] - 1;
+                count[i + 1] += excess;
+                moves += excess;
+            }
+        }
+
+        return moves;
+    }
+}
+
+Approach - 3 Sorting 
+// T.C - O(nlogn)
+// S.C = O(1)
+
+import java.util.Arrays;
+
+class Solution {
+    public int minIncrementForUnique(int[] nums) {
+        int n = nums.length;
+
+        // Sort the array so we can handle duplicates in order
+        Arrays.sort(nums);
+
+        int res = 0; // This will store the total number of increments needed
+
+        // Start from the second element and compare with the previous one
+        for (int i = 1; i < n; i++) {
+            // If the current number is less than or equal to the previous one,
+            // we need to increment it to make it unique
+            if (nums[i] <= nums[i - 1]) {
+                // Calculate how much we need to increment to make nums[i] > nums[i - 1]
+                res += nums[i - 1] - nums[i] + 1;
+
+                // Update the current number to be one more than the previous number
+                nums[i] = nums[i - 1] + 1;
+            }
+        }
+
+        // Return the total number of increments made
+        return res;
+    }
+}
+
