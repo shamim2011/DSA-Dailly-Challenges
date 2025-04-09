@@ -1,0 +1,45 @@
+Approach 1: Using HashSet
+T.C - O(N)
+S.C - O(u) u = unique element
+
+import java.util.HashSet;
+import java.util.Set;
+
+class Solution {
+    public int minOperations(int[] nums, int k) {
+        int count = 0;
+        Set<Integer> selected = new HashSet<>();
+
+        for (int ele : nums) {
+            if (ele < k) {
+                return -1; // If any element is less than k, return -1
+            }
+            if (ele > k && !selected.contains(ele)) {
+                selected.add(ele); // Add to set if it's greater than k and not already counted
+                count++; // Increment the count of operations
+            }
+        }
+
+        return count;
+    }
+}
+
+
+Approach 2: Using HashMap
+T.C - O(N)
+S.C - O(u) u = unique element
+
+class Solution {
+    public int minOperations(int[] nums, int k) {
+        int n = nums.length;
+        Map<Integer,Integer> mp = new HashMap<>();
+        for(int num : nums){
+            if(num<k){
+                return -1;
+            }
+            else if(num>k)
+                mp.put(num,mp.getOrDefault(num,0)+1);
+        }
+        return mp.size();
+    }
+}
