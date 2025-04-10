@@ -1,0 +1,55 @@
+//Approach (Using Simple String traversal and Combinatorics multipliaction to find count)
+//T.C : O((n - m) * log(limit)), n and m are lengths of start and finish
+//S.C : O(1)
+
+class Solution {
+    // Helper method to count numbers <= str that end with inputSuffix and use digits <= limit
+    private long solve(String str, String inputSuffix, int limit) {
+        // If the number is shorter than the suffix, no such numbers exist
+        if (str.length() < inputSuffix.length()) {
+            return 0;
+        }
+
+        long count = 0;
+
+        // Extract the trailing part of the string with the same length as the inputSuffix
+        // For example, if str = "3000" and suffix = "12", trailing = "00"
+        String trailing = str.substring(str.length() - inputSuffix.length());
+
+        // Remaining length before the suffix
+        int remainL = str.length() - inputSuffix.length();
+
+        // Iterate through the digits of the part before the suffix
+        for (int i = 0; i < remainL; i++) {
+            int digit = str.charAt(i) - '0'; // Get numeric value of the character
+
+            if (digit <= limit) {
+                // If current digit <= limit, compute how many options
+                // are possible from this position onward
+                count += digit * Math.pow(limit + 1, remainL - i - 1);
+            } else {
+                // If digit > limit, we can form all combinations up to this position
+                count += Math.pow(limit + 1, remainL - i);
+                return count; // Stop further processing as all greater digits are invalid
+            }
+        }
+
+        // If the trailing part of str is >= inputSuffix,
+        // we can include str itself in the count
+        if (trailing.compareTo(inputSuffix) >= 0) {
+            count += 1;
+        }
+
+        return count;
+    }
+
+    // Main method to return the number of "powerful integers"
+    public long numberOfPowerfulInt(long start, long finish, int limit, String s) {
+        // Convert (start-1) and finish to strings for bounds
+        String startStr = Long.toString(start - 1);
+        String finishStr = Long.toString(finish);
+
+        // Calculate powerful ints up to 'finish' and subtract those below 'start'
+        return solve(finishStr, s, limit) - solve(startStr, s, limit);
+    }
+}
