@@ -1,0 +1,99 @@
+//Approach-1 (Brute Force)
+//T.C : O((high-low+1)*d), where d  = number of digits
+//S.C : O(d) for storing string
+
+class Solution {
+
+    // Helper method to check if a number is symmetric
+    // A number is symmetric if it has even number of digits
+    // and the sum of the first half of digits equals the sum of the second half
+    boolean isSymetric(int num) {
+        // Convert the number to a string to access its digits easily
+        String s = Integer.toString(num);
+
+        // If the number has an odd number of digits, it can't be symmetric
+        if (s.length() % 2 == 1) {
+            return false;
+        }
+
+        int sum1 = 0; // Sum of the first half of digits
+        int sum2 = 0; // Sum of the second half of digits
+        int i;
+
+        // Sum the digits in the first half
+        for (i = 0; i < s.length() / 2; i++) {
+            sum1 += s.charAt(i) - '0'; // Convert char digit to int
+        }
+
+        // Sum the digits in the second half
+        for (i = s.length() / 2; i < s.length(); i++) {
+            sum2 += s.charAt(i) - '0'; // Convert char digit to int
+        }
+
+        // Return true if both halves have equal sum, false otherwise
+        return sum1 == sum2;
+    }
+
+    // Main method to count symmetric integers in the range [low, high]
+    public int countSymmetricIntegers(int low, int high) {
+        int count = 0;
+
+        // Iterate through all numbers in the given range
+        for (int i = low; i <= high; i++) {
+            // Check if the number is symmetric and increment count if it is
+            if (isSymetric(i)) {
+                count++;
+            }
+        }
+
+        // Return the total count of symmetric integers in the range
+        return count;
+    }
+}
+
+
+//Approach-2 (Optimal using / and %)
+//T.C : O(high-low+1)
+//S.C : O(1)
+
+class Solution {
+
+    // Method to count symmetric integers between 'low' and 'high' (inclusive)
+    public int countSymmetricIntegers(int low, int high) {
+        int count = 0;
+
+        // Loop through all numbers in the range [low, high]
+        for (int num = low; num <= high; num++) {
+
+            // Case 1: Two-digit numbers (10 to 99)
+            // A 2-digit number is symmetric if both digits
+            // are equal → divisible by 11
+            if (num >= 10 && num <= 99 && num % 11 == 0) {
+                count++;
+            }
+
+            // Case 2: Four-digit numbers (1000 to 9999)
+            // A 4-digit number is symmetric if sum of the first two digits
+            // equals the sum of the last two digits
+            else if (num >= 1000 && num <= 9999) {
+
+                // Extract each digit using division and modulus
+                int first = num / 1000;               // Thousands place
+                int second = (num / 100) % 10;        // Hundreds place
+                int third = (num / 10) % 10;          // Tens place
+                int fourth = num % 10;                // Units place
+
+                // Check if the sum of first two digits 
+                // equals the sum of last two digits
+                if (first + second == third + fourth) {
+                    count++;
+                }
+            }
+
+            // All other numbers (1-digit, 3-digit, 5-digit, etc.) are skipped
+        }
+
+        // Return the final count of symmetric integers
+        return count;
+    }
+}
