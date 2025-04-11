@@ -1,0 +1,35 @@
+// String Method
+class Solution {
+    public boolean isPalindrome(int x) {
+        String s = String.valueOf(x);
+        int l = 0;
+        int r = s.length()-1;
+        while(l<=r){
+            if(s.charAt(l) != s.charAt(r)){
+                return false;
+            }
+            l++;r--;
+        }
+        return true;
+    }
+}
+
+// Simple reverse method
+
+class Solution {
+    public boolean isPalindrome(int x) {
+        if(x<0){
+            return false;
+        }
+        int copy = x;
+        int reverse =0 ;
+        while(x>0){
+            reverse = reverse * 10 + x%10;
+            x /=10;
+        }
+        if(reverse == copy){
+            return true;
+        }
+        return false;
+    }
+}
