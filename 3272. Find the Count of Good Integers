@@ -1,0 +1,83 @@
+//Approach (Using Maths + Strings)
+//T.C : O(10^d * nlogn), where d = number of digits
+//S.C : O(10^d * n)
+
+class Solution {
+    public long countGoodIntegers(int n, int k) {
+        // Set to store unique digit permutations of 
+        // valid palindrome numbers divisible by k
+        Set<String> st = new HashSet<>();
+
+        // Calculate half the length of the palindrome
+        int d = (n + 1) / 2;
+
+        // Start and end represent the numeric range 
+        // of the left half of palindromes
+        int start = (int) Math.pow(10, d - 1);
+        int end = (int) Math.pow(10, d) - 1;
+
+        // Iterate through all possible left halves
+        for (int num = start; num <= end; num++) {
+            String leftHalf = Integer.toString(num);
+            String full;
+
+            // Create the full palindrome number by mirroring the left half
+            if (n % 2 == 0) {
+                // If n is even, reverse the entire left half
+                StringBuilder rightHalf = new StringBuilder(leftHalf).reverse();
+                full = leftHalf + rightHalf.toString();
+            } else {
+                // If n is odd, exclude the middle digit when reversing
+                StringBuilder rightHalf = new StringBuilder(leftHalf.substring(0, d - 1)).reverse();
+                full = leftHalf + rightHalf.toString();
+            }
+
+            // Convert the palindrome string back to a number
+            long number = Long.parseLong(full);
+
+            // Check if the number is divisible by k
+            if (number % k != 0)
+                continue;
+
+            // Sort the digits of the number to 
+            // count unique permutations later
+            char[] chars = full.toCharArray();
+            Arrays.sort(chars);
+            st.add(new String(chars));
+        }
+
+        // Precompute factorials from 0 to 10 
+        // for permutation calculation
+        long[] factorial = new long[11];
+        factorial[0] = 1;
+        for (int i = 1; i < 11; i++) {
+            factorial[i] = factorial[i - 1] * i;
+        }
+
+        long result = 0;
+
+        // For each unique sorted digit combination,
+        //  calculate how many valid permutations exist
+        for (String s : st) {
+            int[] count = new int[10]; // Digit frequency map
+
+            for (char ch : s.toCharArray()) {
+                count[ch - '0']++;
+            }
+
+            int totalDigits = s.length();
+            int zeroDigits = count[0];
+            int nonZeroDigits = totalDigits - zeroDigits;
+
+            // Calculate permutations where the number doesn't start with 0
+            long perm = nonZeroDigits * factorial[totalDigits - 1];
+            for (int i = 0; i < 10; i++) {
+                perm /= factorial[count[i]];
+            }
+
+            result += perm;
+        }
+
+        return result;
+    }
+}
