@@ -1,0 +1,53 @@
+//Approach (Using Maths)
+//T.C : O(log(n))
+//S.C : O(1) but note that we use O(log(n)) system stack space of recursion
+
+class Solution {
+    // Define the modulo value as 10^9 + 7 using
+    //  Math.pow (returns a double, then cast to int)
+    final int MOD = (int)(Math.pow(10, 9) + 7);
+
+    // Function to compute (a^b) % MOD 
+    // using recursive fast exponentiation
+    long power(long a, long b) {
+        // Base case: a^0 = 1
+        if (b == 0) {
+            return 1;
+        }
+
+        // Recursively compute a^(b/2)
+        long half = power(a, b / 2);
+
+        // Square the result to get a^b (partially)
+        long result = (half * half) % MOD;
+
+        // If b is odd, multiply one more 'a' to the result
+        if (b % 2 == 1) {
+            result = (result * a) % MOD;
+        }
+
+        // Return the final result modulo MOD
+        return result;
+    }
+
+    // Main function to count good numbers
+    public int countGoodNumbers(long n) {
+        // Even indices can have 5 choices (0, 2, 4, 6, 8)
+        long even = (n + 1) / 2;
+
+        // Odd indices can have 4 choices (2, 3, 5, 7)
+        long odd = n / 2;
+
+        // Compute 5^even % MOD
+        long res1 = power(5, even);
+
+        // Compute 4^odd % MOD
+        long res2 = power(4, odd);
+
+        // Multiply the two results and take modulo MOD
+        long ans = (res1 * res2) % MOD;
+
+        // Return the final answer as an integer
+        return (int) ans;
+    }
+}
