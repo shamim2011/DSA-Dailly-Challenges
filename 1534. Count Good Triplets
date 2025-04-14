@@ -1,0 +1,65 @@
+//Approach (Simple straight forward with slight improvements)
+//T.C : O(n^3) 
+//S.C : O(1)
+
+class Solution {
+    public int countGoodTriplets(int[] arr, int a, int b, int c) {
+        int n = arr.length; // Get the length of the array
+        int count = 0; // Initialize a counter to keep track of good triplets
+
+        // Iterate through all possible triplets (i, j, k) where i < j < k
+        for (int i = 0; i < n - 2; i++) {
+            for (int j = i + 1; j < n - 1; j++) {
+                for (int k = j + 1; k < n; k++) {
+
+                    // Calculate absolute differences 
+                    // between the elements of the triplet
+
+                    // Check if the triplet satisfies all three conditions
+                    if(Math.abs(arr[i]-arr[j])<=a && 
+                       Math.abs(arr[j]-arr[k])<=b && 
+                       Math.abs(arr[i]-arr[k])<=c) 
+                    {
+                        count++;
+                    }
+                }
+            }
+        }
+
+        // Return the total number of good triplets found
+        return count;
+    }
+}
+
+
+////////---different just simple update
+
+class Solution {
+    public int countGoodTriplets(int[] arr, int a, int b, int c) {
+        int n = arr.length; // Get the number of elements in the array
+        int count = 0; // Counter to keep track of the number of good triplets
+
+        // Loop through all possible triplets (i, j, k) such that i < j < k
+        for (int i = 0; i < n - 2; i++) {
+            for (int j = i + 1; j < n - 1; j++) {
+                // First condition check: |arr[i] - arr[j]| <= a
+                if (Math.abs(arr[i] - arr[j]) <= a) {
+                    // Only proceed if the first condition is satisfied
+                    for (int k = j + 1; k < n; k++) {
+                        // Check the remaining two conditions:
+                        // |arr[j] - arr[k]| <= b and |arr[i] - arr[k]| <= c
+                        if (Math.abs(arr[j] - arr[k]) <= b &&
+                            Math.abs(arr[i] - arr[k]) <= c) {
+                            // If all conditions are satisfied, increment the count
+                            count++;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Return the total number of valid (good) triplets found
+        return count;
+    }
+}
+
