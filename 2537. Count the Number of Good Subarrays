@@ -1,0 +1,45 @@
+// Approach - Sliding Windows
+// T.C - O(n)
+// S.C - O(n)
+
+class Solution {
+    public long countGood(int[] nums, int k) {
+        int n = nums.length;
+        int i = 0; // Start of the sliding window
+        int j = 0; // End of the sliding window
+        long result = 0; // Final count of "good" subarrays
+        long pairs = 0; // Current number of pairs in the window
+
+        // Map to keep count of each element in the current window
+        Map<Integer, Integer> mp = new HashMap<>();
+
+        // Iterate through the array with the end pointer `j`
+        while (j < n) {
+            // Add to the number of pairs the number of times nums[j] has appeared so far
+            pairs += mp.getOrDefault(nums[j], 0);
+
+            // Update the frequency of nums[j] in the map
+            mp.put(nums[j], mp.getOrDefault(nums[j], 0) + 1);
+
+            // If current number of pairs is at least k, then shrink the window from the left
+            while (pairs >= k) {
+                // All subarrays starting from i and ending at or after j are valid
+                result += (n - j);
+
+                // Before moving `i`, reduce the count of nums[i] in the map
+                mp.put(nums[i], mp.get(nums[i]) - 1);
+
+                // Subtract the number of pairs that were contributed by nums[i]
+                pairs -= mp.get(nums[i]);
+
+                // Move the start of the window forward
+                i++;
+            }
+
+            // Move the end of the window forward
+            j++;
+        }
+
+        return result;
+    }
+}
