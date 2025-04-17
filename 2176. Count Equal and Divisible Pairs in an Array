@@ -1,0 +1,82 @@
+//Approach-1 (Brute Force)
+//T.C : O(n^2) 
+//S.C : O(1)
+
+class Solution {
+    public int countPairs(int[] nums, int k) {
+        int count = 0;
+        int n = nums.length;
+        for(int i=0;i<n-1;i++){
+            for(int j=i+1;j<n;j++){
+                if(nums[i] == nums[j] && i*j%k == 0){
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+}
+
+
+//Approach-2 (Slight better approach)
+//T.C : O(n * (log(k) + sqrt(k)))
+//S.C : O(n)
+
+class Solution {
+    public int countPairs(int[] nums, int k) {
+        int n = nums.length;
+        int result = 0;
+
+        // Step 1: Group indices by the values in nums
+        // For example, if nums = [3,1,2,3,2], indicesMap = {3:[0,3], 1:[1], 2:[2,4]}
+        Map<Integer, List<Integer>> indicesMap = new HashMap<>();
+        for (int i = 0; i < n; i++) {
+            indicesMap.computeIfAbsent(nums[i], x -> new ArrayList<>()).add(i);
+        }
+
+        // Step 2: Find all divisors of k
+        // These divisors are used to check valid gcd combinations
+        Set<Integer> div = new HashSet<>();
+        for (int f = 1; f * f <= k; f++) {
+            if (k % f == 0) {
+                div.add(f);         // Add divisor f
+                div.add(k / f);     // Add corresponding divisor pair k/f
+            }
+        }
+
+        // Step 3: For each unique number in nums, process its list of indices
+        for (Map.Entry<Integer, List<Integer>> entry : indicesMap.entrySet()) {
+            List<Integer> indices = entry.getValue();
+            Map<Integer, Integer> factorsMap = new HashMap<>();
+
+            // Loop over each index of the current number
+            for (int i : indices) {
+                int gcd = gcd(i, k);    // Compute gcd of index i and k
+                int j = k / gcd;        // j is the factor we need in the partner index for the pair to be valid
+
+                // Add to result the count of previous indices that had gcd dividing i
+                result += factorsMap.getOrDefault(j, 0);
+
+                // Update factorsMap for all divisors of k that divide i
+                for (int f : div) {
+                    if (i % f == 0) {
+                        // Count how many times each divisor f appears as a gcd
+                        factorsMap.put(f, factorsMap.getOrDefault(f, 0) + 1);
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
+
+    // Helper method to calculate the greatest common divisor
+    private int gcd(int a, int b) {
+        while (b != 0) {
+            int t = b;
+            b = a % b;
+            a = t;
+        }
+        return a;
+    }
+}
