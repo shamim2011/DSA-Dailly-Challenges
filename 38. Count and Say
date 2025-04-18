@@ -1,0 +1,37 @@
+//Approach (Simple Recursion)
+//T.C : O(2^n)
+//S.C : O(2^n)
+
+class Solution {
+    public String countAndSay(int n) {
+        // Base case: if n is 1, return the first element in the sequence
+        if(n == 1){
+            return "1";
+        }
+
+        // Recursively get the previous term in the sequence
+        String say = countAndSay(n - 1);
+
+        // This will store the result of processing the previous term
+        String result = "";
+
+        // Iterate through the characters of the previous term
+        for(int i = 0; i < say.length(); i++) {
+            char ch = say.charAt(i); // Current character to process
+            int count = 1; // Count how many times this character repeats consecutively
+
+            // Check for consecutive repeating characters
+            while(i < say.length() - 1 && say.charAt(i) == say.charAt(i + 1)) {
+                count++; // Increment count if next character is the same
+                i++;     // Move to the next character
+            }
+
+            // Append the count followed by the character to the result string
+            result += Integer.toString(count) + ch;
+        }
+
+        // Return the processed result for this level
+        return result;
+    }
+}
+
