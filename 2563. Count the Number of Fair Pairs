@@ -1,0 +1,81 @@
+// Approach - 1 --> Brute Force   TLE
+// T.C - O(n^2)
+// S.C - O(1)
+
+class Solution {
+    public long countFairPairs(int[] nums, int lower, int upper) {
+        long res = 0;
+        int n = nums.length;
+        for(int i=0;i<n-1;i++){
+            for(int j=i+1;j<n;j++){
+                if(nums[i]+nums[j] >= lower && nums[i]+nums[j]<=upper){
+                    res++;
+                }
+            }
+        }
+        return res;
+    }
+}
+
+//Approach (simple binary search trick)
+//T.C : O(nlogn)
+//S.C : O(1)
+
+class Solution {
+    public long countFairPairs(int[] nums, int lower, int upper) {
+        long res = 0;
+        int n = nums.length;
+        
+        // Sort the array to enable binary search
+        Arrays.sort(nums);
+        
+        // Iterate through each element and find valid pair count
+        for (int i = 0; i < n; i++) {
+            // For each nums[i], find how many j > i such that:
+            // lower <= nums[i] + nums[j] <= upper
+
+            // Use binary search to find the first index j (j > i)
+            // where nums[i] + nums[j] >= lower → nums[j] >= lower - nums[i]
+            int leftIdx = lowerBound(nums, i + 1, n, lower - nums[i]);
+
+            // Use binary search to find the first index j (j > i)
+            // where nums[i] + nums[j] > upper → nums[j] > upper - nums[i]
+            int rightIdx = upperBound(nums, i + 1, n, upper - nums[i]);
+
+            // The number of valid pairs for current i is (rightIdx - leftIdx)
+            res += (rightIdx - leftIdx);
+        }
+
+        return res;
+    }
+
+    // Finds the first index in nums[start...end) where nums[index] >= target
+    // Equivalent to C++'s lower_bound
+    public int lowerBound(int[] nums, int start, int end, int target) {
+        while (start < end) {
+            int mid = start + (end - start) / 2;
+
+            if (nums[mid] < target) {
+                start = mid + 1; // Move right if current is less than target
+            } else {
+                end = mid; // Move left to find the first >= target
+            }
+        }
+        return start;
+    }
+
+    // Finds the first index in nums[start...end) where nums[index] > target
+    // Equivalent to C++'s upper_bound
+    public int upperBound(int[] nums, int start, int end, int target) {
+        while (start < end) {
+            int mid = start + (end - start) / 2;
+
+            if (nums[mid] <= target) {
+                start = mid + 1; // Move right if current is <= target
+            } else {
+                end = mid; // Move left to find the first > target
+            }
+        }
+        return start;
+    }
+}
