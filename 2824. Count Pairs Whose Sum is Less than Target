@@ -1,0 +1,63 @@
+// Brute Force 
+//T.C O(N^2)
+// S.C - O(1)
+
+class Solution {
+    public int countPairs(List<Integer> nums, int target) {
+        int res = 0;
+        int n = nums.size();
+        for(int i=0;i<n-1;i++){
+            for(int j=i+1;j<n;j++){
+                if(nums.get(i)+nums.get(j)<target){
+                    res++;
+                }
+            }
+        }
+        return res;
+    }
+}
+
+// Approach 2 sorting,Binary........
+
+import java.util.*;
+
+class Solution {
+    public int countPairs(List<Integer> nums, int target) {
+        int n = nums.size();
+        int res = 0;
+
+        // Sort the list to allow binary search
+        Collections.sort(nums);
+
+        // For each element, find how many numbers after it make a valid pair
+        for (int i = 0; i < n; i++) {
+            // We want to find the first index j > i where nums[i] + nums[j] >= target
+            // That means we need to find the lower bound of (target - nums[i])
+            int x = lowerBound(nums, i + 1, n, target - nums.get(i));
+
+            // The number of valid pairs with i as the first element is (x - i - 1)
+            res += (x - i - 1);
+        }
+
+        return res;
+    }
+
+    // Standard lower bound function: returns the first index in [start, end)
+    // where nums.get(index) >= target
+    public int lowerBound(List<Integer> nums, int start, int end, int target) {
+        while (start < end) {
+            int mid = start + (end - start) / 2;
+
+            // If the current middle value is less than target, move right
+            if (nums.get(mid) < target) {
+                start = mid + 1;
+            } else {
+                // Otherwise, this could be our lower bound, move left
+                end = mid;
+            }
+        }
+
+        // 'start' will be the first index where nums.get(start) >= target
+        return start;
+    }
+}
