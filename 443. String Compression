@@ -1,0 +1,44 @@
+class Solution {
+    public int compress(char[] chars) {
+        // Initialize the previous character with the first character in the array
+        char preChar = chars[0];
+        int count = 1; // Initialize the count of consecutive characters
+        StringBuilder sb = new StringBuilder(); // To store the compressed result
+
+        // Loop through the characters starting from the second one
+        for (int i = 1; i < chars.length; i++) {
+            char currChar = chars[i];
+
+            // If the current character is same as previous, increment the count
+            if (preChar == currChar) {
+                count++;
+            } else {
+                // Append the previous character to the result
+                sb.append(preChar);
+
+                // If count is more than 1, append the count as well
+                if (count > 1) {
+                    sb.append(count);
+                }
+
+                // Update preChar and reset count
+                preChar = currChar;
+                count = 1;
+            }
+        }
+
+        // After the loop, append the last character and its count (if > 1)
+        sb.append(preChar);
+        if (count > 1) {
+            sb.append(count);
+        }
+
+        // Write the compressed result back to the original array
+        for (int i = 0; i < sb.length(); i++) {
+            chars[i] = sb.charAt(i);
+        }
+
+        // Return the length of the compressed string
+        return sb.length();
+    }
+}
