@@ -1,0 +1,41 @@
+//Approach (Grouping using map)
+//T.C : O(n)
+//S.C : O(n)
+
+class Solution {
+    public int numRabbits(int[] answers) {
+        int n = answers.length;
+
+        // Map to store the frequency of each answer
+        // Key: answer value (number of other rabbits with same color),
+        // Value: count of rabbits who gave that answer
+        HashMap<Integer, Integer> mp = new HashMap<>();
+
+        // Count how many times each answer appears
+        for (int i = 0; i < n; i++) {
+            mp.put(answers[i], mp.getOrDefault(answers[i], 0) + 1);
+        }
+
+        int ans = 0;
+
+        // Iterate through each unique answer in the map
+        for (Map.Entry<Integer, Integer> entry : mp.entrySet()) {
+            // Number of other rabbits with the same color
+            int x = entry.getKey();     
+            // How many rabbits gave this answer
+            int count = entry.getValue(); 
+            // Total size of a group with the same color
+            int groupSize = x + 1; 
+            // Calculate how many such groups
+               // we need to accommodate all rabbits that gave this answer
+            // (we round up because a partially
+               // filled group still counts as a full group)
+            int groups = (int) Math.ceil((double) count / groupSize);
+
+            // Total rabbits in these groups
+            ans += groups * groupSize;
+        }
+        // Return the minimum number of rabbits in the forest
+        return ans; 
+    }
+}
