@@ -1,0 +1,33 @@
+//Approach - Using Maths for counting total possible shifts
+//T.C : O(n)
+//S.C : O(1)
+
+class Solution {
+    public int numberOfArrays(int[] differences, int lower, int upper) {
+        // These track the minimum and maximum values reached by the prefix sum
+        int minVal = 0, maxVal = 0;
+
+        // 'curr' represents the running sum (or prefix sum)
+        int curr = 0;
+
+        // Iterate through the differences array to simulate the array reconstruction
+        for (int d : differences) {
+            // Update the current prefix sum
+            curr += d;
+
+            // Track the minimum and maximum prefix sum values
+            minVal = Math.min(minVal, curr);
+            maxVal = Math.max(maxVal, curr);
+
+            // Early exit: if no valid starting value 'a0' can keep values within bounds
+            // The valid range for a0 is [lower - minVal, upper - maxVal]
+            // If this range is invalid (start > end), return 0
+            if ((upper - maxVal) - (lower - minVal) + 1 <= 0) {
+                return 0;
+            }
+        }
+
+        // The number of valid starting values 'a0' that keep all elements in bounds
+        return (upper - maxVal) - (lower - minVal) + 1;
+    }
+}
