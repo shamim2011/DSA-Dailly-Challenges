@@ -1,0 +1,57 @@
+// Approach - Recursive 
+
+class Solution {
+    // Main method to be called with the input number
+    public int addDigits(int num) {
+        return solve(num); // Call the helper function to calculate the result
+    }
+
+    // Helper method that recursively adds the digits until a single digit remains
+    int solve(int n) {
+        // Base case: if n is a single-digit number (0 to 9), return it
+        if (n <= 9) {
+            return n;
+        }
+
+        int s = 0; // Variable to store the sum of digits
+
+        // Loop to extract and sum the digits of n
+        while (n > 0) {
+            s += n % 10; // Add the last digit to sum
+            n = n / 10;  // Remove the last digit
+        }
+
+        // Recursive call with the sum of digits
+        return solve(s);
+    }
+}
+
+// Brute Force
+
+class Solution {
+    public int addDigits(int num) {
+        int sum=0;
+		while(num>0) {
+			sum+=num%10;
+			num=num/10;
+		}
+		int sum1=0;
+		if(sum>9) {
+			while(sum!=0) {
+				sum1+=sum%10;
+				sum=sum/10;
+			}
+            			int sum2=0;
+			if(sum1>9) {
+				while(sum1>0) {
+					sum2+=sum1%10;
+					
+					sum1=sum1/10;
+				}
+				return sum2;
+			}
+			return sum1;
+		}
+		return sum;
+    }
+}
