@@ -1,0 +1,170 @@
+// Approach - Recursive Backtracking (Brute-force recursion)
+// T.C - O(maxValue*m^n)
+// S.C - O(n)
+
+class Solution {
+    int M = (int)1e9 + 7;
+    long solve(int startVal,int count,int n,int maxValue){
+        if(count == n){
+            return 1;
+        }
+        long result=0;
+        for(int multiplier = 1;startVal*multiplier<=maxValue;multiplier++){
+            result = (result + solve(startVal*multiplier,count+1,n,maxValue)) % M;
+        }
+        return result;
+    }
+    public int idealArrays(int n, int maxValue) {
+        long result = 0;
+        for(int startVal=1;startVal<=maxValue;startVal++){
+            result = (result + solve(startVal,1,n,maxValue)) % M;
+        }
+        return (int)result;
+    }
+}
+
+// Approach - Memoization with Recursion (Top-Down Dynamic Programming)
+// T.C - O(maxVal*n*log(maxVal))
+// S.C - O(maxVal*n)
+
+public class Solution {
+    final int M = (int)1e9 + 7;  // Modulo for large number handling
+    int[][] t;  // Memoization table: t[startVal][count]
+
+    // Recursive function to count the number of ideal arrays
+    public int solve(int start, int count, int n, int maxVal) {
+        // Base case: if array length reached, count this sequence
+        if (count == n) {
+            return 1;
+        }
+
+        // If already computed, return memoized result
+        if (t[start][count] != -1) {
+            return t[start][count];
+        }
+
+        long result = 0;
+
+        // Try all valid multipliers such that start * multiplier <= maxVal
+        for (int multiplier = 1; start * multiplier <= maxVal; multiplier++) {
+            result = (result + solve(start * multiplier, count + 1, n, maxVal)) % M;
+        }
+
+        // Store the result in memoization table
+        t[start][count] = (int)result;
+        return t[start][count];
+    }
+
+    // Main function to compute the total number of ideal arrays
+    public int idealArrays(int n, int maxVal) {
+        long result = 0;
+
+        // Initialize the memoization table with -1
+        t = new int[maxVal + 1][n + 1];
+        for (int i = 0; i <= maxVal; i++) {
+            Arrays.fill(t[i], -1);
+        }
+
+        // Try starting each array with values from 1 to maxVal
+        for (int startVal = 1; startVal <= maxVal; startVal++) {
+            result = (result + solve(startVal, 1, n, maxVal)) % M;
+        }
+
+        return (int)result;
+    }
+}
+
+
+//Approach - Using Maths (combinatorics) and DP
+//T.C : O(maxVal * log(maxVal) + n)
+//S.C : O(maxVal + n)
+
+public class Solution {
+    final int M = (int)1e9 + 7;  // Modulo for large number handling
+
+    // Function to compute valid sets for a given number 'm'
+    void findSets(int m, int[] count, int[][] dp) {
+        // If dp[m][1] is already computed, no need to compute again
+        if (dp[m][1] != 0) return;
+
+        // Initialize dp[m][1] as 1, meaning we can always form a single-element set
+        dp[m][1] = 1;
+        count[1]++;  // Increment the count of sets of length 1
+
+        // Try all divisors of m starting from 2
+        for (int div = 2; div <= m; div++) {
+            // Check if div is a divisor of m
+            if (m % div == 0) {
+                // Recursively find the valid sets for m / div
+                findSets(m / div, count, dp);
+
+                // For each valid set of length 'len' for m / div, 
+                // propagate it to m and increase its length by 1
+                for (int len = 1; len < 15; len++) {
+                    if (dp[m / div][len] != 0) {
+                        dp[m][len + 1] = (dp[m][len + 1] + dp[m / div][len]) % M;
+                        count[len + 1] = (count[len + 1] + dp[m / div][len]) % M;
+                    }
+                }
+            }
+        }
+    }
+
+    // Function to compute a^b % M using fast exponentiation
+    long findPower(long a, long b) {
+        if (b == 0) return 1;  // Base case: a^0 = 1
+
+        long half = findPower(a, b / 2);  // Recurse for half of the power
+        long result = (half * half) % M;  // Calculate the result for half of the power
+
+        // If b is odd, multiply by a to account for the extra power
+        if (b % 2 == 1) {
+            result = (result * a) % M;
+        }
+
+        return result;
+    }
+
+    // Function to compute nCr % M (n choose r)
+    int modularnCr(int n, int r, long[] fact) {
+        if (r < 0 || r > n) return 0;  // If r is out of bounds, return 0
+
+        // Using the precomputed factorials to calculate nCr % M
+        long b = (fact[r] * fact[n - r]) % M;
+        return (int)((fact[n] * findPower(b, M - 2)) % M);  // Use Fermat's Little Theorem for modular inverse
+    }
+
+    // Main function to compute the number of ideal arrays
+    public int idealArrays(int n, int maxValue) {
+        int[][] dp = new int[maxValue + 1][15];  // DP table to store results for different m and length
+        int[] count = new int[15];  // Count array to store the count of sequences of each length
+
+        // For each value from 1 to maxValue, compute the valid sets
+        for (int val = 1; val <= maxValue; val++) {
+            findSets(val, count, dp);
+        }
+
+        // Precompute factorials up to n for later use in nCr calculation
+        long[] fact = new long[n + 1];
+        fact[0] = 1;
+        for (int i = 1; i <= n; i++) {
+            fact[i] = (fact[i - 1] * i) % M;
+        }
+
+        // Result to store the final answer
+        long result = 0;
+
+        // For each possible set length from 1 to 14, compute the number of possibilities
+        for (int len = 1; len < 15; len++) {
+            if (n < len) break;  // If the array length is smaller than the required length, break early
+            if (count[len] != 0) {
+                // Compute the number of ways to choose 'len - 1' positions from 'n - 1'
+                long possibilities = modularnCr(n - 1, len - 1, fact);
+                // Add the result for this length, considering the modular constraints
+                result = (result + (count[len] * possibilities) % M) % M;
+            }
+        }
+
+        return (int)result;  // Return the result as an integer
+    }
+}
