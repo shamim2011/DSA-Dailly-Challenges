@@ -1,0 +1,40 @@
+//Approach (Simulation)
+//T.C : O(n * digit)
+//S.C : O(n)
+
+public class Solution {
+    // Helper method to calculate the sum of digits of a number
+    private int findDigitSum(int num) {
+        int sum = 0;
+        while (num > 0) {
+            sum += num % 10; // Add the last digit to sum
+            num /= 10;       // Remove the last digit
+        }
+        return sum;
+    }
+    // Main method to count the number of groups with the largest size
+    public int countLargestGroup(int n) {
+        // Map to store the frequency of each digit sum
+        Map<Integer, Integer> mp = new HashMap<>();
+        int maxSize = 0; // Keeps track of the maximum group size
+        int count = 0;   // Number of groups that have the maxSize
+        // Iterate from 1 to n
+        for (int num = 1; num <= n; num++) {
+            // Calculate digit sum for current number
+            int digitSum = findDigitSum(num);
+            // Increment the count of this digit sum in the map
+            mp.put(digitSum, mp.getOrDefault(digitSum, 0) + 1);
+            // Get the updated group size for this digit sum
+            int groupSize = mp.get(digitSum);
+            // Update maxSize and count accordingly
+            if (groupSize == maxSize) {
+                count++; // Another group of the same max size
+            } else if (groupSize > maxSize) {
+                maxSize = groupSize; // New larger group found
+                count = 1;           // Reset count to 1 for the new max size
+            }
+        }
+        // Return the number of groups with the largest size
+        return count;
+    }
+}
