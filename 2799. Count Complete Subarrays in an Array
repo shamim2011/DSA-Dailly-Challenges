@@ -1,0 +1,48 @@
+//Approach  (Sliding Window)
+//T.C : O(n)
+//S.C : O(n)
+
+class Solution {
+    public int countCompleteSubarrays(int[] nums) {
+        
+        int n = nums.length;
+
+        // Step 1: Use a Set to find all unique elements in the array
+        Set<Integer> st = new HashSet<>();
+        for (int num : nums) {
+            st.add(num); // Add each number to the set
+        }
+
+        // Total number of unique elements in the entire array
+        int count = st.size();
+
+        // Step 2: Use a sliding window and frequency map to count complete subarrays
+        Map<Integer, Integer> mp = new HashMap<>();
+        int i = 0, j = 0; // i = left end of window, j = right end of window
+        int ans = 0; // Final count of complete subarrays
+
+        while (j < n) {
+            // Add nums[j] to the frequency map
+            mp.put(nums[j], mp.getOrDefault(nums[j], 0) + 1);
+
+            // While the current window contains all unique elements
+            while (mp.size() == count) {
+                // From j to n-1, all subarrays are valid → count them all at once
+                ans += (n - j);
+
+                // Shrink the window from the left (i++)
+                mp.put(nums[i], mp.get(nums[i]) - 1); // Decrease count of nums[i]
+                if (mp.get(nums[i]) == 0) {
+                    mp.remove(nums[i]); // Remove if count is 0
+                }
+                i++; // Move left boundary forward
+            }
+
+            // Expand the window to the right
+            j++;
+        }
+
+        // Return the total number of complete subarrays found
+        return ans;
+    }
+}
