@@ -1,0 +1,116 @@
+// Approach - 1 (Brute Force)
+// T. C - O(n^2)
+// S . S - O(1)
+
+class Solution {
+    public int subarraysDivByK(int[] nums, int k) {
+        // Initialize counter to store the number of valid subarrays
+        int count = 0;
+
+        // Length of the input array
+        int n = nums.length;
+
+        // Outer loop to fix the starting index of the subarray
+        for (int i = 0; i < n; i++) {
+            // Variable to store the sum of the current subarray
+            int sum = 0;
+
+            // Inner loop to fix the ending index of the subarray
+            for (int j = i; j < n; j++) {
+                // Add the current element to the sum
+                sum += nums[j];
+
+                // Check if the sum is divisible by k
+                if (sum % k == 0) {
+                    // If yes, increment the counter
+                    count++;
+                }
+            }
+        }
+
+        // Return the total count of valid subarrays
+        return count;
+    }
+}
+-----------------------------  Same code of the above code --------------------
+
+class Solution {
+    public int subarraysDivByK(int[] nums, int k) {
+        int n = nums.length;
+        int count = 0;
+
+        // Build prefix sum array in-place
+        for (int i = 1; i < n; i++) {
+            nums[i] += nums[i - 1];
+        }
+
+        // Check all subarrays using the prefix sums
+        for (int i = 0; i < n; i++) {
+            for (int j = i; j < n; j++) {
+                int sum = (i == 0) ? nums[j] : nums[j] - nums[i - 1];
+
+                if (sum % k == 0) {
+                    count++;
+                }
+            }
+        }
+
+        return count;
+    }
+}
+
+
+//Approach-3 (Time : O(n), Space : O(n))
+/*
+    Concept behind this method
+    K
+    
+    a  b  c  d   e   f   g    h
+    -----s1-------
+    -----------------s2--------
+    
+    Lets say, 
+    s1%k = x
+    s2%k = x
+    s1 = k*n + x
+    s2 = k*m + x
+    subarraySum = s2-s1
+                = k*(m-n)
+                Which proves that the subarray is divisible by k
+*/
+
+class Solution {
+    public int subarraysDivByK(int[] nums, int k) {
+        int n = nums.length;
+        int count = 0;       // To store the final count of subarrays
+        int sum = 0;         // Running prefix sum
+        Map<Integer, Integer> mp = new HashMap<>();
+        // Initialize with remainder 0 seen once (important for 
+        // subarrays starting at index 0)
+        mp.put(0, 1);        
+
+        for (int i = 0; i < n; i++) {
+            sum += nums[i];  // Update running sum
+
+            int rem = sum % k;  // Get remainder when sum is divided by k
+
+            // If remainder is negative, adjust it to be in range [0, k-1]
+            if (rem < 0) {
+                rem += k;
+            }
+
+            // If this remainder was seen before, it means the 
+            // subarray between previous index and current is divisible by k
+            if (mp.containsKey(rem)) {
+                // Add number of times this remainder has occurred
+                count += mp.get(rem);
+            }
+
+            // Update the frequency of this remainder
+            mp.put(rem, mp.getOrDefault(rem, 0) + 1);
+        }
+
+        return count;  // Return total count of valid subarrays
+    }
+}
+
