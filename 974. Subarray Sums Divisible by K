@@ -1,4 +1,4 @@
-// Approach - 1 (Brute Force)
+// Approach - 1 (Brute Force)   TLE
 // T. C - O(n^2)
 // S . S - O(1)
 
@@ -34,7 +34,7 @@ class Solution {
 }
 -----------------------------  Same code of the above code --------------------
 
-class Solution {
+class Solution {                                             ----->  TLE
     public int subarraysDivByK(int[] nums, int k) {
         int n = nums.length;
         int count = 0;
