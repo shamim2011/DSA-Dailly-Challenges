@@ -1,0 +1,38 @@
+//Approach: Sliding Window
+//T.C : O(n)
+//S.C : O(1)
+
+class Solution {
+    public long countSubarrays(int[] nums, int minK, int maxK) {
+        int n = nums.length;
+        int minKPos = -1;    // last index where minK was seen
+        int maxKPos = -1;    // last index where maxK was seen
+        // last index where an invalid element was seen (element < minK || element > maxK)
+        int cultIdx = -1;   
+        long ans = 0;        // final answer
+        for (int i = 0; i < n; i++) {
+            // If current element is out of [minK, maxK] range, update cultIdx
+            if (nums[i] < minK || nums[i] > maxK) {
+                cultIdx = i;
+            }
+            // If current element is exactly minK, update minKPos
+            if (nums[i] == minK) {
+                minKPos = i;
+            }
+            // If current element is exactly maxK, update maxKPos
+            if (nums[i] == maxK) {
+                maxKPos = i;
+            }
+            // Find the smaller of the two positions
+            // (we need both minK and maxK to be inside the window)
+            int smaller = Math.min(maxKPos, minKPos);
+
+            // Calculate number of valid subarrays ending at i
+            int temp = (smaller - cultIdx);
+
+            // If temp < 0, that means no valid subarray for this index
+            ans += (temp < 0 ? 0 : temp);
+        }
+        return ans;
+    } 
+}
