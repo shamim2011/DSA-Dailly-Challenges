@@ -1,0 +1,21 @@
+//Approach (Striaght forward simulation)
+//T.C : O(n)
+//S.C : O(1)
+
+class Solution {
+    public int countSubarrays(int[] nums) {
+        int n = nums.length; // Length of the input array
+        int ans = 0; // Initialize answer to 0 (count of valid subarrays)
+
+        // Loop through each triplet starting at index i
+        for (int i = 0; i < n - 2; i++) {
+            // Check if the middle element is twice the sum of the first and last elements
+            // (Note: your condition is different from the standard "average" check)
+            if (2 * (nums[i] + nums[i+2]) == nums[i+1]) {
+                ans++; // If condition is satisfied, increment the count
+            }
+        }
+
+        return ans; // Return the total count of valid subarrays
+    }
+}
