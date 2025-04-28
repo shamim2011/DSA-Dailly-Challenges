@@ -53,3 +53,35 @@ class Solution {
         return ans;  // Return the total count
     }
 }
+
+
+
+--------------------------------JS------------------------
+
+/**
+ * @param {number[]} nums
+ * @param {number} k
+ * @return {number}
+ */
+var countSubarrays = function(nums, k) {
+    let ans = 0;  // Final answer to store count of valid subarrays
+    const n = nums.length;
+    let i = 0, j = 0;  // i = start of window, j = end of window
+    let sum = 0;  // Sum of elements in current window
+
+    while (j < n) {  // Move the right end of the window
+        sum += nums[j];  // Add the current element to the sum
+
+        // While the current window is invalid, shrink it from the left
+        while (i <= j && (j - i + 1) * sum >= k) {
+            sum -= nums[i];  // Remove nums[i] from sum
+            i++;             // Move the start of the window to the right
+        }
+
+        // After shrinking, all subarrays ending at j and starting from i to j are valid
+        ans += (j - i + 1);
+        j++;  // Move the right end forward
+    }
+
+    return ans;
+};
