@@ -1,0 +1,55 @@
+Approach - 1 (Simple Brute Force)    TLE 
+// T . C - O(n^2)
+// S. C - O(1)
+
+class Solution {
+    public long countSubarrays(int[] nums, long k) {
+        long ans = 0; // Initialize answer to store the count of valid subarrays
+        int n = nums.length; // Length of the input array
+        
+        // Iterate over all possible starting indices of subarrays
+        for (int i = 0; i < n; i++) {
+            int sum = 0; // Initialize sum for the current subarray starting at i
+            
+            // Iterate over all possible ending indices starting from i
+            for (int j = i; j < n; j++) {
+                sum += nums[j]; // Add current element to the subarray sum
+                
+                // Check if the condition (length of subarray * sum) is less than k
+                if ((j - i + 1) * (long)sum < k) { 
+                    ans++; // If condition satisfies, increment the count
+                }
+            }
+        }
+        return ans; // Return the total count of valid subarrays
+    }
+}
+
+
+
+Approach - 2 (Sliding Windows)    
+// T . C - O(n)
+// S. C - O(1)
+
+class Solution {
+    public long countSubarrays(int[] nums, long k) {
+        long ans = 0;  // Final answer to store count of valid subarrays
+        int n = nums.length;
+        int i = 0, j = 0;  // i = start of window, j = end of window
+        long sum = 0;  // Sum of elements in current window
+        while (j < n) {  // Move the right end of the window
+            sum += nums[j];  // Add the current element to the sum
+            
+            // While the current window is invalid, shrink it from the left
+            while (i <= j && (j - i + 1) * sum >= k) {
+                sum -= nums[i];  // Remove nums[i] from sum
+                i++;             // Move the start of the window to the right
+            }
+            // After shrinking, all subarrays ending at 
+            // j and starting from i to j are valid
+            ans += (j - i + 1);
+            j++;  // Move the right end forward
+        }
+        return ans;  // Return the total count
+    }
+}
