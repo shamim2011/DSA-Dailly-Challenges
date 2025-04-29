@@ -1,0 +1,70 @@
+// Approach - 1 (Simple brute force)
+// T . C - O(n^2)
+// S . C - O(1)
+
+class Solution {
+    public long countSubarrays(int[] nums, int k) {
+        int n = nums.length;
+        int max = Arrays.stream(nums).max().getAsInt();
+        long ans =0;
+        for(int i=0;i<n;i++){
+            int count = 0;
+            for(int j=i;j<n;j++){
+                if(nums[j]==max){
+                    count++;
+                }
+                if(count>=k){
+                    ans++;
+                }
+            }
+            
+        }
+        return ans;
+    }
+}
+
+// Approach - 2 (Sliding Windows)
+// T . C - O(n)
+// S . C - O(1)
+
+class Solution {
+    public long countSubarrays(int[] nums, int k) {
+        int n = nums.length;
+        // Find the maximum value in the array
+        int max = Arrays.stream(nums).max().getAsInt();
+        long ans = 0; // To store the final answer (number of valid subarrays)
+        int i = 0, j = 0; // Two pointers: i = start of window, j = end of window
+        // To keep track of how many times 'max' appears in the current window
+        int count = 0; 
+        // Start traversing the array
+        while (j < n) {
+            // If current element is equal to max, increment the count
+            if (nums[j] == max) {
+                count++;
+            }
+            // While the window has at least 'k' max elements
+            while (count >= k) {
+                // All subarrays from i to j are valid
+                // (because extending the subarray to the right will also be valid)
+                ans += (n - j);
+                
+                // Move left pointer i to shrink the window
+                // If nums[i] was max, decrease the count
+                if (nums[i] == max) {
+                    count--;
+                }
+                i++;
+            }
+            // Move right pointer j to expand the window
+            j++;
+        }
+        
+        return ans;
+    }
+}
+
+// Approach - 3 (Without Sliding Window)
+// T . C - O(n)
+// S . C - O(n)
+
+
