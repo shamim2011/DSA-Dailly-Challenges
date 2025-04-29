@@ -67,4 +67,29 @@ class Solution {
 // T . C - O(n)
 // S . C - O(n)
 
+class Solution {
+    public long countSubarrays(int[] nums, int k) {
+        int n = nums.length;
+        // Step 1: Find the maximum value in the array
+        int max = Arrays.stream(nums).max().getAsInt();
+        long ans = 0; // To store the final answer (number of valid subarrays)
+        List<Integer> li = new ArrayList<>(); // List to store indices where nums[i] == max
+        // Step 2: Iterate over the array
+        for (int i = 0; i < n; i++) {
+            // If current element is equal to max, store its index
+            if (nums[i] == max) {
+                li.add(i);
+            }
+            int size = li.size(); // Number of occurrences of max so far
+            // If we have at least 'k' occurrences of max so far
+            if (size >= k) {
+                // Get the index of the (k-th from the end) max element
+                int last_idx = li.get(size - k);
+                // All subarrays ending at index i and starting from 0 to last_idx are valid
+                ans += last_idx + 1;
+            }
+        }
+        return ans; // Return the total count of valid subarrays
+    }
+}
 
