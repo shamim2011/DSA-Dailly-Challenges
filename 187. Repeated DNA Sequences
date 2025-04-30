@@ -1,0 +1,37 @@
+// Approach (Sliding Window + HashMap)
+// T . C - O(n)
+// S . C - O(n)
+
+class Solution {
+    public List<String> findRepeatedDnaSequences(String s) {
+        // HashMap to store DNA sequences and their frequency
+        Map<String, Integer> mp = new HashMap<>();
+        int n = s.length();
+        int i = 0, j = 0;
+
+        // Sliding window to iterate through all substrings of length 10
+        while (j < n) {
+            // When the window size becomes 10
+            while ((j - i + 1) == 10) {
+                // Extract substring of length 10
+                String str = s.substring(i, j + 1);
+                // Increment its count in the map
+                mp.put(str, mp.getOrDefault(str, 0) + 1);
+                // Slide the window forward
+                i++;
+            }
+            j++;
+        }
+
+        // List to store the result: sequences that appear more than once
+        List<String> li = new ArrayList<>();
+        for (Map.Entry<String, Integer> entry : mp.entrySet()) {
+            // Add sequences with frequency > 1 to the result list
+            if (entry.getValue() > 1) {
+                li.add(entry.getKey());
+            }
+        }
+
+        return li;
+    }
+}
