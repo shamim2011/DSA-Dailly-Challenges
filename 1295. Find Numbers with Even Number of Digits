@@ -1,0 +1,54 @@
+// Approach - 1 (Mathematical Digit Counting)
+// T.C-O(n * d))
+// S.C - O(1)
+
+class Solution {
+    public int findNumbers(int[] nums) {
+        int ans =0 ;
+        int n = nums.length;
+        for(int  i=0;i<n;i++){
+            int digit = numberOfDigit(nums[i]);
+            if(digit % 2 == 0){
+                ans++;
+            }
+        }
+        return ans;
+    }
+    public int numberOfDigit(int num){
+        int d = 0;
+        while(num>0){
+            if(num%10>0 || num>0){
+                d++; 
+            }
+            num/=10;
+        }
+        return d;
+    }
+}
+
+// Approach - 2 (Digit Count via Range Checking)
+// T.C-O(n)
+// S.C - O(1)
+
+class Solution {
+    public int findNumbers(int[] nums) {
+        int n = nums.length; // Get the length of the input array
+        // Initialize the counter to store how many numbers have even number of digits
+        int ans = 0; 
+
+        // Iterate through each number in the array
+        for (int i = 0; i < n; i++) {
+            // Check if the number has an even number of digits
+            // Numbers with 2 digits: 10 to 99
+            // Numbers with 4 digits: 1000 to 9999
+            // Numbers with 6 or more digits (starting from 100000)
+            if ((nums[i] > 9 && nums[i] < 100) || 
+                (nums[i] > 999 && nums[i] < 10000) || 
+                (nums[i] > 99999)) {
+                ans++; // Increment the count if the number has even digits
+            }
+        }
+
+        return ans; // Return the total count
+    }
+}
