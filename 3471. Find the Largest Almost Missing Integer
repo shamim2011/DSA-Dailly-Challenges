@@ -1,0 +1,75 @@
+// Approach -1 (Simple method in HashMap)
+// T.C - O(n*k)
+// S.C - O(n)
+
+class Solution {
+    public int largestInteger(int[] nums, int k) {
+        // This map will store the count of how many subarrays each number appears in
+        HashMap<Integer, Integer> countMap = new HashMap<>();
+
+        // Iterate over all subarrays of size k
+        for (int i = 0; i <= nums.length - k; i++) {
+            // Use a set to avoid counting the same number more than once in a single subarray
+            HashSet<Integer> uniqueInSubarray = new HashSet<>();
+
+            // Collect all unique elements in the current subarray
+            for (int j = i; j < i + k; j++) {
+                uniqueInSubarray.add(nums[j]);
+            }
+
+            // For each unique number in the current subarray, increase its subarray count
+            for (int num : uniqueInSubarray) {
+                countMap.put(num, countMap.getOrDefault(num, 0) + 1);
+            }
+        }
+
+        int max = -1;  // To store the maximum number that appears in exactly one subarray
+
+        // Iterate through the map to find the largest number that appears in exactly one subarray
+        for (Map.Entry<Integer, Integer> entry : countMap.entrySet()) {
+            if (entry.getValue() == 1) {
+                max = Math.max(max, entry.getKey());
+            }
+        }
+
+        // Return the result. If no such number is found, return -1
+        return max;
+    }
+}
+
+
+// Approach -2 (Sliding Window with Frequency Map (Naive Counting Approach))
+// T.C - O(n*k)
+// S.C - O(n)
+
+class Solution {
+    public int largestInteger(int[] nums, int k) {
+        // Map to store how many times each number appears across all subarrays of size k
+        HashMap<Integer, Integer> mp = new HashMap<>();
+
+        int n = nums.length;
+        // Initialize the answer to the smallest possible integer value
+        int ans = Integer.MIN_VALUE;
+
+        // Iterate over all subarrays of size k
+        for (int i = 0; i <= n - k; i++) {
+            // For each subarray starting at index i
+            for (int j = i; j < i + k; j++) {
+                // Count the occurrences of each number across all subarrays
+                mp.put(nums[j], mp.getOrDefault(nums[j], 0) + 1);
+            }
+        }
+
+        // Iterate through the map entries
+        for (Map.Entry<Integer, Integer> entry : mp.entrySet()) {
+            // If a number appears only once in total, or if the entire array is just one subarray (n == k)
+            if (entry.getValue() == 1 || n == k) {
+                // Update the answer with the maximum such number
+                ans = Math.max(ans, entry.getKey());
+            }
+        }
+
+        // If no valid number was found, return -1, otherwise return the result
+        return ans > Integer.MIN_VALUE ? ans : -1;
+    }
+}
