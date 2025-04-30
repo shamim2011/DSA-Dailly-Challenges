@@ -1,0 +1,39 @@
+// Approach - (Sliding Windows)
+// T . C - O(n)
+// S . C - O(1)
+
+class Solution {
+    public int minSubArrayLen(int target, int[] nums) {
+        int n = nums.length;
+
+        // Initialize the minimum length to a large value
+        int len = Integer.MAX_VALUE;
+
+        // Two pointers for the sliding window
+        int i = 0, j = 0;
+
+        // Variable to keep track of the current window sum
+        int sum = 0;
+
+        // Start expanding the window with the right pointer `j`
+        while (j < n) {
+            sum += nums[j]; // Add the current element to the sum
+
+            // Try to shrink the window from the left as long as sum >= target
+            while (sum >= target) {
+                // Update the minimum length if this window is smaller
+                len = Math.min(len, (j - i + 1));
+                
+                // Shrink the window from the left and update sum
+                sum -= nums[i];
+                i++;
+            }
+
+            // Move the right pointer to expand the window
+            j++;
+        }
+
+        // If len was never updated, return 0 (no valid subarray found)
+        return len == Integer.MAX_VALUE ? 0 : len;
+    }
+}
