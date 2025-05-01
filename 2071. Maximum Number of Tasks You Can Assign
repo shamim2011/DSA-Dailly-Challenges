@@ -1,0 +1,71 @@
+//Approach (Binary Search on Answer)
+//T.C : O(MLogM+NLogN+Min(M,N)∗Log(Min(M,N))∗Log(Min(M,N))), M = tasks.size(), N = workers.size()
+//S.C : O(M)
+
+class Solution {
+    public int maxTaskAssign(int[] tasks, int[] workers, int pills, int strength) {
+        // Sort both arrays to enable efficient assignment
+        Arrays.sort(tasks);
+        Arrays.sort(workers);
+        int n = tasks.length, m = workers.length;
+
+        int l = 0, r = Math.min(n, m), ans = 0;
+
+        // Binary search for the maximum number of tasks that can be assigned
+        while (l <= r) {
+            int mid = (l + r) / 2;
+
+            // If we can assign `mid` tasks, try for more
+            if (check(tasks, workers, pills, strength, mid)) {
+                ans = mid;
+                l = mid + 1;
+            } else {
+                // Otherwise, try fewer tasks
+                r = mid - 1;
+            }
+        }
+        return ans;
+    }
+
+    // Helper function to check if we can assign `mid` tasks
+    private boolean check(int[] tasks, int[] workers, int pills, int strength, int mid) {
+        int p = pills;
+
+        // Use TreeMap to simulate a multiset of worker strengths for efficient lookup
+        TreeMap<Integer, Integer> tmp = new TreeMap<>();
+
+        // Add the strongest `mid` workers to the TreeMap
+        for (int i = workers.length - mid; i < workers.length; ++i) {
+            tmp.put(workers[i], tmp.getOrDefault(workers[i], 0) + 1);
+        }
+
+        // Try to assign the hardest task first (starting from the end)
+        for (int i = mid - 1; i >= 0; --i) {
+            // Try to assign the strongest worker to the task
+            Integer key = tmp.lastKey();
+
+            if (key >= tasks[i]) {
+                // Worker is strong enough without a pill
+                tmp.put(key, tmp.get(key) - 1);
+                if (tmp.get(key) == 0) {
+                    tmp.remove(key);
+                }
+            } else {
+                // Need to use a pill
+                if (p == 0) return false;
+
+                // Find a worker who, with a pill, can do the task
+                key = tmp.ceilingKey(tasks[i] - strength);
+                if (key == null) return false;
+
+                // Assign the task to this worker and consume a pill
+                tmp.put(key, tmp.get(key) - 1);
+                if (tmp.get(key) == 0) {
+                    tmp.remove(key);
+                }
+                --p;
+            }
+        }
+        return true;
+    }
+}
