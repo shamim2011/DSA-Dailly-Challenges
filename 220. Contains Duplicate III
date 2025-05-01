@@ -16,40 +16,28 @@ class Solution {
     }
 }
 
-Approach - 2(HashMap)
-// T . C - O(n)
-// S.C - O(n)
-
+------------------------------same code of above code-----------------------
 class Solution {
     public boolean containsNearbyAlmostDuplicate(int[] nums, int indexDiff, int valueDiff) {
-        // Get the length of the input array
-        int n = nums.length;
-
-        // Create a map to store each number and its last seen index
-        Map<Integer, Integer> mp = new HashMap<>();
-
-        // Traverse the array
-        for (int j = 0; j < n; j++) {
-
-            // Check if the current number has been seen before
-            if (mp.containsKey(nums[j])) {
-                // Get the previous index of the current number
-                int pIdx = mp.get(nums[j]);
-
-                // Get the value at the previous index (same as nums[j] in this map-based approach)
-                int pVal = nums[pIdx];
-
-                // Check if both the index difference and value difference are within the given limits
-                if (Math.abs(pIdx - j) <= indexDiff && Math.abs(pVal - nums[j]) <= valueDiff) {
-                    return true;  // Condition met, return true
+        int n=nums.length;
+        int i=0,j=1;
+        while(i<n-1){
+            while(i<j && j<n){
+                if(Math.abs(nums[i]-nums[j])<=valueDiff && Math.abs(i-j)<=indexDiff){
+                    return true;
                 }
+                j++;
             }
-
-            // Update the map with the current number and its index
-            mp.put(nums[j], j);
+            i++;
+            j = i + 1;
         }
-
-        // No such pair found, return false
         return false;
     }
 }
+
+Approach - 2(TreeSet)
+// T . C - O(n)
+// S.C - O(n)
+
+
+
