@@ -1,4 +1,4 @@
-Approach - 1(Simple Brute Force)
+Approach - 1(Simple Brute Force) TLE
 // T . C - O(n^2)
 // S.C - O(1)
 
