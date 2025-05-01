@@ -1,0 +1,51 @@
+Approach - 1(Simple Brute Force)
+// T . C - O(n^2)
+// S.C - O(1)
+
+class Solution {
+    public boolean containsNearbyDuplicate(int[] nums, int k) {
+        int n = nums.length;
+        for(int i=0;i<n;i++){
+            for(int j=i+1;j<n;j++){
+                if(nums[i]==nums[j] && Math.abs(i-j)<=k){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+}
+
+Approach - 2(HashMap)
+// T . C - O(n)
+// S.C - O(n)
+
+class Solution {
+    public boolean containsNearbyDuplicate(int[] nums, int k) {
+        // Get the length of the input array
+        int n = nums.length;
+        
+        // Create a map to store the last index of each element
+        Map<Integer, Integer> mp = new HashMap<>();
+        
+        // Iterate through the array using index j
+        for (int j = 0; j < n; j++) {
+            
+            // Check if the element already exists in the map
+            if (mp.containsKey(nums[j])) {
+                
+                // Check if the absolute difference between the current index (j) 
+                // and the previous index of the same element is <= k
+                if (Math.abs(mp.get(nums[j]) - j) <= k) {
+                    return true;  // If condition is met, return true
+                }
+            }
+            
+            // Update the map with the current element and its index
+            mp.put(nums[j], j);
+        }
+        
+        // If no duplicates are found within the given distance k, return false
+        return false;
+    }
+}
