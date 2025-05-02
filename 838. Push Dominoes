@@ -1,0 +1,75 @@
+// Approach-1 
+// T.C : (O(n) time : Finding closest 'L' and closest 'R')
+// S.C : O(n)
+
+class Solution {
+    public String pushDominoes(String dominoes) {
+        int n = dominoes.length();
+
+        // Array to store the index of the nearest 'R' to the left of or at each position
+        int[] leftClosestR = new int[n];
+
+        // Array to store the index of the nearest 'L' to the right of or at each position
+        int[] rightClosestL = new int[n];
+
+        // Traverse from left to right to fill leftClosestR
+        for (int i = 0; i < n; i++) {
+            if (dominoes.charAt(i) == 'R') {
+                // If current is 'R', it starts pushing from here
+                leftClosestR[i] = i;
+            } else if (dominoes.charAt(i) == '.') {
+                // If current is '.', inherit from previous if exists
+                leftClosestR[i] = i > 0 ? leftClosestR[i - 1] : -1;
+            } else {
+                // If current is 'L', no right push influence
+                leftClosestR[i] = -1;
+            }
+        }
+
+        // Traverse from right to left to fill rightClosestL
+        for (int i = n - 1; i >= 0; i--) {
+            if (dominoes.charAt(i) == 'L') {
+                // If current is 'L', it starts pushing from here
+                rightClosestL[i] = i;
+            } else if (dominoes.charAt(i) == '.') {
+                // If current is '.', inherit from next if exists
+                rightClosestL[i] = i < n - 1 ? rightClosestL[i + 1] : -1;
+            } else {
+                // If current is 'R', no left push influence
+                rightClosestL[i] = -1;
+            }
+        }
+
+        // Build the final result
+        StringBuilder result = new StringBuilder();
+
+        for (int i = 0; i < n; i++) {
+            int disLeftR = leftClosestR[i] == -1 ? Integer.MAX_VALUE : Math.abs(i - leftClosestR[i]);
+            int distRightL = rightClosestL[i] == -1 ? Integer.MAX_VALUE : Math.abs(i - rightClosestL[i]);
+
+            // If no influence or equal influence from both sides, it remains upright
+            if (leftClosestR[i] == rightClosestL[i]) {
+                result.append('.');
+            }
+            else if (disLeftR == distRightL) {
+                result.append('.');
+            }
+            // If no right push, only left push affects
+            else if (leftClosestR[i] == -1) {
+                result.append('L');
+            }
+            // If no left push, only right push affects
+            else if (rightClosestL[i] == -1) {
+                result.append('R');
+            }
+            // Choose the closer force
+            else {
+                result.append(disLeftR < distRightL ? 'R' : 'L');
+            }
+        }
+
+        return result.toString();
+    }
+}
+
+
