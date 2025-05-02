@@ -1,5 +1,5 @@
 // Approach-1 
-// T.C : (O(n) time : Finding closest 'L' and closest 'R')
+// T.C : O(n) time : Finding closest 'L' and closest 'R')
 // S.C : O(n)
 
 class Solution {
@@ -71,5 +71,64 @@ class Solution {
         return result.toString();
     }
 }
+
+// Approach-2 
+// T.C : (O(n) time : Using Force Simulation)
+// S.C : O(n)
+
+class Solution {
+    public String pushDominoes(String dominoes) {
+        int n = dominoes.length();
+        int[] forces = new int[n];  // Array to store net force applied on each domino
+
+        // First pass: Left to Right to simulate forces from 'R'
+        int force = 0;
+        for (int i = 0; i < n; i++) {
+            if (dominoes.charAt(i) == 'R') {
+                // Maximum force when we see a 'R'
+                force = n;
+            } else if (dominoes.charAt(i) == 'L') {
+                // No force after an 'L'
+                force = 0;
+            } else {
+                // Decrease force as it moves away from 'R'
+                force = Math.max(force - 1, 0);
+            }
+            forces[i] = force; // Store positive force (from 'R') at position i
+        }
+
+        // Second pass: Right to Left to simulate forces from 'L'
+        force = 0;
+        for (int i = n - 1; i >= 0; i--) {
+            if (dominoes.charAt(i) == 'L') {
+                // Maximum force when we see a 'L'
+                force = n;
+            } else if (dominoes.charAt(i) == 'R') {
+                // No force after an 'R'
+                force = 0;
+            } else {
+                // Decrease force as it moves away from 'L'
+                force = Math.max(force - 1, 0);
+            }
+            // Subtract leftward force (negative) from any existing rightward force
+            forces[i] -= force;
+        }
+
+        // Third pass: Build result based on net forces
+        StringBuilder ans = new StringBuilder();
+        for (int f : forces) {
+            if (f < 0) {
+                ans.append('L'); // Net force to the left
+            } else if (f > 0) {
+                ans.append('R'); // Net force to the right
+            } else {
+                ans.append('.'); // No net force
+            }
+        }
+
+        return ans.toString(); // Final domino state
+    }
+}
+
 
 
