@@ -1,0 +1,91 @@
+// Approach 1: Frequency Counting with Maps
+// T . C- O(n)
+// S . C - O(1)
+
+import java.util.*;
+
+class Solution {
+    public int minDominoRotations(int[] tops, int[] bottoms) {
+        int n = bottoms.length;
+
+        // Maps to count how many times each number appears in tops, bottoms, and in both (same index)
+        Map<Integer, Integer> top = new HashMap<>();
+        Map<Integer, Integer> bottom = new HashMap<>();
+        Map<Integer, Integer> same = new HashMap<>();
+
+        // Count occurrences
+        for (int i = 0; i < n; i++) {
+            top.put(tops[i], top.getOrDefault(tops[i], 0) + 1);           // Count in tops
+            bottom.put(bottoms[i], bottom.getOrDefault(bottoms[i], 0) + 1); // Count in bottoms
+
+            if (tops[i] == bottoms[i]) {
+                same.put(tops[i], same.getOrDefault(tops[i], 0) + 1);     // Count if both sides are equal
+            }
+        }
+
+        // Try each value from 1 to 6 to see if it can fill the entire row
+        for (int val = 1; val <= 6; val++) {
+            int t = top.getOrDefault(val, 0);      // Occurrences in top
+            int b = bottom.getOrDefault(val, 0);   // Occurrences in bottom
+            int s = same.getOrDefault(val, 0);     // Occurrences where top == bottom
+
+            // Check if total count (adjusted for overlap) can fill all dominoes
+            if (t + b - s >= n) {
+                // Return the minimum rotations needed to make all top or all bottom equal to val
+                return Math.min(n - t, n - b);
+            }
+        }
+
+        // If no value can be used to fill the row, return -1
+        return -1;
+    }
+}
+
+
+// Approach 2: Greedy Rotation Count (Using Helper Function)
+// T . C- O(n)
+// S . C - O(1)
+
+class Solution {
+
+    // Helper method to find minimum swaps needed to make all tops or bottoms equal to val
+    private int find(int[] tops, int[] bottoms, int val) {
+        int n = tops.length;
+        int swapTop = 0;      // swaps needed to make all tops = val
+        int swapBottom = 0;   // swaps needed to make all bottoms = val
+
+        for (int i = 0; i < n; i++) {
+            // If neither top nor bottom has val at position i, it's impossible
+            if (tops[i] != val && bottoms[i] != val) {
+                return -1;
+            }
+            // If top is not val, but bottom is — we would need to swap top with bottom
+            else if (tops[i] != val) {
+                swapTop++;
+            }
+            // If bottom is not val, but top is — we would need to swap bottom with top
+            else if (bottoms[i] != val) {
+                swapBottom++;
+            }
+            // If both top and bottom already have val, no swap is needed at this index
+        }
+
+        // Return the minimum swaps needed (either make all tops = val or all bottoms = val)
+        return Math.min(swapTop, swapBottom);
+    }
+
+    public int minDominoRotations(int[] tops, int[] bottoms) {
+        int result = Integer.MAX_VALUE; // Track minimum number of rotations needed
+
+        // Try each value from 1 to 6 as the potential uniform value
+        for (int val = 1; val <= 6; val++) {
+            int steps = find(tops, bottoms, val); // Try making all tops or bottoms = val
+            if (steps != -1) {
+                result = Math.min(steps, result); // Keep the minimum number of steps found
+            }
+        }
+
+        // If result was updated, return it; otherwise, return -1 (not possible)
+        return result == Integer.MAX_VALUE ? -1 : result;
+    }
+}
