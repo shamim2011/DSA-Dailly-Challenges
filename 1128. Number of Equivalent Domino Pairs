@@ -1,0 +1,63 @@
+//Approach-1 (Using Brute force method)  TLE (18/19) test case pass
+//T.C : O(n ^ 2)
+//S.C : O(1)
+
+class Solution {
+    public int numEquivDominoPairs(int[][] dominoes) {
+        int n = dominoes.length;
+        int count = 0; // To store the number of equivalent domino pairs
+
+        // Loop through each pair of dominoes
+        for (int i = 0; i < n-1; i++) {
+            for (int j = i + 1; j < n; j++) {
+                // Get values of the first domino
+                int a1 = dominoes[i][0], b1 = dominoes[i][1];
+                int a2 = dominoes[j][0],b2 = dominoes[j][1];
+
+                // Check if dominoes are equivalent (order doesn't matter)
+                if ((a1 == a2 && b1 == b2) || (a1 == b2 && a2 == b1)) {
+                    count++; // Increment count if they are equivalent
+                }
+            }
+        }
+
+        // Return the total number of equivalent pairs
+        return count;
+    }
+}
+
+
+
+//Approach-2 (constant space)
+//T.C : O(n)
+//S.C : O(1)
+
+class Solution {
+    public int numEquivDominoPairs(int[][] dominoes) {
+        // Map to store the frequency of each unique domino (after sorting)
+        Map<String, Integer> map = new HashMap<>();
+        int count = 0; // To keep track of the number of equivalent domino pairs
+        // Iterate over each domino in the input array
+        for (int[] d : dominoes) {
+            // Sort the domino so that [2,1] and [1,2] are treated the same
+            int a = Math.min(d[0], d[1]); // smaller value first
+            int b = Math.max(d[0], d[1]); // larger value second
+            String key = a + "," + b;     // create a string key like "1,2"
+
+            // Get the current count of this key, defaulting to 0 if not present
+            int val = map.getOrDefault(key, 0);
+
+            // For each previously seen domino of the same type, we can form one new pair
+            count += val;
+
+            // Update the frequency map with one more occurrence of this domino
+            map.put(key, val + 1);
+        }
+        // Return the total number of equivalent domino pairs
+        return count;
+    }
+}
+
+
+
+
