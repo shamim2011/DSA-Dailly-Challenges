@@ -1,0 +1,156 @@
+//Approach-1 (Recur + Memo)
+//T.C : O(n)
+//S.C : O(n)
+
+class Solution {
+    // Risky due to floating-point inaccuracy
+    int MOD = (int) Math.pow(10, 9) + 7; 
+    // DP array to store intermediate results (top-down memoization)
+    int[] t = new int[1007];
+
+    // Recursive function to compute the number of tilings
+    public int solve(int n) {
+        // Base cases
+        if (n == 1 || n == 2) {
+            return n; // 1 way to tile 1x1 and 2 ways to tile 2x1
+        }
+        if (n == 3) {
+            return 5; // 5 distinct ways to tile a 3x1 board
+        }
+
+        // If result is already computed, return it
+        if (t[n] != -1) {
+            return t[n];
+        }
+
+        // Recursive relation:
+        // Ways to tile n = 2 * solve(n - 1) + solve(n - 3)
+        // Use long for multiplication to avoid overflow before casting to int
+        t[n] = (int)((2L * solve(n - 1) % MOD + solve(n - 3) % MOD) % MOD);
+
+        return t[n];
+    }
+
+    // Main function to be called
+    public int numTilings(int n) {
+        // Initialize DP array with -1 (meaning "not computed yet")
+        for (int i = 0; i <= n; i++) {
+            t[i] = -1;
+        }
+
+        // Start recursive DP
+        return solve(n);
+    }
+}
+
+
+//Approach-2 (Bottom Up/dp)
+//T.C : O(n)
+//S.C : O(n)
+
+class Solution {
+    public int numTilings(int n) {
+        // Risky due to floating-point inaccuracy
+        int MOD = (int) Math.pow(10, 9) + 7; 
+
+        // Handle small base cases directly
+        if (n == 1 || n == 2) {
+            return n; // 1 way for n=1, 2 ways for n=2
+        }
+        if (n == 3) {
+            return 5; // 5 distinct tiling ways for n=3
+        }
+
+        // Create DP array to store the number of ways to tile each board size
+        int[] t = new int[n + 1];
+
+        // Base case initializations
+        t[1] = 1;   // 1 way to tile 1x1 board
+        t[2] = 2;   // 2 ways to tile 2x1 board
+        t[3] = 5;   // 5 ways to tile 3x1 board
+
+        // Bottom-up computation using recurrence relation:
+        // t[n] = 2 * t[n - 1] + t[n - 3]
+        for (int i = 4; i <= n; i++) {
+            t[i] = (int) ((2L * t[i - 1] % MOD + t[i - 3] % MOD) % MOD);
+        }
+
+        // Final result: number of ways to tile n x 1 board
+        return t[n];
+    }
+}
+
+--------------------------------------------  JS  ---------------------------
+
+//Approach-1 (Recur + Memo)
+//T.C : O(n)
+//S.C : O(n)
+
+/**
+ * @param {number} n
+ * @return {number}
+ */
+var numTilings = function(n) {
+    // Define modulus to prevent overflow (same as 10^9 + 7)
+    const MOD = 1000000007;
+
+    // Memoization array to store intermediate results
+    const t = new Array(n + 1).fill(-1);
+
+    // Recursive function to compute number of tilings
+    function solve(n) {
+        // Base cases
+        if (n === 1 || n === 2) return n;
+        if (n === 3) return 5;
+
+        // Return memoized value if already computed
+        if (t[n] !== -1) return t[n];
+
+        // Recursive relation:
+        // solve(n) = 2 * solve(n-1) + solve(n-3)
+        t[n] = (2 * solve(n - 1) % MOD + solve(n - 3) % MOD) % MOD;
+
+        return t[n];
+    }
+
+    // Start recursion
+    return solve(n);
+};
+
+
+//Approach-2 (Bottom Up/dp)
+//T.C : O(n)
+//S.C : O(n)
+/**
+ * @param {number} n
+ * @return {number}
+ */
+var numTilings = function(n) {
+    // Use BigInt to safely represent 10^9 + 7
+    const MOD = 1000000007;
+
+    // Handle small base cases directly
+    if (n === 1 || n === 2) {
+        return n;
+    }
+    if (n === 3) {
+        return 5;
+    }
+
+    // Create DP array to store number of ways to tile each board size
+    const t = new Array(n + 1).fill(0);
+
+    // Base case initializations
+    t[1] = 1;   // 1 way to tile 1x1 board
+    t[2] = 2;   // 2 ways to tile 2x1 board
+    t[3] = 5;   // 5 ways to tile 3x1 board
+
+    // Bottom-up computation using recurrence:
+    // t[n] = 2 * t[n - 1] + t[n - 3]
+    for (let i = 4; i <= n; i++) {
+        t[i] = (2 * t[i - 1] % MOD + t[i - 3] % MOD) % MOD;
+    }
+
+    // Final result: number of ways to tile n x 1 board
+    return t[n];
+};
