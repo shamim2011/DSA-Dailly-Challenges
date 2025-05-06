@@ -12,3 +12,22 @@ class Solution {
             return ans;
     }
 }
+
+// Approach 2 Optimal code without using extra space 
+// T.C -O(n)
+// S.C-O(1)
+
+class Solution {
+    public int[] buildArray(int[] nums) {
+        int n=nums.length;
+        for(int i=0;i<n;i++){
+                nums[i]=nums[i] + n*(nums[nums[i]]%n);
+                }
+                for(int i=0;i<n;i++){
+                   nums[i]=nums[i]/n;
+                   }
+                   return nums;
+
+        
+    }
+}
