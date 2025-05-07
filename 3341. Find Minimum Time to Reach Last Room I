@@ -1,0 +1,67 @@
+//Approach (Using Dijkstra's Algorithm)
+//T.C : O(mn log(mn))
+//S.C : O(mn)
+
+class Solution {
+    // Define the 4 possible directions for movement: down, up, right, left
+    private static final int[][] directions = {
+        {1, 0},   // Down
+        {-1, 0},  // Up
+        {0, 1},   // Right
+        {0, -1}   // Left
+    };
+
+    public int minTimeToReach(int[][] moveTime) {
+        int m = moveTime.length;      // Number of rows
+        int n = moveTime[0].length;   // Number of columns
+
+        // Initialize a 2D array to track the minimum time to reach each cell
+        int[][] result = new int[m][n];
+        for (int[] row : result) {
+            Arrays.fill(row, Integer.MAX_VALUE); // Fill with "infinity"
+        }
+
+        // Min-heap priority queue: stores {time, row, column}
+        PriorityQueue<int[]> pq = new PriorityQueue<>(Comparator.comparingInt(a -> a[0]));
+
+        result[0][0] = 0; // Starting point has time 0
+        pq.offer(new int[]{0, 0, 0}); // Push starting cell into the queue
+
+        // Dijkstra-like traversal
+        while (!pq.isEmpty()) {
+            int[] curr = pq.poll();       // Get cell with the smallest time
+            int currTime = curr[0];       // Current accumulated time
+            int i = curr[1], j = curr[2]; // Current coordinates
+
+            // If we've reached the bottom-right corner, return the time
+            if (i == m - 1 && j == n - 1) {
+                return currTime;
+            }
+
+            // Explore all 4 possible directions
+            for (int[] dir : directions) {
+                int i_ = i + dir[0]; // Next row
+                int j_ = j + dir[1]; // Next column
+
+                // Check if the new cell is within the grid boundaries
+                if (i_ >= 0 && i_ < m && j_ >= 0 && j_ < n) {
+                    // If the moveTime of the next cell is greater than current time,
+                    // we need to wait (wait = moveTime - currTime), otherwise wait = 0
+                    int wait = Math.max(moveTime[i_][j_] - currTime, 0);
+
+                    // Total time to reach the next cell: current time + wait + 1 move
+                    int arrTime = currTime + wait + 1;
+
+                    // If this path to the next cell is faster, update and add to queue
+                    if (result[i_][j_] > arrTime) {
+                        result[i_][j_] = arrTime;
+                        pq.offer(new int[]{arrTime, i_, j_});
+                    }
+                }
+            }
+        }
+
+        // If bottom-right cell is not reached, return -1
+        return -1;
+    }
+}
