@@ -1,0 +1,185 @@
+// Approach-1 (Brute Force)     TLE
+// T.C : O(n * n!)
+// S.C : O(n * n!), storing all permutations in set
+
+class Solution {
+    public int countBalancedPermutations(String number) {
+        // Convert the input number string to a character array for permutation logic
+        char[] digits = number.toCharArray();
+        // Sort the digits to start generating permutations in lexicographic order
+        Arrays.sort(digits);
+        Set<String> uniquePermutations = new HashSet<>();
+        int balancedCount = 0;
+        do {
+            // Convert the character array back to a string to check for duplicates
+            String currentPermutation = new String(digits);
+            // Skip if this permutation has already been processed
+            if (uniquePermutations.contains(currentPermutation))
+                continue;
+            uniquePermutations.add(currentPermutation);
+            int evenIndexSum = 0;
+            int oddIndexSum = 0;
+            // Sum digits at even and odd indices
+            for (int i = 0; i < digits.length; ++i) {
+                int digit = digits[i] - '0';
+                if (i % 2 == 0)
+                    evenIndexSum += digit;
+                else
+                    oddIndexSum += digit;
+            }
+            // Check if the sums are equal
+            if (evenIndexSum == oddIndexSum) {
+                balancedCount++;
+            }
+        } while (nextPermutation(digits)); // Generate the next permutation
+
+        return balancedCount;
+    }
+    /**
+    * Generates the next lexicographical permutation of the array.
+    * Returns false if there is no next permutation (i.e., the array is in descending order).
+    */
+    private boolean nextPermutation(char[] arr) {
+        int i = arr.length - 2;
+        // Find the first index i such that arr[i] < arr[i + 1]
+        while (i >= 0 && arr[i] >= arr[i + 1]) {
+            i--;
+        }
+        // If no such index exists, we are at the last permutation
+        if (i < 0) return false;
+        // Find the smallest element greater than arr[i] to the right
+        int j = arr.length - 1;
+        while (arr[j] <= arr[i]) {
+            j--;
+        }
+        // Swap arr[i] and arr[j]
+        swap(arr, i, j);
+        // Reverse the suffix starting at i + 1
+        reverse(arr, i + 1, arr.length - 1);
+        return true;
+    }
+    /**
+    * Reverses a portion of the array between two indices.
+    */
+    private void reverse(char[] arr, int start, int end) {
+        while (start < end) {
+            swap(arr, start++, end--);
+        }
+    }
+    /**
+    * Swaps two elements in an array.
+    */
+    private void swap(char[] arr, int i, int j) {
+        char temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+}
+
+
+// Approach-2 (Recursion + Memoization)
+// T.C : O(10 * n^2 * Sum)
+// S.C : O(10 ^ n * Sum)
+
+class Solution {
+    int lengthOfNum;
+    int totalDigitSum;
+    int MOD = (int) 1e9 + 7;
+    long totalPermutations = 0;
+
+    // Fast modular exponentiation to compute a^b % MOD
+    int modPow(long base, long exp) {
+        if (exp == 0) return 1;
+
+        long half = modPow(base, exp / 2);
+        long result = (half * half) % MOD;
+
+        if (exp % 2 == 1) {
+            result = (result * base) % MOD;
+        }
+
+        return (int) result;
+    }
+
+    // Recursive DP to count valid permutations with equal sum on even and odd indices
+    int countValidWays(int digit, int evenCount, int sumSoFar,
+                       int[] digitFreq, long[] inverseFact,
+                       int[][][] dp) {
+        if (digit == 10) {
+            // Base case: all digits considered
+            // Valid if the total sum is equally split and even position digits count is valid
+            if (sumSoFar == totalDigitSum / 2 && evenCount == (lengthOfNum + 1) / 2) {
+                return (int) totalPermutations;
+            }
+            return 0;
+        }
+
+        // Memoization check
+        if (dp[digit][evenCount][sumSoFar] != -1) {
+            return dp[digit][evenCount][sumSoFar];
+        }
+
+        long ways = 0;
+
+        // Try placing 'count' instances of digit in even positions
+        for (int count = 0; count <= Math.min(digitFreq[digit], (lengthOfNum + 1) / 2 - evenCount); count++) {
+            int evenPosCount = count;
+            int oddPosCount = digitFreq[digit] - count;
+
+            // Compute division factor using modular inverse for repeated digits
+            long divisor = (inverseFact[evenPosCount] * inverseFact[oddPosCount]) % MOD;
+
+            long val = countValidWays(
+                digit + 1,
+                evenCount + evenPosCount,
+                sumSoFar + digit * evenPosCount,
+                digitFreq,
+                inverseFact,
+                dp
+            );
+
+            ways = (ways + (val * divisor) % MOD) % MOD;
+        }
+
+        return dp[digit][evenCount][sumSoFar] = (int) ways;
+    }
+
+    public int countBalancedPermutations(String num) {
+        lengthOfNum = num.length();
+        totalDigitSum = 0;
+
+        int[] digitFreq = new int[10];
+        for (int i = 0; i < lengthOfNum; i++) {
+            int digit = num.charAt(i) - '0';
+            totalDigitSum += digit;
+            digitFreq[digit]++;
+        }
+
+        if (totalDigitSum % 2 != 0) {
+            return 0; // If total sum is odd, can't split equally
+        }
+
+        // Precompute factorials and inverse factorials using Fermat's Little Theorem
+        long[] fact = new long[lengthOfNum + 1];
+        fact[0] = 1;
+        for (int i = 1; i <= lengthOfNum; i++) {
+            fact[i] = (fact[i - 1] * i) % MOD;
+        }
+
+        long[] inverseFact = new long[lengthOfNum + 1];
+        for (int i = 0; i <= lengthOfNum; i++) {
+            inverseFact[i] = modPow(fact[i], MOD - 2);
+        }
+
+        // Total ways to arrange digits in even and odd indices
+        totalPermutations = (fact[(lengthOfNum + 1) / 2] * fact[lengthOfNum / 2]) % MOD;
+
+        // Initialize DP memo table
+        int[][][] dp = new int[10][(lengthOfNum + 1) / 2 + 1][totalDigitSum + 1];
+        for (int[][] arr2D : dp)
+            for (int[] arr1D : arr2D)
+                Arrays.fill(arr1D, -1);
+
+        return countValidWays(0, 0, 0, digitFreq, inverseFact, dp);
+    }
+}
