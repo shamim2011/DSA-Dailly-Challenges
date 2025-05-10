@@ -1,0 +1,55 @@
+// Approach - Sliding Windows
+// T.C - O(n)
+// S.C - O(1)
+
+class Solution {
+    // Main method to find the longest substring where each character appears at least k times
+    public int longestSubstring(String s, int k) {
+        // If string is shorter than k or empty, no valid substring can exist
+        if (s.length() < k || s.isEmpty()) {
+            return 0;
+        }
+
+        int[] arr = new int[26];  // Array to store frequency of characters 'a' to 'z'
+        int n = s.length();
+        int result = 0;  // To keep track of the maximum length of valid substring
+        int i = 0, j = 0;
+
+        // Outer loop - starting point of the substring
+        while (i < n) {
+            Arrays.fill(arr, 0);  // Reset frequency array for each new starting point
+            j = i;  // Set the end of the window initially to the starting point
+
+            // Inner loop - extend the end of the substring
+            while (j < n) {
+                arr[s.charAt(j) - 'a']++;  // Update frequency of current character
+
+                // Check if the current window [i, j] is valid
+                if (isValid(s, i, j, k, arr)) {
+                    // If valid, update result if this window is larger
+                    result = Math.max(result, j - i + 1);
+                }
+
+                j++;  // Move end of the window forward
+            }
+
+            i++;  // Move start of the window forward
+        }
+
+        return result;  // Return the maximum length of valid substring
+    }
+
+    // Helper method to check if all characters in the current substring appear at least k times
+    public boolean isValid(String s, int start, int end, int k, int[] arr) {
+        int c = 0;        // Total number of distinct characters in the window
+        int countK = 0;   // Number of characters in the window that appear at least k times
+
+        for (int freq : arr) {
+            if (freq > 0) c++;           // Count the distinct characters
+            if (freq >= k) countK++;     // Count the characters meeting the condition
+        }
+
+        // The substring is valid if all characters occur at least k times
+        return countK == c;
+    }
+}
