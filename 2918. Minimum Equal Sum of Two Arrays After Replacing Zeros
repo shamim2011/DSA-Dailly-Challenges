@@ -1,0 +1,45 @@
+Approach - Greedy Approach
+T.C - O(n + m)
+S.C - O(1)
+
+class Solution {
+    public long minSum(int[] nums1, int[] nums2) {
+        long sum1 = 0;
+        long sum2 = 0;
+
+        long zeroCount1 = 0;
+        long zeroCount2 = 0;
+
+        // Traverse nums1 to compute sum1
+        for (int num : nums1) {
+            // If the number is 0, we consider replacing it with 1 (to minimize effect)
+            sum1 += num == 0 ? 1 : num;
+
+            // Count number of zeros in nums1
+            if (num == 0) {
+                zeroCount1++;
+            }
+        }
+
+        // Traverse nums2 to compute sum2
+        for (int num : nums2) {
+            // If the number is 0, we consider replacing it with 1
+            sum2 += num == 0 ? 1 : num;
+
+            // Count number of zeros in nums2
+            if (num == 0) {
+                zeroCount2++;
+            }
+        }
+
+        // Check if it's impossible to make the sums equal:
+        // If one array has a smaller sum and no zeros to adjust it,
+        // then it's impossible to equalize the sums.
+        if ((sum1 < sum2 && zeroCount1 == 0) || (sum2 < sum1 && zeroCount2 == 0)) {
+            return -1;
+        }
+
+        // If equalization is possible, return the maximum of the two sums
+        return Math.max(sum1, sum2);
+    }
+}
