@@ -1,4 +1,49 @@
-// Approach - Sliding Windows
+// Approach - 1(Simple Brute Force)
+// T.C-O(n^2)
+//S.C - O(1)
+
+class Solution {
+    // Method to find the longest substring where every character appears at least k times
+    public int longestSubstring(String s, int k) {
+        int length = 0; // To keep track of the maximum valid substring length
+        Map<Character, Integer> mp = new HashMap<>(); // Frequency map for characters
+        int n = s.length();
+
+        // Try every possible starting index for the substring
+        for (int i = 0; i < n; i++) {
+            mp.clear(); // Clear the map for the new starting index
+
+            // Try every possible ending index for the substring starting at i
+            for (int j = i; j < n; j++) {
+                // Update the frequency map for current character
+                mp.put(s.charAt(j), mp.getOrDefault(s.charAt(j), 0) + 1);
+
+                // Check if all characters in the current substring appear at least k times
+                if (isValid(mp, k)) {
+                    // Update the max length if the current substring is valid
+                    length = Math.max(length, j - i + 1);
+                }
+            }
+        }
+
+        return length; // Return the maximum valid substring length found
+    }
+
+    // Helper method to check if all characters in the map appear at least k times
+    public boolean isValid(Map<Character, Integer> mp, int k) {
+        for (int freq : mp.values()) {
+            if (freq < k) {
+                return false; // If any frequency is less than k, it's not valid
+            }
+        }
+        return true; // All frequencies are at least k
+    }
+}
+
+
+
+
+// Approach 2- Sliding Windows
 // T.C - O(n)
 // S.C - O(1)
 
