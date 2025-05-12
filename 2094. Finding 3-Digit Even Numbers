@@ -1,0 +1,88 @@
+//Approach-1 (Trying all possibilities using 3 for loops for 3 digits)
+//T.C : O(n^3 + SlogS), S = total 3 digits even numbers
+//S.C : O(S)
+
+class Solution {
+    public int[] findEvenNumbers(int[] digits) {
+        int n = digits.length;
+
+        // Use a Set to store unique even 3-digit numbers
+        Set<Integer> st = new HashSet<>();
+
+        // Iterate over all possible combinations of 3 different indices
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                for (int k = 0; k < n; k++) {
+
+                    // Skip if any two indices are the same (we want unique digits)
+                    if (i == j || j == k || k == i) {
+                        continue;
+                    }
+
+                    // Form a 3-digit number from digits[i], digits[j], digits[k]
+                    int num = digits[i] * 100 + digits[j] * 10 + digits[k];
+
+                    // Check if the number is a valid 3-digit even number
+                    if (num >= 100 && num % 2 == 0) {
+                        st.add(num); // Add to set to avoid duplicates
+                    }
+                }
+            }
+        }
+
+        // Convert the set to an array
+        int[] arr = new int[st.size()];
+        int i = 0;
+        for (int num : st) {
+            arr[i++] = num;
+        }
+
+        // Sort the result array
+        Arrays.sort(arr);
+
+        return arr; // Return the sorted array of even 3-digit numbers
+    }
+}
+
+
+//Approach-2 (Smartly finding valid digits for each position)
+//T.C : O(1)
+//S.C : O(1)
+
+class Solution {
+    public int[] findEvenNumbers(int[] digits) {
+        List<Integer> li = new ArrayList<>();  // List to store valid even 3-digit numbers
+
+        int[] arr = new int[10];  // Frequency array to count digits from 0 to 9
+        for (int digit : digits) {
+            arr[digit]++;  // Count each digit in the input
+        }
+        // Try to form all valid 3-digit even numbers
+        for (int i = 1; i <= 9; i++) {  // First digit (hundreds place) must be 1–9 (not 0)
+            if (arr[i] == 0) continue;  // Skip if digit not available
+            arr[i]--;  // Use one instance of digit i
+            for (int j = 0; j <= 9; j++) {  // Second digit (tens place) can be 0–9
+                if (arr[j] == 0) continue;
+                arr[j]--;  // Use one instance of digit j
+                for (int k = 0; k <= 8; k += 2) {  // Third digit (units place) must be even: 0, 2, 4, 6, 8
+                    if (arr[k] == 0) continue;
+                    arr[k]--;  // Use one instance of digit k
+                    int num = i * 100 + j * 10 + k;  // Construct the 3-digit number
+                    li.add(num);  // Add valid number to result list
+                    arr[k]++;  // Backtrack: restore frequency of digit k
+                }
+                arr[j]++;  // Backtrack: restore frequency of digit j
+            }
+            arr[i]++;  // Backtrack: restore frequency of digit i
+        }
+        // Convert the result list to array
+        int[] resArr = new int[li.size()];
+        int i = 0;
+        for (int num : li) {
+            resArr[i++] = num;
+        }
+
+        return resArr;
+    }
+}
+
