@@ -1,0 +1,28 @@
+Approach : Bit Manipulation
+Time complexity: O(log n)
+Space complexity: O(log n)
+
+class Solution {
+    public int[] evenOddBit(int n) {
+        List<Integer> li = new ArrayList<>();
+        while(n>0){
+            int rem=n%2;
+            li.add(rem);
+            n=n/2;
+        }
+        int[] arr=new int[2];
+        int even=0;
+        int odd=0;
+        for(int i=0;i<li.size();i++){
+            if(i%2==0 && li.get(i)==1){
+                even++;
+            }
+            if(i%2!=0 && li.get(i)==1){
+                odd++;
+            }
+        }
+        arr[0]=even;
+        arr[1]=odd;
+        return arr;
+    }
+}
