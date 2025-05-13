@@ -1,0 +1,105 @@
+//Approach 1 - Character Frequency Mapping with Iterative Simulation      TLE
+//T.C : O(t × k) Since k ≤ 26, we treat k as a constant.
+//S.C : O(1)
+
+class Solution {
+    // Define the modulo constant to prevent integer overflow
+    final int M = (int) (Math.pow(10, 9) + 7); // 1000000007
+
+    public int lengthAfterTransformations(String s, int t) {
+        // Step 1: Create a frequency map for characters in the input string
+        Map<Character, Integer> mp = new HashMap<>();
+
+        for (char ch : s.toCharArray()) {
+            mp.put(ch, mp.getOrDefault(ch, 0) + 1);
+        }
+
+        // Step 2: Perform the transformation 't' times
+        for (int count = 1; count <= t; count++) {
+            // Temporary map to store the updated frequencies after this round
+            Map<Character, Integer> temp = new HashMap<>();
+
+            // Iterate over current map and apply transformation rules
+            for (Map.Entry<Character, Integer> entry : mp.entrySet()) {
+                char ch = entry.getKey();     // current character
+                int freq = entry.getValue();  // its frequency
+
+                if (ch != 'z') {
+                    // Rule: If character is not 'z', increment it (shift to next character)
+                    char nextChar = (char) (ch + 1);
+                    // Update frequency of next character (modulo M)
+                    temp.put(nextChar, (temp.getOrDefault(nextChar, 0) + freq) % M);
+                } else {
+                    // Special rule: if character is 'z', split into 'a' and 'b'
+                    temp.put('a', (temp.getOrDefault('a', 0) + freq) % M);
+                    temp.put('b', (temp.getOrDefault('b', 0) + freq) % M);
+                }
+            }
+
+            // Update main map for the next transformation round
+            mp = temp;
+        }
+
+        // Step 3: Calculate total length of resulting string (sum of frequencies)
+        int result = 0;
+        for (int val : mp.values()) {
+            result = (result + val) % M;
+        }
+
+        return result;
+    }
+}
+
+//Approach 2 - Using frequency count in map
+//T.C : O(n+t)
+//S.C : O(26) ~= O(1)
+
+class Solution {
+    // Define the modulo constant to prevent integer overflow
+    final int M = (int) (Math.pow(10, 9) + 7); // 1000000007
+
+    public int lengthAfterTransformations(String s, int t) {
+        // Step 1: Initialize a frequency array for characters 'a' to 'z'
+        // Index 0 corresponds to 'a', index 25 to 'z'
+        int[] mp = new int[26];
+
+        // Count the frequency of each character in the input string
+        for (char ch : s.toCharArray()) {
+            mp[ch - 'a']++;
+        }
+
+        // Step 2: Perform the transformation 't' times
+        for (int count = 1; count <= t; count++) {
+            // Temporary array to store the updated character frequencies
+            int[] temp = new int[26];
+
+            // Loop through all 26 lowercase characters
+            for (int i = 0; i < 26; i++) {
+                char ch = (char) (i + 'a'); // Convert index to character
+                int freq = mp[i]; // Frequency of current character
+
+                if (ch != 'z') {
+                    // If character is not 'z', shift it to the next character
+                    char nextChar = (char) (ch + 1);
+                    // Update frequency in temp array (use modulo to avoid overflow)
+                    temp[nextChar - 'a'] = (temp[nextChar - 'a'] + freq) % M;
+                } else {
+                    // If character is 'z', split it into 'a' and 'b'
+                    temp['a' - 'a'] = (temp['a' - 'a'] + freq) % M;
+                    temp['b' - 'a'] = (temp['b' - 'a'] + freq) % M;
+                }
+            }
+
+            // Update the main frequency array for the next round
+            mp = temp;
+        }
+
+        // Step 3: Calculate the total number of characters after all transformations
+        int result = 0;
+        for (int i = 0; i < 26; i++) {
+            result = (result + mp[i]) % M;
+        }
+
+        return result;
+    }
+}
