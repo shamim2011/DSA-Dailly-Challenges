@@ -1,0 +1,103 @@
+//Approach - Using Matrix Exponentiation
+//T.C : O(n + log(t))
+//S.C : O(26*26) ~ O(1)
+
+import java.util.*;
+
+public class Solution {
+    private static final int MOD = 1_000_000_007; // Modulo to prevent overflow
+    private static final int SIZE = 26;           // Size of the alphabet (a to z)
+
+    // Performs matrix multiplication on two 26x26 matrices under modulo MOD
+    private List<List<Integer>> matrixMultiplication(List<List<Integer>> A, List<List<Integer>> B) {
+        List<List<Integer>> result = new ArrayList<>();
+        // Initialize a 26x26 zero matrix
+        for (int i = 0; i < SIZE; i++) {
+            List<Integer> row = new ArrayList<>(Collections.nCopies(SIZE, 0));
+            result.add(row);
+        }
+
+        // Standard triple nested loop for matrix multiplication
+        for (int i = 0; i < SIZE; ++i) {
+            for (int j = 0; j < SIZE; ++j) {
+                long sum = 0;
+                for (int k = 0; k < SIZE; ++k) {
+                    sum = (sum + 1L * A.get(i).get(k) * B.get(k).get(j)) % MOD;
+                }
+                result.get(i).set(j, (int) sum); // Set result under modulo
+            }
+        }
+        return result;
+    }
+
+    // Performs binary exponentiation of a matrix
+    private List<List<Integer>> matrixExponentiation(List<List<Integer>> base, int exponent) {
+        // Initialize identity matrix
+        List<List<Integer>> identity = new ArrayList<>();
+        for (int i = 0; i < SIZE; i++) {
+            List<Integer> row = new ArrayList<>(Collections.nCopies(SIZE, 0));
+            row.set(i, 1); // Set diagonal to 1
+            identity.add(row);
+        }
+
+        // Base case: exponent is 0, return identity
+        if (exponent == 0)
+            return identity;
+
+        // Recursive case: divide exponent by 2
+        List<List<Integer>> half = matrixExponentiation(base, exponent / 2);
+        List<List<Integer>> result = matrixMultiplication(half, half);
+
+        // If exponent is odd, multiply one more time with base
+        if (exponent % 2 == 1)
+            result = matrixMultiplication(result, base);
+
+        return result;
+    }
+
+    // Main function to compute final string length after t transformations
+    public int lengthAfterTransformations(String s, int t, List<Integer> nums) {
+        int[] freq = new int[SIZE]; // Initial frequency of characters in the string
+
+        // Count frequency of each character in the string
+        for (char ch : s.toCharArray()) {
+            freq[ch - 'a']++;
+        }
+
+        // Initialize transformation matrix T
+        List<List<Integer>> T = new ArrayList<>();
+        for (int i = 0; i < SIZE; i++) {
+            T.add(new ArrayList<>(Collections.nCopies(SIZE, 0)));
+        }
+
+        // Fill transformation matrix based on nums
+        // Each character at index i can transform to (i + 1) to (i + nums[i]) % 26
+        for (int i = 0; i < SIZE; ++i) {
+            for (int add = 1; add <= nums.get(i); ++add) {
+                int newIndex = (i + add) % SIZE;
+                T.get(newIndex).set(i, T.get(newIndex).get(i) + 1);
+            }
+        }
+
+        // Raise transformation matrix T to the power of t
+        List<List<Integer>> result = matrixExponentiation(T, t);
+
+        // Multiply the matrix result with the initial frequency vector
+        int[] updatedFreq = new int[SIZE];
+        for (int i = 0; i < SIZE; ++i) {
+            long value = 0;
+            for (int j = 0; j < SIZE; ++j) {
+                value = (value + 1L * result.get(i).get(j) * freq[j]) % MOD;
+            }
+            updatedFreq[i] = (int) value;
+        }
+
+        // Sum the updated frequency array to get the final string length
+        int resultLength = 0;
+        for (int val : updatedFreq) {
+            resultLength = (resultLength + val) % MOD;
+        }
+
+        return resultLength;
+    }
+}
