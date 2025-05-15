@@ -1,0 +1,27 @@
+// Approach 1 (Greedy approach with linear scan)
+// T.C - O(n)
+// S.C - O(k) == O(n)
+
+class Solution {
+    public List<String> getLongestSubsequence(String[] words, int[] groups) {
+        // Create a list to store the result
+        List<String> res = new ArrayList<>();
+        // Get the total number of elements
+        int n = groups.length;
+        // Always add the first word to the result
+        res.add(words[0]);
+        // Loop through the rest of the words and groups
+        for (int i = 1; i < n; i++) {
+            // If the current group is different from the previous one,
+            // add the corresponding word to the result
+            if (groups[i] != groups[i - 1]) {
+                res.add(words[i]);
+            } else {
+                // If the group is the same as the previous, skip the word
+                continue;
+            }
+        }
+        // Return the final list of selected words
+        return res;
+    }
+}
