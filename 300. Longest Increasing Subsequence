@@ -38,46 +38,8 @@ class Solution {
 }
 
 
-// Approach -2 Using LIS(Longest INcreasing Subsequence)  --> BUTTOM UP APPROACH
-class Solution {
-    public int lengthOfLIS(int[] nums) {
-        int n = nums.length;
-        // dp[i] will hold the length of the longest increasing subsequence
-        // that ends with nums[i]
-        int[] dp = new int[n];
 
-        // Initialize all dp values to 1, since the minimum 
-        // LIS ending at any index is 1 (the element itself)
-        Arrays.fill(dp, 1);
-
-        // Variable to keep track of the maximum length of LIS found so far
-        int maxLIS = 1;
-
-        // Iterate over the array to fill dp[]
-        for (int i = 1; i < n; i++) {
-            // Check all previous elements before index i
-            for (int j = 0; j < i; j++) {
-                // If nums[j] is less than nums[i], we can 
-                // extend the increasing subsequence
-                if (nums[j] < nums[i]) {
-                    // Update dp[i] to be the maximum of 
-                    // its current value and dp[j] + 1
-                    dp[i] = Math.max(dp[i], dp[j] + 1);
-                    
-                    // Update maxLIS if we found a longer increasing subsequence
-                    maxLIS = Math.max(maxLIS, dp[i]);
-                }
-            }
-        }
-
-        // Return the length of the longest increasing subsequence found
-        return maxLIS;
-    }
-}
-
-
-
-// Approach -3 (Using Recursion + Memorisation)  T.C = O(n^2)
+// Approach -2 (Using Recursion + Memorisation)  T.C = O(n^2)
 // memoized (top-down DP) 
 
 class Solution {
@@ -124,5 +86,40 @@ class Solution {
 }
 
 
+// Approach -3 Using LIS(Longest INcreasing Subsequence)  --> BUTTOM UP APPROACH
+class Solution {
+    public int lengthOfLIS(int[] nums) {
+        int n = nums.length;
+        // dp[i] will hold the length of the longest increasing subsequence
+        // that ends with nums[i]
+        int[] dp = new int[n];
 
+        // Initialize all dp values to 1, since the minimum 
+        // LIS ending at any index is 1 (the element itself)
+        Arrays.fill(dp, 1);
+
+        // Variable to keep track of the maximum length of LIS found so far
+        int maxLIS = 1;
+
+        // Iterate over the array to fill dp[]
+        for (int i = 1; i < n; i++) {
+            // Check all previous elements before index i
+            for (int j = 0; j < i; j++) {
+                // If nums[j] is less than nums[i], we can 
+                // extend the increasing subsequence
+                if (nums[j] < nums[i]) {
+                    // Update dp[i] to be the maximum of 
+                    // its current value and dp[j] + 1
+                    dp[i] = Math.max(dp[i], dp[j] + 1);
+                    
+                    // Update maxLIS if we found a longer increasing subsequence
+                    maxLIS = Math.max(maxLIS, dp[i]);
+                }
+            }
+        }
+
+        // Return the length of the longest increasing subsequence found
+        return maxLIS;
+    }
+}
 
