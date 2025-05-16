@@ -1,0 +1,74 @@
+//Approach -  Using LIS Pattern
+//T.C : (n^2 * L), where L = max length of a string in the words
+//S.C : O(n)
+
+class Solution {
+
+    // Helper method to check if two strings have a Hamming distance of exactly 1
+    public boolean hamingDis(String s1, String s2) {
+        int diff = 0;
+        for (int i = 0; i < s1.length(); i++) {
+            // Count character differences between s1 and s2
+            if (s1.charAt(i) != s2.charAt(i)) {
+                diff++;
+            }
+            // If more than one character is different, return false early
+            if (diff > 1) {
+                return false;
+            }
+        }
+        // Return true only if exactly one character is different
+        return diff == 1;
+    }
+
+    // Main method to find the longest valid subsequence of words
+    public List<String> getWordsInLongestSubsequence(String[] words, int[] groups) {
+        int n = groups.length;
+
+        // dp[i] stores the length of the longest valid subsequence ending at index i
+        int[] dp = new int[n];
+        Arrays.fill(dp, 1); // Each word alone is a valid subsequence of length 1
+
+        // parent[i] helps trace back the path of the subsequence
+        int[] parent = new int[n];
+        Arrays.fill(parent, -1); // -1 means no parent
+
+        int longestSub = 1;       // Length of the longest subsequence found
+        int longestSubIdx = 0;    // Index where the longest subsequence ends
+
+        // Loop to calculate dp values for all indices
+        for (int i = 1; i < n; i++) {
+            for (int j = 0; j < i; j++) {
+                // Check if the two words are from different groups,
+                // are the same length, and have a Hamming distance of 1
+                if (groups[i] != groups[j] && 
+                    words[i].length() == words[j].length() &&
+                    hamingDis(words[i], words[j])) {
+                    
+                    // Update dp[i] if a longer subsequence ending at i is found
+                    if (dp[j] + 1 > dp[i]) {
+                        dp[i] = dp[j] + 1;
+                        parent[i] = j; // Track the previous word in the sequence
+
+                        // Update longest subsequence details
+                        if (longestSub < dp[i]) {
+                            longestSub = dp[i];
+                            longestSubIdx = i;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Reconstruct the longest subsequence using the parent array
+        List<String> result = new ArrayList<>();
+        while (longestSubIdx != -1) {
+            result.add(words[longestSubIdx]);
+            longestSubIdx = parent[longestSubIdx];
+        }
+
+        // The result is built backwards, so reverse it to get the correct order
+        Collections.reverse(result);
+        return result;
+    }
+}
