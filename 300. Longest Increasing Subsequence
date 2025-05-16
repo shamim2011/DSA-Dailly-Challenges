@@ -38,7 +38,7 @@ class Solution {
 }
 
 
-// Approach -2 Using LIS(Longest INcreasing Subsequence)
+// Approach -2 Using LIS(Longest INcreasing Subsequence)  --> BUTTOM UP APPROACH
 class Solution {
     public int lengthOfLIS(int[] nums) {
         int n = nums.length;
