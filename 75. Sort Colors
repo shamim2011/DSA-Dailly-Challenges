@@ -1,0 +1,79 @@
+// Approach-1 : Sorting
+// T.C : O(n*log(n))
+// S.C : O(1)
+
+class Solution {
+    public void sortColors(int[] nums) {
+        Arrays.sort(nums);
+    }
+}
+
+// Approach-2 (Using counting)
+// T.C : O(n+n)
+// S.C : O(1)
+
+class Solution {
+    public void sortColors(int[] nums) {
+        int n = nums.length;
+
+        // Initialize counters for each color (0, 1, and 2)
+        int count_0 = 0, count_1 = 0, count_2 = 0;
+
+        // First pass: count the number of 0s, 1s, and 2s in the array
+        for (int num : nums) {
+            if (num == 0) count_0++;
+            else if (num == 1) count_1++;
+            else count_2++;
+        }
+
+        // Second pass: overwrite the original array with the counted number of 0s, then 1s, then 2s
+        for (int i = 0; i < n; i++) {
+            if (count_0 > 0) {
+                nums[i] = 0;
+                count_0--;
+            } else if (count_1 > 0) {
+                nums[i] = 1;
+                count_1--;
+            } else {
+                nums[i] = 2;
+                count_2--;
+            }
+        }
+    }
+}
+
+
+// Approach-3 (Follow up) : O(n)
+// T.C : O(n)
+// S.C : O(1)
+
+class Solution {
+    public void sortColors(int[] nums) {
+        // i: boundary for 0s
+        // j: current index
+        // k: boundary for 2s
+        int i = 0, j = 0, k = nums.length - 1;
+        // Loop until the current index j surpasses the boundary for 2s
+        while (j <= k) {
+            if (nums[j] == 1) {
+                // If the current element is 1, it's in the right place, just move ahead
+                j++;
+            } else if (nums[j] == 2) {
+                // If the current element is 2, swap it with the element at the end boundary (k)
+                // Don't increment j here because the new element at nums[j] needs to be processed
+                int temp = nums[j];
+                nums[j] = nums[k];
+                nums[k] = temp;
+                k--;
+            } else {
+                // If the current element is 0, swap it with the element at the start boundary (i)
+                // Increment both i and j because we know the swapped-in value at j is already checked
+                int temp = nums[j];
+                nums[j] = nums[i];
+                nums[i] = temp;
+                i++;
+                j++;
+            }
+        }
+    }
+}
