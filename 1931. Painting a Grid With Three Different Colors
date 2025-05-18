@@ -1,0 +1,184 @@
+//Approach 1 (Recursion )  TLE
+//T.C : O(n × S × S × m)
+//S.C : O(S × m + n × S)
+
+
+class Solution {
+    // Define the modulo constant to prevent integer overflow
+    int M = (int)1e9 + 7;
+
+    // List to store all valid color combinations for a single column
+    ArrayList<String> columnStates = new ArrayList<>();
+
+    // Recursively generate all valid color combinations for a column of height 'm'
+    // Each column must not have the same color in two adjacent rows
+    void generateColumnState(String curr, char preChar, int l, int m) {
+        // If we've built a full column (length == m), store the combination
+        if (l == m) {
+            columnStates.add(curr);
+            return;
+        }
+
+        // Try each color: Red, Green, Blue
+        for (char color : new char[]{'R', 'G', 'B'}) {
+            // Skip if it's the same as the color above (no vertical repeat)
+            if (color == preChar) continue;
+
+            // Recursively build the next row in the column
+            generateColumnState(curr + color, color, l + 1, m);
+        }
+    }
+
+    // Recursive function to count the number of ways to color remaining columns
+    // such that adjacent columns are not the same in any row
+    int solve(int remainingCol, int prevIdx, int m) {
+        // Base case: no more columns to color
+        if (remainingCol == 0) {
+            return 1;
+        }
+
+        int ways = 0;
+        String prevState = columnStates.get(prevIdx);
+
+        // Try each possible column configuration for the next column
+        for (int nextColumnIdx = 0; nextColumnIdx < columnStates.size(); nextColumnIdx++) {
+            // Skip if the next column is identical to the previous one
+            if (nextColumnIdx == prevIdx) continue;
+
+            String currState = columnStates.get(nextColumnIdx);
+            boolean valid = true;
+
+            // Check that current column does not have the same color as the previous
+            // in any row (no horizontal repeat)
+            for (int r = 0; r < m; r++) {
+                if (prevState.charAt(r) == currState.charAt(r)) {
+                    valid = false;
+                    break;
+                }
+            }
+
+            // If valid, recursively count ways with one fewer column
+            if (valid) {
+                ways = (ways + solve(remainingCol - 1, nextColumnIdx, m)) % M;
+            }
+        }
+
+        return ways;
+    }
+
+    // Main function to be called with the grid dimensions
+    public int colorTheGrid(int m, int n) {
+        // Step 1: Generate all valid single-column configurations
+        generateColumnState("", '#', 0, m); // '#' used as dummy previous character
+
+        int result = 0;
+
+        // Step 2: Start from each valid first column and count total configurations
+        for (int i = 0; i < columnStates.size(); i++) {
+            result = (result + solve(n - 1, i, m)) % M;
+        }
+
+        return result;
+    }
+}
+
+
+
+//Approach 2 (Recursion + Memoization)
+//T.C : O(n * S * S * m), where S = total states i.e. 3 * 2^m-1
+//S.C : O((n * S) + (S * m)) where n * S is because of memoization array t, and S * m is for storing columnStates
+
+class Solution {
+    int[][] dp;
+    // Define the modulo constant to prevent integer overflow
+    int M = (int)1e9 + 7;
+
+    // List to store all valid color combinations for a single column
+    ArrayList<String> columnStates = new ArrayList<>();
+
+    // Recursively generate all valid color combinations for a column of height 'm'
+    // Each column must not have the same color in two adjacent rows (vertical constraint)
+    void generateColumnState(String curr, char preChar, int l, int m) {
+        // If we've built a full column (length == m), store the combination
+        if (l == m) {
+            columnStates.add(curr);
+            return;
+        }
+
+        // Try each color: Red, Green, Blue
+        for (char color : new char[]{'R', 'G', 'B'}) {
+            // Skip if it's the same as the color above (no vertical repeat)
+            if (color == preChar) continue;
+
+            // Recursively build the next row in the column
+            generateColumnState(curr + color, color, l + 1, m);
+        }
+    }
+
+    // Recursive function to count the number of ways to color remaining columns
+    // such that adjacent columns are not the same in any row (horizontal constraint)
+    int solve(int remainingCol, int prevIdx, int m) {
+        // Base case: no more columns to color
+        if (remainingCol == 0) {
+            return 1;
+        }
+
+        // Return memoized result if already computed
+        if (dp[remainingCol][prevIdx] != -1) {
+            return dp[remainingCol][prevIdx];
+        }
+
+        int ways = 0;
+        String prevState = columnStates.get(prevIdx);
+
+        // Try each possible column configuration for the next column
+        for (int nextColumnIdx = 0; nextColumnIdx < columnStates.size(); nextColumnIdx++) {
+            // Skip if the next column is identical to the previous one
+            if (nextColumnIdx == prevIdx) continue;
+
+            String currState = columnStates.get(nextColumnIdx);
+            boolean valid = true;
+
+            // Check that current column does not have the same color as the previous
+            // in any row (no horizontal repeat)
+            for (int r = 0; r < m; r++) {
+                if (prevState.charAt(r) == currState.charAt(r)) {
+                    valid = false;
+                    break;
+                }
+            }
+
+            // If valid, recursively count ways with one fewer column
+            if (valid) {
+                ways = (ways + solve(remainingCol - 1, nextColumnIdx, m)) % M;
+            }
+        }
+
+        // Store result in dp array and return
+        return dp[remainingCol][prevIdx] = ways;
+    }
+
+    // Main function to be called with the grid dimensions m (rows) and n (columns)
+    public int colorTheGrid(int m, int n) {
+        // Step 1: Generate all valid single-column configurations
+        generateColumnState("", '#', 0, m); // '#' used as dummy previous character for initial call
+
+        int numColumnPatterns = columnStates.size();
+        dp = new int[n][numColumnPatterns]; // dp[col][prevPattern]
+
+        // Initialize dp array with -1 to indicate uncomputed states
+        for (int[] row : dp) {
+            Arrays.fill(row, -1);
+        }
+
+        int result = 0;
+
+        // Step 2: Start from each valid first column and count total configurations
+        for (int i = 0; i < columnStates.size(); i++) {
+            result = (result + solve(n - 1, i, m)) % M;
+        }
+
+        return result;
+    }
+}
+
