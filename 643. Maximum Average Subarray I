@@ -41,7 +41,168 @@ class Solution {
 }
 
 
-// Approach - 1 Sliding Windows
+// Approach - 2 Brute Force with Manual Sliding Window TLE
+// T.C - O(n*k)
+// S.C - O(1)
+
+class Solution {
+    public double findMaxAverage(int[] nums, int k) {
+        // Handle special case: only one element in the array
+        if (nums.length == 1) {
+            return (double)(nums[0]);
+        }
+
+        // Handle special case: when subarray length k is 1,
+        // simply return the maximum element (max average is max number)
+        if (k == 1) {
+            double maxK = Integer.MIN_VALUE;
+            for (int num : nums) {
+                maxK = Math.max(maxK, num);
+            }
+            return maxK;
+        }
+
+        int n = nums.length;
+        // Initialize max average with a very low value
+        double maxA = (double) Integer.MIN_VALUE;
+
+        // i and j are used to manage window positions
+        int i = 0, j = 0;
+
+        // Loop to control the start of the window (i)
+        while (i <= n - k) {
+            double sum = 0;
+
+            // Loop to calculate sum of current window [i, i + k - 1]
+            while (j < i + k) {
+                sum = sum + nums[j];
+
+                // Once window size is exactly k, compute average
+                if (j - i + 1 == k) {
+                    maxA = Math.max(maxA, sum / k);
+                }
+
+                j++;
+            }
+
+            // Move the window start to the next position
+            i++;
+            j = i; // Reset j to the new start
+        }
+
+        return maxA; // Return the maximum average found
+    }
+}
+
+
+// Approach - 3 Sliding Window with Recalculated Boundaries (Semi-Optimized) ACCEPTED
+// T.C - O(n*K)
+// S.C - O(1)
+
+class Solution {
+    public double findMaxAverage(int[] nums, int k) {
+        // Edge case: If array has only one element, return it as the average
+        if (nums.length == 1) {
+            return (double)(nums[0]);
+        }
+
+        // Edge case: If k == 1, return the maximum element in the array
+        if (k == 1) {
+            double maxK = Integer.MIN_VALUE;
+            for (int num : nums) {
+                maxK = Math.max(maxK, num);
+            }
+            return maxK;
+        }
+
+        int n = nums.length;
+        // Initialize the maximum average with the smallest possible value
+        double maxA = (double) Integer.MIN_VALUE;
+
+        // Two pointers for sliding window
+        int i = 0, j = 0;
+        double sum = 0;
+
+        // Outer loop moves the start of the window
+        while (i <= n - k) {
+            // Inner loop calculates the sum of the window from j = i to i + k - 1
+            while (j < i + k) {
+                sum = sum + nums[j]; // Accumulate the sum
+
+                // When the window size becomes exactly k
+                if (j - i + 1 == k) {
+                    // Update the max average if current window average is greater
+                    maxA = Math.max(maxA, sum / k);
+
+                    // Remove the first element of the window for the next round
+                    sum -= nums[i];
+                }
+
+                j++; // Expand the window
+            }
+
+            i++;     // Move the start of the window
+            // Note: j is not reset here, which leads to logical errors in later iterations
+        }
+
+        return maxA; // Return the maximum average found
+    }
+}
+
+
+// Approach - 4 Sliding Window
 // T.C - O(n)
 // S.C - O(1)
+
+class Solution {
+    public double findMaxAverage(int[] nums, int k) {
+        // If the array contains only one element, return it as the average
+        if (nums.length == 1) {
+            return (double)(nums[0]);
+        }
+
+        // If the required subarray length is 1, return the maximum element in the array
+        if (k == 1) {
+            double maxK = Integer.MIN_VALUE;
+            for (int num : nums) {
+                maxK = Math.max(maxK, num);
+            }
+            return maxK;
+        }
+
+        int n = nums.length;
+        // Initialize max average with the smallest possible value
+        double maxA = (double) Integer.MIN_VALUE;
+
+        // i is the start index of the window, j is the end index
+        int i = 0, j = 0;
+
+        // Variable to store the sum of current window
+        double sum = 0;
+
+        // Loop while the start of the window can slide forward without exceeding bounds
+        while (i <= n - k) {
+            // Expand the window until it reaches the desired size 'k'
+            while (j - i + 1 <= k) {
+                sum += nums[j]; // Add current element to the window sum
+
+                // When the window reaches size 'k', calculate average
+                if (j - i + 1 == k) {
+                    maxA = Math.max(maxA, sum / k); // Update max average if current is greater
+                }
+
+                j++; // Move the window end forward
+            }
+
+            // Slide the window forward by removing the element at index i
+            sum -= nums[i];
+
+            // Move the start of the window
+            i++;
+        }
+
+        // Return the maximum average of any subarray of size k
+        return maxA;
+    }
+}
 
