@@ -1,0 +1,47 @@
+// Approach - 1 Simple Brute force TLE
+// T.C - O(n*n)
+// S.C - O(1)
+
+class Solution {
+    public double findMaxAverage(int[] nums, int k) {
+        // Special case: only one element in the array
+        if (nums.length == 1) {
+            return (double)(nums[0]);
+        }
+
+        // Special case: if k is 1, return the maximum element as the max average
+        if (k == 1) {
+            double maxK = Integer.MIN_VALUE;
+            for (int num : nums) {
+                maxK = Math.max(maxK, num);
+            }
+            return maxK;
+        }
+
+        int n = nums.length;
+        double maxA = Integer.MIN_VALUE; // Initialize max average with the smallest possible value
+
+        // Loop over all possible starting indices of subarrays of length k
+        for (int i = 0; i <n-k+1; i++) {
+            double sum = nums[i]; // Start the sum with the first element of the current window
+
+            // Inner loop to build the sum of length-k subarray starting at index i
+            for (int j = i + 1; j < n; j++) {
+                sum += nums[j]; // Add current element to the sum
+
+                // Check if we've reached a window size of k
+                if (j - i + 1 == k) {
+                    maxA = Math.max(maxA, sum / k); // Calculate average and update maxA if higher
+                }
+            }
+        }
+
+        return maxA; // Return the maximum average found
+    }
+}
+
+
+// Approach - 1 Sliding Windows
+// T.C - O(n)
+// S.C - O(1)
+
