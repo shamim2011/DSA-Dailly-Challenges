@@ -1,0 +1,31 @@
+//Approach (Simply checking triangle properties)
+//T.C : O(1) 
+//S.C : O(1)
+
+class Solution {
+    public String triangleType(int[] nums) {
+        // Check if the given side lengths form a valid triangle using the triangle inequality theorem
+        // A triangle is valid if the sum of any two sides is greater than the third side
+        boolean valid = (nums[0] + nums[1]) > nums[2] && 
+                        (nums[0] + nums[2]) > nums[1] && 
+                        (nums[1] + nums[2]) > nums[0];
+        
+        // If not a valid triangle, return "none"
+        if (!valid) {
+            return "none";
+        }
+
+        // If all three sides are equal, it's an equilateral triangle
+        if (nums[0] == nums[1] && nums[1] == nums[2]) {
+            return "equilateral";
+        }
+
+        // If all three sides are different, it's a scalene triangle
+        if (nums[0] != nums[1] && nums[0] != nums[2] && nums[1] != nums[2]) {
+            return "scalene";
+        }
+
+        // If it's a valid triangle and not equilateral or scalene, it must be isosceles
+        return "isosceles";
+    }
+}
