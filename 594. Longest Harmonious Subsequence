@@ -68,3 +68,36 @@ class Solution {
         return lhs; // Return the maximum length of harmonious subsequence found
     }
 }
+
+
+// Approach 2 - Sliding Windows
+// T.C - O(n)
+// S.C - O(n)
+
+class Solution {
+    public int findLHS(int[] nums) {
+        // Step 1: Count the frequency of each number
+        Map<Integer, Integer> freqMap = new HashMap<>();
+
+        for (int num : nums) {
+            freqMap.put(num, freqMap.getOrDefault(num, 0) + 1);
+        }
+
+        int lhs = 0; // To store the length of the longest harmonious subsequence
+
+        // Step 2: Iterate using Map.Entry to get both key and value easily
+        for (Map.Entry<Integer, Integer> entry : freqMap.entrySet()) {
+            int key = entry.getKey();
+            int value = entry.getValue();
+
+            // Check if there is a key exactly 1 greater
+            if (freqMap.containsKey(key + 1)) {
+                // Sum the counts of key and key+1
+                int length = value + freqMap.get(key + 1);
+                lhs = Math.max(lhs, length); // Update the maximum length
+            }
+        }
+
+        return lhs; // Return the result
+    }
+}
