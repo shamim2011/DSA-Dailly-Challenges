@@ -1,0 +1,80 @@
+//Approach - Simple brute force Simulation TLE
+//T.C : O(Q * n)
+//S.C : O(n)
+
+class Solution {
+    public boolean isZeroArray(int[] nums, int[][] queries) {
+        int n = nums.length;
+
+        // This array will track how many times each index is incremented by the queries
+        int[] result = new int[n];
+
+        // Step 1: Apply each query directly to the result array
+        // Each query is of the form [start, end], meaning increment all values from start to end (inclusive)
+        for (int[] query : queries) {
+            int start = query[0];
+            int end = query[1];
+
+            // Increment all values in the range [start, end] by 1
+            for (int i = start; i <= end; i++) {
+                result[i] += 1;
+            }
+        }
+
+        // Step 2: Check if each value in 'nums' can be reduced to 0
+        // For that to happen, result[i] must be at least as large as nums[i]
+        for (int i = 0; i < n; i++) {
+            if (result[i] < nums[i]) {
+                // If not enough increments were applied to position i,
+                // it's not possible to reduce nums[i] to 0
+                return false;
+            }
+        }
+
+        // If all positions have enough increments, return true
+        return true;
+    }
+}
+
+
+//Approach - Straight Forward Difference Array Technique
+//T.C : O(Q + n)
+//S.C : O(Q + n)
+
+class Solution {
+    public boolean isZeroArray(int[] nums, int[][] queries) {
+        int n = nums.length;
+        // Step 1: Create a difference array to track increments efficiently
+        int[] diff = new int[n];
+        Arrays.fill(diff, 0); // Initialize all elements to 0
+        // Apply range increment using the difference array technique
+        for (int[] query : queries) {
+            int start = query[0]; // Start index of the range
+            int end = query[1];   // End index of the range
+            // Increment at the start index
+            diff[start] += 1;
+            // Decrement right after the end index to stop the range effect
+            if (end + 1 < n) {
+                diff[end + 1] -= 1;
+            }
+            // No need to do anything if end + 1 is out of bounds
+        }
+        // Step 2: Convert the difference array to the actual incremented values
+        int[] result = new int[n];
+        int cSum = 0; // Cumulative sum to track the current increment
+        for (int i = 0; i < n; i++) {
+            cSum += diff[i];     // Accumulate increment
+            result[i] = cSum;    // Store the effect at current index
+        }
+        // Step 3: Check if each number in nums can be reduced to zero or less
+        // by subtracting the incremented values from the queries
+        for (int i = 0; i < n; i++) {
+            if (result[i] < nums[i]) {
+                // Not enough operations to reduce nums[i] to zero
+                return false;
+            }
+        }
+        // All numbers can be reduced to zero
+        return true;
+    }
+}
