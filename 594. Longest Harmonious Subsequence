@@ -1,0 +1,70 @@
+// Approach 1 - Brute Force with Sorting and Nested Loop
+// T.C - O(n*n)
+// S.C - O(1)
+
+class Solution {
+    public int findLHS(int[] nums) {
+        int n = nums.length;
+        
+        // Sort the array to group equal elements and make it easier to find subsequences
+        Arrays.sort(nums);
+
+        int lhs = 0; // Variable to keep track of the length of the longest harmonious subsequence
+
+        // Loop through each element in the array
+        for (int i = 0; i < n - 1; i++) {
+            int minV = nums[i]; // Set the current number as the starting point of the subsequence
+
+            // Loop through the remaining elements in the array
+            for (int j = i + 1; j < n; j++) {
+                // If the difference becomes greater than 1, break the loop as the array is sorted
+                if (nums[j] - minV > 1) {
+                    break;
+                }
+
+                // If we find a number that is exactly 1 greater, it forms a harmonious subsequence
+                if (nums[j] - minV == 1) {
+                    lhs = Math.max(lhs, j - i + 1); // Update the maximum length found
+                }
+            }
+        }
+
+        return lhs; // Return the length of the longest harmonious subsequence
+    }
+}
+
+// Approach 2 - Sorting and Sliding Windows
+// T.C - O(nlogn)
+// S.C - O(1)
+
+
+class Solution {
+    public int findLHS(int[] nums) {
+        int n = nums.length;
+
+        // Step 1: Sort the array to bring similar elements together and make scanning easier
+        Arrays.sort(nums);
+
+        int i = 0, j = 0; // Two pointers: i for window start, j for window end
+        int lhs = 0;      // Variable to track the length of the Longest Harmonious Subsequence (LHS)
+
+        // Step 2: Use two pointers to slide a window through the array
+        while (i < n) {
+            int minV = nums[i]; // Current minimum value of the window (start of the window)
+
+            // Step 3: Move j forward as long as the difference between nums[j] and minV is <= 1
+            while (j < n && (minV + 1) >= nums[j]) {
+                // If we find a value exactly 1 more than minV, we may have a valid harmonious subsequence
+                if (minV + 1 == nums[j]) {
+                    // Update the longest length if this subsequence is longer
+                    lhs = Math.max(lhs, j - i + 1);
+                }
+                j++; // Expand the window
+            }
+
+            i++; // Move the start of the window forward
+        }
+
+        return lhs; // Return the maximum length of harmonious subsequence found
+    }
+}
