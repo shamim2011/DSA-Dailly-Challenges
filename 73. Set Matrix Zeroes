@@ -1,0 +1,132 @@
+// Approach - 1 In-place Two-Pass Marking using a Sentinel Value  TLE
+// T C: O(m × n)
+// S C: O(1)
+
+class Solution {
+    public void setZeroes(int[][] matrix) {
+        int m = matrix.length;           // Number of rows
+        int n = matrix[0].length;        // Number of columns
+        int mark = Integer.MIN_VALUE + 1; // Unique marker value (unlikely to be in input)
+
+        // First pass: mark the rows and columns that need to be zeroed
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+
+                // If the current cell is zero, we mark its row and column
+                if (matrix[i][j] == 0) {
+
+                    // Mark the entire row i (except actual zeroes)
+                    for (int k = 0; k < n; k++) {
+                        if (matrix[i][k] != 0) {
+                            matrix[i][k] = mark; // Use marker instead of setting to 0 directly
+                        }
+                    }
+
+                    // Mark the entire column j (except actual zeroes)
+                    for (int k = 0; k < m; k++) {
+                        if (matrix[k][j] != 0) {
+                            matrix[k][j] = mark; // Same here
+                        }
+                    } 
+                }
+            }
+        }
+
+        // Second pass: convert all marker values to actual zeroes
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (matrix[i][j] == mark) {
+                    matrix[i][j] = 0;
+                }
+            }
+        }
+    }
+}
+
+//Approch-2 (Using extra space of m*n)
+//T.C : O(m*n*(m+n))
+//S.C : O(m*n)
+
+class Solution {
+    public void setZeroes(int[][] matrix) {
+        int m = matrix.length;           // Number of rows
+        int n = matrix[0].length;        // Number of columns
+
+        // Step 1: Create a temporary copy of the original matrix
+        int[][] temp = new int[m][n];
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                temp[i][j] = matrix[i][j]; // Copy original values
+            }
+        }
+
+        // Step 2: Scan the original matrix for zeroes
+        // and mark entire row and column as zero in the temp matrix
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (matrix[i][j] == 0) {
+                    // Set entire row i to 0 in temp
+                    for (int k = 0; k < n; k++) {
+                        temp[i][k] = 0;
+                    }
+
+                    // Set entire column j to 0 in temp
+                    for (int k = 0; k < m; k++) {
+                        temp[k][j] = 0;
+                    }
+                }
+            }
+        }
+
+        // Step 3: Copy modified temp matrix back to the original matrix
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                matrix[i][j] = temp[i][j]; // Overwrite original matrix
+            }
+        }
+    }
+}
+
+
+//Approch-3 (Two-pass approach using extra row and column marker arrays)
+//T.C : O(m × n)
+//S.C : O(m+n)
+
+
+class Solution {
+    public void setZeroes(int[][] matrix) {
+        int m = matrix.length;           // Number of rows
+        int n = matrix[0].length;        // Number of columns
+
+        // Step 1: Create two boolean arrays to track which rows and columns contain zeroes
+        boolean[] rows = new boolean[m]; // To mark rows that need to be zeroed
+        Arrays.fill(rows, false);        // Initialize all to false
+
+        boolean[] cols = new boolean[n]; // To mark columns that need to be zeroed
+        Arrays.fill(cols, false);        // Initialize all to false
+
+        // Step 2: First pass — identify rows and columns that contain at least one zero
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (matrix[i][j] == 0) {
+                    rows[i] = true;      // Mark this row
+                    cols[j] = true;      // Mark this column
+                }
+            }
+        }
+
+        // Step 3: Second pass — set matrix[i][j] to zero if either its row or column is marked
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (rows[i] == true || cols[j] == true) {
+                    matrix[i][j] = 0;    // Set cell to zero
+                }
+            }
+        }
+    }
+}
+
+//Approach-4 (In place constant space)
+//T.C : O(m*n)
+//S.C : O(1)
+
