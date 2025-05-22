@@ -1,0 +1,57 @@
+//Approach (Using heaps)
+//T.C : O(QlogQ + n * QlogQ)
+//S.C : O(Q)
+
+import java.util.*;
+
+class Solution {
+    public int maxRemoval(int[] nums, int[][] queries) {
+        int n = nums.length;
+        int Q = queries.length;
+
+        // Min-heap to store end indices of queries that have been used and are still active
+        PriorityQueue<Integer> past = new PriorityQueue<>();
+
+        // Max-heap to store available queries' end indices, giving priority to the one that lasts the longest
+        PriorityQueue<Integer> maxHeap = new PriorityQueue<>(Collections.reverseOrder());
+
+        // Sort all queries by their start index to process them in order
+        Arrays.sort(queries, (a, b) -> Integer.compare(a[0], b[0]));
+
+        int j = 0;             // Pointer to iterate through the sorted queries
+        int usedCount = 0;     // Counter for how many queries are used
+
+        // Loop through each position in the nums array
+        for (int i = 0; i < n; i++) {
+
+            // Add all queries that start at the current index `i` to the available maxHeap
+            while (j < Q && queries[j][0] == i) {
+                maxHeap.offer(queries[j][1]); // Store only the end index of the query
+                j++;
+            }
+
+            // Reduce nums[i] by the number of currently active queries (from previous steps)
+            nums[i] -= past.size();
+
+            // If more reductions are needed at this index, use new available queries
+            while (nums[i] > 0 && !maxHeap.isEmpty() && maxHeap.peek() >= i) {
+                int r = maxHeap.poll();   // Get a query that is still valid for index `i`
+                past.offer(r);            // Mark it as used and active
+                usedCount++;              // Increment used queries count
+                nums[i]--;                // Apply effect to nums[i]
+            }
+
+            // If we couldn't reduce nums[i] to zero, the task is impossible
+            if (nums[i] > 0)
+                return -1;
+
+            // Remove expired queries whose effect ends before the next index
+            while (!past.isEmpty() && past.peek() == i) {
+                past.poll();
+            }
+        }
+
+        // Return the number of unused queries
+        return Q - usedCount;
+    }
+}
