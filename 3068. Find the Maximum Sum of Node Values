@@ -1,0 +1,61 @@
+//Approach-1 (Greedily picking nodes to xor)
+//T.C : O(n)
+//S.C : O(1)
+
+class Solution {
+    public long maximumValueSum(int[] nums, int k, int[][] edges) {
+        long sum = 0;    // Total sum of values after choosing optimal XOR with k
+        int count = 0;   // Count of elements where XORing with k increases the value
+        // Minimum loss if we need to undo one XOR operation to make count even
+        int minLost = Integer.MAX_VALUE;  
+        // Iterate over all elements in the array
+        for (int num : nums) {
+            int xorVal = num ^ k; // Compute the XOR of the number with k
+            // If XORing increases the number's value, choose XORed value
+            if (xorVal > num) {
+                count++;       // Count this as a gain
+                sum += xorVal;   // Add XORed value to the total sum
+            } else {
+                sum += num;  // Else add the original value to the sum
+            }
+
+            // Track the minimum value loss if we have to undo one XOR
+            minLost = Math.min(minLost, Math.abs(num - xorVal));
+        }
+        // If the number of XORed gains is even, we can keep them all
+        if (count % 2 == 0) {
+            return sum;
+        }
+        // If odd, we have to undo one gain (to maintain valid pairing or graph constraint)
+        return sum - minLost;
+    }
+}
+
+
+//Approach-2(Greedy  + Sorting)
+//T.C : O(nlogn)
+//S.C : O(n)
+
+class Solution {
+    public long maximumValueSum(int[] nums, int k, int[][] edges) {
+        long normalSum = 0;  // Initial sum of all elements without XOR
+        List<Integer> gainList = new ArrayList<>(); // Stores gain of each number when XORed with k
+        // Calculate potential gain from XOR for each number and build the total sum without XOR
+        for (int num : nums) {
+            gainList.add((num ^ k) - num); // Gain = (XOR value) - (original value)
+            normalSum += (long) num;        // Add original value to the total sum
+        }
+        // Sort gains in descending order to prioritize the largest positive gains
+        Collections.sort(gainList, Collections.reverseOrder());
+        // Process the gain list in pairs, since an even number of XORs may be required
+        for (int i = 0; i < gainList.size() - 1; i += 2) {
+            long pairSum = gainList.get(i) + gainList.get(i + 1); // Sum of two gains
+            // Only apply the gain if the sum of the pair is positive
+            if (pairSum > 0) {
+                normalSum += pairSum; // Add the net gain from this pair to the result
+            }
+            // If the pairSum is not positive, it's better to skip XOR for these elements
+        }
+        return normalSum; // Return the maximum possible sum
+    }
+}
