@@ -1,0 +1,23 @@
+// Approach - Frequency Counting using HashMap
+// T.C - O(n + k log k)   k is number of elements in the result list (typically much smaller than n)
+// S.C - O(u + k)         u = unique elements
+
+class Solution {
+    public List<Integer> intersection(int[][] nums) {
+        int r=nums.length;
+        Map<Integer,Integer> mp = new HashMap<>();
+        List<Integer> ans = new ArrayList<>();
+        for(int[] arr:nums){
+            for(int e:arr){
+                mp.put(e,mp.getOrDefault(e,0)+1);
+            }
+        }
+        for(Map.Entry<Integer,Integer>entry:mp.entrySet()){
+            if(entry.getValue()==r){
+                ans.add(entry.getKey());
+            }
+        }
+        Collections.sort(ans);
+        return ans;
+    }
+}
