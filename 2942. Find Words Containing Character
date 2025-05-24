@@ -1,0 +1,23 @@
+// Approach - linear scan with character matching.
+// T.C - O(n × m)
+// S.C - O(n)
+
+class Solution {
+    // Method to find indices of words containing a specific character
+    public List<Integer> findWordsContaining(String[] words, char x) {
+        // Create a list to store the result (indices of matching words)
+        List<Integer> ans = new ArrayList<>();
+        // Convert the character 'x' to a String for comparison
+        String s = Character.toString(x);
+        // Iterate through the array of words
+        for (int i = 0; i < words.length; i++) {
+            // Check if the current word contains the character (as string)
+            if (words[i].contains(s)) {
+                // If yes, add the index to the result list
+                ans.add(i);
+            }
+        }
+        // Return the list of indices
+        return ans;
+    }
+}
