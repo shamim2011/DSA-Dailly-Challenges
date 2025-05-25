@@ -1,0 +1,74 @@
+//Approach-1 (Using simple set)
+//T.C : O(n)
+//S.C : O(n)
+
+class Solution {
+    public int longestPalindrome(String s) {
+        int ans = 0;
+        // Set to track characters with odd occurrences
+        Set<Character> st = new HashSet<>(); 
+        // Loop through each character in the string
+        for (char ch : s.toCharArray()) {
+            // If the character is already in the set, it means we found a pair
+            if (st.contains(ch)) {
+                // Remove the character since it forms a complete pair
+                st.remove(ch);
+                // Add 2 to the length (one pair)
+                ans += 2;   
+            } else {
+                // If it's the first time we see the character, add it to the set
+                st.add(ch);
+            }
+        }
+        // If there's any character left in the set, we can place one in the center
+        if (!st.isEmpty()) {
+            // Add 1 to the length for a single odd character in the middle
+            ans += 1;
+        }
+        // Return the length of the longest palindrome
+        return ans;
+    }
+}
+
+
+//Approach-2 (Using hashmap and countintg frequency)
+//T.C : O(n)
+//S.C : O(n)
+
+class Solution {
+    public int longestPalindrome(String s) {
+        // Map to store frequency of each character
+        Map<Character, Integer> mp = new HashMap<>();
+        int ans = 0;
+
+        // Count frequency of each character in the string
+        for (char ch : s.toCharArray()) {
+            mp.put(ch, mp.getOrDefault(ch, 0) + 1);
+        }
+
+        // Flag to indicate if we can place one odd character in the center
+        boolean takeCentralChar = false;
+
+        // Iterate through all character frequencies
+        for (int v : mp.values()) {
+            if (v % 2 == 0) {
+                // If frequency is even, we can use all of it in the palindrome
+                ans += v;
+            } else {
+                // If frequency is odd, use the maximum even part (v - 1)
+                ans += v - 1;
+                // Mark that we can place one odd character in the center
+                takeCentralChar = true;
+            }
+        }
+
+        // If there was at least one character with an odd frequency,
+        // we can place one of them in the center
+        if (takeCentralChar) {
+            ans += 1;
+        }
+
+        // Return the length of the longest palindrome that can be built
+        return ans;
+    }
+}
