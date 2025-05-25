@@ -1,0 +1,43 @@
+//Approach - Using map
+//T.C : O(n), where n = number of words
+//S.C : O(n)
+
+class Solution {
+    public int longestPalindrome(String[] words) {
+        int ans = 0; 
+        // Map to store the frequency of each word
+        Map<String, Integer> mp = new HashMap<>();
+
+        // First pass: Try to form palindrome pairs
+        for (String str : words) {
+            // Reverse the current word
+            String rev = new StringBuilder(str).reverse().toString();
+
+            // If a reverse pair exists in the map, we can form a 4-letter palindrome
+            if (mp.getOrDefault(rev, 0) > 0) {
+                ans += 4; // Add 4 because two 2-letter words form a palindrome
+                mp.put(rev, mp.get(rev) - 1); // Use up one instance of the reverse word
+            } else {
+                // Otherwise, store or increment the count of this word
+                mp.put(str, mp.getOrDefault(str, 0) + 1);
+            }
+        }
+
+        // Second pass: Check for a word with identical
+        // letters (e.g., "gg") to use in the center
+        for (Map.Entry<String, Integer> entry : mp.entrySet()) {
+            String word = entry.getKey();
+            int count = entry.getValue();
+
+            // If the word is made of the same character and still available
+            if (word.charAt(0) == word.charAt(1) && count > 0) {
+                // Add one such word (2 characters) to the center of the palindrome
+                ans += 2; 
+                // Only one such word can be used in the center
+                break;
+            }
+        }
+
+        return ans;
+    }
+}
