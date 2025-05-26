@@ -1,0 +1,21 @@
+//  Approach - Using hashSet
+// T.C - O(n)
+// S.C - O(n)
+
+class Solution {
+    public int maximumNumberOfStringPairs(String[] words) {
+        int ans = 0;
+        Set<String> st = new HashSet<>();
+        for(String str:words){
+            String rev = new StringBuilder(str).reverse().toString();
+            if(st.contains(rev)){
+                ans+=1;
+                st.remove(str);
+            }
+            else{
+                st.add(str);
+            }
+        }
+        return ans;
+    }
+}
