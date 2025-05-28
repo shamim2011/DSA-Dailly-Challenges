@@ -1,0 +1,85 @@
+//Approach-1 (Using BFS)
+//T.C : O(V*(V+E))
+//S.C : O(V+E)
+
+class Solution {
+
+    // Perform BFS from the current node to count 
+    // how many nodes are reachable within a given distance
+    private int bfs(int curr, Map<Integer, List<Integer>> adj, int dis, int N) {
+        Queue<int[]> queue = new LinkedList<>();
+        queue.offer(new int[]{curr, 0}); // Start BFS from current node with distance 0
+        boolean[] visited = new boolean[N];
+        visited[curr] = true;
+
+        int count = 0; // Count of reachable target nodes
+
+        while (!queue.isEmpty()) {
+            int[] pair = queue.poll();
+            int currNode = pair[0];
+            int distance = pair[1];
+
+            if (distance > dis) {
+                continue; // Skip if current distance exceeds allowed distance
+            }
+
+            count++; // Count the current node as reachable
+
+            // Traverse all unvisited neighbors
+            for (int neighbor : adj.getOrDefault(currNode, new ArrayList<>())) {
+                if (!visited[neighbor]) {
+                    visited[neighbor] = true;
+                    // Enqueue with incremented distance
+                    queue.offer(new int[]{neighbor, distance + 1}); 
+                }
+            }
+        }
+
+        return count;
+    }
+
+    // Build adjacency list from edges and compute 
+    // reachable node counts for each node within distance 'dis'
+    private int[] findCount(int[][] edges, int dis) {
+        int N = edges.length + 1; // Total number of nodes (0-based indexing)
+        Map<Integer, List<Integer>> adj = new HashMap<>();
+
+        // Build adjacency list
+        for (int[] edge : edges) {
+            int u = edge[0];
+            int v = edge[1];
+            adj.computeIfAbsent(u, k -> new ArrayList<>()).add(v);
+            adj.computeIfAbsent(v, k -> new ArrayList<>()).add(u);
+        }
+
+        int[] result = new int[N];
+
+        // Perform BFS for each node
+        for (int i = 0; i < N; i++) {
+            result[i] = bfs(i, adj, dis, N);
+        }
+
+        return result;
+    }
+
+    // Main method to calculate final result
+    public int[] maxTargetNodes(int[][] edges1, int[][] edges2, int k) {
+        int N = edges1.length + 1; // Number of nodes
+
+        // Get number of reachable nodes within distance k from each node in tree1
+        int[] result1 = findCount(edges1, k);
+
+        // Get number of reachable nodes within distance k-1 from each node in tree2
+        int[] result2 = findCount(edges2, k - 1);
+
+        // Find the maximum number of nodes reachable from any node in tree2
+        int maxTargetNodesCount = Arrays.stream(result2).max().getAsInt();
+
+        // Add max reachable nodes from tree2 to each node's count from tree1
+        for (int i = 0; i < N; i++) {
+            result1[i] += maxTargetNodesCount;
+        }
+
+        return result1;
+    }
+}
