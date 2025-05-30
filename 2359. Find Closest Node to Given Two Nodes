@@ -1,0 +1,143 @@
+//Approach-1 (BFS)
+//T.C : O(V+E), V = number of vertices and E = number of edges
+//S.C : O(n)
+
+class Solution {
+    int n; // Number of nodes in the graph
+
+    // BFS to compute shortest distances from startNode to all reachable nodes
+    void bfs(int[] edges, int startNode, int[] dist_nd) {
+        Queue<Integer> queue = new LinkedList<>(); // Queue to manage BFS traversal
+        queue.offer(startNode); // Start BFS from the given startNode
+
+        dist_nd[startNode] = 0; // Distance to startNode is zero
+        // To track visited nodes and avoid revisiting
+        boolean[] visited = new boolean[n]; 
+        Arrays.fill(visited, false); // Initially mark all nodes as unvisited
+        visited[startNode] = true; // Mark startNode as visited
+
+        // Standard BFS loop
+        while (!queue.isEmpty()) {
+            int u = queue.poll(); // Remove and get the current node from the queue
+            // Get the neighbor node connected by a single directed edge
+            int v = edges[u]; 
+
+            // If the neighbor exists and hasn't been visited
+            if (v != -1 && !visited[v]) {
+                visited[v] = true; // Mark neighbor as visited
+                // Set the distance from startNode to neighbor
+                dist_nd[v] = 1 + dist_nd[u]; 
+                queue.offer(v); // Add neighbor to the queue for further exploration
+            }
+        }
+    }
+
+
+    // Main method to find the closest meeting node
+    public int closestMeetingNode(int[] edges, int node1, int node2) {
+        n = edges.length; // Total number of nodes
+
+        // Distance arrays to track distance from node1 and node2 to every other node
+        int[] dist1 = new int[n];
+        Arrays.fill(dist1, Integer.MAX_VALUE); // Initialize with max value
+
+        int[] dist2 = new int[n];
+        Arrays.fill(dist2, Integer.MAX_VALUE); // Initialize with max value
+
+
+        // Distance to start nodes is zero
+        dist1[node1] = 0;
+        dist2[node2] = 0;
+
+        // Perform DFS from both nodes to fill their respective distance arrays
+        bfs(edges, node1, dist1);
+        bfs(edges, node2, dist2);
+
+        // Variables to track the result
+        int minDistNode = -1; // Stores the index of closest meeting node
+        // Minimum of maximum distances seen so far
+        int minDistTillNow = Integer.MAX_VALUE; 
+        // Iterate over all nodes
+        for (int i = 0; i < n; i++) {
+            // Maximum distance from node1 and node2 to this node
+            int maxD = Math.max(dist1[i], dist2[i]); 
+
+            // Update result if we found a better (closer) meeting node
+            if (maxD < minDistTillNow) {
+                minDistTillNow = maxD;
+                minDistNode = i;
+            }
+        }
+        // Return the index of the closest meeting node
+        return minDistNode; 
+    }
+}
+
+
+
+//Approach-2 (DFS)
+//T.C : O(V+E), V = number of vertices and E = number of edges
+//S.C : O(n)
+
+class Solution {
+    int n; // Number of nodes in the graph
+
+    // Depth-First Search to compute distance from startNode to all reachable nodes
+    void dfs(int[] edges, int startNode, int[] dist_nd, boolean[] visited) {
+        visited[startNode] = true; // Mark current node as visited
+
+        // Get the neighbor of the current node
+        int v = edges[startNode];
+
+        // If neighbor exists and is not visited yet
+        if (v != -1 && !visited[v]) {
+            dist_nd[v] = 1 + dist_nd[startNode]; // Set distance of neighbor
+            dfs(edges, v, dist_nd, visited);    // Recur for neighbor
+        }
+    }
+
+    // Main method to find the closest meeting node
+    public int closestMeetingNode(int[] edges, int node1, int node2) {
+        n = edges.length; // Total number of nodes
+
+        // Distance arrays to track distance from node1 and node2 to every other node
+        int[] dist1 = new int[n];
+        Arrays.fill(dist1, Integer.MAX_VALUE); // Initialize with max value
+
+        int[] dist2 = new int[n];
+        Arrays.fill(dist2, Integer.MAX_VALUE); // Initialize with max value
+
+        // Visited arrays to avoid cycles or repeated visits
+        boolean[] visited1 = new boolean[n];
+        Arrays.fill(visited1, false);
+
+        boolean[] visited2 = new boolean[n];
+        Arrays.fill(visited2, false);
+
+        // Distance to start nodes is zero
+        dist1[node1] = 0;
+        dist2[node2] = 0;
+
+        // Perform DFS from both nodes to fill their respective distance arrays
+        dfs(edges, node1, dist1, visited1);
+        dfs(edges, node2, dist2, visited2);
+
+        // Variables to track the result
+        int minDistNode = -1; // Stores the index of closest meeting node
+        // Minimum of maximum distances seen so far
+        int minDistTillNow = Integer.MAX_VALUE; 
+        // Iterate over all nodes
+        for (int i = 0; i < n; i++) {
+            // Maximum distance from node1 and node2 to this node
+            int maxD = Math.max(dist1[i], dist2[i]); 
+
+            // Update result if we found a better (closer) meeting node
+            if (maxD < minDistTillNow) {
+                minDistTillNow = maxD;
+                minDistNode = i;
+            }
+        }
+        // Return the index of the closest meeting node
+        return minDistNode; 
+    }
+}
