@@ -1,0 +1,74 @@
+//T.C : O(n^2), The maximum number of cells is n^2 and each cell is visited at most once.
+//S.C : O(n^2)
+
+class Solution {
+    int n;
+    // Helper method to convert a cell number to board coordinates
+    int[] getCoord(int num) {
+        int RT = (num - 1) / n;           // Row from the top
+        int RB = (n - 1) - RT;            // Row from the bottom
+        int col = (num - 1) % n;          // Column index
+
+        // Handle zigzag traversal: reverse column if
+        //  the row (from bottom) is traversed right-to-left
+        if ((n % 2 == 1 && RB % 2 == 1) || (n % 2 == 0 && RB % 2 == 0)) {
+            col = (n - 1) - col;
+        }
+        // Return the board coordinates
+        return new int[]{RB, col};        
+    }
+    public int snakesAndLadders(int[][] board) {
+        n = board.length;                 // Size of the board (n x n)
+        int steps = 0;                    // Number of moves made
+        Queue<Integer> queue = new LinkedList<>();   // For BFS traversal
+        boolean[][] visited = new boolean[n][n];  // All values are already false
+        for(boolean[] arr:visited){
+            Arrays.fill(arr,false);
+        }
+        // Initialize: mark cell 1 (bottom-left) as visited and enqueue it
+        visited[n - 1][0] = true;
+        queue.offer(1);
+        // Begin BFS traversal
+        while(!queue.isEmpty()){
+            // Number of positions at current BFS level
+            int N = queue.size();
+            while(N-- > 0){
+                // Current cell number
+                int x = queue.poll();
+                // Reached the final cell
+                if(x == n*n){
+                    return steps;
+                }
+                // Try all dice rolls from 1 to 6
+                for(int dice = 1; dice<=6;dice++){
+                    int val = x + dice;
+                    // Out of bounds
+                    if(val > n*n){
+                        break;
+                    }
+                    int[] coord = getCoord(val);
+                    int r = coord[0];
+                    int c = coord[1];
+                    // Already visited
+                    if(visited[r][c]){
+                        continue;
+                    }
+                    visited[r][c] = true;
+                    // Check for snake or ladder
+                    if(board[r][c] == -1){
+                        // Normal move
+                        queue.offer(val);
+                    }
+                    else{
+                        // Move to ladder/snake destination
+                        queue.offer(board[r][c]);
+                    }
+                }
+            }
+            // Increment move count after each level
+            steps++;
+        }
+        // No path to the destination
+        return -1;
+    }
+}
