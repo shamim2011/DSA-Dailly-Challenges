@@ -1,0 +1,94 @@
+//Approach-1
+//T.C : O(n)
+//S.C : O(2*n) ~ O(n) But using 2 Extra Arrays
+
+class Solution {
+    public int candy(int[] ratings) {
+        int n = ratings.length;
+
+        // Left to Right pass: to store candies count based on increasing rating from left
+        int[] L2R = new int[n];
+        // Every child gets at least 1 candy initially
+        Arrays.fill(L2R, 1); 
+
+        // Right to Left pass: to store candies count based on increasing rating from right
+        int[] R2L = new int[n];
+        // Initialize all with 1 candy
+        Arrays.fill(R2L, 1); 
+
+        // First pass: Left to Right
+        // If the current child has a higher rating than the previous one,
+        // give one more candy than the previous child
+        for (int i = 1; i < n; i++) {
+            if (ratings[i] > ratings[i - 1]) {
+                L2R[i] = L2R[i - 1] + 1;
+            }
+        }
+
+        // Second pass: Right to Left
+        // If the current child has a higher rating than the next one,
+        // give one more candy than the next child
+        for (int i = n - 2; i >= 0; i--) {
+            if (ratings[i] > ratings[i + 1]) {
+                R2L[i] = R2L[i + 1] + 1;
+            }
+        }
+
+        int result = 0;
+        // Final candies given to each child is the maximum of both passes
+        for (int i = 0; i < n; i++) {
+            result += Math.max(R2L[i], L2R[i]);
+        }
+
+        return result; // Total minimum candies required
+    }
+}
+
+
+//Approach-2 
+//T.C : O(n)
+//S.C : O(n) - Using only 1 Extra Array
+
+class Solution {
+    public int candy(int[] ratings) {
+        int n = ratings.length;
+
+        // Create an array to store the number of candies each child will get
+        int[] count = new int[n];
+
+        // Step 1: Give each child at least 1 candy
+        Arrays.fill(count, 1); 
+
+        // Step 2: Traverse from left to right
+        // If a child has a higher rating than the left child,
+        // give this child more candies than the left one
+        for (int i = 1; i < n; i++) {
+            if (ratings[i] > ratings[i - 1]) {
+                count[i] = Math.max(count[i], count[i - 1] + 1);
+            }
+        }
+
+        // Step 3: Traverse from right to left
+        // If a child has a higher rating than the right child,
+        // ensure this child has more candies than the right one
+        for (int i = n - 2; i >= 0; i--) {
+            if (ratings[i] > ratings[i + 1]) {
+                count[i] = Math.max(count[i], count[i + 1] + 1);
+            }
+        }
+
+        // Step 4: Sum up all the candies to get the minimum total required
+        int result = 0;
+        for (int i = 0; i < n; i++) {
+            result += count[i];
+        }
+
+        return result; // Return the total minimum number of candies required
+    }
+}
+
+
+//Approach-3
+//T.C : O(n)
+//S.C : O(1)
+
