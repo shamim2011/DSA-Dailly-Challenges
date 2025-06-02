@@ -92,3 +92,51 @@ class Solution {
 //T.C : O(n)
 //S.C : O(1)
 
+
+class Solution {
+    public int candy(int[] ratings) {
+        int n = ratings.length;
+
+        // Start with giving 1 candy to each child initially
+        int candy = n;
+        int i = 1;
+
+        while (i < n) {
+            // If current rating equals previous, move to next child
+            if (ratings[i] == ratings[i - 1]) {
+                i++;
+                continue;
+            }
+
+            // Handle strictly increasing sequence (like a peak going up)
+            int peak = 0;
+            while (i < n && ratings[i] > ratings[i - 1]) {
+                peak++;             // Track the number of steps going up
+                candy += peak;      // Give more candies as we go up
+                i++;
+                if (i == n) {
+                    return candy;   // If we reach the end, return the result
+                }
+            }
+
+            // Handle strictly decreasing sequence (like a dip going down)
+            int dip = 0;
+            while (i < n && ratings[i] < ratings[i - 1]) {
+                dip++;              // Track the number of steps going down
+                candy += dip;       // Give more candies going down
+                i++;
+            }
+
+            // If there is both a peak and a dip, the peak child is counted twice.
+            // So we subtract the minimum of peak and dip to avoid overcounting.
+            candy -= Math.min(peak, dip);
+
+            if (i == n) {
+                return candy;       // If we reach the end, return the result
+            }
+        }
+
+        return candy; // Return the total minimum number of candies required
+    }
+}
+
