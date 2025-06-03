@@ -68,3 +68,61 @@ class Solution {
 //S.C : O(n)
 
 
+class Solution {
+    public int maxCandies(int[] status, int[] candies, int[][] keys, int[][] containedBoxes, int[] initialBoxes) {
+        int totalCandies = 0;
+
+        // Set to track boxes that have already been visited (opened)
+        Set<Integer> visited = new HashSet<>();
+
+        // Set to track boxes that are found (may be locked or unlocked)
+        Set<Integer> foundBoxes = new HashSet<>();
+
+        // Queue for BFS processing of boxes that are unlocked and can be opened
+        Queue<Integer> que = new LinkedList<>();
+
+        // Process the initial boxes
+        for (int box : initialBoxes) {
+            foundBoxes.add(box); // Mark the box as found
+
+            // If the box is already unlocked (status == 1), process it immediately
+            if (status[box] == 1) {
+                que.offer(box);               // Add it to the queue for BFS
+                visited.add(box);            // Mark as visited
+                totalCandies += candies[box]; // Collect candies from this box
+            }
+        }
+
+        // Begin BFS traversal
+        while (!que.isEmpty()) {
+            int box = que.poll(); // Get the next box to process
+
+            // Process all boxes contained in the current box
+            for (int innerBox : containedBoxes[box]) {
+                foundBoxes.add(innerBox); // Mark as found
+
+                // If the inner box is unlocked and not yet visited, process it
+                if (status[innerBox] == 1 && !visited.contains(innerBox)) {
+                    que.offer(innerBox);                // Add to the queue
+                    visited.add(innerBox);              // Mark as visited
+                    totalCandies += candies[innerBox];  // Collect candies
+                }
+            }
+
+            // Use all keys found in the current box
+            for (int boxKey : keys[box]) {
+                status[boxKey] = 1; // Unlock the corresponding box
+
+                // If the box was found earlier and not yet visited, process it
+                if (foundBoxes.contains(boxKey) && !visited.contains(boxKey)) {
+                    que.offer(boxKey);                // Add to the queue
+                    visited.add(boxKey);              // Mark as visited
+                    totalCandies += candies[boxKey];  // Collect candies
+                }
+            }
+        }
+
+        // Return the total number of candies collected
+        return totalCandies;
+    }
+}
