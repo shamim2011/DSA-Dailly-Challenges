@@ -1,0 +1,69 @@
+//Approach-1 (Using DFS)
+//T.C : O(n), where n =  number of boxes, we don't visit any box more than once
+//S.C : O(n)
+
+class Solution {
+
+    // Helper DFS function to collect candies recursively
+    int dfs(int box, int[] status, int[] candies, int[][] keys, int[][] containedBoxes,
+            Set<Integer> visited, Set<Integer> foundBoxes) {
+
+        // If we have already visited this box, skip it to avoid duplicate processing
+        if (visited.contains(box)) {
+            return 0;
+        }
+
+        // If we found this box but it is locked, store it for later and return 0
+        if (status[box] == 0) {
+            foundBoxes.add(box);
+            return 0;
+        }
+
+        // Mark the box as visited
+        visited.add(box);
+
+        // Start by collecting candies in this box
+        int candiesCollected = candies[box];
+
+        // Explore all boxes contained within the current box
+        for (int innerBox : containedBoxes[box]) {
+            candiesCollected += dfs(innerBox, status, candies, keys, containedBoxes, visited, foundBoxes);
+        }
+
+        // Use all the keys found in this box to unlock other boxes
+        for (int boxKey : keys[box]) {
+            status[boxKey] = 1; // Mark the box as unlocked
+
+            // If we had found this box earlier and it's now unlocked, process it
+            if (foundBoxes.contains(boxKey)) {
+                candiesCollected += dfs(boxKey, status, candies, keys, containedBoxes, visited, foundBoxes);
+            }
+        }
+
+        return candiesCollected;
+    }
+
+    // Main method to calculate the maximum candies we can collect
+    public int maxCandies(int[] status, int[] candies, int[][] keys, int[][] containedBoxes, int[] initialBoxes) {
+        int totalCandies = 0;
+
+        // To keep track of already visited (opened) boxes
+        Set<Integer> visited = new HashSet<>();
+
+        // To keep track of boxes that are found but not yet opened (locked)
+        Set<Integer> foundBoxes = new HashSet<>();
+
+        // Try to process each initial box
+        for (int box : initialBoxes) {
+            totalCandies += dfs(box, status, candies, keys, containedBoxes, visited, foundBoxes);
+        }
+
+        return totalCandies;
+    }
+}
+
+
+//Approach-2 (Using BFS)
+//T.C : O(n), where n =  number of boxes, we don't visit any box more than once
+//S.C : O(n)
+
