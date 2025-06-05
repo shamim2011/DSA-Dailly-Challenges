@@ -5,21 +5,111 @@
 class Solution {
     public String answerString(String word, int numFriends) {
         int n = word.length();
+        // If there's only one friend, the whole word is the answer
         if (numFriends == 1) {
             return word;
         }
-
-        int longestPossible = n - (numFriends - 1);
         String result = "";
-
+        // Maximum number of characters we can take for one segment
+        int longestPossible = n - (numFriends - 1);
+        // Try all substrings of length `longestPossible` starting from each index
         for (int i = 0; i < n; i++) {
-            int canTakeLength = Math.min(longestPossible, n - i);
-            String sub = word.substring(i, i + canTakeLength);
+            // Ensure we do not go out of bounds
+            int canTake = Math.min(longestPossible, n - i);
+            // Extract the substring starting at i of length canTake
+            String sub = word.substring(i, i + canTake);
+            // Keep the lexicographically greatest substring
             if (sub.compareTo(result) > 0) {
                 result = sub;
             }
         }
-
         return result;
     }
 }
+
+
+//Approach-2 (trying at every index to find best substring)
+//T.C : O(n^2)
+//S.C : O(1)
+
+
+class Solution {
+    public String answerString(String word, int numFriends) {
+        if(numFriends == 1){
+            return word;
+        }
+        int n = word.length();
+        int longestPossible = n - (numFriends - 1);
+        String res = "";
+        // Iterate over each index in the string
+        for(int i = 0;i<n;i++){
+            // If a full substring of 'longestPossible' length can be taken
+            if(i+longestPossible<=n){
+                String sub = word.substring(i,i+longestPossible);
+                if(sub.compareTo(res)>0){
+                    res = sub;
+                }
+            }
+            // Else, take whatever is left from index i to end
+            else{
+                String sub = word.substring(i);
+                if(sub.compareTo(res)>0){
+                    res = sub;
+                }
+            }
+        }
+        return res;
+    }
+}
+
+//Approach-3 (2 Pointer) 
+//T.C : O(n)
+//S.C : O(1)
+
+
+class Solution {
+
+    // Function to find the starting index of the lexicographically greatest substring
+    int bestStartingPoint(String word, int n) {
+        int i = 0, j = 1;
+
+        // Use a two-pointer technique to find the best starting position
+        while (j < n) {
+            int k = 0;
+
+            // Compare characters starting from i and j
+            while (j + k < n && word.charAt(i + k) == word.charAt(j + k)) {
+                k++;
+            }
+
+            // If character at j+k is greater, j gives better substring => update i
+            if (j + k < n && word.charAt(i + k) < word.charAt(j + k)) {
+                i = j;
+                j++;
+            } else {
+                // Otherwise, skip the repeated section
+                j = j + k + 1;
+            }
+        }
+
+        return i;
+    }
+
+    public String answerString(String word, int numFriends) {
+        if (numFriends == 1) {
+            return word; // Take entire string if only 1 friend
+        }
+
+        int n = word.length();
+        int longestPossible = n - (numFriends - 1);
+
+        // Find best starting point for the largest lexicographical substring
+        int i = bestStartingPoint(word, n);
+
+        // Take as much as possible but not more than allowed
+        int canTakePossible = Math.min(n - i, longestPossible);
+
+        return word.substring(i, i + canTakePossible);
+    }
+}
+
