@@ -1,0 +1,59 @@
+//Approach-1 (DFS)
+//T.C : O(m* ( V+E)), we try DFS m times
+//S.C : O(V+E)
+
+
+class Solution {
+
+    // Depth-First Search to find the smallest character in the equivalence group
+    char dfs(Map<Character, List<Character>> adj, char curr, boolean[] visited) {
+        visited[curr - 'a'] = true; // Mark current character as visited
+        char minChar = curr;
+
+        // Explore all neighbors of current character
+        for (char neighbor : adj.getOrDefault(curr, new ArrayList<>())) {
+            if (!visited[neighbor - 'a']) {
+                // Recursively find smallest character in the connected component
+                char nextMin = dfs(adj, neighbor, visited);
+
+                // Update the smallest character found so far
+                if (nextMin < minChar) {
+                    minChar = nextMin;
+                }
+            }
+        }
+        return minChar;
+    }
+
+    public String smallestEquivalentString(String s1, String s2, String baseStr) {
+        int n = s1.length();
+        int m = baseStr.length();
+
+        // Build an adjacency list to represent character equivalences
+        Map<Character, List<Character>> adj = new HashMap<>();
+
+        for (int i = 0; i < n; i++) {
+            char u = s1.charAt(i);
+            char v = s2.charAt(i);
+
+            // Since the equivalence is bidirectional, add both directions
+            adj.computeIfAbsent(u, k -> new ArrayList<>()).add(v);
+            adj.computeIfAbsent(v, k -> new ArrayList<>()).add(u);
+        }
+
+        StringBuilder res = new StringBuilder();
+
+        // For each character in baseStr, find the smallest equivalent character
+        for (int i = 0; i < m; i++) {
+            char ch = baseStr.charAt(i);
+
+            // Boolean array to track visited characters during DFS
+            boolean[] visited = new boolean[26];
+
+            // Append the smallest equivalent character
+            res.append(dfs(adj, ch, visited));
+        }
+
+        return res.toString();
+    }
+}
