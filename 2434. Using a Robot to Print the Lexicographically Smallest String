@@ -1,3 +1,40 @@
 //Approach (Greedily finding the minimum character to right)
 //T.C : O(n)
 //S.C : O(n)
+
+class Solution {
+    public String robotWithString(String s) {
+        int n = s.length();
+        // Step 1: Precompute the minimum character from current index to the right
+        char[] minCharToRight = new char[n];
+        minCharToRight[n - 1] = s.charAt(n - 1);
+        for (int i = n - 2; i >= 0; i--) {
+            // For each index, store the smallest character from i to the end
+            minCharToRight[i] = (char) Math.min(s.charAt(i), minCharToRight[i + 1]);
+        }
+        // Stack to simulate temporary storage (like robot's hand)
+        Deque<Character> st = new ArrayDeque<>();
+        // Final result to simulate letters printed on paper
+        StringBuilder paper = new StringBuilder(); 
+        int i = 0;
+        while (i < n) {
+            // Push the current character into the stack
+            st.push(s.charAt(i));
+            // Get the smallest character to the right of current position
+            char minChar = (i + 1 < n) ? minCharToRight[i + 1] : s.charAt(i);
+            // Pop from stack to result as long as the top character is <= minChar to the right
+            while (!st.isEmpty() && st.peek() <= minChar) {
+                paper.append(st.pop());
+            }
+            // Move to the next character
+            i++; 
+        }
+        // After traversing input string, empty the stack into the result
+        while (!st.isEmpty()) {
+            paper.append(st.pop());
+        }
+        // Return the final string written on paper
+        return paper.toString(); 
+    }
+}
+
