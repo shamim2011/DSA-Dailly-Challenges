@@ -1,0 +1,3 @@
+//Approach (Greedily finding the minimum character to right)
+//T.C : O(n)
+//S.C : O(n)
