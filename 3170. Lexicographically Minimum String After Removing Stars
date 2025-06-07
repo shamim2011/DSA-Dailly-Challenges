@@ -2,3 +2,57 @@
 //T.C : O(nlogn)
 //S.C : O(n)
 
+// Class to represent a character and its index in the string
+class P {
+    public char c;
+    public int i;
+
+    // Constructor to initialize the character and index
+    public P(char c, int i) {
+        this.c = c;
+        this.i = i;
+    }
+}
+
+class Solution {
+    public String clearStars(String s) {
+        char[] str = s.toCharArray(); // Convert the string to a character array for easy manipulation
+
+        // Priority queue to store characters and their indices
+        // Sorted by character ascending. If characters are equal, sort by index descending
+        Queue<P> pq = new PriorityQueue<>((a, b) -> {
+            if (a.c == b.c) {
+                return b.i - a.i; // for same character, keep the one with later index first
+            }
+            return Character.compare(a.c, b.c); // otherwise, sort by character lexicographically
+        });
+
+        // Traverse the input string
+        for (int i = 0; i < str.length; i++) {
+            char c = str[i];
+
+            if (c != '*') {
+                // If character is not '*', add it with its index to the priority queue
+                pq.add(new P(c, i));
+            } else {
+                // If character is '*', remove the smallest lexicographical character from queue
+                if (!pq.isEmpty()) {
+                    P p = pq.poll();  // Remove the character to be deleted
+                    str[p.i] = '*';   // Mark it as removed in the character array
+                }
+            }
+        }
+
+        // Build the final string by excluding all '*' characters
+        char[] result = new char[str.length];
+        int index = 0;
+        for (char c : str) {
+            if (c != '*') {
+                result[index++] = c;
+            }
+        }
+
+        // Return the new string built from remaining characters
+        return new String(result, 0, index);
+    }
+}
