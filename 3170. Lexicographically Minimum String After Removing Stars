@@ -1,0 +1,4 @@
+//Simple approach using heap
+//T.C : O(nlogn)
+//S.C : O(n)
+
