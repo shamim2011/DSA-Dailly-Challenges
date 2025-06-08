@@ -1,0 +1,4 @@
+//Approach (Simple Recursion - DFS)
+//T.C : O(n) - We visit each number (1 to n) only once.
+//S.C : O(d) - where d is the number of digits in n i.e. log10(n)
+
