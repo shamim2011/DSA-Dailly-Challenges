@@ -2,10 +2,11 @@
 //T.C : O(nlogn)
 //S.C : O(n)
 
-// Class to represent a character and its index in the string
+// Custom class to store a character and its original index
 class P {
-    public char c;
-    public int i;
+    public char c;  // The character itself
+    // The index of the character in the original string
+    public int i;  
 
     // Constructor to initialize the character and index
     public P(char c, int i) {
@@ -16,43 +17,51 @@ class P {
 
 class Solution {
     public String clearStars(String s) {
-        char[] str = s.toCharArray(); // Convert the string to a character array for easy manipulation
 
-        // Priority queue to store characters and their indices
-        // Sorted by character ascending. If characters are equal, sort by index descending
+        // Convert the input string to a character array for easy modification
+        char[] str = s.toCharArray();
+
+        // PriorityQueue to keep track of characters to be potentially removed by '*'
+        // Sorting logic:
+        // 1. First by character (lexicographically smallest comes first)
+        // 2. If characters are equal, one with larger index comes first (so that earlier one is deleted)
         Queue<P> pq = new PriorityQueue<>((a, b) -> {
             if (a.c == b.c) {
-                return b.i - a.i; // for same character, keep the one with later index first
+                // If same character, compare by descending index
+                return b.i - a.i;
             }
-            return Character.compare(a.c, b.c); // otherwise, sort by character lexicographically
+            // Otherwise, lexicographically
+            return Character.compare(a.c, b.c); 
         });
 
-        // Traverse the input string
+        // Iterate through the character array
         for (int i = 0; i < str.length; i++) {
-            char c = str[i];
+            if (str[i] != '*') {
+                // If current character is not '*', 
+                // add it to the priority queue with its index
+                pq.add(new P(str[i], i));
+                continue;
+            }
 
-            if (c != '*') {
-                // If character is not '*', add it with its index to the priority queue
-                pq.add(new P(c, i));
-            } else {
-                // If character is '*', remove the smallest lexicographical character from queue
-                if (!pq.isEmpty()) {
-                    P p = pq.poll();  // Remove the character to be deleted
-                    str[p.i] = '*';   // Mark it as removed in the character array
-                }
+            // If current character is '*',
+            //  remove the smallest lexicographical character seen so far
+            if (!pq.isEmpty()) {
+                // Get the character to be removed
+                P p = pq.poll();    
+                // Mark the original character's position as '*'
+                str[p.i] = '*';      
             }
         }
 
-        // Build the final string by excluding all '*' characters
-        char[] result = new char[str.length];
-        int index = 0;
-        for (char c : str) {
-            if (c != '*') {
-                result[index++] = c;
+        // Build the final result string by skipping all '*'
+        StringBuilder res = new StringBuilder();
+        for (char ch : str) {
+            if (ch != '*') {
+                res.append(ch);  // Only append non-'*' characters
             }
         }
 
-        // Return the new string built from remaining characters
-        return new String(result, 0, index);
+        // Return the final string after all removals
+        return res.toString();
     }
 }
