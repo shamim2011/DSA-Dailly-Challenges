@@ -1,4 +1,37 @@
 //Approach (Simple Recursion - DFS)
 //T.C : O(n) - We visit each number (1 to n) only once.
-//S.C : O(d) - where d is the number of digits in n i.e. log10(n)
+//S.C : O(k) - where k is the number of digits in n i.e. log10(n)
 
+class Solution {
+    // Recursive helper method to build numbers in lexicographical order
+    void solve(int currNum, int n, List<Integer> ans) {
+        // Base case: If the current number exceeds 'n', stop recursion
+        if (currNum > n) {
+            return;
+        }
+        // Add the current number to the result list
+        ans.add(currNum);
+        // Try to append digits from 0 to 9 to form next lexicographical numbers
+        for (int nextDigit = 0; nextDigit <= 9; nextDigit++) {
+            // Form the next number by appending a digit
+            int nextNumber = currNum * 10 + nextDigit;
+            // If the next number exceeds 'n', stop further branching
+            if (nextNumber > n) {
+                return;
+            }
+            // Recurse with the new number
+            solve(nextNumber, n, ans);
+        }
+    }
+    // Main method to return the list of numbers in lexicographical order
+    public List<Integer> lexicalOrder(int n) {
+        // List to store the final result
+        List<Integer> ans = new ArrayList<>();
+        // Start DFS from numbers 1 to 9 (0 is not valid as a starting digit)
+        for (int num = 1; num <= 9; num++) {
+            solve(num, n, ans); // Recursively build the lexicographical order
+        }
+        // Return the populated list
+        return ans;
+    }
+}
