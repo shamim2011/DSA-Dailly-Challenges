@@ -1,0 +1,166 @@
+// Approach - Brute Force – Concatenate and Check Palindrome   TLE
+// T.C - O(n² * k)
+// S.C - O(1)
+
+class Solution {
+    public boolean isPalindrome(String str){
+        int i=0,j=str.length()-1;
+        while(i<=j){
+            if(str.charAt(i)!=str.charAt(j)){
+                return false;
+            }
+            i++;j--;
+        }
+        return true;
+    }
+    public List<List<Integer>> palindromePairs(String[] words) {
+        List<List<Integer>> ans = new ArrayList<>();
+        int n = words.length;
+        for(int i=0;i<n;i++){
+            for(int j=i+1;j<n;j++){
+                // String str = new StringBuilder(words[i]+words[j]).toString();
+                if(isPalindrome(words[i]+words[j])){
+                   ans.add(Arrays.asList(i, j));
+                }
+                if(isPalindrome(words[j]+words[i])){
+                   ans.add(Arrays.asList(j, i));
+                }
+            }
+        }
+        return ans;
+    }
+}
+
+
+// Approach 2- Prefix-Suffix HashMap Matching
+// T.C - O(n * k²)  Temporary strings for reversed suffix/prefix: O(k) at most at a time
+// S.C - O(n * k)
+
+class Solution {
+
+    // Helper method to check if a given string is a palindrome
+    boolean isPalindrome(String str) {
+        int i = 0, j = str.length() - 1;
+        while (i <= j) {
+            if (str.charAt(i) != str.charAt(j)) {
+                return false; // Mismatch found
+            }
+            i++;
+            j--;
+        }
+        return true; // All characters matched
+    }
+
+    public List<List<Integer>> palindromePairs(String[] words) {
+        // Map to store each word and its index for quick lookup
+        Map<String, Integer> mp = new HashMap<>();
+        // Final result list to store pairs of indices forming palindrome
+        List<List<Integer>> ans = new ArrayList<>();
+
+        // Step 1: Store each word and its index in the map
+        for (int i = 0; i < words.length; i++) {
+            mp.put(words[i], i);
+        }
+
+        // Step 2: Check each word for valid palindrome pair combinations
+        for (int i = 0; i < words.length; i++) {
+            String s = words[i];
+            int len = s.length();
+
+            // Try every possible split of the word into prefix and suffix
+            for (int j = 0; j <= len; j++) {
+                String pref = s.substring(0, j);   // Prefix: s[0...j-1]
+                String suff = s.substring(j);      // Suffix: s[j...end]
+
+                // Case 1: If the prefix is a palindrome,
+                // check if there's a reversed suffix in the map
+                if (isPalindrome(pref)) {
+                    String revSuff = new StringBuilder(suff).reverse().toString();
+                    // If reversed suffix exists and is not the same word
+                    if (mp.containsKey(revSuff) && mp.get(revSuff) != i) {
+                        ans.add(Arrays.asList(mp.get(revSuff), i));
+                    }
+                }
+
+                // Case 2: If the suffix is a palindrome (skip full word split),
+                // check if there's a reversed prefix in the map
+                if (j != len && isPalindrome(suff)) {
+                    String revPref = new StringBuilder(pref).reverse().toString();
+                    // If reversed prefix exists and is not the same word
+                    if (mp.containsKey(revPref) && mp.get(revPref) != i) {
+                        ans.add(Arrays.asList(i, mp.get(revPref)));
+                    }
+                }
+            }
+        }
+
+        return ans; // Return the list of valid palindrome pairs
+    }
+}
+
+
+// Same approach of 2
+// Approach 2- Prefix-Suffix HashMap Matching
+// T.C - O(n * k²)  Temporary strings for reversed suffix/prefix: O(k) at most at a time
+// S.C - O(n * k)
+
+class Solution {
+
+    // Helper method to check if a string is a palindrome
+    boolean isPalindrome(String str) {
+        int i = 0, j = str.length() - 1;
+        while (i <= j) {
+            if (str.charAt(i) != str.charAt(j)) {
+                return false; // Characters don't match
+            }
+            i++;
+            j--;
+        }
+        return true; // All characters matched, it's a palindrome
+    }
+
+    public List<List<Integer>> palindromePairs(String[] words) {
+        // Map to store reversed word as key and its index as value
+        Map<String, Integer> mp = new HashMap<>();
+        // List to store the resulting palindrome index pairs
+        List<List<Integer>> ans = new ArrayList<>();
+
+        // Step 1: Populate the map with reversed words and their indices
+        for (int i = 0; i < words.length; i++) {
+            String reversed = new StringBuilder(words[i]).reverse().toString();
+            mp.put(reversed, i);
+        }
+
+        // Step 2: Iterate through each word to find palindrome pairs
+        for (int i = 0; i < words.length; i++) {
+            String s = words[i];
+            int len = s.length();
+
+            // Try all possible ways to split the word into prefix and suffix
+            for (int j = 0; j <= len; j++) {
+                String prefix = s.substring(0, j);  // Prefix from start to j-1
+                String suffix = s.substring(j);     // Suffix from j to end
+
+                // Case 1: If prefix is a palindrome, check if reversed suffix exists in map
+                if (isPalindrome(prefix)) {
+                    if (mp.containsKey(suffix) && mp.get(suffix) != i) {
+                        // Found a valid (reversedSuffix, current) pair
+                        ans.add(Arrays.asList(mp.get(suffix), i));
+                    }
+                }
+
+                // Case 2: If suffix is a palindrome and not the full word,
+                // check if reversed prefix exists in map
+                if (j != len && isPalindrome(suffix)) {
+                    if (mp.containsKey(prefix) && mp.get(prefix) != i) {
+                        // Found a valid (current, reversedPrefix) pair
+                        ans.add(Arrays.asList(i, mp.get(prefix)));
+                    }
+                }
+            }
+        }
+
+        return ans; // Return all valid palindrome pairs
+    }
+}
+
