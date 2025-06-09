@@ -1,0 +1,115 @@
+//Approach-1 (Simple Recursion - DFS) - MEMORY LIMIT EXCEEDE (MLE)
+//T.C : O(n)
+//S.C : O(d) of system stack and O(n) for storing numbers in result array
+
+class Solution {
+    // Recursive helper method to build numbers in lexicographical order
+    void solve(int currNum, int n, List<Integer> ans) {
+        // Base case: If the current number exceeds 'n', stop recursion
+        if (currNum > n) {
+            return;
+        }
+        // Add the current number to the result list
+        ans.add(currNum);
+        // Try to append digits from 0 to 9 to form next lexicographical numbers
+        for (int nextDigit = 0; nextDigit <= 9; nextDigit++) {
+            // Form the next number by appending a digit
+            int nextNumber = currNum * 10 + nextDigit;
+            // If the next number exceeds 'n', stop further branching
+            if (nextNumber > n) {
+                return;
+            }
+            // Recurse with the new number
+            solve(nextNumber, n, ans);
+        }
+    }
+    // Main method to return the list of numbers in lexicographical order
+    public List<Integer> lexicalOrder(int n) {
+        // List to store the final result
+        List<Integer> ans = new ArrayList<>();
+        // Start DFS from numbers 1 to 9 (0 is not valid as a starting digit)
+        for (int num = 1; num <= 9; num++) {
+            solve(num, n, ans); // Recursively build the lexicographical order
+        }
+        // Return the populated list
+        return ans;
+    }
+}
+
+
+//Approach-2 (Simple Recursion - DFS without storing in result) - TIME LIMIT EXCEEDE (TLE)
+//T.C : O(n)
+//S.C : O(d) of system stack
+
+class Solution {
+    private int count = 0;
+    private int result = 0;
+
+    public boolean solve(long curr, int n, int k) {
+        if (curr > n) return false;
+
+        count++;
+
+        if (count == k) {
+            result = (int) curr;
+            return true;
+        }
+
+        for (int nextDigit = 0; nextDigit <= 9; nextDigit++) {
+            long nextnum = curr * 10 + nextDigit;
+            if (nextnum > n) break;
+
+            if (solve(nextnum, n, k)) return true;
+        }
+
+        return false;
+    }
+
+    public int findKthNumber(int n, int k) {
+        for (long num = 1; num <= 9; num++) {
+            if (solve(num, n, k)) break;
+        }
+        
+        return result;
+    }
+}
+
+
+//Approach-3 (Optimal)
+//T.C : O((logn)^2)
+//S.C : O(log(n)) system resursion stack
+
+class Solution {
+    // Helper method to count how many numbers are 
+    // between [curr, next) in lexicographical order up to n
+    int count(long curr, long next, int n) {
+        int countNum = 0;
+        // We traverse levels in the prefix tree (lexicographical tree)
+        while (curr <= n) {
+            // At current depth, add how many valid numbers exist between curr and next, capped by n
+            countNum += Math.min((long)n + 1, next) - curr;
+            // Go one level deeper (e.g., from 1 → 10, 2 → 20)
+            curr *= 10;
+            next *= 10;
+        }
+        return countNum;
+    }
+    public int findKthNumber(int n, int k) {
+        int curr = 1;  // Start from 1, which is the first number in lexicographical order
+        k -= 1;        // We've already considered '1' as the first number
+        // Keep going until we find the k-th number
+        while (k > 0) {
+            int count = count(curr, curr + 1, n);
+            if (count <= k) {
+                // If there are not enough numbers under this prefix, skip this entire subtree
+                curr++;     // Move to the next sibling
+                k -= count; // Reduce k by the number of skipped nodes
+            } else {
+                // There are enough numbers under this prefix — go deeper
+                curr *= 10; // Move to the next level in the tree (child node)
+                k -= 1;     // We've used 1 step to go deeper (include the parent node)
+            }
+        }
+        return curr;
+    }
+}
