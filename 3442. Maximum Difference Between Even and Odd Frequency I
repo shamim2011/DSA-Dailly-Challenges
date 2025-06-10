@@ -1,4 +1,4 @@
-// Approach 1- Frequency Counting + Min/Max Tracking
+// Approach 1- HashMap Frequency Counting
 // T.C - O(n)
 // S.C - O(n)
 
@@ -31,7 +31,7 @@ class Solution {
     }
 }
 
-// Approach 2- Frequency Counting with Odd/Even Separation"
+// Approach 2- Array-Based Frequency Counting
 // T.C - O(n)
 // S.C - O(1)
 
