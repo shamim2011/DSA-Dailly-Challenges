@@ -1,0 +1,64 @@
+// Approach 1- Frequency Counting + Min/Max Tracking
+// T.C - O(n)
+// S.C - O(n)
+
+import java.util.*;
+
+class Solution {
+    public int maxDifference(String s) {
+        // Step 1: Create a frequency map to count occurrences of each character
+        Map<Character, Integer> mp = new HashMap<>();
+        for (int i = 0; i < s.length(); i++) {
+            char ch = s.charAt(i);
+            mp.put(ch, mp.getOrDefault(ch, 0) + 1);
+        }
+        // Step 2: Initialize variables to track:
+        // maxOdd: maximum frequency among characters with odd frequency
+        // minEven: minimum frequency among characters with even frequency
+        int maxOdd = 0;
+        int minEven = Integer.MAX_VALUE;
+        // Step 3: Traverse the frequency map to update maxOdd and minEven
+        for (int value : mp.values()) {
+            if (value % 2 != 0) {
+                maxOdd = Math.max(maxOdd, value); // update maxOdd if current value is greater
+            } else {
+                minEven = Math.min(minEven, value); // update minEven if current value is smaller
+            }
+        }
+        // Step 4: Return the difference
+        // If no even frequency exists, minEven remains Integer.MAX_VALUE → result may be negative or overflow
+        return (maxOdd - minEven);
+    }
+}
+
+// Approach 2- Frequency Counting with Odd/Even Separation"
+// T.C - O(n)
+// S.C - O(1)
+
+class Solution {
+    public int maxDifference(String s) {
+        // Initialize an array to store the frequency of each letter (a-z)
+        int[] letter = new int[26];
+        Arrays.fill(letter, 0);
+        // Count the frequency of each character in the string
+        for (int i = 0; i < s.length(); i++) {
+            int index = s.charAt(i) - 'a'; // Convert character to index (0-25)
+            letter[index]++;
+        }
+        int maxOdd = 0;          // Track maximum odd frequency
+        int minEven = Integer.MAX_VALUE; // Track minimum even frequency
+        // Iterate through each letter's frequency
+        for (int i = 0; i < 26; i++) {
+            if (letter[i] == 0) continue; // Skip letters not present in the string
+            if (letter[i] % 2 != 0) {
+                // Current frequency is odd - check if it's the largest odd so far
+                maxOdd = Math.max(maxOdd, letter[i]);
+            } else {
+                // Current frequency is even - check if it's the smallest even so far
+                minEven = Math.min(minEven, letter[i]);
+            }
+        }
+        // Return the difference between max odd and min even frequencies
+        return maxOdd - minEven;
+    }
+}
