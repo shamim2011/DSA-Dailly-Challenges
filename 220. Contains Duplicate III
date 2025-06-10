@@ -35,9 +35,43 @@ class Solution {
     }
 }
 
-Approach - 2(TreeSet)
-// T . C - O(n)
-// S.C - O(n)
+// Approach-2 Brute Force Sliding Window Check
+// T.C : O(n × indexDiff)
+// S.C : 	O(n)
+
+class Solution {
+    public boolean containsNearbyAlmostDuplicate(int[] nums, int indexDiff, int valueDiff) {
+        int n = nums.length;
+
+        // Step 1: Optimization shortcut
+        // If valueDiff == 0 and all elements are unique, no two values can satisfy the condition.
+        Set<Integer> st = new HashSet<>();
+        for (int num : nums) {
+            st.add(num); // Collect unique elements
+        }
+
+        // If valueDiff is 0 and all elements are unique, no valid (i, j) can exist
+        if (valueDiff == 0 && n == st.size()) {
+            return false;
+        }
+
+        // Step 2: Brute-force check for all pairs (i, j) such that j is within i + indexDiff
+        for (int i = 0; i < n; i++) {
+            // Only check up to i + indexDiff
+            for (int j = i + 1; j <= i + indexDiff; j++) {
+                if (j >= n) break; // Don't go out of bounds
+
+                // If the value difference is within the allowed limit, return true
+                if (Math.abs((long)nums[i] - (long)nums[j]) <= valueDiff) {
+                    return true;
+                }
+            }
+        }
+
+        // No such pair found
+        return false;
+    }
+}
 
 
 
