@@ -1,0 +1,30 @@
+class Solution {
+    public int[] transformArray(int[] nums) {
+        int n = nums.length;
+        int[] ans = new int[n];
+        for(int i=0;i<n;i++){
+            if(nums[i]%2==0){
+                ans[i] = 0;  
+            }
+            else{
+                ans[i] = 1;
+            }
+        }
+        Arrays.sort(ans);
+        return ans;
+    }
+}
+
+--------------------------------------------------------------------------
+
+
+class Solution {
+    public int[] transformArray(int[] nums) {
+        int n = nums.length;
+        for(int i=0;i<n;i++){
+            nums[i] = nums[i]%2;
+        }
+        Arrays.sort(nums);
+        return nums;
+    }
+}
