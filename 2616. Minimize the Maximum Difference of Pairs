@@ -1,0 +1,45 @@
+// Approach - Binary Search + Greedy
+//T.C : O(nlogn)
+//S.c : O(1)
+
+class Solution {
+    int n;
+    // Helper function to check if we can form at least 'p' pairs
+    // such that the absolute difference between elements in each pair is <= mid
+    boolean isValid(int[] nums, int mid, int p) {
+        int count = 0;
+        int i = 0;
+        // Try to form pairs greedily
+        while (i < n - 1) {
+            // If current pair satisfies the condition, count it and skip the next index
+            if (Math.abs(nums[i] - nums[i + 1]) <= mid) {
+                count++;
+                i += 2; // skip both elements of the formed pair
+            } else {
+                i++; // move to the next element
+            }
+        }
+        // Return true if we can form at least 'p' such pairs
+        return count >= p;
+    }
+    public int minimizeMax(int[] nums, int p) {
+        n = nums.length;
+        // Sort the array so that adjacent differences are minimized
+        Arrays.sort(nums);
+        // Initialize binary search bounds
+        int left = 0, right = nums[n - 1] - nums[0];
+        int result = Integer.MAX_VALUE;
+        // Binary search to find the minimum possible maximum difference
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            // Check if current mid can allow forming at least 'p' valid pairs
+            if (isValid(nums, mid, p)) {
+                result = mid;       // Update result if valid
+                right = mid - 1;    // Try to find a smaller maximum
+            } else {
+                left = mid + 1;     // Try a larger value if not enough pairs
+            }
+        }
+        return result;
+    }
+}
