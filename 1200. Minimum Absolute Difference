@@ -1,0 +1,24 @@
+// Approach - Sorting + Single Pass for Minimum Difference
+//T.C : O(nlogn)
+//S.c : O(k) where k is the number of pairs with min difference
+
+class Solution {
+    public List<List<Integer>> minimumAbsDifference(int[] nums) {
+        int n = nums.length;
+        List<List<Integer>> ans = new ArrayList<>();
+        Arrays.sort(nums);
+        int minDiff = Integer.MAX_VALUE;
+        for(int i=0;i<n-1;i++){
+            minDiff = Math.min(minDiff,nums[i+1]-nums[i]);
+        }
+        for(int i=0;i<n-1;i++){
+            List<Integer> li = new ArrayList<>();
+            if(nums[i+1]-nums[i]<=minDiff){
+                li.add(nums[i]);
+                li.add(nums[i+1]);
+                ans.add(li);
+            }
+        }
+        return ans;
+    }
+}
