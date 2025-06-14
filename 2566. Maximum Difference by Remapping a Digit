@@ -39,3 +39,44 @@ class Solution {
         return (maxVal - minVal);
     }
 }
+
+
+//Approach-2 (Using Java Standard Library functions)
+//T.C : O(log10(n))
+//S.C : O(log10(n))
+
+class Solution {
+    public int minMaxDifference(int num) {
+        // Convert the integer to a string for easy digit manipulation
+        String s = Integer.toString(num);
+
+        // Step 1: Find the index of the first digit that is not '9'
+        // We'll use this digit to create the maximum number by replacing it with '9'
+        int idx = 0;
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) == '9') {
+                continue;  // Skip if digit is already '9'
+            } else {
+                idx = i;   // Found first non-'9' digit
+                break;
+            }
+        }
+
+        // Step 2: Replace all occurrences of the chosen digit with '9' to get maxStr
+        String maxStr = "";
+        if (idx < s.length()) {
+            maxStr = s.replace(s.charAt(idx), '9');
+        }
+
+        // Step 3: Replace all occurrences of the first digit with '0' to get minStr
+        String minStr = s.replace(s.charAt(0), '0');
+
+        // Step 4: Convert both maxStr and minStr to integer values
+        int minVal = Integer.parseInt(minStr);
+        int maxVal = Integer.parseInt(maxStr);
+
+        // Step 5: Return the difference
+        return (maxVal - minVal);
+    }
+}
+
