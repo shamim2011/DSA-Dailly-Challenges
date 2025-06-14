@@ -1,0 +1,33 @@
+//Approach - Greedy + Sorting
+// T.c - O(n*logn)
+// S.c - O(1)
+
+class Solution {
+    public int minDifference(int[] nums) {
+        int n = nums.length;
+
+        // If there are 4 or fewer elements, we can change all of them,
+        // so the min difference after up to 3 moves will be 0
+        if (n <= 4) return 0;
+
+        // Sort the array to easily access smallest and largest elements
+        Arrays.sort(nums);
+
+        // Now consider the 4 possible ways to change up to 3 elements:
+
+        // 1. Remove the 3 largest elements → take the difference between 4th largest and smallest
+        int diff1 = nums[n - 4] - nums[0];
+
+        // 2. Remove the 2 largest and 1 smallest → use 3rd largest and 2nd smallest
+        int diff2 = nums[n - 3] - nums[1];
+
+        // 3. Remove the 1 largest and 2 smallest → use 2nd largest and 3rd smallest
+        int diff3 = nums[n - 2] - nums[2];
+
+        // 4. Remove the 3 smallest elements → take the difference between largest and 4th smallest
+        int diff4 = nums[n - 1] - nums[3];
+
+        // Return the minimum of all four options
+        return Math.min(Math.min(diff1, diff2), Math.min(diff3, diff4));
+    }
+}
