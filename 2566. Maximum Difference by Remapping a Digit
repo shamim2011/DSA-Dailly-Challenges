@@ -1,0 +1,41 @@
+//Approach-1 (Simple iterating on digits)
+//T.C : O(log10(n))
+//S.C : O(log10(n))
+
+class Solution {
+    public int minMaxDifference(int num) {
+        // Convert the number to a string to manipulate individual digits easily
+        String s = Integer.toString(num);
+
+        // This variable will store the first digit (from left) that is not '9'
+        // We'll replace it with '9' to get the maximum possible number
+        char find9ch = ' ';
+
+        // Step 1: Find the first digit that is not '9'
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) == '9') {
+                continue;  // Skip if it's already 9
+            } else {
+                find9ch = s.charAt(i);  // Found the first non-9 digit
+                break;
+            }
+        }
+
+        // Step 2: Create the max string
+        // If a non-9 digit was found, replace all its occurrences with '9'
+        // Else, keep the string as-is (it’s already all 9s)
+        String maxStr = (find9ch != ' ') ? s.replace(find9ch, '9') : s;
+
+        // Step 3: Create the min string
+        // Replace all occurrences of the first digit with '0' to get the minimum possible number
+        // This may result in leading zeros, but it's fine for parsing into int
+        String minStr = s.replace(s.charAt(0), '0');
+
+        // Step 4: Convert strings back to integers
+        int minVal = Integer.parseInt(minStr);
+        int maxVal = Integer.parseInt(maxStr);
+
+        // Step 5: Return the difference
+        return (maxVal - minVal);
+    }
+}
