@@ -1,0 +1,55 @@
+// Approach - Greedy Digit Replacement + String Manipulation
+// T.c - O(n)
+// S.C - O(n)
+
+
+class Solution {
+    public int maxDiff(int num) {
+        // Convert the number to a string for easy digit manipulation
+        String s = Integer.toString(num);
+
+        // Step 1: Maximize the number
+        // Find the first digit from left that is not '9'
+        char non9Elem = ' ';
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) != '9') {
+                non9Elem = s.charAt(i);
+                break;
+            }
+        }
+
+        // If such a digit exists, replace all its occurrences with '9'
+        // Else (all digits are '9'), the max remains the same
+        String maxStr = (non9Elem != ' ' ? s.replace(non9Elem, '9') : s);
+
+        // Step 2: Minimize the number
+        char non1Elem = ' ';
+        String minStr = "";
+
+        // Case 1: If first digit is not '1', replace it with '1' to minimize most
+        if (s.charAt(0) != '1') {
+            non1Elem = s.charAt(0);
+            minStr = s.replace(non1Elem, '1');
+        } 
+        // Case 2: If first digit is already '1', look for next digit (not '0' or '1')
+        else {
+            for (int i = 1; i < s.length(); i++) {
+                if (s.charAt(i) != '0' && s.charAt(i) != '1') {
+                    non1Elem = s.charAt(i);
+                    break;
+                }
+            }
+            // If such digit found, replace all occurrences with '0'
+            if (non1Elem != ' ') {
+                minStr = s.replace(non1Elem, '0');
+            } else {
+                // If no such digit found, leave number unchanged
+                minStr = s;
+            }
+        }
+        int maxVal = Integer.parseInt(maxStr);
+        int minVal = Integer.parseInt(minStr);
+
+        return maxVal - minVal;
+    }
+}
