@@ -1,0 +1,37 @@
+// Approach - CamelCase Tag Generation with 100 Character Limit
+// T.C - O(n)
+// S.C - O(n)
+
+class Solution {
+    public String generateTag(String caption) {
+        
+        // Split the input caption into words, trimming extra spaces
+        String[] words = caption.trim().split(" ");
+
+        // If caption is empty or contains only spaces, return just the hashtag
+        if (words.length == 0) {
+            return "#";
+        }
+
+        // Initialize the result with a hashtag
+        StringBuilder sb = new StringBuilder("#");
+
+        // Append the first word in all lowercase (no capitalization)
+        sb.append(words[0].toLowerCase());
+
+        // Process remaining words
+        for (int i = 1; i < words.length; i++) {
+            // If the word is empty (e.g., due to multiple spaces), skip or append as-is
+            if (words[i].isEmpty()) {
+                sb.append(words[i]); // No-op but keeps logic consistent
+            } else {
+                // Capitalize first letter, lowercase the rest
+                sb.append(Character.toUpperCase(words[i].charAt(0)))
+                  .append(words[i].substring(1).toLowerCase());
+            }
+        }
+
+        // Ensure final string does not exceed 100 characters
+        return sb.substring(0, Math.min(sb.length(), 100));
+    }
+}
