@@ -1,0 +1,51 @@
+//Approach - Using maths Combinatorics
+//T.C : O(log(n-k-1))
+//S.C : O(n)
+
+
+class Solution {
+    // Define the modulo constant (10^9 + 7), commonly used in competitive programming
+    int MOD = (int) Math.pow(10, 9) + 7;
+    // Fast modular exponentiation function: calculates (a^b) % MOD efficiently
+    long findPow(long a, long b) {
+        long result = 1;
+        a %= MOD;
+        while (b > 0) {
+            // If the least significant bit of b is 1, multiply result by a
+            if ((b & 1) == 1)
+                result = (result * a) % MOD;
+
+            // Square the base a and halve the exponent b
+            a = (a * a) % MOD;
+            b >>= 1;
+        }
+        return result;
+    }
+    // Function to compute nCr % MOD using precomputed factorials and Fermat's inverse
+    long nCr(int n, int r, long[] factorial, long[] fermatFact) {
+        // Formula: n! / ((n-r)! * r!) ≡ n! * inv((n-r)!) * inv(r!) % MOD
+        return factorial[n] * fermatFact[n - r] % MOD * fermatFact[r] % MOD; // O(1)
+    }
+    public int countGoodArrays(int n, int m, int k) {
+        // Precompute factorials up to n
+        long[] factorial = new long[n + 1];
+        Arrays.fill(factorial, 1);
+        factorial[0] = 1;
+        factorial[1] = 1;
+        for (int i = 2; i <= n; i++) {
+            factorial[i] = (factorial[i - 1] * i) % MOD;
+        }
+        // Precompute modular inverses of factorials using Fermat's Little Theorem
+        long[] fermatFact = new long[n + 1];
+        Arrays.fill(fermatFact, 1);
+        for (int i = 0; i <= n; i++) {
+            fermatFact[i] = findPow(factorial[i], MOD - 2);  // inverse of factorial[i]
+        }
+        // Apply the combinatoric formula:
+        // result = m * C(n-1, k) * (m-1)^(n-k-1)
+        long result = nCr(n - 1, k, factorial, fermatFact);   // Calculate C(n-1, k)
+        result = (result * m) % MOD;                          // Multiply by m
+        result = (result * findPow(m - 1, n - k - 1)) % MOD;  // Multiply by (m-1)^(n-k-1)
+        return (int) result;
+    }
+}
