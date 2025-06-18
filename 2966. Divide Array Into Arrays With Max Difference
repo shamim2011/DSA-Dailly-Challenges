@@ -1,0 +1,78 @@
+// Approach 1: Approach: Greedy + Grouping after sorting.
+// T.C - (nlogn)
+// S.C - O(n)
+
+class Solution {
+    public int[][] divideArray(int[] nums, int k) {
+        int n = nums.length;
+        // To store the result as a list of integer lists (temporary structure)
+        List<List<Integer>> list = new ArrayList<>();
+        // If the array size is not a multiple of 3, we can't divide it into triplets
+        if(n % 3 != 0){
+            return new int[0][0];  // return empty 2D array
+        }
+        // Sort the array to make sure elements close in value are grouped together
+        Arrays.sort(nums);
+        // Traverse the sorted array in groups of 3
+        for(int i = 2; i < n; i += 3){
+            List<Integer> li = new ArrayList<>();
+            // If the difference between the smallest and largest in the group is greater than k
+            // the group is invalid
+            if(nums[i] - nums[i - 2] > k){
+                return new int[0][0];  // return empty 2D array
+            } else {
+                // Valid group, add the 3 elements
+                li.add(nums[i - 2]);
+                li.add(nums[i - 1]);
+                li.add(nums[i]);
+            }
+            // Add the valid triplet to the list
+            list.add(li);
+        }
+        // Convert the list of lists to a 2D array
+        int rows = list.size();
+        int cols = list.get(0).size();
+        int[][] arr = new int[rows][cols];
+        for(int i = 0; i < rows; i++){
+            List<Integer> row = list.get(i);
+            for(int j = 0; j < cols; j++){
+                arr[i][j] = row.get(j);  // Copy elements to 2D array
+            }
+        }
+        return arr;  // Return the final 2D array of valid triplets
+    }
+}
+
+
+// Approach 2: Greedy with sorting
+// T.C - (nlogn)
+// S.C - O(1)
+
+class Solution {
+    public int[][] divideArray(int[] nums, int k) {
+        int n = nums.length;
+        // If array length is not divisible by 3, it's impossible to form valid triplets
+        if (n % 3 != 0) {
+            return new int[0][0];  // Return an empty 2D array
+        }
+        // Sort the array to group close numbers together
+        Arrays.sort(nums);
+        // Create the result array with n/3 rows and 3 columns (triplets)
+        int[][] result = new int[n / 3][3];
+        int row = 0;  // Row index for the result array
+        // Traverse the sorted array in steps of 3 to form triplets
+        for (int i = 2; i < n; i += 3) {
+            // Check if the current group of 3 numbers satisfies the condition
+            if (nums[i] - nums[i - 2] > k) {
+                return new int[0][0];  // Return empty if difference exceeds k
+            }
+            // Valid triplet, assign it to the result array
+            result[row][0] = nums[i - 2];
+            result[row][1] = nums[i - 1];
+            result[row][2] = nums[i];
+            row++;  // Move to the next row
+        }
+        // Return the filled 2D array of valid triplets
+        return result;
+    }
+}
