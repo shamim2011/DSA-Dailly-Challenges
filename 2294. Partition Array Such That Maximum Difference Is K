@@ -1,0 +1,39 @@
+// Approach 1- Greedy + Sorting
+// T.C - O(nlogn)
+// S.C - O(n)
+
+class Solution {
+    public int partitionArray(int[] nums, int k) {
+        int n = nums.length;
+        // Step 1: Sort the array to group elements based on their proximity
+        Arrays.sort(nums);
+        // Step 2: Initialize the first element as the starting minimum of the current group
+        int min = nums[0];
+        // Step 3: Result list to hold all valid groups (not required for just count, but kept for structure)
+        List<List<Integer>> res = new ArrayList<>();
+        // Step 4: Traverse the array from the second element
+        for (int i = 1; i < n; i++) {
+            // Create a new group with the current minimum
+            List<Integer> li = new ArrayList<>();
+            li.add(min);
+            // If the difference is within allowed limit `k`, add to the current group
+            if (nums[i] - min <= k) {
+                li.add(nums[i]);
+            } else {
+                // Otherwise, close the current group and start a new one
+                res.add(li);
+                min = nums[i]; // update the minimum for the new group
+                // i remains the same to reprocess this number in the next group
+                i = i; // (no effect, can be removed)
+            }
+        }
+        // Step 5: Add 1 to count the last group which may not be added inside the loop
+        return res.size() + 1;
+    }
+}
+
+
+// Approach 2 - Greedy + Sorting
+// T.C - O(nlogn)
+// S.C - O(1)
+
