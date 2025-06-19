@@ -37,3 +37,57 @@ class Solution {
 // T.C - O(nlogn)
 // S.C - O(1)
 
+
+class Solution {
+    public int partitionArray(int[] nums, int k) {
+        int n = nums.length;
+        // Step 1: Sort the array to make it easier to group close elements together
+        Arrays.sort(nums);
+        int min = nums[0];
+        int ans = 0;
+        // Step 4: Traverse the array starting from the second element
+        for (int i = 1; i < n; i++) {
+            // If the current element is within the range (<= k) of the group minimum
+            if (nums[i] - min <= k) {
+                continue;  // Include it in the current group
+            } else {
+                // If not, start a new group
+                ans++;          // Increment group count
+                min = nums[i];  // Reset the group minimum to current element
+            }
+        }
+        // Step 5: Return total groups formed (including the first one)
+        return ans + 1;
+    }
+}
+-------------------same of approach 2 --------------------------
+class Solution {
+    public int partitionArray(int[] nums, int k) {
+        int n = nums.length;
+
+        // Step 1: Sort the array to group close elements together
+        Arrays.sort(nums);
+
+        // Step 2: Initialize the minimum element of the current group
+        int min = nums[0];
+
+        // Step 3: Initialize the group count; at least one group is needed
+        int ans = 1;
+
+        // Step 4: Traverse the array starting from index 1
+        for (int i = 1; i < n; i++) {
+            // If the difference between current element and group min exceeds k,
+            // start a new group
+            if (nums[i] - min > k) {
+                ans++;           // Increment group count
+                min = nums[i];   // Set new group's min element
+            }
+            // Else, continue in the same group
+        }
+
+        // Step 5: Return the total number of groups formed
+        return ans;
+    }
+}
+
+
