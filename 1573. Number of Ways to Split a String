@@ -1,0 +1,51 @@
+// Approach - Prefix Sum Counting + Combinatorics
+// T.C - O(n)
+// S.C - O(1)
+
+class Solution {
+    int MOD = (int)Math.pow(10, 9) + 7; // Modulus to avoid integer overflow
+
+    public int numWays(String s) {
+        int n = s.length();
+        int totalOne = 0;
+
+        // Count total number of '1's in the string
+        for (int i = 0; i < n; i++) {
+            if (s.charAt(i) == '1') {
+                totalOne += 1;
+            }
+        }
+
+        // If total number of '1's is not divisible by 3, we cannot divide into 3 equal parts
+        if (totalOne % 3 != 0) {
+            return 0;
+        }
+
+        // Special case: if there are no '1's, 
+        // we need to count number of ways to choose 2 cuts from n-1 positions
+        if (totalOne == 0) {
+            return (int)(((long)(n - 1) * (n - 2) / 2) % MOD);
+        }
+
+        long eachBoxOne = totalOne / 3;  // Each segment must contain this many '1's
+        long countOne = 0;               // Running count of '1's while iterating
+        long firstBox = 0;               // Number of positions where first split can happen
+        long secondBox = 0;              // Number of positions where second split can happen
+
+        // Iterate through the string to count possible split positions
+        for (int i = 0; i < n; i++) {
+            if (s.charAt(i) == '1') {
+                countOne++;
+            }
+            if (countOne == eachBoxOne) {
+                firstBox++; // Count number of positions where we can make first cut
+            }
+            if (countOne == 2 * eachBoxOne) {
+                secondBox++; // Count number of positions where we can make second cut
+            }
+        }
+
+        // Total ways = firstBox choices × secondBox choices
+        return (int)((firstBox * secondBox) % MOD);
+    }
+}
