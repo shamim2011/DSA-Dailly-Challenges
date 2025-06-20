@@ -1,3 +1,45 @@
 //Approach (Iterating and finding best at each point of time)
 //T.C : O(n)
 //S.C : O(n)
+
+
+class Solution {
+    public int maxDistance(String s, int k) {
+        // Initialize counters for each direction
+        int north = 0, south = 0, east = 0, west = 0;
+        int result = 0; // Store the maximum distance
+        
+        // Traverse the string character by character
+        for(int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+
+            // Count each direction move
+            if(c == 'N') north++;
+            else if(c == 'S') south++;
+            else if(c == 'E') east++;
+            else west++;
+
+            // Manhattan distance = |East - West| + |North - South|
+            int currDist = Math.abs(east - west) + Math.abs(north - south);
+
+            int steps = i + 1; // Total steps taken so far
+            int wasted = steps - currDist; // Steps that cancel each other
+
+            int extra = 0;
+
+            // You can modify at most k steps to optimize the path
+            // One modification can reduce wasted moves by 2
+            if(steps != currDist) {
+                extra = Math.min(2 * k, wasted);
+            }
+
+            // Final distance after using up to k modifications
+            int finalCurrDist = currDist + extra;
+
+            // Update result with maximum found distance
+            result = Math.max(result, finalCurrDist);
+        }
+
+        return result;
+    }
+}
