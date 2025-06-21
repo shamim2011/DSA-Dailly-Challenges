@@ -58,8 +58,91 @@ class Solution {
     }
 }
 
-
-//Approach-2 (Straight forward)
+//Approach-2 (Brute-Force Frequency Normalization (No Sorting))
 //T.C : O(n)
 //S.C : O(1)
 
+class Solution {
+    public int minimumDeletions(String word, int k) {
+        int n = word.length();
+
+        int[] freq = new int[26];  // Step 1: Array to store frequency of each lowercase letter
+
+        // Step 2: Count frequency of each character in the input string
+        for (char ch : word.toCharArray()) {
+            freq[ch - 'a']++;
+        }
+
+        int result = n;  // Step 3: Initialize result with max deletions (i.e., delete all characters)
+
+        // Step 4: Try each non-zero frequency as the "base" frequency
+        for (int i = 0; i < 26; i++) {
+            if (freq[i] == 0) continue; // Skip characters not present in the word
+
+            int del = 0;  // Tracks deletions for this base frequency
+
+            // Step 5: Compare every other character's frequency with base freq[i]
+            for (int j = 0; j < 26; j++) {
+                if (i == j || freq[j] == 0) continue; // Skip self or unused characters
+
+                if (freq[j] > freq[i] + k) {
+                    // Case 1: Frequency too high → reduce it to base + k
+                    del += freq[j] - (freq[i] + k);
+                } else if (freq[j] < freq[i]) {
+                    // Case 2: Frequency too low → delete all characters of that frequency
+                    del += freq[j];
+                }
+                // Case 3: freq[j] ∈ [freq[i], freq[i] + k] → no deletion needed
+            }
+
+            // Step 6: Track the minimum deletions across all base frequencies
+            result = Math.min(result, del);
+        }
+
+        // Step 7: Return the minimal deletions required
+        return result;
+    }
+}
+
+
+//Approach-3 (Straight forward)
+//T.C : O(n)
+//S.C : O(1)
+
+class Solution {
+    public int minimumDeletions(String word, int k) {
+        int n = word.length();
+        int[] freq = new int[26];  // Frequency array for all lowercase letters
+
+        // Step 1: Count frequency of each character
+        for (char ch : word.toCharArray()) {
+            freq[ch - 'a']++;
+        }
+
+        // Step 2: Sort frequencies in ascending order
+        Arrays.sort(freq);
+
+        int result = n;         // Initialize result with max possible deletions (delete all)
+        int cumDelete = 0;      // Cumulative deletions from lower frequencies
+
+        // Step 3: Try each non-zero frequency as a base
+        for (int i = 0; i < 26; i++) {
+            int del = cumDelete;        // Start with deletions done so far for smaller frequencies
+            int freq_i = freq[i];       // Use freq[i] as the base frequency
+
+            // Step 4: For higher frequencies, check if they need reduction
+            for (int j = 25; j > i; j--) {
+                if (freq[j] - freq_i <= k) break;  // Already within [base, base+k], no deletion
+                del += freq[j] - (freq_i + k);     // Delete the excess to bring within range
+            }
+
+            // Step 5: Update minimum deletions
+            result = Math.min(result, del);
+
+            // Step 6: Add current base freq to cumulative deletions for next iterations
+            cumDelete += freq_i;
+        }
+
+        return result;  // Return the minimum number of deletions found
+    }
+}
