@@ -1,0 +1,65 @@
+//Approach-1 (Brute-force on frequencies)
+//T.C : O(n + m²)  -> where m is the number of distinct characters in the string word.
+//S.C : O(m) 
+
+class Solution {
+    public int minimumDeletions(String word, int k) {
+        int n = word.length();
+
+        // Step 1: Count frequency of each character
+        Map<Character, Integer> mp = new HashMap<>();
+        for (int i = 0; i < n; i++) {
+            char c = word.charAt(i);
+            mp.put(c, mp.getOrDefault(c, 0) + 1);
+        }
+
+        // Step 2: Extract frequencies into a list
+        List<Integer> li = new ArrayList<>();
+        for (Map.Entry<Character, Integer> entry : mp.entrySet()) {
+            li.add(entry.getValue());
+        }
+
+        // Step 3: Sort the frequencies to make comparison easier
+        Collections.sort(li);
+
+        int ans = Integer.MAX_VALUE;
+
+        // Step 4: Try each frequency as a base frequency
+        for (int i = 0; i < li.size(); i++) {
+            int x = li.get(i); // base frequency
+            int del = 0;
+
+            // Step 5: For every other frequency, calculate deletions
+            for (int j = 0; j < li.size(); j++) {
+                if (i == j) continue; // skip the base itself
+
+                int curr = li.get(j);
+
+                // Case 1: If curr is already in range [x, x + k], no deletion needed
+                if (curr >= x && curr <= x + k) continue;
+
+                // Case 2: If curr > x + k → delete excess characters
+                if (curr > x + k) {
+                    del += curr - (x + k);
+                }
+
+                // Case 3: If curr < x → delete all characters of that frequency
+                else if (curr < x) {
+                    del += curr;
+                }
+            }
+
+            // Step 6: Update minimum deletions
+            ans = Math.min(ans, del);
+        }
+
+        // Step 7: Return the minimal deletions needed
+        return ans;
+    }
+}
+
+
+//Approach-2 (Straight forward)
+//T.C : O(n)
+//S.C : O(1)
+
