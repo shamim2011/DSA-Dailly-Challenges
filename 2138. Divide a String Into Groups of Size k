@@ -1,0 +1,39 @@
+//Approach (Greedy Substring Splitting with Padding)
+//T.C : O(n)
+//S.C : O(k)
+
+class Solution {
+    public String[] divideString(String s, int k, char fill) {
+        int n = s.length(); // Total length of input string
+
+        // Calculate the total number of groups needed
+        int size = n / k;
+        if (n % k != 0) {
+            size++; // Add one more group if there are leftover characters
+        }
+
+        String[] arr = new String[size]; // Result array to store divided strings
+        int j = 0; // Index for filling the result array
+
+        // Traverse the string in steps of size 'k'
+        for (int i = 0; i < n; i += k) {
+            if (i + k <= n) {
+                // If there are enough characters left to form a full group
+                arr[j++] = s.substring(i, i + k);
+            } else {
+                // If characters left are less than k, fill the rest with 'fill' character
+                StringBuilder sb = new StringBuilder();
+                sb.append(s.substring(i)); // Add remaining characters
+
+                // Append fill characters until the length becomes 'k'
+                while (sb.length() < k) {
+                    sb.append(fill);
+                }
+
+                arr[j++] = sb.toString(); // Store the padded group
+            }
+        }
+
+        return arr; // Return the final divided and padded string array
+    }
+}
