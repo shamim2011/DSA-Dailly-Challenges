@@ -1,0 +1,3 @@
+//Approach - Using palindrome generation logic
+//T.C : ~O((10 ^ D) * D), where D = number of digits in k-mirror number
+//S.C : O(D), where D = number of digits in k-mirror number
