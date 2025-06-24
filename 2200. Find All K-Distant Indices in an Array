@@ -1,0 +1,26 @@
+//Approach (Inefficient Brute-Force with Uncontrolled Two Pointers)
+//T.C : O(n)
+//S.C : O(n)
+
+class Solution {
+    public List<Integer> findKDistantIndices(int[] nums, int key, int k) {
+        int n = nums.length;
+        List<Integer> ans = new ArrayList<>();
+        int i = 0, j = 0;
+        // Traverse the array with pointer j to find all positions where nums[j] == key
+        while (j < n) {
+            if (nums[j] == key) {
+                // From the found key position j, check all indices i such that |i - j| <= k
+                // Start i from its current value and go up to j + k or array end
+                while (i <= j + k && i < n) {
+                    if (Math.abs(i - j) <= k) {
+                        ans.add(i); // Add valid index i
+                    }
+                    i++;
+                }
+            }
+            j++; // Move to next index
+        }
+        return ans;
+    }
+}
