@@ -1,0 +1,3 @@
+//Approach (Binary Search on Answer)
+//T.C : O(log(maxP-minP) * n * log(m)
+//S.C : O(1)
