@@ -1,3 +1,86 @@
 //Approach (Binary Search on Answer)
 //T.C : O(log(maxP-minP) * n * log(m)
 //S.C : O(1)
+
+class Solution {
+
+    // Helper function to count how many products are <= midProd
+    public long findCountSmallest(int[] nums1, int[] nums2, long midProd) {
+        long prodCount = 0;  // Stores total count of products <= midProd
+        int n = nums2.length;
+
+        // Traverse through each element of nums1
+        for (int i = 0; i < nums1.length; i++) {
+
+            // Case 1: nums1[i] is non-negative
+            if (nums1[i] >= 0) {
+                int l = 0, r = n - 1;
+                int m = -1; // To track the largest index such that product <= midProd
+
+                // Binary search on nums2 for current nums1[i]
+                while (l <= r) {
+                    int mid = l + (r - l) / 2;
+                    long prod = (long) nums1[i] * nums2[mid];
+
+                    if (prod <= midProd) {
+                        m = mid;       // Found a valid product, search right for more
+                        l = mid + 1;
+                    } else {
+                        r = mid - 1;   // Too big, search left
+                    }
+                }
+                prodCount += (m + 1); // Count = number of elements from 0 to m
+            }
+
+            // Case 2: nums1[i] is negative
+            else {
+                int l = 0, r = n - 1;
+                int m = n; // To track the smallest index such that product > midProd
+
+                // Binary search on nums2 for current negative nums1[i]
+                while (l <= r) {
+                    int mid = l + (r - l) / 2;
+                    long prod = (long) nums1[i] * nums2[mid];
+
+                    if (prod <= midProd) {
+                        m = mid;       // Possible candidate, but check for smaller index
+                        r = mid - 1;
+                    } else {
+                        l = mid + 1;
+                    }
+                }
+                prodCount += (n - m); // Count = number of elements from m to n-1
+            }
+        }
+        return prodCount; // Total number of products <= midProd
+    }
+
+    // Main function to find the k-th smallest product
+    public long kthSmallestProduct(int[] nums1, int[] nums2, long k) {
+        long result = 0;
+
+        // Possible range of products: [-1e10, 1e10]
+        long l = (long) (-1 * Math.pow(10, 10));
+        long r = (long) Math.pow(10, 10);
+
+        // Binary search over product values
+        while (l <= r) {
+            long midProd = l + (r - l) / 2;
+
+            // Count number of products <= midProd
+            long countSmallest = findCountSmallest(nums1, nums2, midProd);
+
+            if (countSmallest >= k) {
+                // Mid is a valid candidate; look for smaller value
+                result = midProd;
+                r = midProd - 1;
+            } else {
+                // Too few products <= midProd; look right
+                l = midProd + 1;
+            }
+        }
+
+        return result; // Final answer is the smallest midProd such that count >= k
+    }
+}
+
