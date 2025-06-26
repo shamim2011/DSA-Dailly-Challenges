@@ -1,3 +1,128 @@
-//Approach - Using palindrome generation logic
+//Approach 1- Brute-force with Base Conversion & Palindrome Check
+//T.C : O(m × log m) where m = max number checked
+//S.C : O(logₖ(m)) per iteration
+
+class Solution {
+    public boolean dPalindrom(int num){
+        int origin = num;
+        int reverse = 0;
+        while(num>0){
+            reverse = reverse*10+num%10;
+            num = num/10;
+        }
+        return (reverse == origin);
+    }
+    public boolean kPalindrom(int num,int k){
+        StringBuilder ksb = new StringBuilder();
+        while(num>0){
+            ksb.append(num%k);
+            num = num/k;
+        }
+        return isKPalindrom(ksb.toString());
+    }
+    public boolean isKPalindrom(String s){
+        int l=0,r=s.length()-1;
+        while(l<=r){
+            if(s.charAt(l)!=s.charAt(r)){
+                return false;
+            }
+            l++;r--;
+        }
+        return true;
+    }
+    public long kMirror(int k, int n) {
+        long sum=0;
+        int count =0;
+        int i=1;
+        while(count<n){
+            boolean dPal = dPalindrom(i);
+            boolean kPal = kPalindrom(i,k);
+            if(dPal == true && kPal==true){
+                sum+=i;
+                count++;
+            }
+            i++;
+        }
+        return sum;
+    }
+}
+
+
+//Approach 2- Using palindrome generation logic
 //T.C : ~O((10 ^ D) * D), where D = number of digits in k-mirror number
 //S.C : O(D), where D = number of digits in k-mirror number
+
+
+class Solution {
+
+    // Converts a decimal number to its representation in base-k
+    public String convertToBaseK(long num, int k) {
+        if (num == 0) return "0";  // base case
+        StringBuilder baseK = new StringBuilder();
+        while (num > 0) {
+            baseK.append(num % k);  // append the remainder
+            num /= k;               // divide number by base
+        }
+        return baseK.toString();   // reversed order; palindrome check handles that
+    }
+
+    // Checks whether a given string is a palindrome
+    public boolean isPalindrome(String s) {
+        int l = 0, r = s.length() - 1;
+        while (l <= r) {
+            if (s.charAt(l) != s.charAt(r)) return false;
+            l++;
+            r--;
+        }
+        return true;
+    }
+
+    // Main function to find sum of first n numbers that are palindromic in both base-10 and base-k
+    public long kMirror(int k, int n) {
+        long sum = 0;          // stores the sum of valid k-mirror numbers
+        int length = 1;        // start with 1-digit palindromes
+
+        // Continue until we find 'n' such k-mirror numbers
+        while (n > 0) {
+            // Half length of the palindrome to generate full palindromes
+            int halfLength = (length + 1) / 2;
+
+            // Generate numbers with 'halfLength' digits (the left half of the palindrome)
+            long minNum = (long)Math.pow(10, halfLength - 1);  // e.g., 10 for halfLength=2
+            long maxNum = (long)Math.pow(10, halfLength) - 1;  // e.g., 99 for halfLength=2
+
+            // Iterate through all such left-half numbers
+            for (long num = minNum; num <= maxNum; num++) {
+                String firstHalf = Long.toString(num);  // left part of the palindrome
+                String secondHalf = new StringBuilder(firstHalf).reverse().toString();  // reversed for right part
+
+                String fullPalindrome;
+
+                // If total length is even, just join both halves
+                if (length % 2 == 0) {
+                    fullPalindrome = firstHalf + secondHalf;
+                } else {
+                    // If odd, avoid repeating middle digit
+                    fullPalindrome = firstHalf + secondHalf.substring(1);
+                }
+
+                long palNum = Long.parseLong(fullPalindrome);  // convert back to long
+
+                // Convert this palindrome to base-k and check if it's also a palindrome in that base
+                String basek = convertToBaseK(palNum, k);
+                if (isPalindrome(basek)) {
+                    sum += palNum;  // add to sum if it's a k-mirror number
+                    n--;            // reduce count of required numbers
+
+                    // If we’ve found enough numbers, return the result
+                    if (n == 0) {
+                        return sum;
+                    }
+                }
+            }
+            length++;  // increase the length of palindromes to generate
+        }
+
+        return sum;  // fallback return (should never hit due to early return inside loop)
+    }
+}
