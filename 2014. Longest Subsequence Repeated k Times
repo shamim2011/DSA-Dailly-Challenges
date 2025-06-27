@@ -1,3 +1,94 @@
 //Approach-1 (Khandani Backtracking remplate - storing all possible strings)
 //T.C : O(n * ((n/k)!))
 //S.C : O(n/k)
+
+class Solution {
+    // Stores the current best result subsequence
+    String result = "";
+    private boolean isSubsequence(String s, String sub, int k) {
+        int i = 0;                // Pointer in string s
+        int j = 0;                // Pointer in sub repeated k times
+
+        while (i < s.length() && j < sub.length() * k) {
+            if (s.charAt(i) == sub.charAt(j % sub.length())) {
+                // Characters match → advance both
+                i++;
+                j++;
+            } else {
+                // Try skipping a character in s
+                i++;
+            }
+        }
+        // Check if we matched all sub*k characters
+        return (j == sub.length() * k);
+    }
+
+    private void backtracking(String s,StringBuilder curr,boolean[] canUse,int[] requiredFreq,int k,int maxLength
+    ) {
+        // If current subsequence is too long, stop
+        if (curr.length() > maxLength) {
+            return;
+        }
+
+        String currStr = curr.toString();
+
+        // Check if current subsequence is a better candidate:
+        // - longer than current result, or
+        // - same length but lexicographically larger
+        // AND it must appear k times as subsequence in s
+        if (
+            (curr.length() > result.length() ||
+             (curr.length() == result.length() && currStr.compareTo(result) > 0))
+            && isSubsequence(s, currStr, k)
+        ) {
+            result = currStr;
+        }
+
+        // Try adding each possible character next
+        for (int i = 0; i < 26; i++) {
+            if (canUse[i] == false || requiredFreq[i] == 0) continue;
+
+            // Choose character i + 'a'
+            char ch = (char) (i + 'a');
+            curr.append(ch);
+            requiredFreq[i]--;
+
+            // Explore further with this new character added
+            backtracking(s, curr, canUse, requiredFreq, k, maxLength);
+
+            // Undo the choice for backtracking
+            curr.deleteCharAt(curr.length() - 1);
+            requiredFreq[i]++;
+        }
+    }
+    public String longestSubsequenceRepeatedK(String s, int k) {
+        int n = s.length();
+
+        int[] freq = new int[26];
+        for (char ch : s.toCharArray()) {
+            freq[ch - 'a']++;
+        }
+
+        // Determine which letters can be used at least k times
+        boolean[] canUse = new boolean[26];
+        int[] requiredFreq = new int[26];
+
+        for (int i = 0; i < 26; i++) {
+            if (freq[i] >= k) {
+                canUse[i] = true;
+                requiredFreq[i] = freq[i] / k;
+                // Each letter can appear at most freq[i] / k times
+                // in the subsequence, so it repeats k times in s.
+            }
+        }
+
+        // The subsequence we build cannot be longer than n/k
+        int maxLength = n / k;
+        StringBuilder curr = new StringBuilder();
+
+        // Start backtracking
+        backtracking(s, curr, canUse, requiredFreq, k, maxLength);
+
+        return result;
+    }
+}
