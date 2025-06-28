@@ -37,7 +37,7 @@ class Solution {
 
 //Approach-2 (Using nth_element for partial sort)
 //T.C : O(nlogn)
-//S.C : O(1)
+//S.C : O(n)
 
 import java.util.*;
 
