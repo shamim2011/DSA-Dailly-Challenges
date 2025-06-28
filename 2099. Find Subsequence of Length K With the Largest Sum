@@ -1,0 +1,4 @@
+//Approach-1 (Using sorting with indices)
+//T.C : O(nlogn)
+//S.C : O(1)
+
