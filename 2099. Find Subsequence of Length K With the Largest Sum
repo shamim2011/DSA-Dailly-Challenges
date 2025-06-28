@@ -1,4 +1,96 @@
 //Approach-1 (Using sorting with indices)
 //T.C : O(nlogn)
+//S.C : O(n)
+
+class Solution {
+    public int[] maxSubsequence(int[] nums, int k) {
+        int n = nums.length;
+        // Edge case: if entire array is needed
+        if (n == k) {
+            return nums;
+        }
+        // Create a 2D array to store:
+        // - index of each element
+        // - value of each element
+        int[][] arr = new int[n][2];
+        for (int i = 0; i < n; i++) {
+            arr[i][0] = i;        // store original index
+            arr[i][1] = nums[i];  // store value
+        }
+        // Sort arr by value in ascending order
+        Arrays.sort(arr, (a, b) -> Integer.compare(a[1], b[1]));
+        // Now the last k elements of arr contain the k largest numbers
+        // But they may be in any order.
+        // Sort only the last k elements by their original index
+        // so we preserve the original relative order
+        Arrays.sort(arr,n - k,n,Comparator.comparingInt(a -> a[0]));
+        // Prepare result array
+        int[] ans = new int[k];
+        int j = 0;
+        for (int i = n - k; i < n; i++) {
+            ans[j++] = arr[i][1];
+        }
+        return ans;
+    }
+}
+
+
+//Approach-2 (Using nth_element for partial sort)
+//T.C : O(nlogn)
 //S.C : O(1)
 
+import java.util.*;
+
+class Solution {
+    public int[] maxSubsequence(int[] nums, int k) {
+        int n = nums.length;
+
+        // Edge case: if we want the entire array, just return it
+        if (n == k) {
+            return nums;
+        }
+
+        // Create a copy of nums so we don't modify the original
+        int[] temp = Arrays.copyOf(nums, n);
+
+        // Sort the copy to identify the k largest elements
+        Arrays.sort(temp);
+
+        // Find the smallest value among the k largest elements
+        int kLargest = temp[n - k];
+
+        // Count how many times this particular value appears 
+        // among the top k values (to handle duplicates correctly)
+        int countKLargest = 0;
+        for (int i = n - k; i < n; i++) {
+            if (temp[i] == kLargest) {
+                countKLargest++;
+            }
+        }
+
+        // Prepare the answer array
+        int[] ans = new int[k];
+        int j = 0;
+
+        // Traverse the original array in order
+        for (int i = 0; i < n; i++) {
+            
+            // If current number is strictly greater than kLargest,
+            // it belongs in the top k
+            if (nums[i] > kLargest) {
+                ans[j++] = nums[i];
+            }
+            // If current number equals kLargest, and we still need to include it,
+            // include it and decrement the counter
+            else if (nums[i] == kLargest && countKLargest > 0) {
+                ans[j++] = nums[i];
+                countKLargest--;
+            }
+            
+            // Stop early if we’ve already collected k elements
+            if (j == k) break;
+        }
+
+        return ans;
+    }
+}
