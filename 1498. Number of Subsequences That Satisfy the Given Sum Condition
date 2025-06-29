@@ -1,0 +1,75 @@
+✅ Your main problem:
+→ Changes to ans inside your recursive function are not reflected back in the caller.
+✅ Why?
+In Java:
+Primitive types (like int) are passed by value.
+So when you do:
+ans++;
+inside your recursive function, that’s just changing a local copy of ans. The original ans in your outer method stays zero.
+
+So:
+
+backtracking(..., ans, ...);
+return ans;
+
+always returns 0 (or your initial value) because ans was never updated outside the function.
+
+//Approach-1 (Produce all subsequences, find min and max and check)
+//This will give TLE
+//T.C : O(2^(n) * nlogn)
+//S.C : O(n)
+
+import java.util.*;
+
+class Solution {
+    int mod = 1_000_000_007;
+    int ans = 0;
+
+    /**
+     * Recursive backtracking function to generate all subsequences
+     *
+     * @param nums    Original array
+     * @param temp    Current subsequence being built
+     * @param i       Current index in nums
+     * @param target  Target sum for min + max condition
+     */
+    public void backtracking(int[] nums, List<Integer> temp, int i, int target) {
+        // Base case: reached the end of the array
+        if (i >= nums.length) {
+            if (temp.size() > 0) {
+                // Create a sorted copy of the current subsequence
+                List<Integer> sortLi = new ArrayList<>(temp);
+                Collections.sort(sortLi);
+
+                // Find min and max of the subsequence
+                int min = sortLi.get(0);
+                int max = sortLi.get(sortLi.size() - 1);
+
+                // Check if the sum of min and max is within the target
+                if (max + min <= target) {
+                    ans++;
+                }
+            }
+            return;
+        }
+
+        // ---------- Decision 1: INCLUDE nums[i] ----------
+        temp.add(nums[i]); // Do step
+        backtracking(nums, temp, i + 1, target); // Explore
+        temp.remove(temp.size() - 1); // Undo step
+
+        // ---------- Decision 2: EXCLUDE nums[i] ----------
+        backtracking(nums, temp, i + 1, target);
+    }
+    public int numSubseq(int[] nums, int target) {
+        List<Integer> li = new ArrayList<>();
+        backtracking(nums, li, 0, target);
+        return ans % mod;
+    }
+}
+
+
+//Approach-2 (Using Sorting + Two Pointer Approach)
+//T.C : O(nlogn)
+//S.C : O(n)
+
