@@ -1,0 +1,89 @@
+// Approach - Sliding Window with Brute-Force Uniqueness Check
+// T.C - O(n³)
+// S.C -  O(n)
+
+class Solution {
+
+    // Helper method to check if all characters in a string are unique
+    public boolean isUniCharString(String str) {
+        Map<Character, Integer> mp = new HashMap<>();
+
+        // Count frequency of each character
+        for (char ch : str.toCharArray()) {
+            mp.put(ch, mp.getOrDefault(ch, 0) + 1);
+        }
+
+        // If any character occurs more than once → not unique
+        for (int val : mp.values()) {
+            if (val > 1) {
+                return false;
+            }
+        }
+        return true; // All characters unique
+    }
+
+    public int lengthOfLongestSubstring(String s) {
+        // Edge cases for very short strings
+        if (s.length() == 0) {
+            return 0;
+        }
+        if (s.length() == 1) {
+            return 1;
+        }
+
+        int n = s.length();
+        int len = Integer.MIN_VALUE; // To store the length of the longest unique substring
+
+        int i = 0;    // Start of window
+        int j = 1;    // End of window (exclusive)
+
+        // Move j from 1 to n
+        while (j < n + 1) {
+            // Get the current substring from i to j-1
+            String sub = s.substring(i, j);
+
+            if (isUniCharString(sub)) {
+                // If substring has all unique characters,
+                // update max length
+                len = Math.max(len, sub.length());
+                j++; // Expand window to right
+            } else {
+                i++; // Shift window start to right
+            }
+        }
+        return len;
+    }
+}
+
+// Approach - Sliding Window with HashSet
+// T.C - O(n)
+// S.C -  O(min(n, m))   m = size of the character set (e.g. 26 for lowercase English letters).
+
+class Solution {
+    public int lengthOfLongestSubstring(String s) {
+        int n = s.length();
+        int maxLen = 0;
+
+        // HashSet to store unique characters in current window
+        Set<Character> set = new HashSet<>();
+
+        int i = 0; // Left pointer
+        int j = 0; // Right pointer
+
+        while (i < n && j < n) {
+            char ch = s.charAt(j);
+
+            if (!set.contains(ch)) {
+                // Character is unique in current window
+                set.add(ch);
+                j++;
+                maxLen = Math.max(maxLen, j - i);
+            } else {
+                // Duplicate found → remove the leftmost character
+                set.remove(s.charAt(i));
+                i++;
+            }
+        }
+        return maxLen;
+    }
+}
