@@ -74,3 +74,51 @@ class Solution {
 //S.C : O(n)
 
 
+import java.util.*;
+
+class Solution {
+    int mod = 1_000_000_007;
+
+    public int numSubseq(int[] nums, int target) {
+        int n = nums.length;
+        int ans = 0;
+
+        // Sort the input array to simplify two-pointer logic
+        Arrays.sort(nums);
+
+        // Precompute powers of 2 up to (n-1)
+        // power[i] = (2^i) % mod
+        int[] power = new int[n];
+        power[0] = 1;
+        for (int i = 1; i < n; i++) {
+            power[i] = (power[i - 1] * 2) % mod;
+        }
+
+        int l = 0;
+        int r = n - 1;
+
+        // Two-pointer technique
+        while (l <= r) {
+            if (nums[l] + nums[r] <= target) {
+                // When nums[l] + nums[r] is valid,
+                // every subset where:
+                // - nums[l] is the minimum element
+                // - all elements chosen between l and r
+                // contributes to the answer.
+
+                // Number of subsequences:
+                // All combinations of elements between l+1 and r (inclusive)
+                // i.e. 2^(r - l) subsequences
+                ans = (ans + power[r - l]) % mod;
+
+                // Move left pointer forward
+                l++;
+            } else {
+                // nums[l] + nums[r] too big — decrease right pointer
+                r--;
+            }
+        }
+
+        return ans;
+    }
+}
