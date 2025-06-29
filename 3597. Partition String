@@ -1,0 +1,40 @@
+// Approach : Greedy Unique Segment
+// T.C - O(n^2)
+// S.C - O(n^2)
+
+class Solution {
+    public List<String> partitionString(String s) {
+        int n = s.length();
+
+        // Set to keep track of unique substrings already used
+        Set<String> st = new LinkedHashSet<>();
+
+        // List to store the answer segments
+        List<String> ans = new ArrayList<>();
+
+        int i = 0;   // start index of current segment
+        int j = 0;   // end index of current segment
+
+        // Process the string until the end
+        while (i < n && j < n) {
+            // Take substring from i to j (inclusive)
+            String sub = s.substring(i, j + 1);
+
+            // Check if this substring has already been seen
+            if (!st.contains(sub)) {
+                // This substring is unique, so accept it
+                st.add(sub);
+                ans.add(sub);
+
+                // Move j forward and start next segment at j
+                ++j;
+                i = j;
+            } else {
+                // Substring already seen → extend it further
+                j++;
+            }
+        }
+
+        return ans;
+    }
+}
