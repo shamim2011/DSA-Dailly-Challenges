@@ -1,3 +1,33 @@
 //Approach-backtracking
-//T.C : O(nlogn)
-//S.C : O(n)
+// T.C - O(2^n)
+// S.C - O(n)
+
+
+class Solution {
+    
+    public void backTracking(int[] nums,int i,List<Integer> temp,Set<List<Integer>> st){
+        if(i>=nums.length){
+            List<Integer> sortLi = new ArrayList<>(temp);
+            Collections.sort(sortLi);
+            st.add(new ArrayList<>(sortLi));
+            
+            return;
+        }
+        //Do
+        temp.add(nums[i]);
+        //Explore
+        backTracking(nums,i+1,temp,st);
+        //Undo
+        temp.remove(temp.size()-1);
+
+        backTracking(nums,i+1,temp,st);
+    }
+    public List<List<Integer>> subsetsWithDup(int[] nums) {
+        List<List<Integer>> ans= new ArrayList<>();
+        Set<List<Integer>> st = new HashSet<>();
+        List<Integer> li = new ArrayList<>();
+        backTracking(nums,0,li,st);
+        ans.addAll(st);
+        return ans;
+    }
+}
