@@ -1,0 +1,18 @@
+// Approach - Greedy Sliding Window with HashSet
+// T.C - O(n)
+// S.C -  O(k)  k = character set size (e.g. ≤ 26 for lowercase English letters). 
+
+class Solution {
+    public int partitionString(String s) {
+        int count =1;
+        Set<Character> st = new HashSet<>();
+        for(char ch:s.toCharArray()){
+            if(st.contains(ch)){
+                count++;
+                st.clear();
+            }
+            st.add(ch);
+        }
+        return count;
+    }
+}
