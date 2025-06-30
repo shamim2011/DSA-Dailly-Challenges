@@ -70,7 +70,7 @@ class Solution {
 }
 
 
-// Approach 2 - Sliding Windows
+// Approach 3 - HashSet
 // T.C - O(n)
 // S.C - O(n)
 
