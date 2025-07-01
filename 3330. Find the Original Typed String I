@@ -24,7 +24,7 @@ class Solution {
 
 
 
-// Approach 2- straight forward traversal)
+// Approach 2- straight forward traversal
 // T.C - O(n)
 // S.C - (1)
 
