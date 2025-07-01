@@ -101,3 +101,34 @@ class Solution {
         return lhs; // Return the result
     }
 }
+------------------------ Approac 3 same code -------------------------
+class Solution {
+    public int findLHS(int[] nums) {
+        // Create a map to store the frequency of each number in the array
+        Map<Integer, Integer> mp = new HashMap<>();
+
+        // Count the frequency of each number
+        for (int num : nums) {
+            mp.put(num, mp.getOrDefault(num, 0) + 1);
+        }
+
+        int res = 0; // To store the length of the longest harmonious subsequence found so far
+
+        // Iterate through each element in the array
+        for (int i = 0; i < nums.length; i++) {
+            int lhs = 0;
+
+            // Check if there exists a number which is exactly nums[i] + 1
+            if (mp.containsKey(nums[i] + 1)) {
+                // If so, the harmonious subsequence length would be the sum of the counts
+                lhs = mp.get(nums[i]) + mp.get(nums[i] + 1);
+
+                // Update the result if this is the longest harmonious subsequence so far
+                res = Math.max(res, lhs);
+            }
+        }
+
+        return res;
+    }
+}
+
