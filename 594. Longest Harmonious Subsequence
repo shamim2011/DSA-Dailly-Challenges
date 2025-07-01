@@ -101,7 +101,7 @@ class Solution {
         return lhs; // Return the result
     }
 }
------------------------- Approac 3 same code -------------------------
+------------------------ Approach 3 same code -------------------------
 class Solution {
     public int findLHS(int[] nums) {
         // Create a map to store the frequency of each number in the array
