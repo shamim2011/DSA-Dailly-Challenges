@@ -1,4 +1,4 @@
-// Approach - Single Pass Scan for Adjacent Duplicates
+// Approach 1- Single Pass Scan for Adjacent Duplicates
 // T.C - O(n)
 // S.C - (n)
 
@@ -17,6 +17,28 @@ class Solution {
             }
         }
 
+        // Return (ans + 1) as the result
+        return (ans + 1);
+    }
+}
+
+
+
+// Approach 2- straight forward traversal)
+// T.C - O(n)
+// S.C - (1)
+
+class Solution {
+    public int possibleStringCount(String word) {
+        int ans = 0; // Variable to count the number of adjacent equal characters
+
+        // Loop through the string starting from the second character
+        for (int i = 1; i < word.length(); i++) {
+            // Check if the current character is the same as the previous one
+            if (word.charAt(i)==word.charAt(i-1)) {
+                ans++; // Increment the count if adjacent characters are equal
+            }
+        }
         // Return (ans + 1) as the result
         return (ans + 1);
     }
