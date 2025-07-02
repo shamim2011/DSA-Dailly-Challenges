@@ -230,3 +230,83 @@ class Solution {
     }
 }
 
+// Approach-4 (Bottom Up) - Optimized
+// T.C : O(n*k)
+// S.C : O(n*k)
+
+class Solution {
+    int M = 1_000_000_007; // Modulo constant to avoid integer overflow
+
+    public int possibleStringCount(String word, int k) {
+        if (k > word.length()) return 0; // impossible if required length > string length
+
+        List<Integer> fq = new ArrayList<>();
+        int count = 1;
+
+        // Compute frequencies of consecutive identical characters
+        for (int i = 1; i < word.length(); i++) {
+            if (word.charAt(i) == word.charAt(i - 1)) {
+                count++;
+            } else {
+                fq.add(count);
+                count = 1;
+            }
+        }
+        fq.add(count); // add the last group count
+
+        // Compute total ways to pick at least one char from each block
+        long p = 1;
+        for (int num : fq) {
+            p = (p * num) % M;
+        }
+
+        // If number of blocks ≥ k, all combinations are automatically valid
+        if (fq.size() >= k) {
+            return (int) p;
+        }
+
+        int n = fq.size();
+
+        // Bottom-up DP table:
+        // t[i][c] = number of ways to form an invalid subsequence (length < k)
+        // considering blocks from i to end, with total length c so far
+        int[][] t = new int[n + 1][k + 1];
+
+        // Base case:
+        // When we’re beyond last block (i = n), if count < k → 1 invalid way
+        for (int j = k - 1; j >= 0; j--) {
+            t[n][j] = 1;
+        }
+
+        // Fill DP table from bottom up
+        for (int i = n - 1; i >= 0; i--) {
+            // Compute prefix sums of next row for range sum queries
+            int[] prefix = new int[k + 2];
+            for (int h = 1; h <= k; h++) {
+                prefix[h] = (prefix[h - 1] + t[i + 1][h - 1]) % M;
+            }
+
+            for (int c = k - 1; c >= 0; c--) {
+                // We can take from 1 to fq[i] characters from block i
+                int l = c + 1;
+                int r = c + fq.get(i);
+
+                if (r + 1 > k) {
+                    r = k - 1;
+                }
+
+                if (l <= r) {
+                    // Use prefix sums to quickly compute:
+                    // sum of t[i+1][l] to t[i+1][r]
+                    t[i][c] = (prefix[r + 1] - prefix[l] + M) % M;
+                }
+            }
+        }
+
+        // t[0][0] = total number of invalid subsequences (length < k)
+        long inVal = t[0][0];
+
+        // Valid = total - invalid (add M before modulo to handle negatives)
+        return (int) (p - inVal + M) % M;
+    }
+}
