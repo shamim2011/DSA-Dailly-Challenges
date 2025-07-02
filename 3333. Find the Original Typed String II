@@ -1,3 +1,232 @@
-// Approach -
-// T.C - O()
-// S.C - O()
+// Approach-1 (Recursion) - TLE
+// T.C : O(n*k*maxFreq), n = total unique characters, maxFreq = maximumFrequency of a character
+// S.C : O(n*k)
+
+class Solution {
+    int M = 1_000_000_007; // Modulo constant to avoid integer overflow
+
+    // Recursive helper function to count the number of invalid ways
+    // i      -> current index in fq list
+    // count  -> total number of characters taken so far
+    // fq     -> list of frequencies of consecutive characters
+    // k      -> minimum required length
+    int solve(int i, int count, List<Integer> fq, int k) {
+        if (i >= fq.size()) {
+            // If we've processed all frequency blocks
+            if (count < k) {
+                return 1; // Found one invalid selection (total length < k)
+            } else {
+                return 0; // Valid selection (length >= k)
+            }
+        }
+
+        long res = 0;
+
+        // For the current block, try taking from 1 up to fq.get(i) characters
+        for (int take = 1; take <= fq.get(i); take++) {
+            if (count + take < k) {
+                // Only proceed if total length stays below k
+                res = (res + solve(i + 1, count + take, fq, k) % M) % M;
+            } else {
+                break; // No need to continue as length would become >= k
+            }
+        }
+
+        return (int) res;
+    }
+
+    public int possibleStringCount(String word, int k) {
+        if (k > word.length()) return 0;
+
+        List<Integer> fq = new ArrayList<>();
+        int count = 1;
+
+        // Process the string to find frequency of each consecutive block
+        for (int i = 1; i < word.length(); i++) {
+            if (word.charAt(i) == word.charAt(i - 1)) {
+                count++;
+            } else {
+                fq.add(count);
+                count = 1;
+            }
+        }
+        fq.add(count); // Add the last block count
+
+        // Calculate total number of possible substrings of length ≥ k
+        long p = 1;
+        for (int num : fq) {
+            p = (p * num) % M;
+        }
+
+        // If number of blocks itself is at least k,
+        // then every selection of one char per block gives valid substrings
+        if (fq.size() >= k) {
+            return (int) p;
+        }
+
+        // Otherwise, count the number of invalid selections (length < k)
+        int inVal = solve(0, 0, fq, k);
+
+        // Valid substrings = total substrings - invalid substrings
+        return (int)(p-inVal)%M;
+    }
+}
+
+
+// Approach-2 (Recursion + Memoization) - TLE
+// T.C : O(n*k*maxFreq), n = total unique characters, maxFreq = maximumFrequency of a character
+// S.C : O(n*k)
+
+class Solution {
+    int M = 1_000_000_007; // Modulo to avoid integer overflow
+    int[][] t;             // DP memoization table
+
+    // Recursive helper function to count number of invalid selections
+    // i      -> current index in fq list (current block)
+    // count  -> number of characters taken so far in current subsequence
+    // fq     -> list of block frequencies
+    // k      -> minimum length required for subsequence
+    int solve(int i, int count, List<Integer> fq, int k) {
+        // Base case: if we’ve processed all blocks
+        if (i >= fq.size()) {
+            if (count < k) {
+                return 1; // This subsequence is invalid (length < k)
+            } else {
+                return 0; // This subsequence is valid
+            }
+        }
+
+        // Check if this subproblem has been solved before
+        if (t[i][count] != -1) {
+            return t[i][count];
+        }
+
+        long res = 0;
+
+        // Try picking between 1 to fq.get(i) characters from block i
+        for (int take = 1; take <= fq.get(i); take++) {
+            if (count + take < k) {
+                // Proceed only if total length stays below k
+                res = (res + solve(i + 1, count + take, fq, k) % M) % M;
+            } else {
+                // No need to continue if we already reach k
+                break;
+            }
+        }
+
+        // Save result in DP table
+        return (t[i][count] = (int) res);
+    }
+
+    public int possibleStringCount(String word, int k) {
+        if (k > word.length()) return 0;
+
+        List<Integer> fq = new ArrayList<>();
+        int count = 1;
+
+        // Compute frequency of each block of consecutive characters
+        for (int i = 1; i < word.length(); i++) {
+            if (word.charAt(i) == word.charAt(i - 1)) {
+                count++;
+            } else {
+                fq.add(count);
+                count = 1;
+            }
+        }
+        fq.add(count); // Add the last block
+
+        // Calculate total ways to pick subsequences with at least one char from each block
+        long p = 1;
+        for (int num : fq) {
+            p = (p * num) % M;
+        }
+
+        // If number of blocks itself ≥ k, then any selection is automatically valid
+        if (fq.size() >= k) {
+            return (int) p;
+        }
+
+        int n = fq.size();
+        t = new int[n + 1][k + 1]; // DP table: dimensions = blocks × possible total lengths
+        for (int[] row : t) {
+            Arrays.fill(row, -1); // Initialize all DP entries to -1
+        }
+
+        // Find number of invalid subsequences (length < k)
+        long inVal = solve(0, 0, fq, k);
+
+        // Valid subsequences = total subsequences − invalid subsequences
+        return (int) (p - inVal + M) % M;
+    }
+}
+
+
+// Approach-3 (Bottom Up) - TLE
+// T.C : O(n*k*maxFreq), n = total unique characters, maxFreq = maximumFrequency of a character
+// S.C : O(n*k)
+
+class Solution {
+    int M = 1_000_000_007; // Modulo constant to avoid overflow
+
+    public int possibleStringCount(String word, int k) {
+        // If required length is more than the length of the string, return 0
+        if (k > word.length()) return 0;
+
+        List<Integer> fq = new ArrayList<>(); // Stores frequency of consecutive same characters
+        int count = 1;
+
+        // Traverse the string to fill fq list with group sizes
+        for (int i = 1; i < word.length(); i++) {
+            if (word.charAt(i) == word.charAt(i - 1)) {
+                count++; // Increase count for repeated character
+            } else {
+                fq.add(count); // Store current group count
+                count = 1;     // Reset count for next group
+            }
+        }
+        fq.add(count); // Add the last group
+
+        // Calculate total number of valid combinations (one or more characters from each group)
+        long p = 1;
+        for (int num : fq) {
+            p = (p * num) % M;
+        }
+
+        // If number of blocks ≥ k, all combinations are valid
+        if (fq.size() >= k) {
+            return (int) p;
+        }
+
+        int n = fq.size();
+
+        // Bottom-up DP table: t[i][c] = number of invalid ways from index i with c total chars so far
+        int[][] t = new int[n + 1][k + 1];
+
+        // Base case: if we've processed all blocks and count < k, it is invalid → 1 way
+        for (int j = k - 1; j >= 0; j--) {
+            t[n][j] = 1;
+        }
+
+        // Fill the DP table from bottom up
+        for (int i = n - 1; i >= 0; i--) {
+            for (int c = k - 1; c >= 0; c--) {
+                long res = 0;
+                // Try all possible number of characters to take from current block
+                for (int take = 1; take <= fq.get(i); take++) {
+                    if (c + take < k) {
+                        res = (res + t[i + 1][c + take]) % M;
+                    } else {
+                        break; // No need to continue if we reach or exceed k
+                    }
+                }
+                t[i][c] = (int) res; // Store the number of invalid sequences from this state
+            }
+        }
+
+        long inVal = t[0][0]; // Total number of invalid sequences (total length < k)
+
+        // Valid sequences = total - invalid (modulo M to handle negative)
+        return (int) (p - inVal + M) % M;
+    }
+}
+
