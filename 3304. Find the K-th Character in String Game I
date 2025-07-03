@@ -22,7 +22,7 @@ class Solution {
         
         // Special case: if k == 1, simply return 'a'
         if (sb.length() == k) {
-            return sb.toString().charAt(k - 1);
+            return sb.charAt(k - 1);
         }
         
         // Keep expanding the string until it contains at least k characters
