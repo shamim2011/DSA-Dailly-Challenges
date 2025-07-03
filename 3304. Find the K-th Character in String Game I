@@ -1,0 +1,57 @@
+// Approach -  Simulation-Based String Expansion
+// T.C - O(k)
+// S.C - O(k)
+
+class Solution {
+    public char kthCharacter(int k) {
+        
+        // Approach:
+        // ----------
+        // Simulation-Based String Expansion
+        //
+        // - Start with a string: "a"
+        // - Repeat:
+        //     - For every character c in the current string,
+        //       append the next character (c+1).
+        //       - If c == 'z', wrap around to 'a'
+        // - Keep expanding until the string has at least k characters
+        // - Return the k-th character (1-based index)
+        
+        // Initialize the StringBuilder with the starting character 'a'
+        StringBuilder sb = new StringBuilder("a");
+        
+        // Special case: if k == 1, simply return 'a'
+        if (sb.length() == k) {
+            return sb.toString().charAt(k - 1);
+        }
+        
+        // Keep expanding the string until it contains at least k characters
+        while (sb.length() < k) {
+            
+            // Save the current length to avoid processing characters added in this round
+            int len = sb.length();
+            
+            // Iterate only over the original characters of this round
+            for (int i = 0; i < len; i++) {
+                // Get character at position i
+                char ch = sb.charAt(i);
+                
+                // Compute the next character:
+                char nextChar;
+                if (ch == 'z') {
+                    // Wrap around to 'a' if current character is 'z'
+                    nextChar = 'a';
+                } else {
+                    // Otherwise, increment to next alphabet character
+                    nextChar = (char)(ch + 1);
+                }
+                
+                // Append the next character to the end of the StringBuilder
+                sb.append(nextChar);
+            }
+        }
+        
+        // Return the k-th character (convert to 0-based index)
+        return sb.charAt(k - 1);
+    }
+}
