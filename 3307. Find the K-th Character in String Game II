@@ -1,0 +1,51 @@
+//Approach - String Expansion Simulation  TLE
+//T.C : 	O(min(k, 2^n))
+//S.C :	O(min(k, 2^n))
+
+
+class Solution {
+    public char kthCharacter(long k, int[] operations) {
+        
+        // Start with string "a"
+        StringBuilder sb = new StringBuilder("a");
+        int n = operations.length;
+        int i = 0;
+        
+        // Process each operation in the array
+        while (i < n) {
+            
+            // Create a new StringBuilder initialized as a copy of sb
+            StringBuilder res = new StringBuilder(sb.toString());
+            
+            if (operations[i] == 0) {
+                // If operation is 0, duplicate the string
+                // Append sb to itself
+                res.append(sb);
+            } else {
+                // If operation is 1, shift each character and append shifted characters
+                
+                int len = res.length(); // capture the original length
+                
+                for (int j = 0; j < len; j++) {
+                    char next = (char)(res.charAt(j) + 1);
+                    
+                    // Wrap around from 'z' to 'a'
+                    if (next > 'z') next = 'a';
+                    
+                    res.append(next);
+                }
+            }
+            
+            // Update sb with the new string
+            sb = res;
+            
+            // Early exit if we already have enough characters
+            if (sb.length() >= k) break;
+            
+            i++;
+        }
+        
+        // Return the (k-1)th character (zero-based indexing)
+        return sb.charAt((int)k - 1);
+    }
+}
