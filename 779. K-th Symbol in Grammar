@@ -1,0 +1,29 @@
+//Approach - Simple Recursion 
+//T.C : O(n)
+// S.C : O(n)
+
+class Solution {
+    public int kthGrammar(int n, int k) {
+        
+        // Base case: the first row is just "0"
+        if (n == 1 && k == 1) {
+            return 0;
+        }
+
+        // Total number of elements in the nth row is 2^(n-1)
+        int len = (int) Math.pow(2, n - 1);
+
+        // The midpoint divides the row into two halves
+        int mid = len / 2;
+
+        if (k <= mid) {
+            // If k is in the first half, it’s the same as in the previous row
+            return kthGrammar(n - 1, k);
+        } else {
+            // If k is in the second half, it's the **complement** of the value in the first half
+            // So we find the mirrored position in the previous row and flip it:
+            // 0 becomes 1, and 1 becomes 0 → done using (1 - value)
+            return 1 - kthGrammar(n - 1, k - mid);
+        }
+    }
+}
