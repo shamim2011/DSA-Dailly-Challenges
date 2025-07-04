@@ -1,4 +1,4 @@
-//Approach - String Expansion Simulation  TLE
+//Approach 1- String Expansion Simulation  TLE
 //T.C : 	O(min(k, 2^n))
 //S.C :	O(min(k, 2^n))
 
@@ -49,3 +49,51 @@ class Solution {
         return sb.charAt((int)k - 1);
     }
 }
+
+
+//Approach 2- Recursion
+//T.C : O(log(k))
+//S.C : O(log(k))) of system stack
+
+
+class Solution {
+    public char kthCharacter(long k, int[] operations) {
+        
+        int n = operations.length;
+        
+        // Base case:
+        // If k == 1, the first character is always 'a'
+        if (k == 1) return 'a';
+        
+        long len = 1;          // Current length of the constructed string
+        long newK = -1;        // Stores the new position of k for recursive call
+        int operType = -1;     // Stores the operation type responsible for current expansion
+        
+        // Simulate the string length expansion
+        for (int i = 0; i < n; i++) {
+            
+            len *= 2; // Each operation potentially doubles the string length
+            
+            // Check if the length now covers or exceeds position k
+            if (len >= k) {
+                operType = operations[i];       // Record which operation affects this section
+                newK = k - len / 2;             // Compute new k relative to the previous half
+                break;                          // We don't need further operations
+            }
+        }
+        
+        // Recursively find the character at newK in the previous half of the string
+        char ch = kthCharacter(newK, operations);
+        
+        if (operType == 0) {
+            // Operation was duplicate → character stays same
+            return ch;
+        }
+        
+        // Otherwise, operation was "shift +1" → shift the character forward
+        return (ch == 'z') ? 'a' : (char)(ch + 1);
+    }
+}
+
+
+
