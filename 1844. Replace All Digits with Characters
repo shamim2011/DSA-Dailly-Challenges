@@ -1,0 +1,42 @@
+// Approach - Digit-Driven Character Shifting
+// T.C - O(n)
+// S.C - O(n)
+
+class Solution {
+    public String replaceDigits(String s) {
+        
+        int n = s.length();
+        
+        // StringBuilder to build the resulting string
+        StringBuilder res = new StringBuilder();
+        
+        // Loop through each character in the input string
+        for (int i = 0; i < n; i++) {
+            
+            // Check if the current character is a digit (between '0' and '9')
+            if (s.charAt(i) >= '0' && s.charAt(i) <= '9') {
+                
+                // Convert the digit character to an integer value
+                int shift = s.charAt(i) - '0';
+                
+                // Shift the previous character by the digit value:
+                // - s.charAt(i - 1) → the previous character
+                // - Add the shift value
+                // - Cast the sum back to a char
+                char shiftedChar = (char) (s.charAt(i - 1) + shift);
+                
+                // Append the shifted character to the result
+                res.append(shiftedChar);
+                
+            } else {
+                // If not a digit, simply append the character as-is
+                res.append(s.charAt(i));
+            }
+        }
+        
+        // Return the final result string
+        return res.toString();
+    }
+}
+
+
