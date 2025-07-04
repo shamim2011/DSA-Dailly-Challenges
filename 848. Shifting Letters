@@ -1,0 +1,96 @@
+// Approach 1 - Prefix Simulation with Incremental Shifts       TLE
+// T.C - O(n²)
+// S.C - O(n)
+
+class Solution {
+    public String shiftingLetters(String s, int[] shifts) {
+        
+        // Create a StringBuilder to hold the intermediate shifted string
+        StringBuilder str = new StringBuilder();
+        
+        // Initialize str with the first character of the string
+        str.append(s.charAt(0));
+        
+        int i = 0;
+        
+        // Loop through the string one character at a time
+        while (i < s.length()) {
+            
+            // Create a new StringBuilder to build the shifted string
+            StringBuilder sb = new StringBuilder();
+            
+            // For each character from index 0 up to i (inclusive):
+            for (int k = 0; k < i + 1; k++) {
+                
+                // Shift character at position k
+                // Calculation:
+                // - (str.charAt(k) - 'a') → converts letter to 0-based index (0-25)
+                // - Add shifts[i]
+                // - % 26 keeps it in the range [0, 25]
+                // - Add 'a' to convert back to a character
+                char shiftedChar = (char)(( (str.charAt(k) - 'a' + shifts[i]) % 26 ) + 'a');
+                
+                sb.append(shiftedChar);
+            }
+            
+            // Now sb contains shifted characters for indices 0 to i
+            
+            // Assign sb to str
+            str = sb;
+            
+            // Append the rest of the original string from index i+1 onward
+            str.append(s.substring(i + 1));
+            
+            // Move to the next character
+            i++;
+        }
+        
+        // Return the final shifted string
+        return str.toString();
+    }
+}
+
+
+
+// Approach 2 - Suffix Sum + Modular Character Shifting
+// T.C - O(n)
+// S.C - O(n)
+
+class Solution {
+    public static String shiftingLetters(String s, int[] shifts) {
+        
+        // Create a StringBuilder to store the shifted result
+        StringBuilder res = new StringBuilder();
+        
+        // Array to store the cumulative shift for each character
+        int[] prefixBack = new int[shifts.length];
+        
+        int sum = 0;
+
+        // Compute cumulative shifts from the end of the string backwards
+        // Why backwards? Because shifting letter i also affects all letters before it
+        for (int i = shifts.length - 1; i >= 0; i--) {
+            sum = (sum + shifts[i]) % 26;
+            prefixBack[i] = sum;
+        }
+        
+        // Iterate through each character in the string
+        for (int i = 0; i < s.length(); i++) {
+            int t = s.charAt(i);
+            
+            // Shift the character:
+            // - Convert char to 0-based index: (t - 'a')
+            // - Add the cumulative shift prefixBack[i]
+            // - Modulo 26 to wrap around the alphabet
+            // - Convert back to a character by adding 'a'
+            int shiftedCharCode = 
+                'a' + ((t - 'a' + prefixBack[i]) % 26);
+            
+            char nextShiftLetter = (char) shiftedCharCode;
+            
+            res.append(nextShiftLetter);
+        }
+        
+        return res.toString();
+    }
+}
