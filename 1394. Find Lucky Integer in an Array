@@ -1,0 +1,52 @@
+// Approach 1-  Frequency Map + Linear Scan
+// T.C - O(n)
+// S.C - O(n)
+
+class Solution {
+    public int findLucky(int[] arr) {
+        int ans = -1; // Initialize the answer to -1 (in case no lucky number exists)
+
+        Map<Integer, Integer> mp = new HashMap<>(); // Create a map to store frequency of each number
+
+        // Count the frequency of each number in the array
+        for (int num : arr) {
+            mp.put(num, mp.getOrDefault(num, 0) + 1);
+        }
+
+        // Iterate through the map entries
+        for (Map.Entry<Integer, Integer> entry : mp.entrySet()) {
+            // Check if the number is equal to its frequency (i.e. it's a lucky number)
+            if (entry.getKey() == entry.getValue()) {
+                // Update the answer with the maximum lucky number found so far
+                ans = Math.max(ans, entry.getValue());
+            }
+        }
+
+        // Return the largest lucky integer, or -1 if none exists
+        return ans;
+    }
+}
+
+
+// Approach 2-  Frequency Counting using Fixed-Size Array
+// T.C - O(n)
+// S.C - O(1)
+
+class Solution {
+    public int findLucky(int[] arr) {
+        int ans = -1; // Initialize answer to -1 (in case no lucky number exists)
+        int[] freq = new int[501]; // Frequency array for numbers 1 to 500
+        // Count frequency of each number in the array
+        for (int num : arr) {
+            freq[num]++;
+        }
+        // Check for lucky numbers (number == frequency)
+        for (int i = 1; i < freq.length; i++) {
+            if (freq[i] == i) {
+                ans = i; // Update the answer to current lucky number
+            }
+        }
+        return ans; // Return the largest lucky number or -1 if none exist
+    }
+}
+
