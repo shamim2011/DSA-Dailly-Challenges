@@ -2,3 +2,62 @@
 //T.C : O(m+n) for FindSumPairs(), O(1) for add() and O(n) for count()
 //S.C : O(m+n) for vec1 and vec2
 
+
+import java.util.*;
+
+// Class to implement FindSumPairs functionality
+class FindSumPairs {
+    private List<Integer> list1;             // Stores elements of nums1
+    private List<Integer> list2;             // Stores elements of nums2
+    private Map<Integer, Integer> fqMap;     // Stores frequency of each number in nums2
+
+    // Constructor initializes the data structures
+    public FindSumPairs(int[] nums1, int[] nums2) {
+        this.list1 = new ArrayList<>();
+        for (int num : nums1) {
+            this.list1.add(num);             // Copy nums1 into list1
+        }
+
+        this.list2 = new ArrayList<>();
+        for (int num : nums2) {
+            this.list2.add(num);             // Copy nums2 into list2
+        }
+
+        fqMap = new HashMap<>();
+        for (int num : nums2) {
+            // Build frequency map for nums2
+            fqMap.put(num, fqMap.getOrDefault(num, 0) + 1);
+        }
+    }
+
+    // Increment the value at index in nums2 by val
+    public void add(int index, int val) {
+        int oldVal = list2.get(index);                  // Get current value at index
+        fqMap.put(oldVal, fqMap.get(oldVal) - 1);       // Decrease frequency of oldVal
+        if (fqMap.get(oldVal) == 0) {
+            fqMap.remove(oldVal);                      // Remove key if frequency becomes zero
+        }
+
+        int newVal = oldVal + val;                      // Compute new value
+        list2.set(index, newVal);                       // Update list2 at index
+        fqMap.put(newVal, fqMap.getOrDefault(newVal, 0) + 1); // Update frequency map for newVal
+    }
+
+    // Count how many pairs (i, j) exist such that nums1[i] + nums2[j] == tot
+    public int count(int tot) {
+        int count = 0;
+        for (int num : list1) {
+            int complement = tot - num;                    // Find complement value
+            count += fqMap.getOrDefault(complement, 0);    // Add frequency of complement in nums2
+        }
+        return count;
+    }
+}
+
+/**
+ * Your FindSumPairs object will be instantiated and called as such:
+ * FindSumPairs obj = new FindSumPairs(nums1, nums2);
+ * obj.add(index, val);
+ * int param_2 = obj.count(tot);
+ */
+
