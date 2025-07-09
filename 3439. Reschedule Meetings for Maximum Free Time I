@@ -3,3 +3,46 @@
 //S.C : O(k)
 
 
+class Solution {
+    public int maxFreeTime(int eventTime, int k, int[] startTime, int[] endTime) {
+        int n = startTime.length;
+        
+        // Array to store durations of free intervals between events
+        int[] freqArr = new int[n + 1];
+        
+        // Time before the first event starts is free time
+        freqArr[0] = startTime[0];
+        
+        // Calculate free time between consecutive events
+        for (int i = 1; i < n; i++) {
+            freqArr[i] = startTime[i] - endTime[i - 1];
+        }
+        
+        // Free time after the last event until the end of the day
+        freqArr[n] = eventTime - endTime[n - 1];
+        
+        int maxSum = 0;     // To keep track of the maximum sum of free times
+        int currSum = 0;    // Current sum of the window
+        
+        int i = 0, j = 0;
+        int N = n + 1;      // Total intervals of free time
+
+        // Sliding window to sum up k+1 consecutive free intervals
+        while (j < N) {
+            currSum += freqArr[j];
+            
+            // If window size exceeds k+1, shrink from left
+            if (j - i + 1 > k + 1 && i < N) {
+                currSum -= freqArr[i];
+                i++;
+            }
+            
+            // Update maximum sum if current window sum is larger
+            maxSum = Math.max(currSum, maxSum);
+            
+            j++;
+        }
+        
+        return maxSum;
+    }
+}
