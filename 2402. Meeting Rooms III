@@ -1,0 +1,76 @@
+//Approach-1 (Brute Force - Do as said)
+//T.C : O(mlogm +m*n) , where Let n = number of rooms, m =  number of meetings
+//S.C : O(n)
+
+import java.util.Arrays;
+
+class Solution {
+    public int mostBooked(int n, int[][] meetings) {
+        int m = meetings.length;
+
+        // Sort meetings by their start time so we process them chronologically
+        Arrays.sort(meetings, (a, b) -> Integer.compare(a[0], b[0]));
+
+        // Array to store the time at which each room will become available
+        long[] lastAvailableAt = new long[n];
+
+        // Array to store how many times each room was used
+        int[] roomUseCount = new int[n];
+
+        // Iterate over all meetings
+        for (int[] meet : meetings) {
+            int start = meet[0];
+            int end = meet[1];
+            int duration = end - start;
+
+            boolean found = false;
+
+            // Track the room that becomes available the earliest (in case no rooms are free at meeting start)
+            long earlyEndRoomTime = Long.MAX_VALUE;
+            int earlyEndRoom = 0;
+
+            // Check all rooms to find a free room
+            for (int room = 0; room < n; room++) {
+
+                // If the room is free at the start of the current meeting
+                if (lastAvailableAt[room] <= start) {
+                    // Schedule the meeting in this room
+                    lastAvailableAt[room] = end;
+
+                    // Increment the usage count of this room
+                    roomUseCount[room]++;
+
+                    found = true;
+                    break; // no need to check other rooms
+                }
+
+                // Update the earliest available room if this room gets free earlier
+                if (lastAvailableAt[room] < earlyEndRoomTime) {
+                    earlyEndRoomTime = lastAvailableAt[room];
+                    earlyEndRoom = room;
+                }
+            }
+
+            // If no room was available at the meeting start time
+            if (!found) {
+                // Delay the meeting to start as soon as the earliest room is free
+                lastAvailableAt[earlyEndRoom] += duration;
+
+                // Increment the usage count of that room
+                roomUseCount[earlyEndRoom]++;
+            }
+        }
+
+        // Find the room used the most times
+        int resultRoom = -1;
+        int maxUse = 0;
+        for (int room = 0; room < n; room++) {
+            if (roomUseCount[room] > maxUse) {
+                maxUse = roomUseCount[room];
+                resultRoom = room;
+            }
+        }
+
+        return resultRoom;
+    }
+}
