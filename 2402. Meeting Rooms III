@@ -74,3 +74,10 @@ class Solution {
         return resultRoom;
     }
 }
+
+
+//Approach-2 (Use priority Queue to find the first available meeting room)
+//T.C : O(mlogm + m*log(n)) , where Let n = number of rooms, m =  number of meetings
+//S.C : O(n)
+
+
