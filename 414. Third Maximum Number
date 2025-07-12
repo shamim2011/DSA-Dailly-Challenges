@@ -1,0 +1,54 @@
+// Approach - Use TreeSet to store distinct elements in sorted order
+// T.C - O(n log n)
+// S.C - O(n)
+
+
+class Solution {
+    public int thirdMax(int[] nums) {
+        // Create a TreeSet, which automatically stores elements in sorted (ascending) order
+        TreeSet<Integer> st = new TreeSet<>();
+        
+        // Add all numbers from the array into the set
+        // This removes duplicates automatically
+        for (int num : nums) {
+            st.add(num);
+        }
+
+        // If there are fewer than 3 distinct numbers,
+        // return the largest (maximum) number
+        if (st.size() < 3) {
+            return st.last();
+        } else {
+            // Otherwise, remove the largest number
+            st.pollLast();
+
+            // Remove the new largest number (which was originally the 2nd largest)
+            st.pollLast();
+
+            // Now, the largest remaining number is the third maximum
+            return st.last();
+        }
+    }
+}
+
+
+// Approach - Use TreeSet to store distinct elements in sorted order in List
+// T.C - O(n log n)
+// S.C - O(n)
+
+class Solution {
+    public int thirdMax(int[] nums) {
+        TreeSet<Integer> st = new TreeSet<>();
+        for (int num : nums) {
+            st.add(num);
+        }
+        List<Integer> li = new ArrayList<>();
+        for(int num:st){
+            li.add(num);
+        }
+        if (li.size() < 3) {
+            return li.get(li.size()-1);
+        }
+        return li.get(li.size()-3);
+    }
+}
