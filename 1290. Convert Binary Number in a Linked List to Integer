@@ -1,6 +1,6 @@
 //Approach-1 (Reversing the linkedList and then computing)
 //T.C : O(n)
-//S.C : O(1), Ignoring Recursion stack space occupied during reversal of LinkedList
+//S.C : O(n), Ignoring Recursion stack space occupied during reversal of LinkedList
 
 /**
  * Definition for singly-linked list.
@@ -49,3 +49,35 @@ class Solution {
 }
 
 
+
+//Approach-2 (Using bit manipulation to form the decimal number)
+//T.C : O(n)
+//S.C : O(1)
+
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+
+class Solution {
+    public int getDecimalValue(ListNode head) {
+        int result = 0;
+
+        // Traverse the linked list
+        while (head != null) {
+            // Left-shift result by 1 bit to make room for the next bit
+            result = (result << 1) | (head.val);
+            // Move to the next node
+            head = head.next;
+        }
+
+        return result;
+    }
+}
