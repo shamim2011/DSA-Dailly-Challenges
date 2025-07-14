@@ -1,0 +1,51 @@
+//Approach-1 (Reversing the linkedList and then computing)
+//T.C : O(n)
+//S.C : O(1), Ignoring Recursion stack space occupied during reversal of LinkedList
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+
+class Solution {
+
+    // Recursive function to reverse a linked list
+    public ListNode reverseLL(ListNode head) {
+        if (head == null || head.next == null) {
+            return head; // Base case: empty or single node list
+        }
+
+        ListNode last = reverseLL(head.next); // Recurse to the end
+        head.next.next = head; // Reverse the pointer
+        head.next = null;      // Set current node's next to null
+
+        return last; // Return new head
+    }
+
+    // Function to convert binary number in linked list to decimal
+    public int getDecimalValue(ListNode head) {
+        head = reverseLL(head); // Step 1: Reverse the linked list
+
+        int result = 0;
+        int power = 0;
+
+        // Step 2: Traverse reversed list and calculate value
+        while (head != null) {
+            if (head.val == 1) {
+                result += Math.pow(2, power); // Add 2^power if node's value is 1
+            }
+            power++;
+            head = head.next;
+        }
+
+        return result;
+    }
+}
+
+
