@@ -1,0 +1,35 @@
+// Approach - Character Classification + Frequency Counting 
+// T.C - O(n)
+// S.C - O(1)
+
+
+class Solution {
+    public boolean isValid(String word) {
+        if(word.length()<3){
+            return false;
+        }
+        Set<Character> vowels = new HashSet<>(Arrays.asList('a','e','i','o','u','A','E','I','O','U'));
+        
+        int digits = 0;
+        int vow = 0;
+        int consonants = 0;
+        int special = 0;
+        for(int i=0;i<word.length();i++){
+            if((word.charAt(i)>='A' && word.charAt(i)<='Z') || (word.charAt(i)>='a' && word.charAt(i)<='z')){
+                if(vowels.contains(word.charAt(i))){
+                    vow++;
+                }
+                else{
+                    consonants++;
+                }
+            }
+            else if(word.charAt(i)>='0' && word.charAt(i)<='9'){
+                digits++;
+            }
+            else{
+                special++;
+            }
+        }
+        return (vow==0 || consonants==0 || special>0)?false:true;
+    }
+}
