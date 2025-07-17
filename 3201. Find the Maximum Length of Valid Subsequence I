@@ -1,4 +1,45 @@
-//Approach (observing the condition and checking, oddCount, evenCount and alternatingCount
+//Approach 1 Top-Down Dynamic Programming (Memoization) with Recursion      TLE
+//T.C : O(n²)
+//S.C :O(n²)
+
+class Solution {
+    int[][] dp;
+
+    int LIS(int[] nums, int i, int prev, int mod, int[][] dp) {
+        if (i >= nums.length) return 0;
+        if (dp[i + 1][prev + 1] != -1) return dp[i + 1][prev + 1];
+
+        int take = 0;
+        if (prev == -1 || (nums[prev] + nums[i]) % 2 == mod) {
+            take = 1 + LIS(nums, i + 1, i, mod, dp);
+        }
+
+        int skip = LIS(nums, i + 1, prev, mod, dp);
+        return dp[i + 1][prev + 1] = Math.max(take, skip);
+    }
+
+    public int maximumLength(int[] nums) {
+        int n = nums.length;
+        
+        // For mod = 0
+        dp = new int[n + 1][n + 1];
+        for (int i = 0; i <= n; i++) 
+            Arrays.fill(dp[i], -1);
+        int maxSubLength = LIS(nums, 0, -1, 0, dp);
+
+        // For mod = 1
+        dp = new int[n + 1][n + 1];
+        for (int i = 0; i <= n; i++)
+             Arrays.fill(dp[i], -1);
+        maxSubLength = Math.max(maxSubLength, LIS(nums, 0, -1, 1, dp));
+
+        return maxSubLength;
+    }
+}
+
+
+
+//Approach 2 (observing the condition and checking, oddCount, evenCount and alternatingCount
 //T.C : O(n)
 //S.C : O(1)
 
