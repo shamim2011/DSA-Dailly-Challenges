@@ -1,0 +1,40 @@
+//Approach (observing the condition and checking, oddCount, evenCount and alternatingCount
+//T.C : O(n)
+//S.C : O(1)
+
+class Solution {
+    public int maximumLength(int[] nums) {
+        int odd = 0;   // Counter to count odd numbers
+        int even = 0;  // Counter to count even numbers
+
+        // Count how many odd and even numbers are present in the array
+        for (int num : nums) {
+            if (num % 2 == 0) {
+                even++;     // Even number
+            } else {
+                odd++;      // Odd number
+            }
+        }
+
+        // Store the maximum of odd or even count
+        int eom = Math.max(odd, even);
+
+        // Now find the longest alternate even-odd or odd-even sequence
+        int alternate = 1;              // Minimum length is 1 (at least one element)
+        int prev = nums[0] % 2;         // Store parity (0 for even, 1 for odd) of first element
+
+        for (int i = 1; i < nums.length; i++) {
+            int curr = nums[i] % 2;     // Parity of current element
+            if (prev != curr) {
+                // If current parity is different from previous, it's an alternate pattern
+                alternate++;
+                prev = curr;           // Update previous parity
+            }
+        }
+
+        // Return the maximum of either:
+        // - the maximum count of odd/even numbers (eom)
+        // - the longest alternating even-odd or odd-even sequence (alternate)
+        return Math.max(eom, alternate);
+    }
+}
