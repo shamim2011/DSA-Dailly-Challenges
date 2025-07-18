@@ -38,8 +38,47 @@ class Solution {
 }
 
 
+//Approach 2 (Bottum-up-Approach) MLE
+//T.C : O(n*n)
+//S.C : O(n)
+class Solution {
+    public int maximumLength(int[] nums) {
+        int n = nums.length;
+        int maxSub = 0;
+        // For mod = 0
+        int[] dp0 = new int[n];
+        Arrays.fill(dp0,1);
+        for (int i = 1; i <n; i++){
+            for(int j=0;j<i;j++){
+                int mod = (nums[i]+nums[j])%2;
+                if(mod==0){
+                    dp0[i] = Math.max(dp0[i],dp0[j]+1);
+                    maxSub = Math.max(maxSub,dp0[i]);
+                }
+            }
+        }
+        
 
-//Approach 2 (observing the condition and checking, oddCount, evenCount and alternatingCount
+        // For mod = 1
+        int[] dp1 = new int[n];
+        Arrays.fill(dp1,1);
+        for (int i = 1; i <n; i++){
+            for(int j=0;j<i;j++){
+                int mod = (nums[i]+nums[j])%2;
+                if(mod==1){
+                    dp1[i] = Math.max(dp1[i],dp1[j]+1);
+                    maxSub = Math.max(maxSub,dp1[i]);
+                }
+            }
+        }
+
+        return maxSub;
+    }
+}
+
+
+
+//Approach 3 (observing the condition and checking, oddCount, evenCount and alternatingCount
 //T.C : O(n)
 //S.C : O(1)
 
