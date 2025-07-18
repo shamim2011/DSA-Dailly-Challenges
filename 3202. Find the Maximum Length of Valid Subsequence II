@@ -1,1 +1,28 @@
+//Approach (bottum up)
+//T.C : O(n*n)
+//S.C : O(k*n)
 
+class Solution {
+    public int maximumLength(int[] nums, int k) {
+        int n = nums.length;
+        int maxSub = 1;
+        // mod will be   0 to (k-1) so row size (k-1)
+        int[][] dp = new int[k][n];
+        for(int i=0;i<k;i++){
+            Arrays.fill(dp[i],1);
+        }
+
+        for (int i = 1; i <n; i++){
+            for(int j=0;j<i;j++){
+                int mod = (nums[i]+nums[j])%k;
+                // mod == 0 to (k-1), so store 0th to (k-1)th row wale case ka result
+                
+                dp[mod][i] = Math.max(dp[mod][i],dp[mod][j]+1);
+                maxSub = Math.max(maxSub,dp[mod][i]);
+                
+            }
+        }
+        
+        return maxSub;
+    }
+}
