@@ -38,7 +38,7 @@ class Solution {
 }
 
 
-//Approach 2 (Bottum-up-Approach) MLE
+//Approach 2 (Bottum-up-Approach) TLE
 //T.C : O(n*n)
 //S.C : O(n)
 
@@ -71,6 +71,35 @@ class Solution {
     }
 }
 
+
+//Approach 2 (Bottum-up-Approach) TLE
+//T.C : O(n*n)
+//S.C : O(n)
+
+class Solution {
+    public int maximumLength(int[] nums) {
+        int n = nums.length;
+        int maxSub = 0;
+        // For mod = 0
+        int[][] dp = new int[2][n];
+        for(int i=0;i<2;i++){
+            Arrays.fill(dp[i],1);
+        }
+
+        for (int i = 1; i <n; i++){
+            for(int j=0;j<i;j++){
+                int mod = (nums[i]+nums[j])%2;
+                // mod == 0, 0th row, %2=0 wale case ka result
+                //  mod == 1, 1tst row, %2=1 wale case ka result
+                dp[mod][i] = Math.max(dp[mod][i],dp[mod][j]+1);
+                maxSub = Math.max(maxSub,dp[mod][i]);
+                
+            }
+        }
+        
+        return maxSub;
+    }
+}
 
 
 
