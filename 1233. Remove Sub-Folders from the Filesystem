@@ -1,0 +1,40 @@
+//Approach-1 (Using set and substring find)
+//T.C : O(n*L^2)
+//S.C : O(n) //You can consider the length of each character as well - O(n*L)
+
+class Solution {
+    public List<String> removeSubfolders(String[] folder) {
+        // Store all folder paths in a set for quick lookup
+        Set<String> st = new HashSet<>();
+        for (String fold : folder) {
+            st.add(fold);
+        }
+        List<String> res = new ArrayList<>();
+        // Iterate over each folder
+        for (String currFolder : folder) {
+            boolean subfolder = false; // Flag to check if it's a subfolder
+            String tempFolder = currFolder; // Store the original folder path
+            // Keep removing the last part of the folder until we find a parent
+            while (!currFolder.isEmpty()) {
+                int position = currFolder.lastIndexOf('/'); // Find the last '/' position
+                currFolder = currFolder.substring(0, position); // Remove the last part
+                // If the shortened path exists in the set, it's a parent folder
+                if (st.contains(currFolder)) {
+                    subfolder = true; // Mark as subfolder
+                    break;
+                }
+            }
+            // If not a subfolder, add to result
+            if (!subfolder) {
+                res.add(tempFolder);
+            }
+        }
+        return res; // Return list of top-level folders only
+    }
+}
+
+
+//Approach-2 (Using Sorting)
+//T.C : O(n*logn) //You can consider the length of each character as well - O(n*L*logn)
+//S.C : O(1)
+
