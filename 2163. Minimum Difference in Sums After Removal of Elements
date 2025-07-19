@@ -3,3 +3,61 @@
 //S.C : O(N)
 
 
+class Solution {
+    public long minimumDifference(int[] nums) {
+        int N = nums.length;
+        int n = N / 3;  // We split the array into 3 equal parts
+
+        // Arrays to store minimum possible sum of n elements from left and maximum possible sum from right
+        long[] leftMinSum = new long[N];
+        long[] rightMaxSum = new long[N];
+
+        // Max heap to track n smallest elements' sum from the left side (using max heap to pop larger elements)
+        PriorityQueue<Integer> maxHeap = new PriorityQueue<>((a, b) -> b - a);
+        long leftSum = 0;
+
+        // Traverse from left to index 2n-1 to build leftMinSum
+        for (int i = 0; i <= 2 * n - 1; i++) {
+            maxHeap.offer(nums[i]);
+            leftSum += nums[i];
+
+            // If heap size exceeds n, remove the largest element (to keep only n smallest)
+            if (maxHeap.size() > n) {
+                leftSum -= maxHeap.poll();
+            }
+
+            // Store the current sum of n smallest elements up to index i
+            leftMinSum[i] = leftSum;
+        }
+
+        // Min heap to track n largest elements' sum from the right side (using min heap to pop smaller elements)
+        PriorityQueue<Integer> minHeap = new PriorityQueue<>();
+        long rightSum = 0;
+
+        // Traverse from right to index n to build rightMaxSum
+        for (int i = N - 1; i >= n; i--) {
+            minHeap.offer(nums[i]);
+            rightSum += nums[i];
+
+            // If heap size exceeds n, remove the smallest element (to keep only n largest)
+            if (minHeap.size() > n) {
+                rightSum -= minHeap.poll();
+            }
+
+            // Store the current sum of n largest elements starting from index i
+            rightMaxSum[i] = rightSum;
+        }
+
+        // Initialize result with maximum value
+        long result = Long.MAX_VALUE;
+
+        // Try partitioning the array at each point from index n-1 to 2n-1
+        for (int i = n - 1; i <= 2 * n - 1; i++) {
+            // leftMinSum[i] is the sum of smallest n elements from 0 to i
+            // rightMaxSum[i + 1] is the sum of largest n elements from i+1 to end
+            result = Math.min(result, leftMinSum[i] - rightMaxSum[i + 1]);
+        }
+
+        return result;
+    }
+}
