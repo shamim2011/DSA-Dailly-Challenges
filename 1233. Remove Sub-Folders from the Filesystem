@@ -36,5 +36,33 @@ class Solution {
 
 //Approach-2 (Using Sorting)
 //T.C : O(n*logn) //You can consider the length of each character as well - O(n*L*logn)
-//S.C : O(1)
+//S.C : O(n)
 
+class Solution {
+    public List<String> removeSubfolders(String[] folder) {
+        // Sort the folder array lexicographically
+        // This ensures that parent folders come before their subfolders
+        Arrays.sort(folder);
+
+        List<String> res = new ArrayList<>();
+
+        // The first folder in the sorted list cannot be a subfolder
+        res.add(folder[0]);
+
+        // Iterate from the second folder onward
+        for (int i = 1; i < folder.length; i++) {
+            String currFolder = folder[i];                  // Current folder being checked
+            String lastFolder = res.get(res.size() - 1);    // Most recently added folder in result
+            lastFolder += "/";                              // Append '/' to ensure strict prefix match
+
+            // Check if current folder starts with the last added folder (i.e., it's a subfolder)
+            if (!currFolder.startsWith(lastFolder)) {
+                // Not a subfolder, so add it to the result
+                res.add(currFolder);
+            }
+        }
+
+        // Return the list of folders excluding subfolders
+        return res;
+    }
+}
