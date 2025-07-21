@@ -1,0 +1,71 @@
+//Approach 1 (Simple straight forward traversal)
+//T.C : O(n)
+//S.C : O(1)
+
+class Solution {
+    public String makeFancyString(String s) {
+        int n = s.length();
+        StringBuilder sb = new StringBuilder();
+
+        // Add the first character to start the result
+        sb.append(s.charAt(0));
+        int count = 1; // Count of consecutive repeating characters
+
+        // Traverse the string from the second character
+        for (int i = 1; i < n; i++) {
+            char curr = s.charAt(i);
+
+            // If current character is the same as the last added in sb
+            if (curr == sb.charAt(sb.length() - 1)) {
+                count++;
+
+                // Add only if count is less than 3 (allow at most 2 consecutive same chars)
+                if (count < 3) {
+                    sb.append(curr);
+                }
+            } else {
+                // If it's a new character, reset count and append to result
+                sb.append(curr);
+                count = 1;
+            }
+        }
+
+        // Convert StringBuilder to String and return
+        return sb.toString();
+    }
+}
+
+
+//Approach 2 (Greedy + Two-Pointer Simulation using StringBuilder)
+//T.C : O(n)
+//S.C : O(1)
+
+
+class Solution {
+    public String makeFancyString(String s) {
+        int n = s.length();
+        
+        // If the string has 2 or fewer characters, it's already fancy.
+        if (n <= 2) return s;
+
+        // Use StringBuilder to efficiently build the resulting fancy string.
+        StringBuilder sb = new StringBuilder();
+
+        // Append the first two characters by default, since we can't form a triple yet.
+        sb.append(s.charAt(0));
+        sb.append(s.charAt(1));
+        
+        // Start checking from the 3rd character onwards
+        for (int i = 2; i < s.length(); i++) {
+            // Check if the last two characters in sb and the current character are all the same
+            // If they are not all the same, it's safe to append the current character
+            if (!(sb.charAt(sb.length() - 1) == s.charAt(i) && sb.charAt(sb.length() - 2) == s.charAt(i))) {
+                sb.append(s.charAt(i));
+            }
+            // If they are the same, skip the current character to avoid 3 consecutive duplicates
+        }
+
+        // Return the final fancy string
+        return sb.toString();
+    }
+}
