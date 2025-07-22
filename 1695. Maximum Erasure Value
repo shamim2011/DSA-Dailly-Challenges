@@ -1,0 +1,37 @@
+// Approach - Sliding Window + HashSet
+//T.C - O(n)
+// S.C - O(n)
+
+class Solution {
+    public int maximumUniqueSubarray(int[] nums) {
+        int n = nums.length;
+        // Set to store unique elements in the current window
+        Set<Integer> st = new HashSet<>();
+        // Pointers for sliding window
+        int i = 0, j = 0;
+        // Variables to hold the running sum and final result
+        int sum = 0, res = 0;
+        // Traverse the array using the right pointer j
+        while (j < n) {
+            // If current element is not in the set, it's unique
+            if (!st.contains(nums[j])) {
+                // Add element to the set
+                st.add(nums[j]);
+                // Add its value to current sum
+                sum += nums[j];
+                // Update result if needed
+                res = Math.max(res, sum);
+                // Move right pointer forward
+                j++;
+            } else {
+                // If duplicate found, remove element at left pointer from the set
+                st.remove(nums[i]);
+                // Subtract its value from the current sum
+                sum -= nums[i];
+                // Move left pointer forward to shrink the window
+                i++;
+            }
+        }
+        return res; // Final result: max sum of unique elements
+    }
+}
