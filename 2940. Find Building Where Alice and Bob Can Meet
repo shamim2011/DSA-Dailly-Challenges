@@ -1,0 +1,137 @@
+//Approach (Using Segment Tree Range Maximum Query + Binary Search)
+//T.C : O(q*(logn)^2)
+//S.C : O(n)
+
+class Solution {
+
+    // Builds the Segment Tree for Range Maximum Index Query
+    void buildTree(int i, int l, int r, int[] segTree, int[] heights) {
+        if (l == r) {
+            // Leaf node stores index of the element
+            segTree[i] = l;
+            return;
+        }
+
+        int mid = l + (r - l) / 2;
+
+        // Recursively build left and right subtrees
+        buildTree(2 * i + 1, l, mid, segTree, heights);
+        buildTree(2 * i + 2, mid + 1, r, segTree, heights);
+
+        // Store index of the maximum height among the two children
+        int leftIdx = segTree[2 * i + 1];
+        int rightIdx = segTree[2 * i + 2];
+        if (heights[leftIdx] >= heights[rightIdx]) {
+            segTree[i] = leftIdx;
+        } else {
+            segTree[i] = rightIdx;
+        }
+    }
+
+    // Queries segment tree for the index of the max height in [start, end]
+    int querySegment(int start, int end, int i, int l, int r, int[] segTree, int[] heights) {
+        // If current range [l, r] is completely outside [start, end]
+        if (l > end || r < start) {
+            return -1;
+        }
+
+        // If current range [l, r] is completely within [start, end]
+        if (l >= start && r <= end) {
+            return segTree[i]; // Return index of max element
+        }
+
+        int mid = l + (r - l) / 2;
+
+        // Recursively query left and right halves
+        int leftMaxIdx = querySegment(start, end, 2 * i + 1, l, mid, segTree, heights);
+        int rightMaxIdx = querySegment(start, end, 2 * i + 2, mid + 1, r, segTree, heights);
+
+        // Handle invalid indices (out of range)
+        if (leftMaxIdx == -1) return rightMaxIdx;
+        if (rightMaxIdx == -1) return leftMaxIdx;
+
+        // Return the index of the taller building
+        if (heights[leftMaxIdx] >= heights[rightMaxIdx]) {
+            return leftMaxIdx;
+        } else {
+            return rightMaxIdx;
+        }
+    }
+
+    // Wrapper for range max index query
+    int RMIQ(int[] segTree, int[] heights, int n, int a, int b) {
+        return querySegment(a, b, 0, 0, n - 1, segTree, heights);
+    }
+
+    // Constructs the segment tree
+    int[] constructST(int[] heights, int n) {
+        int[] segTree = new int[4 * n]; // Safe size for segment tree
+        buildTree(0, 0, n - 1, segTree, heights);
+        return segTree;
+    }
+
+    // Main function to handle queries
+    public int[] leftmostBuildingQueries(int[] heights, int[][] queries) {
+        int n = heights.length;
+
+        // Step 1: Build the segment tree
+        int[] segTree = constructST(heights, n);
+
+        List<Integer> li = new ArrayList<>();
+
+        // Step 2: Process each query
+        for (int[] query : queries) {
+            int start = query[0];
+            int end = query[1];
+
+            int maxIdx = Math.max(start, end);
+            int minIdx = Math.min(start, end);
+            int maxElem = Math.max(heights[start], heights[end]);
+
+            // Case 1: Same building
+            if (start == end) {
+                li.add(start);
+                continue;
+            }
+
+            // Case 2: One of them is strictly taller
+            else if (heights[maxIdx] > heights[minIdx]) {
+                li.add(maxIdx);
+                continue;
+            }
+
+            // Case 3: Need to find the first taller building after maxIdx
+            int l = maxIdx + 1;
+            int r = n - 1;
+            int result_idx = Integer.MAX_VALUE;
+
+            // Binary Search + Segment Tree to find leftmost taller building
+            while (l <= r) {
+                int mid = l + (r - l) / 2;
+                int idx = RMIQ(segTree, heights, n, l, mid);
+                if (heights[idx] > maxElem) {
+                    result_idx = Math.min(result_idx, idx);
+                    r = mid - 1; // Try to find an even earlier match
+                } else {
+                    l = mid + 1;
+                }
+            }
+
+            // Add result to list
+            if (result_idx == Integer.MAX_VALUE) {
+                li.add(-1);
+            } else {
+                li.add(result_idx);
+            }
+        }
+
+        // Convert list to array
+        int[] res = new int[li.size()];
+        int j = 0;
+        for (int num : li) {
+            res[j++] = num;
+        }
+
+        return res;
+    }
+}
