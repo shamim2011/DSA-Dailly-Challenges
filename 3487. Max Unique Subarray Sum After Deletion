@@ -1,0 +1,71 @@
+//Approach-1 (Using set)
+//T.C : O(n)
+//S.C : O(n)
+
+class Solution {
+    public int maxSum(int[] nums) {
+        // Create a set to store unique positive numbers
+        Set<Integer> st = new HashSet<>();
+
+        // Initialize result with the minimum possible value
+        int result = Integer.MIN_VALUE;
+
+        // Variable to keep the sum of unique positive numbers
+        int sum = 0;
+
+        // Iterate through each number in the array
+        for (int num : nums) {
+            // If the number is non-positive (0 or negative)
+            if (num <= 0) {
+                // Update result with the max of current result and this number
+                result = Math.max(result, num);
+            }
+            // If the number is positive and not already seen
+            else if (!st.contains(num)) {
+                // Add it to the sum
+                sum += num;
+                // Mark the number as seen
+                st.add(num);
+            }
+        }
+
+        // If no positive number was added (sum == 0),
+        // return the max negative number seen (or 0 if all were zero)
+        return sum == 0 ? result : sum;
+    }
+}
+
+
+//Approach-2 (Using constant space)
+//T.C : O(n)
+//S.C : O(1)
+
+class Solution {
+    public int maxSum(int[] nums) {
+        // Create an array to track whether a number (1 to 100) has been seen before
+        int[] arr = new int[101];
+        Arrays.fill(arr, -1); // Initialize all positions to -1 (meaning "not seen")
+
+        int sum = 0;                         // To store the sum of unique positive numbers
+        int result = Integer.MIN_VALUE;     // To track the max negative number (if no positives)
+
+        // Iterate through the input numbers
+        for (int num : nums) {
+            if (num <= 0) {
+                // If number is 0 or negative, update result with the maximum seen so far
+                result = Math.max(result, num);
+            } else if (arr[num] == -1) {
+                // If it's a positive number and hasn't been added to sum yet
+                sum += num;
+                arr[num] = 1; // Mark the number as seen
+            }
+        }
+
+        // If at least one positive number was added, return the sum
+        // Otherwise, return the largest non-positive number
+        return sum > 0 ? sum : result;
+    }
+}
+
+
+
