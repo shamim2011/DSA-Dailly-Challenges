@@ -1,0 +1,31 @@
+//Approach (Simple loop)
+//T.C : O(n) 
+//S.C : O(1)
+
+class Solution {
+    public int countHillValley(int[] nums) {
+        int n = nums.length;
+        int count = 0;
+
+        int i = 0; // Pointer to the last non-equal number before j
+        int j = 1;
+
+        while (j < n - 1) {
+            // Skip duplicates to ensure we always compare with the last different number
+            while (i < j && nums[i] == nums[j]) {
+                i--;
+            }
+
+            // Check if nums[j] is a hill (greater than neighbors) or valley (less than neighbors)
+            if ((nums[j] < nums[i] && nums[j] < nums[j + 1]) || 
+                (nums[j] > nums[i] && nums[j] > nums[j + 1])) {
+                count++;   // Valid hill or valley found
+                i = j;     // Move i to current j for the next comparison
+            }
+
+            j++;
+        }
+
+        return count;
+    }
+}
