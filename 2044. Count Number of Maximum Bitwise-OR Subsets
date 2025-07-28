@@ -1,0 +1,95 @@
+//Approach-1 (Using simple recursion to find subsets)
+//T.C : O(2^n)
+//S.C : O(1)
+
+class Solution {
+
+    // Recursive function to count subsets that result in max OR value
+    int countSubsets(int idx, int currOr, int[] nums, int maxOr) {
+        // Base Case: If we've considered all elements
+        if (idx == nums.length) {
+            // If current OR is equal to the maximum OR, count this subset
+            if (currOr == maxOr) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+
+        // Recursive Case:
+
+        // Include the current element in the subset and compute OR
+        int takeCount = countSubsets(idx + 1, currOr | nums[idx], nums, maxOr);
+
+        // Exclude the current element from the subset
+        int notTakeCount = countSubsets(idx + 1, currOr, nums, maxOr);
+
+        // Total count is the sum of subsets including and excluding current element
+        return takeCount + notTakeCount;
+    }
+
+    public int countMaxOrSubsets(int[] nums) {
+        int maxOr = 0;
+
+        // Compute the maximum possible OR value by including all elements
+        for (int num : nums) {
+            maxOr |= num;
+        }
+
+        // Start recursive process from index 0 with current OR = 0
+        return countSubsets(0, 0, nums, maxOr);
+    }
+}
+
+
+
+//Approach-2 (Memoizing to store subproblems result)
+//T.C : O(n*maxOr)
+//S.C : O(1)
+
+class Solution {
+
+    // Recursive function to count subsets with maximum OR
+    int countSubsets(int idx, int currOr, int[] nums, int maxOr, int[][] t) {
+        // Base case: when all elements have been considered
+        if (idx == nums.length) {
+            // If current OR equals maximum OR, count this subset
+            if (currOr == maxOr) {
+                return 1;
+            } else {
+                // Otherwise, not a valid subset
+                return 0;
+            }
+        }
+        // If already computed, return memoized result
+        if (t[idx][currOr] != -1) {
+            return t[idx][currOr];
+        }
+        // Include current element in the subset
+        int takeCount = countSubsets(idx + 1, currOr | nums[idx], nums, maxOr, t);
+        // Exclude current element from the subset
+        int notTakeCount = countSubsets(idx + 1, currOr, nums, maxOr, t);
+        // Store and return the total count for this state
+        return t[idx][currOr] = takeCount + notTakeCount;
+    }
+    public int countMaxOrSubsets(int[] nums) {
+        int maxOr = 0;
+        // Calculate the maximum OR value possible from any subset
+        for (int num : nums) {
+            maxOr |= num;
+        }
+        int n = nums.length;
+        // Memoization table: t[idx][currOr]
+        // idx = current index in nums
+        // currOr = current OR value
+        int[][] t = new int[n + 1][maxOr + 1];
+        // Initialize memoization table with -1 (unvisited)
+        for (int i = 0; i <= n; i++) {
+            for (int j = 0; j <= maxOr; j++) {
+                t[i][j] = -1;
+            }
+        }
+        // Start recursion from index 0 and current OR = 0
+        return countSubsets(0, 0, nums, maxOr, t);
+    }
+}
