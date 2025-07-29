@@ -23,6 +23,10 @@ The number of nodes in the tree is in the range [0, 2000].
 -1000 <= Node.val <= 1000
 
 
+// Approach: Level Order Traversal using BFS
+// T.C - O(N)
+// S.C - O(N)
+
 /**
  * Definition for a binary tree node.
  * public class TreeNode {
@@ -38,23 +42,51 @@ The number of nodes in the tree is in the range [0, 2000].
  *     }
  * }
  */
+// Definition for a binary tree node.
+class TreeNode {
+    int val;
+    TreeNode left;
+    TreeNode right;
+    TreeNode(int x) { val = x; }
+}
+
 class Solution {
     public List<List<Integer>> levelOrder(TreeNode root) {
-        // Take U Forward Lec-07
-        Queue<TreeNode> q=new LinkedList<TreeNode>();
-        List<List<Integer>> wrapList=new LinkedList<List<Integer>>();
-        if(root==null) return wrapList;
+        // Queue for BFS traversal
+        Queue<TreeNode> q = new LinkedList<TreeNode>();
+
+        // Final result list to store levels
+        List<List<Integer>> wrapList = new LinkedList<List<Integer>>();
+
+        // If tree is empty, return empty list
+        if (root == null) return wrapList;
+
+        // Start BFS by adding root node
         q.offer(root);
-        while(!q.isEmpty()){
-            int size=q.size();
-            List<Integer> subList=new LinkedList<Integer>();
-            for(int i=0;i<size;i++){
-                if(q.peek().left!=null) q.offer(q.peek().left);
-                if(q.peek().right!=null) q.offer(q.peek().right);
+
+        // Continue until queue is empty
+        while (!q.isEmpty()) {
+            int size = q.size(); // Number of nodes at current level
+
+            // Temporary list to hold current level's values
+            List<Integer> subList = new LinkedList<Integer>();
+
+            // Process all nodes at current level
+            for (int i = 0; i < size; i++) {
+                // Add left child if exists
+                if (q.peek().left != null) q.offer(q.peek().left);
+
+                // Add right child if exists
+                if (q.peek().right != null) q.offer(q.peek().right);
+
+                // Add current node's value to subList and remove it from queue
                 subList.add(q.poll().val);
             }
+
+            // Add current level's list to the final result
             wrapList.add(subList);
         }
+
         return wrapList;
     }
 }
