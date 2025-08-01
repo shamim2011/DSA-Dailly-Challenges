@@ -1,0 +1,34 @@
+✅ Approach Name: Iterative Construction (Based on Pascal’s Triangle Property)
+// T.C - O(numRows²) 
+// S.C - O(numRows²) 
+
+class Solution {
+    public List<List<Integer>> generate(int numRows) {
+        // Initialize the final result list that will store all rows of Pascal's Triangle
+        List<List<Integer>> ans = new ArrayList<>();
+
+        // Loop through each row index from 0 to numRows - 1
+        for (int i = 0; i < numRows; i++) {
+            // Create a new list to store the current row values
+            List<Integer> row = new ArrayList<>(i + 1);
+
+            // Build the current row using the previous row
+            for (int j = 0; j <= i; j++) {
+                // First and last elements of each row are always 1
+                if (j == 0 || j == i) {
+                    row.add(1);
+                } else {
+                    // Middle elements are sum of two elements from the previous row
+                    int num = ans.get(i - 1).get(j - 1) + ans.get(i - 1).get(j);
+                    row.add(num);
+                }
+            }
+
+            // Add the completed row to the final answer list
+            ans.add(row);
+        }
+
+        // Return the full Pascal's Triangle up to numRows
+        return ans;
+    }
+}
