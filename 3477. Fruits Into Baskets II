@@ -6,21 +6,30 @@
 
 class Solution {
     public int numOfUnplacedFruits(int[] fruits, int[] baskets) {
-        int n = fruits.length;
-        int unplacedCount = 0;
-        for (int i=0;i<n;i++) {
-            boolean placed = false;
-            for(int j=0;j<n;j++){
-                if(fruits[i]<=baskets[j]){
-                    baskets[j] = -1;
-                    placed = true;
-                    break;
+        int n = fruits.length; // Total number of fruits (and baskets)
+        int unplacedCount = 0; // Counter for fruits that cannot be placed
+
+        // Iterate over each fruit
+        for (int i = 0; i < n; i++) {
+            boolean placed = false; // Flag to check if current fruit is placed
+
+            // Try placing the current fruit in one of the available baskets
+            for (int j = 0; j < n; j++) {
+                if (fruits[i] <= baskets[j]) {
+                    // If the fruit fits in the basket
+                    baskets[j] = -1; // Mark this basket as used
+                    placed = true;   // Mark fruit as placed
+                    break;           // Exit inner loop since the fruit is placed
                 }
             }
-            if(!placed)
+
+            // If the fruit couldn't be placed in any basket, increase the count
+            if (!placed) {
                 unplacedCount++;
-            
+            }
         }
+
+        // Return the total number of unplaced fruits
         return unplacedCount;
     }
 }
