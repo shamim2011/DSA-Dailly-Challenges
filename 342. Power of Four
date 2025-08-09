@@ -14,3 +14,33 @@ class Solution {
         return n==1;
     }
 }
+
+
+// Approach 2 - Base-4 Representation
+// T.C - O(log n)
+// S.c - O(1)
+
+class Solution {
+    public boolean isPowerOfFour(int n) {
+        // Negative numbers or zero can't be powers of four
+        if (n <= 0) {
+            return false;
+        }
+
+        int count1 = 0; // Will store the sum of remainders when dividing by 4
+
+        // Keep dividing n by 4 until n becomes 0
+        while (n > 0) {
+            // Add the remainder of n when divided by 4
+            // If n is a power of four, this remainder should be 0 until we reach 1
+            count1 += n % 4;
+
+            // Divide n by 4 for the next step
+            n = n / 4;
+        }
+
+        // If the sum of remainders is greater than 1, 
+        // it means n had more than one non-zero digit in base 4 → not a power of four
+        return count1 <= 1;
+    }
+}
