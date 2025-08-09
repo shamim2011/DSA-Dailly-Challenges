@@ -34,3 +34,34 @@ class Solution {
         return Math.abs(a - Math.round(a)) < 1e-10;
     }
 }
+
+
+// Approach 3 - Base-3 Representation
+// T.C - O(log n)
+// S.c - O(1)
+
+class Solution {
+    public boolean isPowerOfThree(int n) {
+        // Special case: 1 is 3^0, so it's a power of three
+        if (n == 1) return true;
+
+        // Negative numbers or 0 can never be powers of three
+        if (n <= 0) return false;
+
+        int countNonZeroDigits = 0; // To count non-zero digits in base-3 form
+
+        // Keep dividing by 3 to simulate base-3 conversion
+        while (n > 0) {
+            int remainder = n % 3; // Current base-3 digit
+
+            // Add remainder to count (if remainder > 0)
+            countNonZeroDigits += remainder;
+
+            // Divide by 3 to process the next digit
+            n /= 3;
+        }
+
+        // A power of three must have only ONE non-zero digit in base-3
+        return (countNonZeroDigits == 1);
+    }
+}
