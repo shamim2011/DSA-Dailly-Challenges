@@ -1,0 +1,47 @@
+//Approach - 1 Bit Manipulation (Brian Kernighan’s Algorithm concept) 
+//T.C : O(1)
+//S.C : O(1)
+
+class Solution {
+    public boolean isPowerOfTwo(int n) {
+        // Step 1: Check if n is positive
+        // Step 2: Check if n has only one set bit using (n & (n - 1)) == 0
+        // This works because powers of two have exactly one bit set in binary representation.
+        if (n > 0 && ((n & (n - 1)) == 0)) {
+            return true; // n is a power of two
+        } else {
+            return false; // n is not a power of two
+        }
+    }
+}
+
+
+
+//Approach - 2 Bit Counting (Brian Kernighan–style check, but using %2 here)
+//T.C : O(log n)
+//S.C : O(1)
+
+
+class Solution {
+    public boolean isPowerOfTwo(int n) {
+        // Base case: 1 is a power of two (2^0)
+        if (n == 1) return true;
+        
+        // Negative numbers and zero are not powers of two
+        if (n <= 0) return false;
+        
+        int count1 = 0; // Will count number of 1 bits in binary representation
+        
+        // Loop until all bits are processed
+        while (n > 0) {
+            // Check the last bit (n % 2 gives remainder, 1 if last bit is set)
+            count1 = count1 + n % 2;
+            
+            // Remove the last bit (equivalent to right shift by 1)
+            n = n / 2;
+        }
+        
+        // A number is a power of two if it has exactly one set bit
+        return (count1 == 1);
+    }
+}
