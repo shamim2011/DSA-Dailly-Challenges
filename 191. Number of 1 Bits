@@ -1,0 +1,54 @@
+// Approach 1 - Basic Division-by-2 (Manual Binary Conversion)
+// T.C - O(log n)
+// S.c - O(log n)
+
+import java.util.*;
+
+class Solution {
+    public int hammingWeight(int n) {
+        // List to store binary representation of the number
+        ArrayList<Integer> li = new ArrayList<>();
+        
+        // Convert the number to binary (store bits)
+        while (n > 0) {
+            li.add(n % 2);  // Get remainder (0 or 1)
+            n = n / 2;      // Divide by 2 to shift right
+        }
+        
+        // Count how many bits are 1
+        int count = 0;
+        for (int bit : li) {
+            if (bit == 1) {
+                count++;
+            }
+        }
+        
+        // Return the number of 1's
+        return count;
+    }
+}
+
+
+
+// Approach 2 - Bitwise Division / Modulo
+// T.C - O(log n)
+// S.c - O(1)
+
+
+class Solution {
+    public int hammingWeight(int n) {
+        int count1 = 0; // Counter to store the number of '1' bits
+
+        // Loop until n becomes 0
+        while (n > 0) {
+            // Add 1 to count if the last bit is 1
+            count1 += n % 2; // n % 2 is 1 if last bit is 1, else 0
+
+            // Right shift by dividing by 2 (removes the last bit)
+            n /= 2;
+        }
+
+        // Return the total count of 1 bits
+        return count1;
+    }
+}
