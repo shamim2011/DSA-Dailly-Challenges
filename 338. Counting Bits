@@ -1,0 +1,87 @@
+// Approach - Naive Bit Counting 
+// T.C - O(nlogn)
+// S.C - O(n)
+
+class Solution {
+
+    // Helper method to count number of 1s in binary representation of k
+    int countOnes(int k) {
+        int count = 0;
+
+        // Keep dividing k by 2 until it becomes 0
+        while (k > 0) {
+            // k % 2 gives the last bit (1 if odd, 0 if even)
+            count += k % 2;
+
+            // Remove the last bit by dividing by 2
+            k /= 2;
+        }
+
+        return count;
+    }
+
+    public int[] countBits(int n) {
+        // Result array to store count of 1s for each number from 0 to n
+        int[] ans = new int[n + 1];
+
+        // Base case: 0 has 0 set bits
+        ans[0] = 0;
+
+        // Calculate set bits for each number i
+        for (int i = 1; i <= n; i++) {
+            ans[i] = countOnes(i); // Call helper function
+        }
+
+        // Return the filled array
+        return ans;
+    }
+}
+
+
+
+Dynamic Programming using the relation: 2
+bits(i)=bits(i/2)+(imod2)
+If i is even → number of 1s is same as i / 2.
+
+If i is odd → same as i / 2 plus one more 1.
+// T.C - O(n)
+// S.C - O(1)
+
+class Solution {
+    public int[] countBits(int n) {
+        // Array to store count of set bits from 0 to n
+        int[] ans = new int[n + 1];
+
+        // Base case: 0 has 0 set bits
+        ans[0] = 0;
+
+        // Fill array using the DP relation
+        for (int i = 1; i <= n; i++) {
+            // i >> 1 is i / 2 (shifts bits to the right)
+            // i & 1 is i % 2 (checks last bit: 1 if odd, 0 if even)
+            ans[i] = ans[i/2] + (i%2);
+        }
+
+        return ans;
+    }
+}
+---------------------------------------------same as approach 2------------------------------------
+class Solution {
+    public int[] countBits(int n) {
+        // Array to store count of set bits from 0 to n
+        int[] ans = new int[n + 1];
+
+        // Base case: 0 has 0 set bits
+        ans[0] = 0;
+
+        // Fill array using the DP relation
+        for (int i = 1; i <= n; i++) {
+            // i >> 1 is i / 2 (shifts bits to the right)
+            // i & 1 is i % 2 (checks last bit: 1 if odd, 0 if even)
+            ans[i] = ans[i >> 1] + (i & 1);
+        }
+
+        return ans;
+    }
+}
+
