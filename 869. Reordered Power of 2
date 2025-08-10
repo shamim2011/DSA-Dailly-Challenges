@@ -1,0 +1,36 @@
+//Approach-1 (Using sorting)
+//T.C : O(dlogd), d = number of digits
+//S.C : O(d)
+
+import java.util.Arrays;
+
+class Solution {
+
+    // Helper method: returns the sorted string representation of an integer
+    String getSortedStr(int n) {
+        // Convert integer to string
+        String s = String.valueOf(n);
+        // Convert string to character array
+        char[] arr = s.toCharArray();
+        // Sort the characters in ascending order (lexicographically)
+        Arrays.sort(arr);
+        // Convert the sorted character array back to a string
+        return new String(arr);
+    }
+
+    public boolean reorderedPowerOf2(int n) {
+        // Get the sorted string representation of the input number
+        String s = getSortedStr(n);
+
+        // Loop through all powers of 2 up to 2^29 (since 2^30 = 1073741824 > 1e9)
+        for (int p = 0; p <= 29; p++) {
+            // Check if sorted digits of current power of 2 match sorted digits of n
+            if (s.equals(getSortedStr(1 << p))) {
+                return true; // Match found, n can be reordered to form a power of 2
+            }
+        }
+
+        // If no match found, return false
+        return false;
+    }
+}
