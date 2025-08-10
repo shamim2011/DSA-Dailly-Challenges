@@ -34,3 +34,27 @@ class Solution {
         return false;
     }
 }
+
+//Approach-2 (Using preprocessing and storing in a set)
+//T.C : O(dlogd), d = number of digits
+//S.C : O(d)
+
+class Solution {
+    private Set<String> st = new HashSet<>();
+    private void buildSet(){
+        for(int p=0;p<=29;p++){
+            char[] arr = String.valueOf(1 << p).toCharArray();
+            Arrays.sort(arr);
+            st.add(new String(arr));
+        }
+    }
+    public boolean reorderedPowerOf2(int n) {
+        if(st.isEmpty()){
+            buildSet();
+        }
+        char[] arr = String.valueOf(n).toCharArray();
+        Arrays.sort(arr);
+        
+        return st.contains(new String(arr));
+    }
+}
