@@ -1,0 +1,43 @@
+//Approach (Building powers array using bits information)
+//T.C : O(Q), where Q = size of queries
+//S.C : O(1)
+
+class Solution {
+    // Define the modulo value (prime number) to avoid integer overflow
+    int MOD = (int)(1e9 + 7);
+
+    public int[] productQueries(int n, int[][] queries) {
+        // Result array to store answers for each query
+        int[] ans = new int[queries.length];
+        int idx = 0; // Index to fill in ans[]
+
+        // List to store powers of 2 from the binary representation of n
+        List<Long> powers = new ArrayList<>();
+
+        // Step 1: Extract all powers of 2 that make up n
+        // Example: n = 13 (binary 1101) → powers = [1, 4, 8]
+        for (int i = 0; i < 32; i++) { // 32 bits for int
+            if ((n & (1 << i)) != 0) { // Check if the i-th bit is set in n
+                powers.add((long)(1 << i)); // Add 2^i to the list
+            }
+        }
+
+        // Step 2: Process each query
+        for (int[] nums : queries) {
+            int start = nums[0]; // starting index in powers list
+            int end = nums[1];   // ending index in powers list
+            long pro = 1;        // product for current query
+
+            // Multiply all powers in the range [start, end]
+            for (int i = start; i <= end; i++) {
+                pro = (pro * powers.get(i)) % MOD; // multiply & take modulo
+            }
+
+            // Store result in ans array
+            ans[idx++] = (int) pro;
+        }
+
+        // Step 3: Return the array of results
+        return ans;
+    }
+}
