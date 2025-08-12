@@ -1,0 +1,62 @@
+//Approach-1 (Recursion + Memoization)
+//T.C : O(n*n), assuming that num can go till n in worst case (At max states = t[n][n])
+//S.C : O(n*n), assuming that num can go till n in worst case (we took t[n][n])
+
+
+class Solution {
+    int mod = (int)1e9 + 7; // To take results modulo 10^9+7 (common for large answers)
+    
+    // Memoization table (DP cache) to store results of subproblems
+    // t[remaining_sum][current_number] = number of ways
+    int[][] t = new int[301][301];
+
+    public int numberOfWays(int n, int x) {
+        // Initialize DP table with -1 (meaning "not calculated yet")
+        for (int i = 0; i <= n; i++) {
+            for (int j = 0; j <= n; j++) {
+                t[i][j] = -1;
+            }
+        }
+        // Start solving from number 1
+        return solve(n, 1, x);
+    }
+
+    // Recursive function to count the number of ways
+    // n   → remaining sum we want to achieve
+    // num → current number to consider
+    // x   → exponent to raise num to
+    int solve(int n, int num, int x) {
+
+        // ✅ Base case 1: if remaining sum is exactly 0 → found one valid way
+        if (n == 0) {
+            return 1;
+        }
+
+        // ✅ Base case 2: if remaining sum becomes negative → invalid way
+        if (n < 0) {
+            return 0;
+        }
+
+        // Calculate num^x (current number raised to power x)
+        int currVal = (int) Math.pow(num, x);
+
+        // ✅ Base case 3: if num^x is greater than remaining sum → can't use this number
+        if (currVal > n) {
+            return 0;
+        }
+
+        // If result already computed for this (n, num), return from cache
+        if (t[n][num] != -1) {
+            return t[n][num];
+        }
+
+        // Option 1: Take current number → subtract its power from remaining sum
+        int take = solve(n - currVal, num + 1, x);
+
+        // Option 2: Skip current number → move to next number without subtracting
+        int skip = solve(n, num + 1, x);
+
+        // Store result in DP table with modulo
+        return t[n][num] = (take + skip) % mod;
+    }
+}
