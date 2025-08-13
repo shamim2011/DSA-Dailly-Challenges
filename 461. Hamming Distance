@@ -1,0 +1,24 @@
+// Approach - Bit Manipulation + String Conversion
+// T.C -  O(k) → effectively O(1) for 32-bit integers.
+// S.C - Overall: O(k) → effectively O(1) for fixed-size integers.
+
+class Solution {
+    public int hammingDistance(int x, int y) {
+        // Step 1: XOR will have 1s in positions where bits differ
+        String str = Integer.toBinaryString(x ^ y);
+
+        int dist = 0; // counter for different bits
+
+        // Step 2: Count number of '1's in the binary string
+        for (int i = 0; i < str.length(); i++) {
+            if (str.charAt(i) == '1') {
+                dist++;
+            }
+        }
+
+        // Step 3: Return the Hamming distance
+        return dist;
+    }
+}
+
+
