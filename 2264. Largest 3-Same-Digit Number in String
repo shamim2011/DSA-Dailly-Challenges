@@ -1,4 +1,4 @@
-// Approach - Brute Force with Substring Collection
+// Approach - 1 Brute Force with Substring Collection
 // T.C - O(n)
 // S.C - O(n)
 
@@ -43,6 +43,41 @@ class Solution {
         }
         
         // Step 6: Return the largest good integer found
+        return ans;
+    }
+}
+
+
+
+// Approach - 2 Sliding Window of Size 3
+// T.C - O(n)
+// S.C - O(1)
+
+
+class Solution {
+    public String largestGoodInteger(String num) {
+        // Variable to store the largest "good" integer found
+        String ans = "";
+
+        // Start from index 2 so that we can check i, i-1, and i-2 together
+        for (int i = 2; i < num.length(); i++) {
+
+            // Check if the current 3 consecutive digits are equal
+            if (num.charAt(i) == num.charAt(i - 1) && num.charAt(i) == num.charAt(i - 2)) {
+
+                // Extract the substring of these 3 equal digits
+                String triplet = num.substring(i - 2, i + 1);
+
+                // Update ans if:
+                // 1. ans is empty (first good integer found), or
+                // 2. The digit of the new triplet is larger than the digit in ans
+                if (ans.isEmpty() || triplet.charAt(0) > ans.charAt(0)) {
+                    ans = triplet;
+                }
+            }
+        }
+
+        // Return the largest good integer found, or empty string if none
         return ans;
     }
 }
