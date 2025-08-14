@@ -1,0 +1,48 @@
+// Approach - Brute Force with Substring Collection
+// T.C - O(n)
+// S.C - O(n)
+
+import java.util.*;
+
+class Solution {
+    public String largestGoodInteger(String num) {
+        // Step 1: Store all "good integers" (triplets of same digit) in a list
+        List<String> li = new ArrayList<>();
+        
+        // Step 2: Iterate from index 2 to end (so we can check i-1 and i-2 safely)
+        for (int i = 2; i < num.length(); i++) {
+            // Check if current char, previous char, and char before that are same
+            if (num.charAt(i) == num.charAt(i - 1) && num.charAt(i) == num.charAt(i - 2)) {
+                // Extract the triplet substring and add to list
+                li.add(num.substring(i - 2, i + 1));
+            }
+        }
+        
+        // Step 3: If no triplets found, return empty string
+        String ans = "";
+        if (li.isEmpty()) {
+            return ans;
+        }
+        
+        // Step 4: If only one triplet, return it directly
+        if (li.size() == 1) {
+            return li.get(0);
+        }
+        else {
+            // Step 5: Otherwise, find the largest triplet by comparing first character (digit)
+            ans = li.get(0);
+            int elem = li.get(0).charAt(0); // store ASCII value of first digit of first triplet
+            
+            for (int i = 1; i < li.size(); i++) {
+                int elem2 = li.get(i).charAt(0); // ASCII value of first digit of current triplet
+                if (elem2 > elem) {
+                    ans = li.get(i); // update largest triplet
+                    elem = elem2;    // also update max digit tracker
+                }
+            }
+        }
+        
+        // Step 6: Return the largest good integer found
+        return ans;
+    }
+}
