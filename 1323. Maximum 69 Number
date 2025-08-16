@@ -1,0 +1,73 @@
+// Approach - 1 Brute Force Simulation (Flip Each Digit Once and Track Max)
+// T.C - O(d²) -> Suppose the number has d digits.
+// S.C - O(d)
+
+class Solution {
+    public int maximum69Number (int num) {
+        // Step 1: Store all possible results in a list
+        List<Integer> li = new ArrayList<>();
+        li.add(num); // add the original number
+
+        // Step 2: Convert number -> String -> char array
+        String s = Integer.toString(num);
+        char[] arr = s.toCharArray();
+
+        // Step 3: Try flipping each digit one by one
+        for (int i = 0; i < arr.length; i++) {
+            char ch = arr[i]; // original digit
+
+            // Flip this digit
+            if (ch == '6') {
+                arr[i] = '9';  // change 6 → 9
+            } else {
+                arr[i] = '6';  // change 9 → 6
+            }
+
+            // Clone the modified array so original arr is preserved
+            char[] res = arr.clone();
+
+            // Restore arr[i] back to original digit
+            arr[i] = ch;
+
+            // Convert modified array back to integer
+            int x = Integer.parseInt(new String(res));
+
+            // Add this possible number to the list
+            li.add(x);
+        }
+
+        // Step 4: Find the maximum value among all candidates
+        int max = Integer.MIN_VALUE;
+        for (int val : li) {
+            max = Math.max(max, val);
+        }
+
+        // Step 5: Return the maximum number
+        return max;
+    }
+}
+
+
+// Approach - 2 Greedy (Change the First ‘6’ to ‘9’)
+// T.C - O(d) -> Suppose the number has d digits.
+// S.C - O(d)
+
+class Solution {
+    public int maximum69Number (int num) {
+        // Step 1: Convert the integer to a char array (easier to modify digits)
+        char[] arr = String.valueOf(num).toCharArray();
+        
+        // Step 2: Traverse digits from left to right
+        for (int i = 0; i < arr.length; i++) {
+            // Step 3: If we find the first '6', change it to '9'
+            // (changing the leftmost 6 gives the maximum possible number)
+            if (arr[i] == '6') {
+                arr[i] = '9';
+                break; // only change once, then stop
+            }
+        }
+        
+        // Step 4: Convert the modified char array back to integer
+        return Integer.parseInt(new String(arr));
+    }
+}
