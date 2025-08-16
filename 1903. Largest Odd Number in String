@@ -1,0 +1,24 @@
+Approach Name: Greedy (scan from right to left).
+Time Complexity: O(n), where n = num.length().
+
+Space Complexity: O(1), ignoring output storage.
+
+
+
+class Solution {
+    public String largestOddNumber(String num) {
+        // Traverse from the last digit to the first
+        for (int i = num.length() - 1; i >= 0; i--) {
+            int digit = num.charAt(i) - '0';  // convert char to int
+            
+            // Check if digit is odd
+            if (digit % 2 == 1) {
+                // Found the rightmost odd digit → return substring up to this digit
+                return num.substring(0, i + 1);
+            }
+        }
+        
+        // No odd digit found → return empty string
+        return "";
+    }
+}
