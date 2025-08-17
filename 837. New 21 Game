@@ -1,0 +1,41 @@
+// Approach - 1 (Brute Force Dynamic Programming)
+// T.C - O(n * maxPts) -> For each i (up to n), we check all possible j (1..maxPts).
+// S.C - O(n) -> We use a DP array of size n+1.
+
+class Solution {
+    public double new21Game(int n, int k, int maxPts) {
+        // p[i] = probability of reaching score exactly i
+        double[] p = new double[n + 1];
+
+        // Initially score = 0 with probability = 1
+        p[0] = 1.0;
+
+        // Build probabilities for each score i
+        for (int i = 1; i <= n; i++) {
+            // Try adding each possible card value j (1..maxPts)
+            for (int card = 1; card <= maxPts; card++) {
+                // We only add contribution if (i - j) is valid
+                // and the game has not stopped (i-j < k)
+                if (i - card >= 0 && i - card < k) {
+                    // Probability of drawing card j = 1/maxPts
+                    // So, p[i] += (p[i-j] / maxPts)
+                    p[i] += p[i - card] / maxPts;
+                }
+            }
+        }
+
+        // Final answer = sum of probabilities for scores >= k and <= n
+        double ans = 0.0;
+        for (int i = k; i <= n; i++) {
+            ans += p[i];
+        }
+
+        return ans;
+    }
+}
+
+
+
+// Approach - 2 (Optimising above solution to use already solve subproblem)
+// T.C - O(n * maxPts) -> For each i (up to n), we check all possible j (1..maxPts).
+// S.C - O(n) -> We use a DP array of size n+1.
