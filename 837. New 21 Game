@@ -36,6 +36,41 @@ class Solution {
 
 
 
-// Approach - 2 (Optimising above solution to use already solve subproblem)
-// T.C - O(n * maxPts) -> For each i (up to n), we check all possible j (1..maxPts).
-// S.C - O(n) -> We use a DP array of size n+1.
+// Approach-2 (Optimizing DP using Sliding Window of Probabilities)
+// T.C : O(n)
+// S.C : O(n)
+
+class Solution {
+    public double new21Game(int n, int k, int maxPts) {
+        double[] P = new double[n + 1];
+        // P[i] = probability of getting score = i
+
+        P[0] = 1.0; // Initially, score = 0 → probability = 1
+
+        // Running sum of probabilities of last 'maxPts' valid states
+        double currProbabSum = (k > 0 ? 1.0 : 0.0);
+
+        for (int i = 1; i <= n; i++) {
+
+            // Probability of reaching score i
+            P[i] = currProbabSum / maxPts;
+
+            // If score is still less than k, then it contributes to future states
+            if (i < k) {
+                currProbabSum += P[i];
+            }
+
+            // Remove contribution of scores that are out of sliding window
+            if (i - maxPts >= 0 && i - maxPts < k) {
+                currProbabSum -= P[i - maxPts];
+            }
+        }
+
+        // Sum probabilities where final score ∈ [k, n]
+        double ans = 0.0;
+        for (int i = k; i <= n; i++) {
+            ans += P[i];
+        }
+        return ans;
+    }
+}
