@@ -1,7 +1,7 @@
 // Approach - 1 (Brute Force Dynamic Programming)
 // T.C - O(n * maxPts) -> For each i (up to n), we check all possible j (1..maxPts).
 // S.C - O(n) -> We use a DP array of size n+1.
-
+ 
 class Solution {
     public double new21Game(int n, int k, int maxPts) {
         // p[i] = probability of reaching score exactly i
