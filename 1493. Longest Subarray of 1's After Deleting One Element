@@ -56,5 +56,43 @@ class Solution {
 
 
 // Approach-2 (Sliding Windows)
-// T.C : O(n^2)
+// T.C : O(n)
+// S.C - O(1)
+
+class Solution {
+    public int longestSubarray(int[] nums) {
+        int n = nums.length;
+        int i = 0;           // left pointer of the sliding window
+        int countZero = 0;   // keeps track of zeros in the current window
+        int ans = 0;         // stores the maximum length of valid subarray
+
+        // Iterate with right pointer j
+        for (int j = 0; j < n; j++) {
+            // Expand the window by including nums[j]
+            if (nums[j] == 0) {
+                countZero++;
+            }
+
+            // If there are more than 1 zeros, shrink window from left
+            while (countZero > 1) {
+                if (nums[i] == 0) {
+                    countZero--;
+                }
+                i++;  // move left pointer forward
+            }
+
+            // j - i = length of current valid window - 1 zero removed
+            ans = Math.max(ans, j - i);
+        }
+
+        return ans; // longest subarray length after deleting one element
+    }
+}
+
+// Approach-3 (Using Better Sliding Window)
+// T.C : O(n)
+// S.C - O(1)
+
+
+
 
