@@ -1,0 +1,60 @@
+// Approach-1 (Simple Brute Force)
+// T.C : O(n^2)
+
+class Solution {
+    int n;
+
+    // Helper method: Finds the longest subarray of 1s after skipping (removing) one element at index skip_idx
+    int find(int[] nums, int skip_idx) {
+        int currLength = 0; // current streak of consecutive 1s
+        int maxLength = 0;  // maximum streak of consecutive 1s found so far
+
+        // Iterate through the array
+        for (int i = 0; i < n; i++) {
+            // Skip the element at index skip_idx (treat it as "deleted")
+            if (i == skip_idx) {
+                continue;
+            }
+
+            if (nums[i] == 1) {
+                // If current element is 1, increase current streak length
+                currLength++;
+                // Update maximum streak length
+                maxLength = Math.max(currLength, maxLength);
+            } else {
+                // If current element is 0, reset streak length
+                currLength = 0;
+            }
+        }
+        return maxLength; // return the longest streak found
+    }
+
+    public int longestSubarray(int[] nums) {
+        n = nums.length;
+        int result = 0;  // stores the longest subarray length
+        int zero = 0;    // count how many zeros exist in the array
+
+        // Try removing each zero one by one
+        for (int i = 0; i < n; i++) {
+            if (nums[i] == 0) {
+                zero++;
+                // Assume nums[i] is removed and check longest subarray
+                result = Math.max(result, find(nums, i));
+            }
+        }
+
+        // If there are no zeros in the array
+        // then we must remove one element (as per problem condition)
+        // so the result is (n - 1)
+        if (zero == 0) {
+            return n - 1;
+        }
+
+        return result; // return the maximum length found
+    }
+}
+
+
+// Approach-2 (Sliding Windows)
+// T.C : O(n^2)
+
