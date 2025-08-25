@@ -1,0 +1,49 @@
+// Approach - Diagonal Traversal using HashMap (Grouping by Sum of Indices)
+//T.C : O(m*n)
+//S.C : O(m*n)
+
+
+class Solution {
+    public int[] findDiagonalOrder(int[][] mat) {
+        int row = mat.length;
+        int col = mat[0].length;
+        int[] ans = new int[row * col];
+
+        // Map to group elements by diagonals.
+        // Key = (i+j), Value = all elements belonging to that diagonal
+        Map<Integer, List<Integer>> mp = new HashMap<>();
+
+        // Step 1: Fill the map with elements of each diagonal
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                int key = i + j;
+                mp.putIfAbsent(key, new ArrayList<>());
+                mp.get(key).add(mat[i][j]);
+            }
+        }
+
+        // Step 2: Traverse diagonals in order and fill answer
+        int idx = 0;
+        boolean flip = true; // controls direction (reverse/normal)
+
+        for (int i = 0; i < mp.size(); i++) {
+            List<Integer> diagonal = mp.get(i);
+
+            if (flip) {
+                // Add current diagonal in reverse order
+                for (int k = diagonal.size() - 1; k >= 0; k--) {
+                    ans[idx++] = diagonal.get(k);
+                }
+            } else {
+                // Add current diagonal in normal order
+                for (int k = 0; k < diagonal.size(); k++) {
+                    ans[idx++] = diagonal.get(k);
+                }
+            }
+            // Toggle direction for next diagonal
+            flip = !flip;
+        }
+
+        return ans;
+    }
+}
