@@ -1,0 +1,36 @@
+//Approach (Simple and straight forward)
+//T.C : O(n)
+//S.C : O(1)
+
+class Solution {
+    public int areaOfMaxDiagonal(int[][] dimensions) {
+        // Variable to store the final answer (maximum area among rectangles with max diagonal)
+        int ans = 0;
+        
+        // Variable to keep track of the maximum diagonal squared value found so far
+        int maxDiagSum = 0;
+
+        // Loop through each rectangle's dimensions (length and width)
+        for (int[] nums : dimensions) {
+            int length = nums[0]; // first element = length
+            int width = nums[1];  // second element = width
+
+            // Calculate diagonal squared: length² + width²
+            int DiagSqSum = (length * length) + (width * width);
+
+            // Case 1: Found a rectangle with a strictly larger diagonal
+            if (DiagSqSum > maxDiagSum) {
+                maxDiagSum = DiagSqSum;      // update max diagonal squared
+                ans = length * width;        // update area with this rectangle's area
+            }
+            // Case 2: Found another rectangle with the same diagonal length
+            else if (DiagSqSum == maxDiagSum) {
+                // Take the rectangle with the larger area
+                ans = Math.max(ans, length * width);
+            }
+        }
+
+        // Return the area of the rectangle with the largest diagonal
+        return ans;
+    }
+}
