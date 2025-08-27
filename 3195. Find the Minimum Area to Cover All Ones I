@@ -1,0 +1,38 @@
+//Approach (Just find the minRow, maxRow, minCol and maxCol where we see 1)
+//T.C : O(m * m)
+//S.C : O(1)
+
+class Solution {
+    public int minimumArea(int[][] grid) {
+        int m = grid.length;      // Total number of rows
+        int n = grid[0].length;   // Total number of columns
+
+        // Initialize boundaries for rows and columns
+        int maxRow = -1;  // Keeps track of the bottom-most row that has a '1'
+        int minRow = m;   // Keeps track of the top-most row that has a '1'
+
+        int maxCol = -1;  // Keeps track of the right-most column that has a '1'
+        int minCol = n;   // Keeps track of the left-most column that has a '1'
+
+        // Traverse the entire grid
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                // If we find a cell containing '1'
+                if (grid[i][j] == 1) {
+                    // Update row boundaries
+                    maxRow = Math.max(maxRow, i);   // furthest row down
+                    minRow = Math.min(minRow, i);   // furthest row up
+
+                    // Update column boundaries
+                    maxCol = Math.max(maxCol, j);   // furthest col right
+                    minCol = Math.min(minCol, j);   // furthest col left (✅ fixed here)
+                }
+            }
+        }
+
+        // The rectangle area is (height * width)
+        // height = (maxRow - minRow + 1)
+        // width  = (maxCol - minCol + 1)
+        return (maxRow - minRow + 1) * (maxCol - minCol + 1);
+    }
+}
