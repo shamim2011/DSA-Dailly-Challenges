@@ -1,0 +1,58 @@
+//Approach-2 (Using Map - (i-j) as the key)
+//T.C : O(n^2 * logn)
+//S.C : O(n^2) map stores all elements
+
+
+class Solution {
+    int n; // Size of the matrix (n x n)
+
+    // Helper method to sort one diagonal of the matrix
+    // r, c → starting row and column of the diagonal
+    // asc → whether to sort ascending (true) or descending (false)
+    public void sortDiag(int r, int c, int[][] grid, boolean asc) {
+        int i = r, j = c;
+        List<Integer> li = new ArrayList<>();
+
+        // Collect all elements from this diagonal
+        while (i < n && j < n) {
+            li.add(grid[i][j]);
+            i++;
+            j++;
+        }
+
+        // Sort the diagonal elements
+        if (asc) {
+            Collections.sort(li); // Ascending order
+        } else {
+            Collections.sort(li, Collections.reverseOrder()); // Descending order
+        }
+
+        // Put the sorted values back into the diagonal
+        i = r;
+        j = c;
+        for (int val : li) {
+            grid[i][j] = val;
+            i++;
+            j++;
+        }
+    }
+
+    // Main method to sort all diagonals of the matrix
+    public int[][] sortMatrix(int[][] grid) {
+        n = grid.length;
+
+        // Process diagonals starting from the bottom row (first column)
+        // These will be sorted in descending order
+        for (int row = 0; row < n; row++) {
+            sortDiag(row, 0, grid, false);
+        }
+
+        // Process diagonals starting from the top row (columns 1 to n-1)
+        // These will be sorted in ascending order
+        for (int col = 1; col < n; col++) {
+            sortDiag(0, col, grid, true);
+        }
+
+        return grid;
+    }
+}
