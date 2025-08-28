@@ -1,6 +1,6 @@
 //Approach-2 (Using Map - (i-j) as the key)
 //T.C : O(n^2 * logn)
-//S.C : O(n^2) map stores all elements
+//S.C : O(n) map stores all elements
 
 
 class Solution {
