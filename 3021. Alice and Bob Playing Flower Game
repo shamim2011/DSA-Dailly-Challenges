@@ -1,0 +1,28 @@
+//Approach - Using simple maths
+//T.C : O(1)
+//S.C : O(1)
+
+
+class Solution {
+    public long flowerGame(int n, int m) {
+        // Count how many odd numbers are in the range 1 to n
+        // Example: if n = 5 → oddN = 3 (1, 3, 5)
+        long oddN = (n + 1) / 2;
+
+        // Count how many even numbers are in the range 1 to n
+        // Example: if n = 5 → evenN = 2 (2, 4)
+        long evenN = n / 2;
+
+        // Count how many odd numbers are in the range 1 to m
+        long oddM = (m + 1) / 2;
+
+        // Count how many even numbers are in the range 1 to m
+        long evenM = m / 2;
+
+        // The total number of possible pairs where one is odd and the other is even:
+        // 1. Odd from n × Even from m
+        // 2. Even from n × Odd from m
+        // (Both conditions give "different parity" pairs)
+        return oddN * evenM + evenN * oddM;
+    }
+}
