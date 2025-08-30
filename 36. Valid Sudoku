@@ -70,3 +70,47 @@ class Solution {
         return true; // No duplicates in this box
     }
 }
+
+
+// Approach - 2 HashSet Validation
+// T.C- O(1)
+// S.C -O(1)
+
+class Solution {
+    public boolean isValidSudoku(char[][] board) {
+        // HashSet to store seen values with row, column, and box identification
+        Set<String> st = new HashSet<>();
+        
+        // Iterate through each cell of the 9x9 board
+        for (int i = 0; i < 9; i++) {        // Row
+            for (int j = 0; j < 9; j++) {    // Column
+                
+                // Ignore empty cells
+                if (board[i][j] == '.') continue;  
+                
+                // Encode constraints:
+                // 1. Row constraint: same number should not repeat in a row
+                String row = board[i][j] + "_ROW_" + i;
+                
+                // 2. Column constraint: same number should not repeat in a column
+                String col = board[i][j] + "_COL_" + j;
+                
+                // 3. Box constraint: same number should not repeat in a 3x3 sub-box
+                String box = board[i][j] + "_BOX_" + (i / 3) + "_" + (j / 3);
+                
+                // If number already exists in row/col/box → invalid Sudoku
+                if (st.contains(row) || st.contains(col) || st.contains(box)) {    
+                    return false;
+                } 
+                
+                // Otherwise, add the constraints into the set
+                st.add(row);
+                st.add(col);
+                st.add(box);
+            }
+        }
+        
+        // If no violations are found, the Sudoku board is valid
+        return true; 
+    }
+}
