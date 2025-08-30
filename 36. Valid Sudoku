@@ -1,0 +1,72 @@
+// Approach - 1 HashSet Validation
+// T.C- O(1)
+// S.C -O(1)
+
+
+import java.util.*;
+
+class Solution {
+    public boolean isValidSudoku(char[][] board) {
+        // ✅ Approach: HashSet Validation
+        // - Use HashSet to keep track of already seen numbers in each row, column, and 3x3 box.
+        // - If a duplicate number is found in any row, column, or box → return false.
+        // - Otherwise → return true.
+
+        // Step 1: Validate rows
+        for (int row = 0; row < 9; row++) {
+            Set<Character> st = new HashSet<>();
+            for (int col = 0; col < 9; col++) {
+                if (board[row][col] == '.') continue;  // Ignore empty cells
+                if (st.contains(board[row][col])) {    // Duplicate found in the same row
+                    return false;
+                } else {
+                    st.add(board[row][col]);           // Add digit to set
+                }
+            }
+        }
+
+        // Step 2: Validate columns
+        for (int col = 0; col < 9; col++) {
+            Set<Character> st = new HashSet<>();
+            for (int row = 0; row < 9; row++) {
+                if (board[row][col] == '.') continue;  // Ignore empty cells
+                if (st.contains(board[row][col])) {    // Duplicate found in the same column
+                    return false;
+                } else {
+                    st.add(board[row][col]);           // Add digit to set
+                }
+            }
+        }
+
+        // Step 3: Validate each 3x3 sub-box
+        // The board has 9 sub-boxes, each starting at (0,0), (0,3), (0,6), (3,0), ...
+        for (int sr = 0; sr < 9; sr += 3) {   // sr = starting row of the box
+            int er = sr + 2;                  // er = ending row of the box
+            for (int sc = 0; sc < 9; sc += 3) { // sc = starting col of the box
+                int ec = sc + 2;                // ec = ending col of the box
+                // Validate one 3x3 box
+                if (!voidBox(board, sr, er, sc, ec)) {
+                    return false;
+                }
+            }
+        }
+
+        return true; // If no duplicates found → Valid Sudoku
+    }
+
+    // Helper function to validate one 3x3 sub-box
+    boolean voidBox(char[][] grid, int sr, int er, int sc, int ec) {
+        Set<Character> st = new HashSet<>();
+        for (int i = sr; i <= er; i++) {
+            for (int j = sc; j <= ec; j++) {
+                if (grid[i][j] == '.') continue;  // Ignore empty cells
+                if (st.contains(grid[i][j])) {    // Duplicate found inside the box
+                    return false;
+                } else {
+                    st.add(grid[i][j]);
+                }
+            }
+        }
+        return true; // No duplicates in this box
+    }
+}
