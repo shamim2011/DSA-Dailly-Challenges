@@ -1,0 +1,71 @@
+
+
+
+class Solution {
+
+    // ✅ Function to check if placing digit 'd' at position (r, c) is valid
+    boolean isValid(char[][] board, int r, int c, int d) {
+        // Check the entire column 'c' and row 'r'
+        for (int i = 0; i < 9; i++) {
+            // If digit already exists in column → not valid
+            if (board[i][c] == d) {
+                return false;
+            }
+            // If digit already exists in row → not valid
+            if (board[r][i] == d) {
+                return false;
+            }
+        }
+
+        // Check the 3x3 sub-box containing (r, c)
+        // Find starting index of that box
+        int start_i = (r / 3) * 3;
+        int start_j = (c / 3) * 3;
+
+        // Traverse inside the 3x3 box
+        for (int k = 0; k < 3; k++) {
+            for (int l = 0; l < 3; l++) {
+                if (board[start_i + k][start_j + l] == d) {
+                    return false; // Digit already exists in box → not valid
+                }
+            }
+        }
+        return true; // If no conflict found → digit is valid
+    }
+
+    // ✅ Backtracking function to solve Sudoku
+    boolean solve(char[][] board) {
+        // Traverse the whole 9x9 grid
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                // If an empty cell is found ('.')
+                if (board[i][j] == '.') {
+                    // Try placing digits 1 → 9
+                    for (char d = '1'; d <= '9'; d++) {
+                        // Check if digit 'd' is valid
+                        if (isValid(board, i, j, d)) {
+                            // Place digit
+                            board[i][j] = d;
+
+                            // Recursively solve further
+                            if (solve(board) == true) {
+                                return true; // If solution found → return
+                            }
+
+                            // Otherwise → backtrack (reset the cell)
+                            board[i][j] = '.';
+                        }
+                    }
+                    // If no digit can be placed in this cell → return false
+                    return false;
+                }
+            }
+        }
+        return true; // If all cells are filled correctly → solved
+    }
+
+    // ✅ Main method called by LeetCode
+    public void solveSudoku(char[][] board) {
+        solve(board);
+    }
+}
