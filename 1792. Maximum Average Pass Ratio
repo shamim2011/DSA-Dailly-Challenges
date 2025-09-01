@@ -1,0 +1,54 @@
+//Approach-1 : (Chossing class with max delta/improvement everytime)
+//T.C : O(extraStudents * n)
+//S.C : O(n)
+
+
+class Solution {
+    public double maxAverageRatio(int[][] classes, int extraStudents) {
+        int n = classes.length;  // Number of classes
+
+        // ✅ Step 1: Store the initial pass ratio of each class
+        double[] pr = new double[n];
+        for (int i = 0; i < n; i++) {
+            double ratio = (double) classes[i][0] / classes[i][1];  // passed / total
+            pr[i] = ratio;
+        }
+
+        // ✅ Step 2: Distribute all extra students one by one
+        while (extraStudents-- > 0) {
+            double[] updatedPR = new double[n];
+
+            // Compute the ratio if one extra student is added to each class
+            for (int i = 0; i < n; i++) {
+                double newRatio = (double) (classes[i][0] + 1) / (classes[i][1] + 1);
+                updatedPR[i] = newRatio;
+            }
+
+            // ✅ Step 3: Find the class that gets the maximum benefit (delta increase in ratio)
+            int bestClassIdx = 0;
+            double bestDelta = 0.0;
+            for (int i = 0; i < n; i++) {
+                double delta = updatedPR[i] - pr[i];  // improvement in ratio
+                if (delta > bestDelta) {
+                    bestDelta = delta;
+                    bestClassIdx = i;
+                }
+            }
+
+            // ✅ Step 4: Assign the extra student to the best class
+            pr[bestClassIdx] = updatedPR[bestClassIdx];   // update ratio
+            classes[bestClassIdx][0]++;   // increment passed students
+            classes[bestClassIdx][1]++;   // increment total students
+        }
+
+        // ✅ Step 5: Calculate final average pass ratio
+        double result = 0.0;
+        for (int i = 0; i < n; i++) {
+            result += pr[i];
+        }
+        return result / n;   // average ratio across all classes
+    }
+}
+
+
+
