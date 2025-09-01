@@ -51,4 +51,51 @@ class Solution {
 }
 
 
+//Approach-2 : (Chossing class with max delta/improvement everytime - Improving with max heap)
+//T.C : O(extraStudents * log(n))
+//S.C : O(n)
+
+class Solution {
+    public double maxAverageRatio(int[][] classes, int extraStudents) {
+        int n = classes.length;
+
+        // ✅ PriorityQueue to always pick the class where adding a student gives the maximum benefit (delta)
+        PriorityQueue<double[]> pq = new PriorityQueue<>((a, b) -> Double.compare(b[0], a[0]));
+
+        // ✅ Pre-calculate delta (increase in pass ratio if one student is added) for each class
+        for (int i = 0; i < n; i++) {
+            double currPR = (double) classes[i][0] / classes[i][1]; // Current pass ratio
+            double newPR = (double) (classes[i][0] + 1) / (classes[i][1] + 1); // Pass ratio after adding one student
+            double delta = newPR - currPR; // Improvement in ratio
+            pq.offer(new double[]{delta, i}); // Store delta and index
+        }
+
+        // ✅ Distribute extra students one by one
+        while (extraStudents-- > 0) {
+            // Pick the class with maximum improvement potential
+            double[] curr = pq.poll();
+            int idx = (int) curr[1];
+
+            // Add the student to this class (both pass and total students increase)
+            classes[idx][0]++;
+            classes[idx][1]++;
+
+            // Recalculate the new delta after adding the student
+            double currPR = (double) classes[idx][0] / classes[idx][1];
+            double newPR = (double) (classes[idx][0] + 1) / (classes[idx][1] + 1);
+            double delta = newPR - currPR;
+
+            // Push the updated delta back into the priority queue
+            pq.offer(new double[]{delta, idx});
+        }
+
+        // ✅ Calculate final average pass ratio across all classes
+        double result = 0.0;
+        for (int i = 0; i < n; i++) {
+            result += (double) classes[i][0] / classes[i][1];
+        }
+
+        return result / n; // Return average pass ratio
+    }
+}
 
