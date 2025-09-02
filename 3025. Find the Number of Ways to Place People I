@@ -100,4 +100,47 @@ class Solution {
 //T.C : O(n^2)
 //S.C : O(1)
 
+class Solution {
+    public int numberOfPairs(int[][] points) {
+        int n = points.length;
+        int result = 0;
+
+        // ✅ Step 1: Sort points by x in ascending order
+        // If x is the same, sort y in descending order
+        Arrays.sort(points, (A, B) -> {
+            if (A[0] == B[0]) {
+                return B[1] - A[1];  // Higher y first
+            }
+            return A[0] - B[0];      // Smaller x first
+        });
+
+        // ✅ Step 2: Fix each point A as the "upper" point
+        for (int i = 0; i < n; i++) {
+            int x1 = points[i][0];
+            int y1 = points[i][1];
+
+            // Track the maximum y seen so far among valid B points
+            int maxY = Integer.MIN_VALUE;
+
+            // ✅ Step 3: Look for valid "lower-right" point B
+            for (int j = i + 1; j < n; j++) {
+                int x2 = points[j][0];
+                int y2 = points[j][1];
+
+                // Condition: B must not be higher than A
+                if (y2 > y1) {
+                    continue;
+                }
+
+                // ✅ Step 4: Count B if it improves maxY
+                if (y2 > maxY) {
+                    result++;      // Found a valid pair (A, B)
+                    maxY = y2;    // Update maxY to prevent duplicates
+                }
+            }
+        }
+
+        return result;
+    }
+}
 
