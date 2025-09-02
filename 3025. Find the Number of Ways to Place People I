@@ -1,0 +1,103 @@
+//Approach-1 (Brute Force)
+//T.C : O(n^3)
+//S.C : O(1)
+
+
+class Solution {
+    public int numberOfPairs(int[][] points) {
+        int n = points.length;
+        int result = 0;
+
+        // ✅ Iterate through all possible "upper" points A
+        for (int i = 0; i < n; i++) {
+            int[] A = points[i];
+            int x1 = A[0];
+            int y1 = A[1];
+
+            // ✅ Iterate through all possible "lower-right" points B
+            for (int j = 0; j < n; j++) {
+                if (i == j) continue; // skip same point
+
+                int[] B = points[j];
+                int x2 = B[0];
+                int y2 = B[1];
+
+                // ✅ Condition: B must be to the right & below A
+                if (x1 <= x2 && y1 >= y2) {
+                    boolean hasPoints = false;
+
+                    // ✅ Check if there exists any point C inside rectangle (A,B)
+                    for (int k = 0; k < n; k++) {
+                        if (k == i || k == j) continue; // skip A and B
+
+                        int[] C = points[k];
+                        int x3 = C[0];
+                        int y3 = C[1];
+
+                        // ✅ C lies inside rectangle formed by A (top-left) and B (bottom-right)
+                        if (x3 >= x1 && x3 <= x2 && y3 <= y1 && y3 >= y2) {
+                            hasPoints = true;
+                            break; // No need to check further, rectangle is invalid
+                        }
+                    }
+
+                    // ✅ If no intermediate point lies inside rectangle (A,B), count this pair
+                    if (!hasPoints) {
+                        result++;
+                    }
+                }
+            }
+        }
+
+        return result; // ✅ Total number of valid pairs
+    }
+}
+------------------------------------------ Same code of approach 1 ----------------------------------
+
+//Approach-1 (Brute Force)
+//T.C : O(n^3)
+//S.C : O(1)
+
+class Solution {
+    public int numberOfPairs(int[][] points) {
+        int n = points.length;
+        int result = 0;
+        for(int i=0;i<n;i++){
+            // Upper points
+            int x1 = points[i][0];
+            int y1 = points[i][1];
+            // Lower Right
+            for(int j=0;j<n;j++){
+                if(i==j) continue;
+                int x2 = points[j][0];
+                int y2 = points[j][1];
+                if(x1<=x2 && y1>=y2){
+                    boolean hasPoints = false;
+                    for(int k=0;k<n;k++){
+                        if(k==i || k==j) continue;
+                        int x3 = points[k][0];
+                        int y3 = points[k][1];
+                        if(x3 >= x1 && x3 <= x2 && y3 <= y1 && y3 >= y2){
+                            hasPoints = true;
+                            break;
+                        }
+                    }
+                    if(!hasPoints){
+                        result++;
+                    }
+                }
+            }
+        }
+        return result;
+    }
+}
+
+
+
+
+
+//Approach-2 (Using Sorting)
+//T.C : O(n^2)
+//S.C : O(1)
+
+
