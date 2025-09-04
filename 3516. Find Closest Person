@@ -1,0 +1,27 @@
+// Approach - Direct Distance Comparison (Greedy / Math approach) 
+// T.C - O(1)
+// S.C - O(1)
+
+
+class Solution {
+    public int findClosest(int x, int y, int z) {
+        // Calculate the distance between z and x
+        int distX = Math.abs(z - x);
+        
+        // Calculate the distance between z and y
+        int distY = Math.abs(z - y);
+
+        // If y is closer (distY < distX), return 2
+        if (distX > distY) {
+            return 2;
+        }
+
+        // If x is closer (distX < distY), return 1
+        if (distX < distY) {
+            return 1;
+        }
+
+        // If both distances are equal, return 0
+        return 0;
+    }
+}
