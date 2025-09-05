@@ -1,0 +1,59 @@
+// Approach 1- Math Derivation
+// T.C - O(log(num1)) Upper bound
+// S.C - O(1)
+
+class Solution {
+    public int makeTheIntegerZero(int num1, int num2) {
+        int t = 0; // Step counter (number of operations)
+        
+        // Keep trying until we either find a valid t or decide it's impossible
+        while (true) {
+            // Compute remaining value after subtracting t * num2
+            long val = (long) num1 - (long) t * num2;
+            
+            // If val becomes negative, it's impossible to reach 0 → return -1
+            if (val < 0) return -1;
+
+            // Condition check:
+            // 1. Long.bitCount(val) → counts number of set bits (1s) in binary representation of val
+            // 2. If the number of set bits <= t, we can distribute them within t operations
+            // 3. Also, ensure t <= val (we can’t have more operations than the value itself)
+            if (Long.bitCount(val) <= t && t <= val) {
+                return t; // Found valid t
+            }
+            
+            // Increment step counter and try again
+            t++;
+        }
+    }
+}
+
+
+// Approach 2- Math Derivation & Finding strict bound of t
+// T.C - O(log(num1)) Upper bound
+// S.C - O(1)
+
+class Solution {
+    public int makeTheIntegerZero(int num1, int num2) {
+        // Try values of t from 1 to 36
+        // Why 36? Because bitCount(val) will not exceed 36 
+        // (since val fits within long and we want to minimize iterations).
+        for(int t = 1; t <= 36; t++) {
+            
+            // Calculate remaining value after subtracting t * num2 from num1
+            long val = (long) num1 - (long) t * num2;
+
+            // If val becomes negative, no valid solution can exist beyond this point
+            if(val < 0) return -1;
+
+            // Condition 1: The number of set bits (1s in binary) of val must be <= t
+            // Condition 2: t must be <= val (ensures we can split val properly)
+            if(Long.bitCount(val) <= t && t <= val) {
+                return t; // Found the minimum t that works
+            }
+        }
+        
+        // If no valid t is found in the range, return -1
+        return -1;
+    }
+}
