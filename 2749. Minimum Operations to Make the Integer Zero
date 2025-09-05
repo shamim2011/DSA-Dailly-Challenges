@@ -29,7 +29,7 @@ class Solution {
 }
 
 
-// Approach 2- Math Derivation & Finding strict bound of t
+// Approach 2- Math Derivation & Finding strict bound of t (Wolfram Alpha Inequality solve)
 // T.C - O(log(num1)) Upper bound
 // S.C - O(1)
 
