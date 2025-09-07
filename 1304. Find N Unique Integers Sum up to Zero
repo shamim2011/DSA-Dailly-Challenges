@@ -1,0 +1,68 @@
+// Approach -1 Constructive Approach (Pairing method)
+// T.C - O(n)
+// S.C - O(1)
+
+
+class Solution {
+    public int[] sumZero(int n) {
+        // Result array of size n
+        int[] ans = new int[n];
+        
+        // Starting element value
+        int elem = 1;
+        
+        // Case 1: If n is even
+        if(n % 2 == 0){
+            // Fill array in pairs (elem, -elem)
+            for(int i = 0; i < n; i += 2){
+                ans[i] = elem;       // Positive element
+                ans[i+1] = -elem;    // Matching negative element
+                elem++;              // Move to next value
+            }
+        }
+        // Case 2: If n is odd
+        else{
+            ans[0] = 0;  // Keep one 0 in the array
+            // Fill rest in pairs (elem, -elem)
+            for(int i = 1; i < n; i += 2){
+                ans[i] = elem;       // Positive element
+                ans[i+1] = -elem;    // Matching negative element
+                elem++;              // Move to next value
+            }
+        }
+        
+        return ans; // Return the constructed array
+    }
+}
+
+
+
+// Approach -2 Two Pointers
+// T.C - O(n)
+// S.C - O(1)
+
+
+class Solution {
+    public int[] sumZero(int n) {
+        // Create an array of size n to store the result
+        int[] ans = new int[n];
+
+        // Two pointers: one starts from the beginning (i), one from the end (j)
+        int i = 0, j = n - 1;
+
+        // Start assigning values from 1 and its negative counterpart
+        int elem = 1;
+
+        // Keep filling pairs until pointers meet or cross
+        while (i < j) {
+            ans[i] = elem;      // Assign positive number to left side
+            ans[j] = -elem;     // Assign negative number to right side
+            i++;                // Move left pointer forward
+            j--;                // Move right pointer backward
+            elem++;             // Move to next number
+        }
+
+        // If n is odd, middle element will remain 0 (default in Java arrays)
+        return ans;
+    }
+}
