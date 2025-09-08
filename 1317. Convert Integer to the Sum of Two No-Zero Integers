@@ -1,0 +1,35 @@
+// Approach - 
+// T.C - 
+// S.C - 
+
+class Solution {
+    public int[] getNoZeroIntegers(int n) {
+        // Result array to store two numbers
+        int[] ans = new int[2];
+        int j = 0;   // Index for storing values in ans[]
+        int num = 1; // Start with 1 (since 0 is not allowed)
+
+        // Keep searching until we find a valid pair
+        while (num > 0) {
+            // Subtract num from n to get the other number
+            int sub = n - num;
+
+            /*
+             * Check conditions:
+             * 1. sub % 10 != 0 → quick check: sub should not end with 0
+             * 2. (Integer.toString(sub)).contains("0") → sub should not contain any 0
+             * 3. (Integer.toString(num)).contains("0") → num should not contain any 0
+             */
+            if (sub % 10 != 0 && !(Integer.toString(sub)).contains("0") && !(Integer.toString(num)).contains("0")) {
+                ans[j++] = num; // Store num in result
+                ans[j++] = sub; // Store sub in result
+                break;          // Pair found → exit loop
+            }
+
+            // Try next number
+            num++;
+        }
+
+        return ans; // Return the valid pair
+    }
+}
