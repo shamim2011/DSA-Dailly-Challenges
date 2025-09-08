@@ -1,6 +1,6 @@
-// Approach - 
-// T.C - 
-// S.C - 
+// Approach 1- Brute Force with String Conversion
+// T.C - O(n · log n)
+// S.C - O(n · log n)
 
 class Solution {
     public int[] getNoZeroIntegers(int n) {
@@ -31,5 +31,47 @@ class Solution {
         }
 
         return ans; // Return the valid pair
+    }
+}
+
+
+// Approach 2- Math-Based Approach
+// T.C - O(n · log n)
+// S.C - O(1)
+
+class Solution {
+    public int[] getNoZeroIntegers(int n) {
+        // Array to store the result (two integers)
+        int[] ans = new int[2];
+        
+        // Start checking from 1 (since 0 is not allowed)
+        int num = 1;
+
+        // Iterate until we find a valid pair
+        while (num < n) {
+            int sub = n - num; // Second number
+
+            // Check: both numbers should NOT contain digit '0'
+            if (!hasZero(num) && !hasZero(sub)) {
+                ans[0] = num; // store first number
+                ans[1] = sub; // store second number
+                break;        // pair found, exit loop
+            }
+
+            // Try next number
+            num++;
+        }
+
+        // Return the valid pair
+        return ans;
+    }
+
+    // Helper method to check if a number contains digit '0'
+    public boolean hasZero(int x) {
+        while (x > 0) {
+            if (x % 10 == 0) return true; // found a '0' digit
+            x /= 10; // remove last digit
+        }
+        return false; // no zero found
     }
 }
