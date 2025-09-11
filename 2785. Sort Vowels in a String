@@ -1,0 +1,88 @@
+//Approach-1 Collect and Replace (extract vowels, sort, and reinsert).
+//T.C : O(nlog)
+// S.C - O(n)
+
+class Solution {
+    public String sortVowels(String s) {
+        // Convert input string into a char array (mutable for modifications)
+        char[] arr = s.toCharArray();
+
+        // List to store vowels found in the string
+        List<Character> li = new ArrayList<>();
+
+        // Define vowels (both uppercase and lowercase)
+        String vowels = "AEIOUaeiou";
+
+        // Step 1: Collect vowels and mark their positions
+        for (int i = 0; i < arr.length; i++) {
+            char ch = arr[i];
+            if (vowels.indexOf(ch) != -1) {   // check if it's a vowel
+                li.add(ch);                   // add vowel to list
+                arr[i] = '-';                 // mark its place with placeholder
+            }
+        }
+
+        // Step 2: Sort the collected vowels alphabetically
+        Collections.sort(li);
+
+        // Step 3: Put back the sorted vowels into their original positions
+        int j = 0;  // pointer for sorted vowels list
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i] == '-') {              // if it's a placeholder
+                arr[i] = li.get(j++);         // replace with next sorted vowel
+            }
+        }
+
+        // Step 4: Convert char array back into a string and return
+        return new String(arr);
+    }
+}
+
+
+
+//Approach-2 Frequency Counting with Ordered Replacement
+//T.C : O(n)
+// S.C - O(n)
+
+
+class Solution {
+
+    // Helper function to check if a character is a vowel
+    boolean isVowel(char ch) {
+        ch = Character.toLowerCase(ch); // normalize to lowercase
+        return (ch == 'a' || ch == 'e' || ch == 'i' || ch == 'o' || ch == 'u');
+    }
+
+    public String sortVowels(String s) {
+        // Step 1: Count the frequency of each vowel in the string
+        Map<Character, Integer> map = new HashMap<>();
+        for (char ch : s.toCharArray()) {
+            if (isVowel(ch)) {
+                map.put(ch, map.getOrDefault(ch, 0) + 1);
+            }
+        }
+
+        // Step 2: Define the order of vowels (sorted lexicographically)
+        String vowels = "AEIOUaeiou";
+        int j = 0; // pointer to current vowel in sorted order
+
+        // Step 3: Replace vowels in the string with the smallest available vowel
+        char[] resultArray = s.toCharArray();
+        for (int i = 0; i < s.length(); i++) {
+            if (isVowel(s.charAt(i))) {
+                // Move 'j' until we find a vowel that still has occurrences left
+                while (map.getOrDefault(vowels.charAt(j), 0) == 0) {
+                    j++;
+                }
+                // Replace original vowel with the sorted vowel
+                resultArray[i] = vowels.charAt(j);
+
+                // Decrease the count of this vowel in the frequency map
+                map.put(vowels.charAt(j), map.get(vowels.charAt(j)) - 1);
+            }
+        }
+
+        // Step 4: Convert the char array back to a string
+        return new String(resultArray);
+    }
+}
