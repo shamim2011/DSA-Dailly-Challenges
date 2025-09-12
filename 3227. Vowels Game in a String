@@ -1,0 +1,55 @@
+//Approach (Simple math)
+//T.C : O(n)
+//S.C : O(1)
+
+class Solution {
+    // Main function to decide if Alice wins
+    public boolean doesAliceWin(String s) {
+        // Count vowels in the string
+        int vCount = countVowels(s);
+
+        // If no vowels, Alice cannot win
+        if (vCount == 0) return false;
+
+        // Otherwise, Alice wins
+        return true;  
+    }
+
+    // Helper function to count vowels in the string
+    int countVowels(String s) {
+        int count = 0;
+
+        // Define vowels (only lowercase as per assumption)
+        String vowels = "aeiou";
+
+        // Traverse each character of the string
+        for (int i = 0; i < s.length(); i++) {
+            char ch = s.charAt(i);
+
+            // Check if character is present in the vowels string
+            if (vowels.indexOf(ch) != -1) {
+                count++; // Increment count if it's a vowel
+            }
+        }
+
+        // Return total number of vowels found
+        return count;
+    }
+}
+
+
+
+
+//Approach-2 (Using one liner JCF)
+//T.C : O(n)
+//S.C : O(1)
+
+class Solution {
+    // Main function to decide if Alice wins
+    public boolean doesAliceWin(String s) {
+        // Convert the string into an IntStream of character codes (s.chars())
+        // Use anyMatch() to check if at least one character is a vowel
+        // "aeiou".indexOf(ch) >= 0 means the character exists in the vowels string
+        return s.chars().anyMatch(ch -> "aeiou".indexOf(ch) >= 0);
+    }
+}
