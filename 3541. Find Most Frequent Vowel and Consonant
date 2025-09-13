@@ -1,41 +1,82 @@
-// Approach: Frequency Counting + Max Extraction
+// Approach 1: Frequency Counting + Max Extraction
 // Time Complexity: O(n)
 // Space Complexity: O(1)
 
 class Solution {
     public int maxFreqSum(String s) {
-        // Step 1: Create a HashMap to store frequency of each character in the string
+        // Step 1: Create a HashMap to store frequency of each character
         Map<Character, Integer> mp = new HashMap<>();
         char[] arr = s.toCharArray();
 
-        // Step 2: Count frequency of each character
+        // Step 2: Count frequency of each character in the string
         for (int i = 0; i < arr.length; i++) {
             mp.put(arr[i], mp.getOrDefault(arr[i], 0) + 1);
         }
 
-        // Step 3: Define the set of vowels (only lowercase a, e, i, o, u)
+        // Step 3: Define the set of vowels (only lowercase vowels)
         String vowels = "aeiou";
 
-        // Variables to store min and max frequency of vowels and consonants
-        int minVCount = 0;   // minimum frequency among vowels
-        int maxVCount = 0;   // maximum frequency among vowels
-        int minConCount = 0; // minimum frequency among consonants
-        int maxConCount = 0; // maximum frequency among consonants
+        // Variables to keep track of max frequency of vowels and consonants
+        int maxVCount = 0;
+        int maxConCount = 0;
 
-        // Step 4: Traverse the map to calculate min/max frequencies
+        // Step 4: Iterate over each entry in the frequency map
         for (Map.Entry<Character, Integer> entry : mp.entrySet()) {
             if (vowels.indexOf(entry.getKey()) != -1) {
-                // If character is a vowel
-                minVCount = Math.min(minVCount, entry.getValue());
+                // If character is a vowel -> update maximum vowel frequency
                 maxVCount = Math.max(maxVCount, entry.getValue());
             } else {
-                // If character is a consonant
-                minConCount = Math.min(minConCount, entry.getValue());
+                // If character is a consonant -> update maximum consonant frequency
                 maxConCount = Math.max(maxConCount, entry.getValue());
             }
         }
 
-        // Step 5: Return sum of maximum frequency vowel + maximum frequency consonant
+        // Step 5: Return sum of max vowel frequency + max consonant frequency
+        return (maxVCount + maxConCount);
+    }
+}
+
+
+
+
+// Approach 2: Frequency Array + Max Extraction
+// Time Complexity: O(n)
+// Space Complexity: O(1)
+
+
+class Solution {
+    public int maxFreqSum(String s) {
+        // Step 1: Create frequency array for 26 lowercase letters
+        int[] freq = new int[26];
+
+        // Step 2: Count frequency of each character in the string
+        for (char ch : s.toCharArray()) {
+            freq[ch - 'a']++;
+        }
+
+        // Step 3: Define vowels for quick checking
+        String vowels = "aeiou";
+
+        // Step 4: Track maximum frequency among vowels and consonants
+        int maxVCount = 0;   // max frequency of any vowel
+        int maxConCount = 0; // max frequency of any consonant
+
+        // Step 5: Traverse frequency array (size 26 → constant time)
+        for (int i = 0; i < 26; i++) {
+            if (freq[i] > 0) { // only consider characters present in string
+                char ch = (char) (i + 'a'); // convert index back to character
+
+                if (vowels.indexOf(ch) != -1) {
+                    // If character is a vowel, update maxVCount
+                    maxVCount = Math.max(maxVCount, freq[i]);
+                } else {
+                    // If character is a consonant, update maxConCount
+                    maxConCount = Math.max(maxConCount, freq[i]);
+                }
+            }
+        }
+
+        // Step 6: Return sum of maximum vowel frequency + maximum consonant frequency
         return (maxVCount + maxConCount);
     }
 }
