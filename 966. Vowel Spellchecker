@@ -1,3 +1,84 @@
 //Approach - Using map and set
 //T.C : O(N), N = total length of all the input strings and queries
 //S.C : O(N)
+
+
+class Solution {
+    // A set to store all words exactly as they appear (for exact match checking)
+    Set<String> exactSt = new HashSet<>();
+    
+    // A map for case-insensitive matches: 
+    // key = lowercase word, value = first word in original form
+    Map<String,String> caseMap = new HashMap<>();
+    
+    // A map for vowel-insensitive matches: 
+    // key = masked word (lowercase + vowels replaced with '*'), value = first word in original form
+    Map<String,String> vowelMap = new HashMap<>();
+
+    public String[] spellchecker(String[] wordlist, String[] queries) {
+        
+        // Step 1: Preprocess the wordlist
+        for(String word : wordlist){
+            // Store the exact word
+            exactSt.add(word);
+
+            // Convert word to lowercase
+            String lowerStr = word.toLowerCase();
+            
+            // Store the first occurrence for lowercase mapping
+            caseMap.putIfAbsent(lowerStr, word);
+
+            // Generate vowel-masked version from lowercase
+            String maskWord = maskVowels(lowerStr);
+
+            // Store the first occurrence for vowel-masked mapping
+            vowelMap.putIfAbsent(maskWord, word);
+        }
+
+        // Step 2: Answer queries
+        String[] ans = new String[queries.length];
+        for(int i = 0; i < queries.length; i++){
+            ans[i] = checkMatching(queries[i]);
+        }
+        return ans;
+    }
+
+    // Helper method: Replace vowels with '*' and lowercase all characters
+    String maskVowels(String word){
+        StringBuilder sb = new StringBuilder();
+        String vowels = "aeiou";
+        for(char ch : word.toCharArray()){
+            if(vowels.indexOf(Character.toLowerCase(ch)) != -1){
+                // Replace vowels with '*'
+                sb.append("*");
+            } else {
+                // Store consonants in lowercase
+                sb.append(Character.toLowerCase(ch));
+            }
+        }
+        return sb.toString();
+    }
+
+    // Helper method: Check different matching rules
+    String checkMatching(String query){
+        // Rule 1: Exact match
+        if(exactSt.contains(query)){
+            return query;
+        }
+
+        // Rule 2: Case-insensitive match
+        String lowerQuery = query.toLowerCase();
+        if(caseMap.containsKey(lowerQuery)){
+            return caseMap.get(lowerQuery);
+        }
+
+        // Rule 3: Vowel-insensitive match
+        String maskQuery = maskVowels(lowerQuery);
+        if(vowelMap.containsKey(maskQuery)){
+            return vowelMap.get(maskQuery);
+        }
+
+        // Rule 4: No match
+        return "";
+    }
+}
