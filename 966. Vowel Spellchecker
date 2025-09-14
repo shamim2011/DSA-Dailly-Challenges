@@ -1,0 +1,3 @@
+//Approach - Using map and set
+//T.C : O(N), N = total length of all the input strings and queries
+//S.C : O(N)
