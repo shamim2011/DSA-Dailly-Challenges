@@ -1,0 +1,43 @@
+// Approach - 1 : HashSet + Word Scanning
+// T.C - O(n × m)           -> n = number of words in the text, m = average word length , k = number of broken letters
+//S.C - O(k + n)
+
+class Solution {
+    public int canBeTypedWords(String text, String brokenLetters) {
+        // Initialize counter for words that can be typed
+        int count = 0;
+
+        // Step 1: Store broken letters in a HashSet for O(1) lookup
+        Set<Character> st = new HashSet<>();
+        for (char ch : brokenLetters.toCharArray()) {
+            st.add(ch);
+        }
+
+        // Step 2: Split text into words (separated by space)
+        String[] arrStr = text.split(" ");
+
+        // Step 3: Iterate over each word
+        for (int i = 0; i < arrStr.length; i++) {
+            boolean canType = true;  // assume word can be typed
+
+            String s = arrStr[i];
+            char[] arr = s.toCharArray();
+
+            // Step 4: Check if the word contains any broken letter
+            for (int j = 0; j < arr.length; j++) {
+                if (st.contains(arr[j])) {
+                    canType = false; // word cannot be typed
+                    break;
+                }
+            }
+
+            // Step 5: If no broken letter found, count this word
+            if (canType) {
+                count++;
+            }
+        }
+
+        // Step 6: Return total number of typeable words
+        return count;
+    }
+}
