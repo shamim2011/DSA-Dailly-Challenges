@@ -41,3 +41,65 @@ class Solution {
         return count;
     }
 }
+
+-----------------------------Approach - 1 same code but using stream -----------------------------------
+
+class Solution {
+    public int canBeTypedWords(String text, String brokenLetters) {
+        // Step 1: Put all broken letters in a Set
+        Set<Character> broken = brokenLetters.chars()
+                                             .mapToObj(c -> (char)c)
+                                             .collect(Collectors.toSet());
+
+        // Step 2: Split words and use stream filter
+        return (int) Arrays.stream(text.split(" "))
+                           .filter(word -> word.chars()
+                                               .noneMatch(c -> broken.contains((char)c)))
+                           .count();
+    }
+}
+
+
+// Approach - 2 : Single Scan + Boolean Lookup
+// T.C - O(k + n)  ->  k = number of broken letters
+//S.C - O(1)
+
+class Solution {
+    public int canBeTypedWords(String text, String brokenLetters) {
+        // Step 1: Store broken letters in a boolean array for O(1) lookup
+        // broken[i] = true means ('a' + i) is a broken letter
+        boolean[] broken = new boolean[26];
+        for (char ch : brokenLetters.toCharArray()) {
+            broken[ch - 'a'] = true;
+        }
+
+        int count = 0;          // total words that can be typed
+        boolean canType = true; // flag to track if current word is typeable
+
+        // Step 2: Traverse the text character by character
+        for (int i = 0; i < text.length(); i++) {
+            char ch = text.charAt(i);
+
+            if (ch == ' ') {
+                // End of a word reached
+                if (canType) {
+                    count++; // only count if no broken letter was found
+                }
+                canType = true; // reset flag for the next word
+            } else {
+                // If current character is broken, mark the word as untypeable
+                if (broken[ch - 'a']) {
+                    canType = false;
+                }
+            }
+        }
+
+        // Step 3: Handle the last word (since it may not end with a space)
+        if (canType) {
+            count++;
+        }
+
+        // Step 4: Return the number of typeable words
+        return count;
+    }
+}
