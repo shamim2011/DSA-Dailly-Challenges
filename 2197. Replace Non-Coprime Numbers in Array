@@ -2,3 +2,43 @@
 //T.C : O(n * log(x)), where log comes from GCD
 //S.C : O(1)
 
+class Solution {
+    // Method to replace non-coprime adjacent numbers in the array with their LCM
+    public List<Integer> replaceNonCoprimes(int[] nums) {
+        // Initialize result list to store processed numbers
+        List<Integer> ans = new ArrayList<>();
+        
+        // Iterate through each number in the input array
+        for (int num : nums) {
+            // Continue processing while the result list is not empty
+            while (!ans.isEmpty()) {
+                // Get the last number in the result list
+                int prev = ans.get(ans.size() - 1);
+                // Calculate GCD of the last number and current number
+                int g = GCD(prev, num);
+                
+                // If GCD is 1, numbers are coprime, so stop merging
+                if (g == 1) {
+                    break;
+                }
+                
+                // Remove the last number since we'll merge it
+                ans.remove(ans.size() - 1);
+                // Calculate LCM: (prev / GCD) * num, using long to prevent overflow
+                long lcm = (long) prev / g * num;
+                // Update num to the LCM for the next iteration
+                num = (int) lcm;
+            }
+            // Add the processed number (either original or LCM) to the result
+            ans.add(num);
+        }
+        // Return the final list with non-coprime pairs merged
+        return ans;
+    }
+    
+    // Helper method to compute the Greatest Common Divisor using Euclidean algorithm
+    private int GCD(int x, int y) {
+        // Base case: if y is 0, return x as the GCD
+        return y == 0 ? x : GCD(y, x % y);
+    }
+}
