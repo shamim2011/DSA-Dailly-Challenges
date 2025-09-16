@@ -1,0 +1,4 @@
+//Approach (Using List as a stack)
+//T.C : O(n * log(x)), where log comes from GCD
+//S.C : O(1)
+
