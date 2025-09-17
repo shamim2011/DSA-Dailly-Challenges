@@ -1,4 +1,84 @@
-// Approach - 
-// T.C - 
-// S.C - 
+// Approach - Using maps/set as requirement
+// T.C - (FoodRatings - O(n)
+          changeRating - log(n) due to erase function used in ordered_set
+          highestRated - O(1)
+// S.C - O(n) in all maps
+
+
+class FoodRatings {
+    // Map to store Food -> Cuisine
+    Map<String, String> food_cuisine = new HashMap<>();
+    
+    // Map to store Cuisine -> TreeSet of (Rating, Food)
+    // TreeSet is used to keep foods sorted by rating (and lexicographically if tie)
+    Map<String, TreeSet<Pair<Integer, String>>> cuisine_ratings_food = new HashMap<>();
+    
+    // Map to store Food -> Rating
+    Map<String, Integer> food_rating = new HashMap<>();
+    
+    // Constructor: initializes the system with given foods, cuisines, and ratings
+    public FoodRatings(String[] foods, String[] cuisines, int[] ratings) {
+        int n = foods.length;
+
+        for (int i = 0; i < n; i++) {
+            String food = foods[i];
+            String cuisine = cuisines[i];
+            int rating = ratings[i];
+
+            // Store food -> cuisine mapping
+            food_cuisine.put(food, cuisine);
+
+            // Store food -> rating mapping
+            food_rating.put(food, rating);
+
+            // For each cuisine, maintain a TreeSet of (rating, food)
+            // Ordering: by rating (higher first, so we use -rating), 
+            // if ratings are equal, compare food names lexicographically
+            cuisine_ratings_food
+                .computeIfAbsent(cuisine, k -> new TreeSet<>((a, b) -> {
+                    int compareByRating = Integer.compare(a.getKey(), b.getKey());
+                    if (compareByRating == 0) {
+                        return a.getValue().compareTo(b.getValue());
+                    }
+                    return compareByRating;
+                }))
+                // Store as (-rating, food) so that the highest rating appears first
+                .add(new Pair<>(-rating, food));
+        }
+    }
+    
+    // Method to change the rating of a given food
+    public void changeRating(String food, int newRating) {
+        // Find which cuisine the food belongs to
+        String cuisine = food_cuisine.get(food);
+
+        // Get the set of foods for this cuisine
+        TreeSet<Pair<Integer, String>> cuisineSet = cuisine_ratings_food.get(cuisine);
+
+        // Remove the old (rating, food) entry
+        Pair<Integer, String> oldElement = new Pair<>(-food_rating.get(food), food);
+        cuisineSet.remove(oldElement);
+
+        // Update the rating in the food_rating map
+        food_rating.put(food, newRating);
+
+        // Add the new (rating, food) entry
+        cuisineSet.add(new Pair<>(-newRating, food));
+    }
+    
+    // Method to get the highest rated food for a given cuisine
+    public String highestRated(String cuisine) {
+        // First element in the TreeSet = highest rated (because of ordering)
+        Pair<Integer, String> highestRating = cuisine_ratings_food.get(cuisine).first();
+        return highestRating.getValue();
+    }
+}
+
+/**
+ * Usage Example:
+ * FoodRatings obj = new FoodRatings(foods, cuisines, ratings);
+ * obj.changeRating(food, newRating);
+ * String ans = obj.highestRated(cuisine);
+ */
+
 
