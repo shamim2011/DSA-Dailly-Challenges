@@ -87,3 +87,29 @@ class Solution {
         return maxLen;
     }
 }
+
+
+--------------------------------Approach 2 same code --------------------------------------------------
+
+class Solution {
+    public int lengthOfLongestSubstring(String s) {
+        String maxSubStr = ""; // Tracks the longest substring
+        Set<Character> st = new HashSet<>(); // Tracks unique characters in the current window
+        int i = 0, j = 0; // Window pointers: i (start), j (end)
+        int n = s.length(); // Length of input string
+        while (j < n && i < n) { // Iterate while pointers are within bounds
+            if (!st.contains(s.charAt(j))) { // If character at j is not in set
+                st.add(s.charAt(j)); // Add character to set
+                String sub = s.substring(i, j + 1); // Extract current substring
+                if (sub.length() > maxSubStr.length()) { // Update if longer
+                    maxSubStr = sub;
+                }
+                j++; // Expand window
+            } else { // If character at j is repeated
+                st.remove(s.charAt(i)); // Remove character at start of window
+                i++; // Shrink window
+            }
+        }
+        return maxSubStr.length(); // Return length of longest substring
+    }
+}
