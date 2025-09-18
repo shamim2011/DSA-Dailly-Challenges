@@ -1,0 +1,4 @@
+//Approach (Using proper Data Structures)
+// T.C. : add -> O(log n), edit -> O(log n), rmv -> O(1), execTop -> O(n log n) worst case
+// S.C. : O(n)
+
