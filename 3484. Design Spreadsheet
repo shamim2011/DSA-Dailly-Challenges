@@ -1,0 +1,65 @@
+//Approach Direct Grid Storage with String Parsing
+// T.C. : Constructor → O(rows), setCell / resetCell → O(1), getValue → O(L) for substr where L = length of formula
+// S.C. : O(1)
+
+class Spreadsheet {
+    // 2D grid: rows x 26 (columns A-Z)
+    int[][] grid;
+
+    // Constructor: initialize spreadsheet with given number of rows
+    public Spreadsheet(int rows) {
+        grid = new int[rows][26];
+    }
+
+    // Set a cell (e.g., "A1") with a value
+    public void setCell(String cell, int value) {
+        int col = cell.charAt(0) - 'A'; // Convert 'A'...'Z' to 0...25
+        int rows = Integer.parseInt(cell.substring(1)) - 1; // Convert row string to index
+        grid[rows][col] = value; // Store value in grid
+    }
+
+    // Reset a cell to 0
+    public void resetCell(String cell) {
+        int col = cell.charAt(0) - 'A';
+        int rows = Integer.parseInt(cell.substring(1)) - 1;
+        grid[rows][col] = 0; // Reset value
+    }
+
+    // Evaluate a formula like "=A1+B2" or "=5+B2"
+    public int getValue(String formula) {
+        // Remove the leading '=' sign
+        String s = formula.substring(1);
+
+        // Find index of '+'
+        int plusIdx = s.indexOf('+');
+
+        // Split into left and right operands
+        String left = s.substring(0, plusIdx);
+        String right = s.substring(plusIdx + 1);
+
+        // Evaluate both sides and return sum
+        return solve(left) + solve(right);
+    }
+
+    // Evaluate a single token (either number like "5" or cell reference like "A1")
+    int solve(String str) {
+        // Case 1: Operand is a number
+        if (Character.isDigit(str.charAt(0))) {
+            return Integer.parseInt(str);
+        }
+
+        // Case 2: Operand is a cell reference like "A1"
+        int col = str.charAt(0) - 'A'; // column index
+        int rows = Integer.parseInt(str.substring(1)) - 1; // row index
+        return grid[rows][col];
+    }
+}
+
+/**
+ * Example usage:
+ * Spreadsheet obj = new Spreadsheet(3);
+ * obj.setCell("A1", 10);
+ * obj.setCell("B2", 20);
+ * System.out.println(obj.getValue("=A1+B2")); // 30
+ * System.out.println(obj.getValue("=5+B2"));  // 25
+ */
