@@ -1,0 +1,14 @@
+//Approach (Queue for FIFO, Map for quick retrieval and sorted vector for binary search)
+// T.C. : 
+// addPacket()       -> O(k) worst-case (due to forwardPacket() + vector erase at front)
+// forwardPacket()   -> O(k) worst-case (erase from vector front for destination timestamps)
+// getCount()        -> O(log k) per query (binary search in vector)
+// k = number of packets for a particular destination
+
+// S.C. : 
+// O(MAX_SIZE) total
+// packetStore     -> O(MAX_SIZE)
+// que             -> O(MAX_SIZE * key length)
+// destTimestamps  -> O(MAX_SIZE)
+
+
