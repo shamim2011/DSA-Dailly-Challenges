@@ -1,4 +1,4 @@
-//Approach (Queue for FIFO, Map for quick retrieval and sorted vector for binary search)
+//Approach Queue + HashMap + Binary Search (Index Tracking for Timestamps)
 // T.C. : 
 // addPacket()       -> O(k) worst-case (due to forwardPacket() + vector erase at front)
 // forwardPacket()   -> O(k) worst-case (erase from vector front for destination timestamps)
@@ -13,3 +13,117 @@
 
 
  
+class Router {
+    int MAX_SIZE;   // Maximum number of packets that can be stored (memory limit)
+    Queue<String> que;  // FIFO queue to maintain packet arrival order
+    Map<String,int[]> packetStore;  // Key = "source#destination#timestamp", Value = packet details
+    Map<Integer,ArrayList<Integer>> destTimestamps; // Destination -> list of timestamps for packets sent to that destination
+    Map<Integer,Integer> startIndex;    // Destination -> index of the first valid timestamp (used when old packets are forwarded)
+
+    // Constructor: Initialize Router with memory limit
+    public Router(int memoryLimit) {
+        MAX_SIZE = memoryLimit;
+        que = new LinkedList<>();
+        packetStore = new HashMap<>();
+        destTimestamps = new HashMap<>();
+        startIndex = new HashMap<>();
+    }
+
+    // Utility: Create a unique key for each packet
+    public String makeKey(int source, int destination, int timestamp){
+        return source + "#" + destination + "#" + timestamp;
+    }
+    
+    // Add a packet into the router
+    public boolean addPacket(int source, int destination, int timestamp) {
+        String key =  makeKey(source,destination,timestamp);
+
+        // If the packet already exists, ignore it
+        if (packetStore.containsKey(key)) return false;
+
+        // If memory is full, forward (remove) the oldest packet
+        if(packetStore.size() >= MAX_SIZE){
+            forwardPacket();
+        }
+
+        // Store the packet
+        packetStore.put(key, new int[]{source, destination, timestamp});
+        que.offer(key); // Add to FIFO queue
+
+        // Maintain timestamps list per destination
+        destTimestamps.putIfAbsent(destination,new ArrayList<>());
+        destTimestamps.get(destination).add(timestamp);
+
+        // Initialize start index for destination if not present
+        startIndex.putIfAbsent(destination,0);
+
+        return true;
+    }
+    
+    // Forward (remove and return) the oldest packet in FIFO order
+    public int[] forwardPacket() {
+        if(packetStore.isEmpty()) return new int[0];
+
+        // Remove from queue
+        String key = que.poll();
+        int[] packet = packetStore.get(key);
+        packetStore.remove(key);
+
+        // Update start index for that destination (ignore this timestamp in future queries)
+        int dest = packet[1];
+        int idx = startIndex.get(dest);
+        startIndex.put(dest, idx + 1);
+
+        return packet;
+    }
+    
+    // Count how many packets exist for a given destination in [startTime, endTime]
+    public int getCount(int destination, int startTime, int endTime) {
+        if(!destTimestamps.containsKey(destination)) return 0;
+
+        List<Integer> list = destTimestamps.get(destination);
+        int idx = startIndex.get(destination);
+
+        // Binary search for range of timestamps
+        int start = lowerBound(list, startTime, idx); // first >= startTime
+        int end = upperBound(list, endTime, idx);     // first > endTime
+
+        return (end - start);
+    }
+
+    // Binary Search: Find first index >= target
+    public int lowerBound(List<Integer> list,int target,int startIdx){
+        int l = startIdx, r = list.size();
+        while(l < r){
+            int mid = (l + r) / 2;
+            if(list.get(mid) >= target){
+                r = mid;
+            } else {
+                l = mid + 1;
+            }
+        }
+        return l;
+    }
+
+    // Binary Search: Find first index > target
+    public int upperBound(List<Integer> list,int target,int startIdx){
+        int l = startIdx, r = list.size();
+        while(l < r){
+            int mid = (l + r) / 2;
+            if(list.get(mid) > target){
+                r = mid;
+            } else {
+                l = mid + 1;
+            }
+        }
+        return l;
+    }
+}
+
+/**
+ * Your Router object will be instantiated and called as such:
+ * Router obj = new Router(memoryLimit);
+ * boolean param_1 = obj.addPacket(source,destination,timestamp);
+ * int[] param_2 = obj.forwardPacket();
+ * int param_3 = obj.getCount(destination,startTime,endTime);
+ */
