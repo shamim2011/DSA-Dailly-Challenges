@@ -13,3 +13,49 @@
 // available          -> O(n) (sum of all available movies)
 // movieToShopPrice   -> O(n) (sum of all shop-price mappings)
 // rented             -> O(r) (r = total rented movies)
+
+
+
+class PriceShop implements Comparable<PriceShop>{
+        int price, shop;
+        public PriceShop(int price,int shop){
+            this.price = price;
+            this.shop = shop;
+        }
+        public int compareTo(PriceShop o){
+            if(this.price != o.price) return this.price - o.price;
+            return this.shop - o.shop;
+        }
+    }
+
+    Map<Integer,TreeSet<PriceShop>> available;         // movie - {price,shop}
+    Map<Integer,Map<Integer,Integer>> movieToShopPrice;  // movie - {shop -> price}
+    TreeSet<RentedMovie> rented;   // sorted rented movie -> {price,shop,movie}
+
+    public MovieRentingSystem(int n, int[][] entries) {
+        available = new HashMap<>();
+        movieToShopPrice =  new HashMap<>();
+        rented = new TreeSet<>();
+
+        for(int[] e : entries){
+            int shop = e[0], movie = e[1], price = e[2];
+            available.computeIfAbsent(movie, k -> new TreeSet<>()).add(new PriceShop(price,shop));
+            movieToShopPrice.computeIfAbsent(movie, k -> new HashMap<>()).put(shop,price);
+        }
+    }
+    
+    public List<Integer> search(int movie) {
+        
+    }
+    
+    public void rent(int shop, int movie) {
+        
+    }
+    
+    public void drop(int shop, int movie) {
+        
+    }
+    
+    public List<List<Integer>> report() {
+        
+    }
