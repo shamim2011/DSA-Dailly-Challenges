@@ -1,0 +1,15 @@
+// Approach (TreeSet for ordered storage, HashMap for quick lookup)
+// T.C. : 
+// MovieRentingSystem() -> O(n log n) for n entries (insert each entry into TreeSets)
+// search(movie)        -> O(5) i.e. constant time to return first 5 cheapest shops
+// rent(shop, movie)    -> O(log m + log r) per operation
+//                         (log m to remove from available TreeSet of that movie, log r to insert into rented TreeSet)
+// drop(shop, movie)    -> O(log m + log r) per operation
+//                         (log m to insert back to available TreeSet, log r to remove from rented TreeSet)
+// report()             -> O(5) i.e. constant time to return top 5 rented movies
+
+// S.C. : 
+// O(n + r) total
+// available          -> O(n) (sum of all available movies)
+// movieToShopPrice   -> O(n) (sum of all shop-price mappings)
+// rented             -> O(r) (r = total rented movies)
