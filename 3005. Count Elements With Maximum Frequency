@@ -1,0 +1,75 @@
+// Approach 1 - Frequency Counting with HashMap
+// T.C - O(n)
+// S.C - O(n)
+
+
+class Solution {
+    public int maxFrequencyElements(int[] nums) {
+        // Step 1: Use a HashMap to count frequency of each number
+        Map<Integer, Integer> mp = new HashMap<>();
+        for (int num : nums) {
+            mp.put(num, mp.getOrDefault(num, 0) + 1);
+        }
+
+        // Step 2: Find the maximum frequency among all elements
+        int freq = 0;
+        for (Map.Entry<Integer, Integer> entry : mp.entrySet()) {
+            if (entry.getValue() > freq) {
+                freq = entry.getValue();
+            }
+        }
+
+        // Step 3: Count how many elements have this maximum frequency
+        // and sum their contributions
+        int ans = 0;
+        for (Map.Entry<Integer, Integer> entry : mp.entrySet()) {
+            if (entry.getValue() == freq) {
+                ans += freq;  // add freq for each number with max frequency
+            }
+        }
+
+        // Step 4: Return total frequency count of max occurring elements
+        return ans;
+    }
+}
+
+
+
+// Approach 2- Frequency Counting using Fixed-size Array
+// T.C - O(n)
+// S.C - O(1)
+
+
+class Solution {
+    public int maxFrequencyElements(int[] nums) {
+        // Step 1: Create a frequency array of size 100 
+        // (since nums[i] is assumed to be in range [1, 100]).
+        int[] numsArr = new int[100];
+
+        // Step 2: Count frequency of each element in nums.
+        for (int i = 0; i < nums.length; i++) {
+            numsArr[nums[i] - 1]++;
+        }
+
+        // Step 3: Find the maximum frequency among all elements.
+        int freq = 0;
+        for (int i = 0; i < 100; i++) {
+            if (numsArr[i] > freq) {
+                freq = numsArr[i];
+            }
+        }
+
+        // Step 4: Count how many elements have this maximum frequency,
+        // and add freq for each such element.
+        int ans = 0;
+        for (int i = 0; i < 100; i++) {
+            if (numsArr[i] == freq) {
+                ans += freq;
+            }
+        }
+
+        // Step 5: Return the total count of elements
+        // that occur with the maximum frequency.
+        return ans;   
+    }
+}
