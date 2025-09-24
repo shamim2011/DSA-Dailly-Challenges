@@ -1,0 +1,68 @@
+//Approach - Maths - Long Division
+//T.C : O(denominator) approximately
+//S.C : O(1)
+
+// Approach: Long Division Simulation with HashMap
+// Idea: Use long division to generate digits after the decimal point. 
+// Track remainders using a HashMap to detect repeating cycles.
+
+class Solution {
+    public String fractionToDecimal(int numerator, int denominator) {
+        // Base case: if numerator is 0, the result is simply "0"
+        if (numerator == 0) return "0";
+
+        StringBuilder res = new StringBuilder();
+
+        // Handling the sign of the result
+        // If numerator * denominator is negative, prepend '-'
+        if ((long) numerator * (long) denominator < 0) res.append("-");
+
+        // Convert both numerator and denominator to positive (use long to avoid overflow)
+        long absNumerator = Math.abs((long) numerator);
+        long absDenominator = Math.abs((long) denominator);
+
+        // Append the integer part of the division
+        long integerPart = absNumerator / absDenominator;
+        res.append(integerPart);
+
+        // Find the remainder after the integer division
+        long remainder = absNumerator % absDenominator;
+
+        // If no remainder exists, return the result (pure integer)
+        if (remainder == 0) return res.toString();
+
+        // Append the decimal point since we have a fractional part
+        res.append(".");
+
+        // Map to store the position of each remainder in the result string
+        // This helps in detecting the start of repeating cycles
+        Map<Long, Integer> mp = new HashMap<>();
+
+        // Perform long division until remainder becomes 0 or repeats
+        while (remainder != 0) {
+            // If we have seen this remainder before, it means a cycle is detected
+            if (mp.containsKey(remainder)) {
+                int pos = mp.get(remainder); // position where cycle started
+                res.insert(pos, "(");        // insert '(' at cycle start
+                res.append(")");            // append ')' at cycle end
+                break;
+            }
+
+            // Store the remainder and its position in result string
+            mp.put(remainder, res.length());
+
+            // Multiply remainder by 10 for next digit
+            remainder *= 10;
+
+            // Append the quotient digit
+            long digit = remainder / absDenominator;
+            res.append(digit);
+
+            // Update remainder
+            remainder %= absDenominator;
+        }
+
+        // Return the final result
+        return res.toString();
+    }
+}
