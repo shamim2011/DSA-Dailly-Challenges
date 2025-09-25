@@ -121,3 +121,38 @@ class Solution {
 //T.C : O(n^2)
 //S.C : O(n)
 
+
+class Solution {
+
+    public int minimumTotal(List<List<Integer>> triangle) {
+        int n = triangle.size();   // total number of rows in the triangle
+
+        // 1D DP array to store the minimum path sum from bottom to top
+        int[] t = new int[n];
+
+        // Step 1: Initialize DP array with the values of the last row
+        // Because at the last row, min path = value itself
+        for (int i = 0; i < n; i++) {
+            t[i] = triangle.get(n - 1).get(i);
+        }
+
+        // Step 2: Start filling from the second last row upwards
+        // Update t[col] in place as:
+        // current value + min(path going down, path going down-right)
+        for (int row = n - 2; row >= 0; row--) {
+            for (int col = 0; col <= row; col++) {
+                t[col] = triangle.get(row).get(col) + Math.min(t[col], t[col + 1]);
+            }
+        }
+
+        // Step 3: Final answer will be stored at the top element
+        return t[0];
+    }
+}
+
+
+//Approach-4 : You can also solve it from top to bottom direction
+//T.C : O(n^2)
+//S.C : O(n)
+
+
