@@ -44,7 +44,7 @@ class Solution {
 
 class Solution {
     int n;          // number of rows in the triangle
-    int[][] t;      // memoization table to store minimum path sums
+    int[][] t;      // memoization table to store minimum path sums 
 
     public int minimumTotal(List<List<Integer>> triangle) {
         n = triangle.size();        // total number of rows in the triangle
