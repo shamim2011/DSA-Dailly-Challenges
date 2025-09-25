@@ -79,3 +79,45 @@ class Solution {
         return t[row][col] = minPath;
     }
 }
+
+
+
+//Approach-2 : Bottom Up - Just like "Minimum Falling Path Sum"
+//T.C : O(n^2)
+//S.C : O(n^2)
+
+class Solution {
+
+    public int minimumTotal(List<List<Integer>> triangle) {
+        int n = triangle.size();   // total number of rows in the triangle
+
+        // DP table (same shape as triangle, but as a 2D array)
+        int[][] t = new int[n][n];
+
+        // Step 1: Copy all triangle values into DP table
+        // So we can modify them directly while computing minimum path sums
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j <= i; j++) {
+                t[i][j] = triangle.get(i).get(j);
+            }
+        }
+
+        // Step 2: Start filling the DP table from the second last row upwards
+        // At each step, update t[row][col] as:
+        // value + minimum of the two possible downward paths
+        for (int row = n - 2; row >= 0; row--) {
+            for (int col = 0; col <= row; col++) {
+                t[row][col] += Math.min(t[row + 1][col], t[row + 1][col + 1]);
+            }
+        }
+
+        // Step 3: The top element now contains the minimum path sum
+        return t[0][0];
+    }
+}
+
+
+//Approach-3 : Bottom Up optimized - O(n) space
+//T.C : O(n^2)
+//S.C : O(n)
+
