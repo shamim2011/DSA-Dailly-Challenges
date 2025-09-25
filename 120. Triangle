@@ -1,0 +1,41 @@
+//Approach-1 Recursion with Memoization - Accepted (In the video I initialized the t[][] by -1 by mistake. That's why you will see TLE in the video)
+//T.C : O(n^2) states in t[][]
+//S.C : O(n^2)
+
+class Solution {
+    int n;          // number of rows in the triangle
+    int[][] t;      // memoization table to store minimum path sums
+
+    public int minimumTotal(List<List<Integer>> triangle) {
+        n = triangle.size();        // total number of rows in the triangle
+        t = new int[n][n];          // create memoization table (size n x n)
+
+        // Initialize memoization table with MAX_VALUE (to mark uncomputed states)
+        for (int i = 0; i < n; i++) {
+            Arrays.fill(t[i], Integer.MAX_VALUE);
+        }
+
+        // Start solving from the top element (row=0, col=0)
+        return solve(triangle, 0, 0);    
+    }
+
+    // Recursive function with memoization to find the minimum path sum
+    int solve(List<List<Integer>> triangle, int row, int col) {
+        // Base case: if we are at the last row, return the value at that position
+        if (row == n - 1) {
+            return triangle.get(row).get(col);
+        }
+
+        // If result is already computed for (row, col), return it
+        if (t[row][col] != Integer.MAX_VALUE) return t[row][col];
+
+        // Recursive relation:
+        // Current value + minimum of the two possible downward paths
+        int minPath = triangle.get(row).get(col) +
+                      Math.min(solve(triangle, row + 1, col),       // move down
+                               solve(triangle, row + 1, col + 1));  // move down-right
+
+        // Store the result in memoization table before returning
+        return t[row][col] = minPath;
+    }
+}
