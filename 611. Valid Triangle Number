@@ -1,0 +1,82 @@
+// Approach name 1- Brute-Force
+// T.C - O(n^3)
+// S.C - O(1)
+
+class Solution {
+    public int triangleNumber(int[] nums) {
+        int count = 0;  // To store the number of valid triangles
+        int max = 0;    // To store the largest side in a triplet
+
+        // Loop over all possible triplets (i, j, k)
+        for (int i = 0; i < nums.length; i++) {
+            for (int j = i + 1; j < nums.length; j++) {
+                for (int k = j + 1; k < nums.length; k++) {
+                    // Get the three sides of the current triplet
+                    int a = nums[i];
+                    int b = nums[j];
+                    int c = nums[k];
+
+                    // Find the largest side among a, b, c
+                    max = Math.max(a, Math.max(b, c));
+
+                    // Sum of the other two sides
+                    int sum = a + b + c - max;
+
+                    // Check the triangle inequality:
+                    // sum of the two smaller sides must be greater than the largest side
+                    if (sum > max) {
+                        count++;  // Valid triangle found, increment count
+                    }
+                }
+            }
+        }
+
+        // Return total number of valid triangles
+        return count;
+    }
+}
+
+
+
+// Approach name 2 - Sorting + Two-Pointer Approach
+// T.C - O(n^2)
+// S.C - O(1)
+
+import java.util.Arrays;
+
+class Solution {
+    public int triangleNumber(int[] nums) {
+        // Step 1: Sort the array
+        // Sorting ensures that for any triplet (i, j, k) with i < j < k,
+        // nums[i] <= nums[j] <= nums[k]
+        Arrays.sort(nums);
+
+        int n = nums.length;
+        int count = 0;  // To store the number of valid triangles
+
+        // Step 2: Fix the largest side of the triangle as nums[k]
+        // Iterate k from n-1 down to 2 (since we need at least 3 numbers)
+        for (int k = n - 1; k >= 2; k--) {
+            int i = 0;       // Start pointer
+            int j = k - 1;   // End pointer (just before k)
+
+            // Step 3: Use two-pointer technique to find valid pairs (i, j)
+            while (i < j) {
+                // If nums[i] + nums[j] > nums[k], it forms a triangle
+                if (nums[i] + nums[j] > nums[k]) {
+                    // All pairs from i to j-1 with j will also satisfy the triangle inequality
+                    count += (j - i);
+
+                    // Move the end pointer left to check next possible pair
+                    j--;
+                } else {
+                    // If the sum is not greater than nums[k], move start pointer right
+                    i++;
+                }
+            }
+        }
+
+        // Step 4: Return the total count of valid triangles
+        return count;
+    }
+}
