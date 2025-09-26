@@ -80,3 +80,60 @@ class Solution {
         return count;
     }
 }
+
+
+
+//Approach-3 (Binary Search)
+//T.C : O(n^2 * logn)
+//S.C : O(1)
+
+class Solution {
+    public int triangleNumber(int[] nums) {
+        // Step 1: Sort the array so that we can apply the triangle property easily
+        Arrays.sort(nums);
+
+        int n = nums.length;
+        if (n < 3) return 0;   // If less than 3 sides, no triangle possible
+
+        int count = 0;  // To store the total number of valid triangles
+
+        // Step 2: Fix the first side nums[i]
+        for (int i = 0; i < n; i++) {
+            if (nums[i] == 0) continue;  // Zero-length side cannot form a triangle
+
+            // Step 3: Fix the second side nums[j] (always greater than i)
+            for (int j = i + 1; j < n; j++) {
+                int sum = nums[i] + nums[j];  // Sum of the two chosen sides
+
+                // Step 4: Use binary search to find the largest index 'k'
+                // such that nums[k] < nums[i] + nums[j]
+                int k = binarySearch(nums, j + 1, n - 1, sum);
+
+                // If a valid 'k' is found, then all elements from (j+1) to k
+                // can form valid triangles with nums[i] and nums[j]
+                if (k != -1) {
+                    count += (k - j);  // Add number of valid choices for the 3rd side
+                }
+            }
+        }
+        return count;
+    }
+
+    // Custom binary search function
+    // Finds the rightmost index 'k' such that nums[k] < target
+    int binarySearch(int[] nums, int l, int r, int target) {
+        int k = -1;  // Default value when no valid index is found
+
+        while (l <= r) {
+            int mid = (l + r) / 2;
+
+            if (nums[mid] < target) {
+                k = mid;       // nums[mid] is valid, but try to find a larger one
+                l = mid + 1;   // Move right
+            } else {
+                r = mid - 1;   // Too large, move left
+            }
+        }
+        return k;
+    }
+}
