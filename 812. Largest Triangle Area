@@ -33,3 +33,54 @@ class Solution {
         return ans;
     }
 }
+-----------------------------  Exact same code but Using {Math.hypot(a, b)} Formula -------------------------
+
+
+// Approach: with Heron's Formula + Shoelace Formula
+// T. C - O(n^3)
+// S . C - O(1)
+
+
+class Solution {
+    public double largestTriangleArea(int[][] points) {
+        // Initialize maximum area as 0.0 (area can't be negative)
+        double ans = 0.0;
+
+        // Loop over all triplets of points (i, j, k)
+        for (int i = 0; i < points.length; i++) {
+            for (int j = i + 1; j < points.length; j++) {
+                for (int k = j + 1; k < points.length; k++) {
+
+                    // Extract coordinates of the 3 vertices
+                    double x1 = points[i][0], y1 = points[i][1];
+                    double x2 = points[j][0], y2 = points[j][1];
+                    double x3 = points[k][0], y3 = points[k][1];
+
+                    // Calculate side lengths using distance formula
+                    double a = Math.hypot(x2 - x1, y2 - y1);
+                    double b = Math.hypot(x2 - x3, y2 - y3);
+                    double c = Math.hypot(x3 - x1, y3 - y1);
+
+                    // Semi-perimeter of the triangle
+                    double s = (a + b + c) * 0.5;
+
+                    // Area using Heron's formula (safe-guard with Math.max to avoid NaN for collinear points)
+                    double heron = Math.sqrt(Math.max(0.0, s * (s - a) * (s - b) * (s - c)));
+
+                    // Area using Shoelace formula (determinant method)
+                    double shoelace = 0.5 * Math.abs(
+                        x1 * (y2 - y3) +
+                        x2 * (y3 - y1) +
+                        x3 * (y1 - y2)
+                    );
+
+                    // Update maximum area found so far
+                    ans = Math.max(ans, Math.max(heron, shoelace));
+                }
+            }
+        }
+
+        // Return the maximum area among all triangles
+        return ans;
+    }
+}
