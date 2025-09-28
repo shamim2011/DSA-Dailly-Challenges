@@ -1,0 +1,33 @@
+// Approach - Greedy + Sorting
+// T . C - O(nlogn)
+// S . C - O(1)
+
+
+class Solution {
+    public int largestPerimeter(int[] nums) {
+        int ans = 0;  // variable to store the largest perimeter
+        int n = nums.length;
+
+        // Step 1: Sort the array in ascending order
+        Arrays.sort(nums);
+
+        // Step 2: Traverse from the largest element to smallest
+        // We check triplets (nums[i], nums[i-1], nums[i-2])
+        for (int i = n - 1; i >= 2; i--) {
+            
+            // Step 3: Check triangle inequality
+            // If the largest side < sum of the other two,
+            // then a valid triangle can be formed
+            if (nums[i] < nums[i - 1] + nums[i - 2]) {
+                
+                // Step 4: Update the perimeter and return immediately
+                // because this is the maximum possible (greedy choice)
+                ans = nums[i] + nums[i - 1] + nums[i - 2];
+                return ans;
+            }
+        }
+
+        // Step 5: If no valid triangle found, return 0
+        return ans;
+    }
+}
