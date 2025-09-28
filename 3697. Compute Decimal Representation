@@ -1,0 +1,37 @@
+// Approach - Digit Decomposition using Modulo & Place Value Calculation
+// T.C - O(d) --> d = number of digits
+// S.C - O(d) 
+
+class Solution {
+    public int[] decimalRepresentation(int n) {
+        List<Integer> li = new ArrayList<>();  // to store place values
+        int i = 0;  // keeps track of digit position (10^i)
+
+        // Step 1: Extract digits from right to left
+        while (n > 0) {
+            int digit = n % 10;  // get last digit
+
+            // Step 2: If digit is not zero, compute its place value
+            if (digit != 0) {
+                int num = digit * (int) Math.pow(10, i);
+                li.add(num);  // store the place value
+            }
+
+            n /= 10;  // remove last digit
+            i++;      // move to next position
+        }
+
+        // Step 3: Reverse the list to restore left-to-right order
+        Collections.reverse(li);
+
+        // Step 4: Convert List<Integer> to int[]
+        int[] ans = new int[li.size()];
+        int j = 0;
+        for (int k = 0; k < li.size(); k++) {
+            ans[j++] = li.get(k);
+        }
+
+        // Step 5: Return the array of place values
+        return ans;
+    }
+}
