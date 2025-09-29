@@ -1,0 +1,56 @@
+// Approach: Dynamic Programming (Recursion + Memoization)
+// T.C - 
+// S.C - 
+
+
+class Solution {
+    // DP table for memoization
+    // t[i][j] will store the minimum score of triangulating sub-polygon from i to j
+    int[][] t = new int[51][51];
+
+    // Recursive function to calculate minimum score triangulation
+    int solve(int[] values, int i, int j) {
+        // Base case: If sub-polygon has fewer than 3 vertices, 
+        // it cannot form a triangle → cost = 0
+        if (j - i + 1 < 3) {
+            return 0;
+        }
+
+        // If already computed, return stored value
+        if (t[i][j] != -1) {
+            return t[i][j];
+        }
+
+        int score = Integer.MAX_VALUE;
+
+        // Try every possible vertex k between i and j
+        // Form triangle (i, j, k), and recursively solve left and right parts
+        for (int k = i + 1; k < j; k++) {
+            // Cost = triangle formed by (i, j, k) 
+            // + min triangulation of (i..k) 
+            // + min triangulation of (k..j)
+            int weight = values[i] * values[j] * values[k]
+                        + solve(values, i, k)
+                        + solve(values, k, j);
+
+            // Take minimum over all possible k
+            score = Math.min(score, weight);
+        }
+
+        // Store result in DP table
+        return t[i][j] = score;
+    }
+
+    public int minScoreTriangulation(int[] values) {
+        // Initialize DP table with -1
+        for (int i = 0; i < 51; i++) {
+            for (int j = 0; j < 51; j++) {
+                t[i][j] = -1;
+            }
+        }
+
+        int n = values.length;
+        // Solve for entire polygon (0..n-1)
+        return solve(values, 0, n - 1);
+    }
+}
