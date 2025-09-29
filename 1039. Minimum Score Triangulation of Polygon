@@ -1,6 +1,6 @@
 // Approach: Dynamic Programming (Recursion + Memoization)
-// T.C - 
-// S.C - 
+// T.C - O(n^3)
+// S.C - O(n^2)
 
 
 class Solution {
