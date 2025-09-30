@@ -1,9 +1,7 @@
-//Approach-1Recursive Reduction
+//Approach-1 Recursive Reduction
 //T.C : O(n^2)
 //S.C : O(n^2)
 
-
-import java.util.*;
 
 class Solution {
     public int triangularSum(int[] nums) {
