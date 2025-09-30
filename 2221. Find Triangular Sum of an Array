@@ -1,0 +1,83 @@
+//Approach-1Recursive Reduction
+//T.C : O(n^2)
+//S.C : O(n^2)
+
+
+import java.util.*;
+
+class Solution {
+    public int triangularSum(int[] nums) {
+        // Convert input array to a list for easier manipulation
+        List<Integer> li = new ArrayList<>();
+        for (int num : nums) {
+            li.add(num);
+        }
+        // Start recursive reduction
+        return solve(li);
+    }
+
+    // Recursive function to reduce list until one element remains
+    int solve(List<Integer> li) {
+        // Base case: if only one element is left, return it
+        if (li.size() == 1) {
+            return li.get(0);
+        }
+
+        // Create a new list to hold the next row
+        List<Integer> li1 = new ArrayList<>();
+
+        // Build the next row by adding adjacent pairs modulo 10
+        for (int i = 0; i < li.size() - 1; i++) {
+            li1.add((li.get(i) + li.get(i + 1)) % 10);
+        }
+
+        // Recursively reduce further
+        return solve(li1);
+    }
+}
+
+
+//Approach-2 (Using O(n) space - Do as asked)
+//T.C : O(n^2)
+//S.C : O(n)
+
+
+class Solution {
+    public int triangularSum(int[] nums) {
+        // Continue reducing the array until only one element is left
+        while (nums.length > 1) {
+            // Create a new array one size smaller
+            int[] temp = new int[nums.length - 1];
+
+            // Fill the new array with pairwise sums modulo 10
+            for (int i = 0; i < nums.length - 1; i++) {
+                temp[i] = (nums[i] + nums[i + 1]) % 10;
+            }
+
+            // Replace nums with the reduced array
+            nums = temp;
+        }
+
+        // Only one element remains, return it
+        return nums[0];
+    }
+}
+
+
+//Approach-3 (O(1) space using two pointers)
+//T.C : O(n^2)
+//S.C : O(1)
+
+class Solution {
+    public int triangularSum(int[] nums) {
+        // Keep reducing array size until only one element remains
+        for (int size = nums.length - 1; size >= 1; size--) {
+            // Process current row: replace nums[i] with (nums[i] + nums[i+1]) % 10
+            for (int i = 0; i < size; i++) {
+                nums[i] = (nums[i] + nums[i + 1]) % 10;
+            }
+        }
+        // After reduction, the final result will be at index 0
+        return nums[0];
+    }
+}
