@@ -1,0 +1,69 @@
+//Approach-1 (Simple simulation)
+//T.C : O(numBottles)
+//S.C : O(1)
+
+
+class Solution {
+    public int numWaterBottles(int numBottles, int numExchange) {
+        // Variable to count total bottles consumed
+        int consume = 0;
+
+        // Keep exchanging bottles as long as we have enough to trade
+        while (numBottles >= numExchange) {
+            // Drink numExchange bottles
+            consume += numExchange;
+
+            // Reduce the empty bottles used for exchange
+            numBottles -= numExchange;
+
+            // Get 1 new bottle after exchange
+            numBottles += 1;
+        }
+
+        // Add the remaining bottles that cannot be exchanged
+        return consume + numBottles;
+    }
+}
+
+
+//Approach-2 Simulation (Greedy Exchange)
+//T.C : O(log(numBottles))
+//S.C : O(1)
+
+class Solution {
+    public int numWaterBottles(int numBottles, int numExchange) {
+        // Total bottles you can drink (initially all given bottles)
+        int score = numBottles;
+        
+        // n represents the number of empty bottles you currently have
+        int n = numBottles;
+
+        // Continue exchanging while you have enough empty bottles
+        while (n >= numExchange) {
+            // Number of new bottles you get from exchanging
+            int empty = (n / numExchange);
+
+            // Add the new bottles drunk to total
+            score += empty;
+
+            // Update the number of empty bottles:
+            // (remainder from division) + (newly drunk bottles become empty)
+            n = (n % numExchange) + empty;
+        }
+
+        // Return the total number of bottles drunk
+        return score;
+    }
+}
+
+
+//Approach-3 (Using maths):
+//T.C : O(1)
+//S.C:  O(1)  
+
+class Solution {
+    public int numWaterBottles(int numBottles, int numExchange) {
+        // Total bottles drunk = initial bottles + extra bottles obtained from exchanges
+        return numBottles + (numBottles - 1) / (numExchange - 1);
+    }
+} 
