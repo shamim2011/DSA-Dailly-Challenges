@@ -1,6 +1,6 @@
 // Approach-1 (Using Division)
 // T.C: O(n)
-// S.C: O(n)
+// S.C: O(1)
 
 
 class Solution {
