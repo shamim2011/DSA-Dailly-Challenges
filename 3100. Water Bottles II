@@ -1,0 +1,33 @@
+// Approach - Simulation (Iterative Bottle Exchange)
+// T.C - O(numBottles)
+// S.C - O(1)
+
+
+class Solution {
+    public int maxBottlesDrunk(int numBottles, int numExchange) {
+        // Variable to store total bottles drunk
+        int result = numBottles;
+
+        // Keep track of the number of empty bottles we currently have
+        int emptyBott = numBottles;
+
+        // Loop until we don't have enough empty bottles to exchange
+        while (emptyBott >= numExchange) {
+            // Use 'numExchange' empty bottles to get 1 new full bottle
+            emptyBott -= numExchange;
+
+            // Drink the new bottle (increase result count)
+            result += 1;
+
+            // After drinking, we gain 1 more empty bottle
+            emptyBott += 1;
+
+            // Each time the exchange requirement increases by 1
+            numExchange += 1;
+        }
+
+        // Return the maximum bottles drunk
+        return result;
+    }
+}
+
