@@ -1,0 +1,53 @@
+// Approach-1 (Using Division)
+// T.C: O(n)
+// S.C: O(n)
+
+
+class Solution {
+    public int[] productExceptSelf(int[] nums) {
+        // Variable to store product of all non-zero elements
+        int NonZeroPro = 1;
+
+        // Variable to count number of zeros in the array
+        int countZero = 0;
+
+        // Step 1: Traverse the array
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] == 0) {
+                // Count how many zeros exist
+                countZero++;
+            } else {
+                // Multiply all non-zero elements
+                NonZeroPro *= nums[i];
+            }
+        }
+
+        // Step 2: Prepare the result array
+        int[] ans = new int[nums.length];
+
+        // Step 3: Build the answer for each index
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] != 0) {
+                if (countZero > 0) {
+                    // If there is at least one zero, product except self will always be 0
+                    ans[i] = 0;
+                } else {
+                    // Otherwise, divide the product by nums[i] to exclude itself
+                    ans[i] = NonZeroPro / nums[i];
+                }
+            } else {
+                // Case when nums[i] is zero
+                if (countZero > 1) {
+                    // If more than one zero, product for all indices is 0
+                    ans[i] = 0;
+                } else {
+                    // If exactly one zero, only that index gets product of all non-zero elements
+                    ans[i] = NonZeroPro;
+                }
+            }
+        }
+
+        // Step 4: Return the result array
+        return ans;
+    }
+}
