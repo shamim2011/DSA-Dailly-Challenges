@@ -2,36 +2,72 @@
 //T.C : O(m*n log(m*n))
 //S.C : O(m*n)
 
+import java.util.*;
+
 class Solution {
     public int trapRainWater(int[][] heightMap) {
-        int m = heightMap.length;
-        int n = heightMap[0].length;
-        // // Min-heap to store {height, {i, j}}
+        int m = heightMap.length;        // Number of rows
+        int n = heightMap[0].length;     // Number of columns
+
+        // Min-heap (priority queue) to store cells as {height, row, col}
+        // The cell with the lowest height will be processed first
         PriorityQueue<int[]> bounderyCell = new PriorityQueue<>(Comparator.comparingInt(a -> a[0]));
 
-        boolean[] visited = new boolean[m][n];
-        // Left and Right most column (0,n-1)
-        for(int row=0;row<m;col++){
-            bounderyCell.offer(new int[]{heightMap[row][0],row,0});
+        // Visited matrix to mark which cells are already processed
+        boolean[][] visited = new boolean[m][n];
+
+        // Step 1: Add all the cells from the leftmost and rightmost columns into the heap
+        for (int row = 0; row < m; row++) {
+            bounderyCell.offer(new int[]{heightMap[row][0], row, 0});
             visited[row][0] = true;
-            bounderyCell.offer(new int[]{heightMap[row][n-1],row,n-1});
-            visited[row][n-1] = true;
+
+            bounderyCell.offer(new int[]{heightMap[row][n - 1], row, n - 1});
+            visited[row][n - 1] = true;
         }
-        // top and bottom most row (0,m-1)
-        for(int col=0;col<n;col++){
-            bounderyCell.offer(new int[]{heightMap[0][col],0,col});
+
+        // Step 2: Add all the cells from the top and bottom rows into the heap
+        for (int col = 0; col < n; col++) {
+            bounderyCell.offer(new int[]{heightMap[0][col], 0, col});
             visited[0][col] = true;
-            bounderyCell.offer(new int[]{heightMap[m-1][col],m-1,col});
-            visited[m-1][col] = true;
+
+            bounderyCell.offer(new int[]{heightMap[m - 1][col], m - 1, col});
+            visited[m - 1][col] = true;
         }
+
+        // Variable to keep track of trapped water
         int water = 0;
-        // Directions for moving to neighbors (left, right, up, down)
-        int[] directions = {{0, -1}, {0, 1}, {-1, 0}, {1, 0}};
 
-        // Process the boundary cells in the min-heap
-        while(!bounderyCell.isempty()){
+        // 4 possible directions to move (left, right, up, down)
+        int[][] directions = {{0, -1}, {0, 1}, {-1, 0}, {1, 0}};
 
+        // Step 3: Process the cells in the heap
+        while (!bounderyCell.isEmpty()) {
+            int[] cell = bounderyCell.poll();
+            int height = cell[0];
+            int i = cell[1];
+            int j = cell[2];
+
+            // Explore all 4 neighbors
+            for (int[] dir : directions) {
+                int i_ = i + dir[0];
+                int j_ = j + dir[1];
+
+                // Check boundaries and if the cell is not visited yet
+                if (i_ >= 0 && i_ < m && j_ >= 0 && j_ < n && !visited[i_][j_]) {
+                    // If neighbor height is lower, water can be trapped
+                    water += Math.max(height - heightMap[i_][j_], 0);
+
+                    // Push the neighbor into heap with effective height
+                    // (either its own height or the current boundary height, whichever is higher)
+                    bounderyCell.offer(new int[]{Math.max(height, heightMap[i_][j_]), i_, j_});
+
+                    // Mark as visited
+                    visited[i_][j_] = true;
+                }
+            }
         }
+
+        // Final trapped water
         return water;
     }
 }
