@@ -1,0 +1,37 @@
+//Approach (Using Heap - See video for full intuition and thought process)
+//T.C : O(m*n log(m*n))
+//S.C : O(m*n)
+
+class Solution {
+    public int trapRainWater(int[][] heightMap) {
+        int m = heightMap.length;
+        int n = heightMap[0].length;
+        // // Min-heap to store {height, {i, j}}
+        PriorityQueue<int[]> bounderyCell = new PriorityQueue<>(Comparator.comparingInt(a -> a[0]));
+
+        boolean[] visited = new boolean[m][n];
+        // Left and Right most column (0,n-1)
+        for(int row=0;row<m;col++){
+            bounderyCell.offer(new int[]{heightMap[row][0],row,0});
+            visited[row][0] = true;
+            bounderyCell.offer(new int[]{heightMap[row][n-1],row,n-1});
+            visited[row][n-1] = true;
+        }
+        // top and bottom most row (0,m-1)
+        for(int col=0;col<n;col++){
+            bounderyCell.offer(new int[]{heightMap[0][col],0,col});
+            visited[0][col] = true;
+            bounderyCell.offer(new int[]{heightMap[m-1][col],m-1,col});
+            visited[m-1][col] = true;
+        }
+        int water = 0;
+        // Directions for moving to neighbors (left, right, up, down)
+        int[] directions = {{0, -1}, {0, 1}, {-1, 0}, {1, 0}};
+
+        // Process the boundary cells in the min-heap
+        while(!bounderyCell.isempty()){
+
+        }
+        return water;
+    }
+}
