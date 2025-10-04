@@ -1,0 +1,24 @@
+// Approach: Brute Force (Check all pairs of lines)
+// T.C: O(n^2)  -> Two nested loops to check every pair
+// S.C: O(1)    -> No extra space used
+
+class Solution {
+    public int maxArea(int[] height) {
+        // Variable to store the maximum water area found so far
+        int ans = 0;
+
+        // Iterate over all pairs of lines (i, j)
+        for (int i = 0; i < height.length - 1; i++) {
+            for (int j = i + 1; j < height.length; j++) {
+                // The container height is limited by the smaller line
+                int minElem = Math.min(height[i], height[j]);
+
+                // Area = min(height[i], height[j]) * distance between lines (j - i)
+                ans = Math.max(ans, (minElem * (j - i)));
+            }
+        }
+
+        // Return the maximum area
+        return ans;
+    }
+}
