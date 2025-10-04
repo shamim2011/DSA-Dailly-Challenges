@@ -1,4 +1,4 @@
-// Approach: Brute Force (Check all pairs of lines)
+// Approach: Brute Force (Check all pairs of lines) ( TLE )
 // T.C: O(n^2)  -> Two nested loops to check every pair
 // S.C: O(1)    -> No extra space used
 
@@ -20,5 +20,40 @@ class Solution {
 
         // Return the maximum area
         return ans;
+    }
+}
+
+// Approach 2:  Two Pointer Technique
+// T.C: O(n)  
+// S.C: O(1)  
+
+
+class Solution {
+    public int maxArea(int[] height) {
+        // Variable to store the maximum water area found so far
+        int maxWater = 0;
+
+        // Two pointers: i starts at the left, j starts at the right
+        int i = 0, j = height.length - 1;
+
+        // Loop until the two pointers meet
+        while (i < j) {
+            // If left bar is smaller
+            if (height[i] < height[j]) {
+                int minElem = height[i]; // limiting height is the smaller one
+                // Calculate area = min height × width
+                maxWater = Math.max(maxWater, minElem * (j - i));
+                i++; // Move left pointer inward (try to find a taller bar)
+            } else {
+                // If right bar is smaller or equal
+                int minElem = height[j]; // limiting height is the smaller one
+                // Calculate area = min height × width
+                maxWater = Math.max(maxWater, minElem * (j - i));
+                j--; // Move right pointer inward (try to find a taller bar)
+            }
+        }
+
+        // Return the maximum water area found
+        return maxWater;
     }
 }
