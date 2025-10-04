@@ -1,0 +1,49 @@
+// Approach: Mathematical Reversal (Digit by Digit Extraction)
+// T.C : O(log10(n)) ≈ O(d)   [where d = number of digits in x]
+// S.C : O(1)                 [constant extra space]
+
+
+class Solution {
+    public int reverse(int x) {
+        // Copy of input number
+        int num = x;
+
+        // Flag to check if input is negative
+        boolean isNegative = false;
+
+        // If input is negative, make it positive for processing
+        if (x < 0) {
+            isNegative = true;
+            num = -num;
+        }
+
+        // Variable to store reversed number
+        int reverse = 0;
+
+        // Process each digit until num becomes 0
+        while (num > 0) {
+            // Extract last digit
+            int digit = num % 10;
+
+            // Overflow check before multiplying by 10
+            // If (reverse * 10 + digit) > Integer.MAX_VALUE
+            if (reverse > (Integer.MAX_VALUE - digit) / 10) {
+                return 0; // return 0 if overflow happens
+            }
+
+            // Append digit to reversed number
+            reverse = reverse * 10 + digit;
+
+            // Remove last digit from num
+            num = num / 10;
+        }
+
+        // Restore the sign if the original number was negative
+        if (isNegative) {
+            reverse *= -1;
+        }
+
+        // Return final reversed integer
+        return reverse;
+    }
+}
