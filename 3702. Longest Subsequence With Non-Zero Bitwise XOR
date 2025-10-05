@@ -1,0 +1,27 @@
+// 🔹 Approach: XOR Property Analysis
+/ 🕒 Time Complexity: O(n) → Single pass to compute XOR and check zeros
+// 💾 Space Complexity: O(1) → Only a few variables used
+
+class Solution {
+    public int longestSubsequence(int[] nums) {
+        // Variable to store XOR of all elements
+        int xorAll = 0;
+        // Flag to check if all numbers are zero
+        boolean allZero = true;
+
+        // Compute XOR of all elements and check if all are zeros
+        for (int num : nums) {
+            xorAll ^= num;
+            if (num != 0) {
+                allZero = false;
+            }
+        }
+
+        // If all elements are zero, no valid non-zero XOR subsequence exists
+        if (allZero) return 0;
+
+        // If XOR of all elements is non-zero, entire array forms valid subsequence
+        // Otherwise, removing one element gives non-zero XOR
+        return xorAll != 0 ? nums.length : nums.length - 1;
+    }
+}
