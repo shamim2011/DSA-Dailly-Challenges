@@ -1,3 +1,78 @@
-//Approach (Binary search along with map and set and greedy)
+//Approach Binary Search + Greedy using Map and List
 //T.C : O(n*logn)
-//S.C : O(1)
+//S.C : O(n)
+
+
+class Solution {
+    public int[] avoidFlood(int[] rains) {
+        int n = rains.length;
+        int[] ans = new int[n];
+        Arrays.fill(ans, 1); // Default all dry days to dry lake 1 (as placeholder)
+
+        Map<Integer, Integer> mp = new HashMap<>(); // lake -> last day it was filled
+        List<Integer> li = new ArrayList<>();       // List to store indices of dry days (sorted order)
+
+        for (int i = 0; i < n; i++) {
+            int lake = rains[i];
+
+            if (lake == 0) {
+                // No rain today → this is a dry day
+                // Store the index for future use when a lake needs drying
+                li.add(i);
+            } else {
+                // It is raining on lake 'lake'
+                ans[i] = -1; // Raining days marked as -1
+
+                if (mp.containsKey(lake)) {
+                    // This lake was already filled before
+                    // We need to find a dry day after that day to empty this lake
+
+                    int lastFill = mp.get(lake);
+
+                    // Use binary search to find the earliest dry day > lastFill
+                    int idx = binarySearch(li, lastFill);
+
+                    if (idx == -1) {
+                        // No dry day available to dry this lake before it rains again
+                        // Flood occurs
+                        return new int[0];
+                    }
+
+                    // Use this dry day to dry the current lake
+                    int drydayIdx = li.get(idx);
+                    ans[drydayIdx] = lake;
+
+                    // Remove the used dry day from the list
+                    li.remove(idx);
+                }
+
+                // Update the last day this lake was filled
+                mp.put(lake, i);
+            }
+        }
+
+        // Return the result array
+        return ans;
+    }
+
+    // Binary search to find the smallest dry day index > target (tar)
+    int binarySearch(List<Integer> li, int tar) {
+        int l = 0, r = li.size() - 1;
+        int res = -1;
+
+        while (l <= r) {
+            int mid = l + (r - l) / 2;
+
+            if (li.get(mid) > tar) {
+                // Possible answer found — try to find an even smaller one
+                res = mid;
+                r = mid - 1;
+            } else {
+                // Need a larger dry day
+                l = mid + 1;
+            }
+        }
+
+        return res; // Returns index of first dry day > tar, or -1 if not found
+    }
+}
