@@ -1,0 +1,51 @@
+//Approach : Sorting + Binary Search Approach
+//T.C : O(nlogn)
+//S.C : O(1)
+
+
+class Solution {
+    public int[] successfulPairs(int[] spells, int[] potions, long success) {
+        int n = spells.length;
+        int m = potions.length;
+
+        // Step 1: Sort the potions array for binary search usage
+        Arrays.sort(potions);
+
+        int[] ans = new int[n];
+
+        // Step 2: For each spell, find how many potions form a successful pair
+        for (int i = 0; i < n; i++) {
+            int spellPower = spells[i];
+            int count = binarySearch(potions, spellPower, success); // find count via binary search
+            ans[i] = count;
+        }
+
+        // Step 3: Return the result array
+        return ans;
+    }
+
+    // Binary Search function to find number of potions that form successful pairs
+    int binarySearch(int[] potions, int spell, long success) {
+        int l = 0, r = potions.length - 1;
+        int count = 0; // to store how many potions work for this spell
+
+        while (l <= r) {
+            int mid = l + (r - l) / 2;
+            long product = (long) spell * potions[mid]; // calculate product safely using long
+
+            if (product >= success) {
+                // if product meets success, then all potions from mid to end will also be valid
+                count = potions.length - mid;
+
+                // try to find a smaller valid potion (move left)
+                r = mid - 1;
+            } else {
+                // product too small → need larger potion value
+                l = mid + 1;
+            }
+        }
+
+        // return how many potions can pair successfully with this spell
+        return count;
+    }
+}
