@@ -1,0 +1,40 @@
+//Approach - Smart Simulation with updates
+//T.C : O(m*n)
+//S.C : O(n)
+
+class Solution {
+    public long minTime(int[] skill, int[] mana) {
+        int n = skill.length;  // Number of wizards
+        int m = mana.length;   // Number of potions to brew
+        
+        // Array to track when each wizard finishes brewing their current potion
+        long[] finishTime = new long[n];
+        
+        // Iterate through each potion in order
+        for (int j = 0; j < m; ++j) {
+            
+            // The first wizard starts immediately and takes (mana[j] * skill[0]) time
+            finishTime[0] += (long) mana[j] * skill[0];
+
+            // For each next wizard:
+            // - They can only start after the previous wizard has finished.
+            // - Their total time = max(own current finishTime, previous wizard’s finishTime)
+            //   + (mana[j] * skill[i]) — time required to brew the current potion.
+            for (int i = 1; i < n; ++i) {
+                finishTime[i] = Math.max(finishTime[i], finishTime[i - 1]) 
+                                + (long) mana[j] * skill[i];
+            }
+
+            // Backward pass:
+            // Adjust finish times so that previous wizards' times remain consistent
+            // relative to the next wizard’s updated finish time.
+            // Essentially, this keeps synchronization among wizards.
+            for (int i = n - 1; i > 0; --i) {
+                finishTime[i - 1] = finishTime[i] - (long) mana[j] * skill[i];
+            }
+        }
+
+        // The last wizard’s finish time will be the total minimum time required
+        return finishTime[n - 1];
+    }
+}
