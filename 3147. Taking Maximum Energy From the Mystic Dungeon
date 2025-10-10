@@ -26,6 +26,37 @@ class Solution {
 }
 
 
-// Approach - 2 :  Brute Force Simulation(TLE)
-// T.C - O(n²)
-// S.C - O(1)
+// Approach - 2 :  Dynamic Programming with Jump Intervals
+// T.C - O(n)
+// S.C - O(n)
+
+
+class Solution {
+    public int maximumEnergy(int[] energy, int k) {
+        int n = energy.length;
+        int ans = Integer.MIN_VALUE;  // To store the maximum energy sum found so far
+        int[] vis = new int[n];       // To mark visited indices (avoid recomputation)
+        Arrays.fill(vis, 0);
+        
+        int sum = 0;
+        // Iterate through all indices
+        for (int i = 0; i < n; i++) {
+            if (vis[i] == 1) continue;  // Skip if already processed in a previous sequence
+            
+            int j = i;
+            sum = 0;
+            
+            // Traverse every k-th element starting from index i
+            while (j < n) {
+                vis[j] = 1;             // Mark index as visited
+                sum += energy[j];       // Add current energy value
+                sum = Math.max(sum, energy[j]); // Restart subarray if beneficial (Kadane’s idea)
+                j += k;                 // Move to the next element in the sequence
+            }
+            
+            ans = Math.max(ans, sum);   // Update global maximum
+        }
+        
+        return ans;  // Return the maximum possible energy sum
+    }
+}
