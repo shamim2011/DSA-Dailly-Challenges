@@ -1,0 +1,31 @@
+// Approach - 1 :  Brute Force Simulation(TLE)
+// T.C - O(n²)
+// S.C - O(1)
+
+class Solution {
+    public int maximumEnergy(int[] energy, int k) {
+        int ans = Integer.MIN_VALUE; // Initialize answer with the smallest possible integer
+        
+        // Try starting from every index i
+        for (int i = 0; i < energy.length; i++) {
+            int j = i;
+            int sum = 0;
+            
+            // Jump ahead by k steps each time and accumulate energy
+            while (j < energy.length) {
+                sum += energy[j];
+                j += k;
+            }
+            
+            // Update the maximum energy found so far
+            ans = Math.max(ans, sum);
+        }
+        
+        return ans; // Return the maximum total energy achievable
+    }
+}
+
+
+// Approach - 2 :  Brute Force Simulation(TLE)
+// T.C - O(n²)
+// S.C - O(1)
