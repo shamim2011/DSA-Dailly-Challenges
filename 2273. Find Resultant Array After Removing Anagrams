@@ -69,3 +69,60 @@ class Solution {
         return Arrays.equals(arr1,arr2);
     }
 }
+
+
+
+//Approach 2 (simple traverse and check)
+//T.C : O(n*m)
+//S.C : O(1)
+
+class Solution {
+    public List<String> removeAnagrams(String[] words) {
+        // Initialize result list with first word (always included)
+        List<String> ans = new ArrayList<>();
+        ans.add(words[0]);
+        
+        int n = words.length;
+        
+        // Iterate through remaining words starting from index 1
+        for (int i = 1; i < n; i++) {
+            // Get the last word added to result list
+            String lastWord = ans.get(ans.size() - 1);
+            
+            // Only add current word if it's NOT an anagram of the last added word
+            if (!isAnagram(words[i], lastWord)) {
+                ans.add(words[i]);
+            }
+        }
+        
+        return ans;
+    }
+    
+    // Helper method to check if two strings are anagrams
+    public boolean isAnagram(String s1, String s2) {
+        // Different lengths cannot be anagrams
+        if (s1.length() != s2.length()) return false;
+        
+        // Frequency array for 26 lowercase letters
+        int[] arr = new int[26];
+        
+        // Count frequency of characters in first string
+        for (char ch : s1.toCharArray()) {
+            arr[ch - 'a']++;  // Increment count for each character
+        }
+        
+        // Decrement frequency for characters in second string
+        for (char ch : s2.toCharArray()) {
+            arr[ch - 'a']--;  // Decrement count for each character
+        }
+        
+        // Check if all frequencies are zero (strings are anagrams)
+        for (int i = 0; i < 26; i++) {
+            if (arr[i] != 0) {
+                return false;  // Different character frequencies
+            }
+        }
+        
+        return true;  // All frequencies matched - strings are anagrams
+    }
+}
