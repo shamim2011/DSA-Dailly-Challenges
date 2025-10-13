@@ -1,0 +1,49 @@
+// approach 1 - Backward Iteration with Removal
+// T.C - O(n * k log k) where n = number of words, k = average word length
+// S.C - O(n * k) 
+
+
+class Solution {
+    public List<String> removeAnagrams(String[] words) {
+        // Convert array to ArrayList for dynamic removal
+        List<String> ans = new ArrayList<>(Arrays.asList(words));
+        
+        // Iterate backwards from end to beginning
+        // This prevents index shifting issues when removing elements
+        for (int i = ans.size() - 1; i > 0; i--) {
+            // Check if current word is anagram of previous word
+            if (isAnagram(ans.get(i), ans.get(i - 1))) {
+                // Remove the current word (keeping the first occurrence)
+                ans.remove(i);
+            }
+        }
+        
+        return ans;
+    }
+    
+    // Helper method to check if two strings are anagrams
+    public boolean isAnagram(String s1, String s2) {
+        // Different lengths cannot be anagrams
+        if (s1.length() != s2.length()) return false;
+        
+        // Convert strings to char arrays and sort them
+        char[] arr1 = s1.toCharArray();
+        Arrays.sort(arr1);
+        char[] arr2 = s2.toCharArray();
+        Arrays.sort(arr2);
+        
+        int len = arr1.length;
+        int i = 0, j = 0;
+        
+        // Compare sorted character arrays
+        while (i < len && j < len) {
+            if (arr1[i] != arr2[j]) {
+                return false; // Characters don't match
+            }
+            i++;
+            j++;
+        }
+        
+        return true; // All characters match
+    }
+}
