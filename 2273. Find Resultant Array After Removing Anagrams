@@ -47,3 +47,25 @@ class Solution {
         return true; // All characters match
     }
 }
+
+--------------------------------  Same code of the above -------------------------------------
+
+class Solution {
+    public List<String> removeAnagrams(String[] words) {
+        List<String> ans = new ArrayList<>(Arrays.asList(words));
+        for (int i = ans.size() - 1; i > 0; i--) {
+            if (isAnagram(ans.get(i), ans.get(i - 1))) {
+                ans.remove(i);
+            }
+        }
+        return ans;
+    }
+    public boolean isAnagram(String s1,String s2){
+        if(s1.length()!=s2.length()) return false;
+        char[] arr1 = s1.toCharArray();
+        Arrays.sort(arr1);
+        char[] arr2 = s2.toCharArray();
+        Arrays.sort(arr2);
+        return Arrays.equals(arr1,arr2);
+    }
+}
