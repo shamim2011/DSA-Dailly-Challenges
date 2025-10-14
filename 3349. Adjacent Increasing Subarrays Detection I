@@ -30,3 +30,38 @@ class Solution {
         return true;
     }
 }
+
+
+
+//Approach (Loop and keep checking)
+//T.C : O(n) 
+//S.C : O(1)
+
+class Solution {
+    public boolean hasIncreasingSubarrays(List<Integer> nums, int k) {
+        int currLen = 1; // current increasing sequence length
+        int prevLen = 0; // previous increasing sequence length
+        int n = nums.size(); // total number of elements
+
+        for (int i = 1; i < n; i++) {
+            // If current number is greater than the previous one, sequence continues
+            if (nums.get(i) > nums.get(i - 1)) {
+                currLen++;
+            } 
+            // Otherwise, reset sequence and store the previous length
+            else {
+                prevLen = currLen;
+                currLen = 1;
+            }
+
+            // Condition 1: One long increasing subarray of length >= 2*k
+            if (currLen >= 2 * k) return true;
+
+            // Condition 2: Two consecutive increasing subarrays of length >= k
+            if (Math.min(currLen, prevLen) >= k) return true;
+        }
+
+        // If no valid subarrays found
+        return false;
+    }
+}
