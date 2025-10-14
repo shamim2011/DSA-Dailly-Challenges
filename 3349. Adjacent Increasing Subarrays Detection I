@@ -1,0 +1,32 @@
+// Approach - Sliding Window with Two Consecutive Checks
+// Time Complexity:O(n × k) where n is the length of nums
+// Space Complexity: O(1) 
+
+
+class Solution {
+    public boolean hasIncreasingSubarrays(List<Integer> nums, int k) {
+        // Iterate through all possible starting positions for the first subarray
+        // We need at least 2k elements remaining from current position
+        // Loop runs from i=0 to i=nums.size()-2*k (inclusive)
+        for(int i = 0; i <= nums.size() - 2 * k; i++){
+            // Check if both consecutive subarrays of length k are strictly increasing
+            // First subarray: indices [i, i+k-1]
+            // Second subarray: indices [i+k, i+2k-1]
+            if(isSubArray(i, i + k, nums) && isSubArray(i + k, i + k + k, nums)){
+                return true;
+            }
+        }
+        return false;
+    }
+    boolean isSubArray(int s, int e, List<Integer> nums){
+        // Check each adjacent pair in the subarray [s, e-1]
+        // We compare nums[i-1] with nums[i] for i from s+1 to e-1
+        for(int i = s + 1; i < e; i++){
+            // If current element is not greater than previous, sequence is not strictly increasing
+            if(nums.get(i - 1) >= nums.get(i)){
+                return false;
+            }
+        }
+        return true;
+    }
+}
