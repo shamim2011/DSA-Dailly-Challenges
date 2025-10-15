@@ -1,0 +1,35 @@
+//Approach (Using same concept as we did for Adjacent Increasing Subarrays Detection I)
+//T.C : O(n)
+//S.C : O(1)
+
+class Solution {
+    public int maxIncreasingSubarrays(List<Integer> nums) {
+        int prevLen = 0;   // Length of the previous increasing subarray
+        int currLen = 1;   // Length of the current increasing subarray (starts at 1 for the first element)
+        int n = nums.size();  // Total number of elements in the list
+        int ans = 0;       // Variable to store the final answer (maximum length found)
+
+        // Iterate through the list starting from the second element
+        for (int i = 1; i < n; i++) {
+            // If the current element is greater than the previous one, the increasing sequence continues
+            if (nums.get(i) > nums.get(i - 1)) {
+                currLen++;
+            } else {
+                // Otherwise, the increasing sequence ends here
+                // Save the current length as the previous sequence length
+                prevLen = currLen;
+                // Reset current length to 1 (start a new sequence)
+                currLen = 1;
+            }
+
+            // Update the answer with the best possible result so far
+            // Case 1: Take half of the current increasing length
+            ans = Math.max(ans, currLen / 2);
+            // Case 2: Take the minimum of current and previous lengths (handles overlapping sequences)
+            ans = Math.max(ans, Math.min(currLen, prevLen));
+        }
+
+        // Return the maximum length of valid increasing subarrays found
+        return ans;
+    }
+}
