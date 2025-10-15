@@ -1,4 +1,4 @@
-//Approach (Using same concept as we did for Adjacent Increasing Subarrays Detection II)
+//Approach : sliding Window with Adjacent Sequence Tracking
 //T.C : O(n)
 //S.C : O(1)
 
