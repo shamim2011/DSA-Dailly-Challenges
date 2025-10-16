@@ -1,3 +1,36 @@
 //Approach - Observation about Modulo(%) values
 //T.C : O(n)
 //S.C : O(n)
+
+
+class Solution {
+    public int findSmallestInteger(int[] nums, int value) {
+        // Initialize a HashMap to store the frequency of numbers modulo 'value'
+        Map<Integer, Integer> mp = new HashMap<>();
+        
+        // Iterate through each number in the input array 'nums'
+        for (int num : nums) {
+            // Compute the modulo of the number with respect to 'value'
+            // Add 'value' before modulo to handle negative numbers, ensuring result is non-negative
+            int r = ((num % value) + value) % value;
+            // Update the frequency of the remainder 'r' in the map
+            // Increment the count by 1, or start at 1 if 'r' is not yet in the map
+            mp.put(r, mp.getOrDefault(r, 0) + 1);
+        }
+        
+        // Initialize MEX (Minimum Excluded) to 0
+        // MEX is the smallest non-negative integer not present in the array modulo 'value'
+        int MEX = 0;
+        
+        // Continue looping while the remainder 'MEX % value' exists in the map (has positive frequency)
+        while (mp.getOrDefault(MEX % value, 0) > 0) {
+            // Reduce the frequency of 'MEX % value' by 1, as if "consuming" one occurrence
+            mp.put(MEX % value, mp.get(MEX % value) - 1);
+            // Increment MEX to check the next possible value
+            MEX++;
+        }
+        
+        // Return the smallest non-negative integer (MEX) whose remainder modulo 'value' is not present
+        return MEX;
+    }
+}
