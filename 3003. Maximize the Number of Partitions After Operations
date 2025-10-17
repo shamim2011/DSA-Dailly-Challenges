@@ -1,1 +1,148 @@
-// Approach - 
+// Approach 1 - Recursive Bitmask + Backtracking (Brute Force)
+//T.C :O(N * 26 * 2^K))
+//S.C :O(N) due to recursion
+
+
+class Solution {
+    String S; // The input string
+    int K;    // Maximum allowed unique characters per partition
+
+    int solve(int i, int uniqueChars, boolean canChange) {
+
+        // Base case: if we've processed the entire string
+        if (i >= S.length()) return 0;
+
+        // Get the character index (0 for 'a', 1 for 'b', etc.)
+        int charIdx = S.charAt(i) - 'a';
+
+        // Add this character to the set of seen characters (bitmask update)
+        int newUniqueChars = uniqueChars | (1 << charIdx);
+
+        // Count how many unique characters are currently in the bitmask
+        int uniqueCharCount = Integer.bitCount(newUniqueChars);
+
+        int res = 0;
+
+        // Case 1: Too many unique characters → start a new partition
+        if (uniqueCharCount > K) {
+            res = 1 + solve(i + 1, 1 << charIdx, canChange);
+        } 
+        // Case 2: Still within K unique characters → continue same partition
+        else {
+            res = solve(i + 1, newUniqueChars, canChange);
+        }
+
+        // Case 3: Try changing this character (if we still can)
+        if (canChange) {
+            for (int newCharIdx = 0; newCharIdx < 26; newCharIdx++) {
+                // Try replacing current character with each possible new letter
+                int newCharSet = uniqueChars | (1 << newCharIdx);
+                int newUniqueCharCount = Integer.bitCount(newCharSet);
+
+                // If replacing exceeds K unique chars → start new partition
+                if (newUniqueCharCount > K) {
+                    res = Math.max(res, 1 + solve(i + 1, 1 << newCharIdx, false));
+                } 
+                // Otherwise, continue in the same partition (after change)
+                else {
+                    res = Math.max(res, solve(i + 1, newCharSet, false));
+                }
+            }
+        }
+
+        return res;
+    }
+
+    public int maxPartitionsAfterOperations(String s, int k) {
+        S = s;
+        K = k;
+
+        // Start recursion from index 0 with empty bitmask and change allowed
+        // +1 because the last segment also counts as a partition
+        return solve(0, 0, true) + 1;
+    }
+}
+
+
+
+//Approach 2: Usin Recursion + Memo with Bit Memoization (Digit DP)
+//T.C : Without memoization - )(2^n * 26) , With Memoization - O(n*uniqueChars)
+//S.C : O(m+n) - where m = unique states (resursion stack) and n = size of map
+
+class Solution {
+    // Memoization map: stores previously computed results for states
+    Map<Long, Integer> mp = new HashMap<>();
+
+    // Global variables for convenience
+    String S;
+    int K;
+    int solve(long i, long uniqueChars, boolean canChange) {
+
+        // Encode the current state (i, uniqueChars, canChange) into one long key
+        // Bits used:
+        // - index i shifted left by 27 (since 26 bits are used for mask)
+        // - uniqueChars shifted left by 1 (bitmask of up to 26 characters)
+        // - last bit (LSB) stores canChange flag (1 or 0)
+        long key = (i << 27) | (uniqueChars << 1) | (canChange ? 1 : 0);
+
+        // Return previously computed result if already in map
+        if (mp.containsKey(key)) {
+            return mp.get(key);
+        }
+
+        // Base case: if we have reached or passed the end of the string
+        if (i >= S.length()) return 0;
+
+        // Get current character index (0 for 'a', 1 for 'b', etc.)
+        int charIdx = S.charAt((int) i) - 'a';
+
+        // Add current character to bitmask of unique characters
+        long newUniqueChars = uniqueChars | (1L << charIdx);
+
+        // Count how many unique characters are currently in this partition
+        int uniqueCharCount = Long.bitCount(newUniqueChars);
+
+        int res = 0;
+
+        // Case 1: Too many unique characters → start a new partition
+        if (uniqueCharCount > K) {
+            res = 1 + solve(i + 1, 1L << charIdx, canChange);
+        } 
+        // Case 2: Still within K unique chars → continue current partition
+        else {
+            res = solve(i + 1, newUniqueChars, canChange);
+        }
+
+        // Case 3: Try changing current character (only if we still can)
+        if (canChange) {
+            for (int newCharIdx = 0; newCharIdx < 26; newCharIdx++) {
+                // Try replacing the current character with 'a'..'z'
+                long newCharSet = uniqueChars | (1L << newCharIdx);
+                int newUniqueCharCount = Long.bitCount(newCharSet);
+
+                // If replacement exceeds K unique chars → start new partition
+                if (newUniqueCharCount > K) {
+                    res = Math.max(res, 1 + solve(i + 1, 1L << newCharIdx, false));
+                } 
+                // Else continue in same partition (after replacement)
+                else {
+                    res = Math.max(res, solve(i + 1, newCharSet, false));
+                }
+            }
+        }
+
+        // Store the computed result for this state in the map (memoization)
+        mp.put(key, res);
+
+        return res;
+    }
+    public int maxPartitionsAfterOperations(String s, int k) {
+        // Initialize global variables
+        S = s;
+        K = k;
+
+        // Start recursion at index 0, with empty bitmask, and one allowed change
+        // +1 because even the last substring counts as a partition
+        return solve(0, 0, true) + 1;
+    }
+}
