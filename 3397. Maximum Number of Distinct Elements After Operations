@@ -1,0 +1,32 @@
+//Approach - Greedily sorting and checking each element
+//T.C : O(nlogn)
+//S.C : O(1)
+
+
+class Solution {
+    public int maxDistinctElements(int[] nums, int k) {
+        int count = 0;  // To keep track of total distinct elements we can make
+        Arrays.sort(nums);  // Sort the array to process elements in increasing order
+        int[] arr = new int[nums.length];  // (Not used in logic — can be removed safely)
+        int n = nums.length;  // Store length of the array
+        int prev = Integer.MIN_VALUE;  // Keeps track of the last distinct element value we assigned
+
+        for (int i = 0; i < n; i++) {
+            int minVal = nums[i] - k;  // Minimum possible value after subtracting k
+
+            // Case 1: If we can pick a value greater than the previous one and within range
+            if (prev < minVal) {
+                prev = minVal;  // Assign the smallest possible distinct value
+                count++;  // Increment count of distinct elements
+            }
+            // Case 2: Otherwise, if we can still pick something within the allowed range
+            else if (prev < nums[i] + k) {
+                prev = prev + 1;  // Move to the next possible distinct value
+                count++;  // Increment count of distinct elements
+            }
+            // Case 3: If prev >= nums[i] + k, we can’t pick a distinct value for this element
+        }
+
+        return count;  // Return total distinct elements we managed to form
+    }
+}
