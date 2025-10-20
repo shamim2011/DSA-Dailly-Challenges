@@ -1,0 +1,29 @@
+// Approach - String Parsing and Counting
+// T.C - O(n)
+// S.C - o(1)
+
+
+class Solution {
+
+    // Method to calculate the final value of a variable after performing a series of operations
+    public int finalValueAfterOperations(String[] operations) {
+        int ans = 0;  // Initialize variable to store the final value
+
+        // Iterate over all operations in the array
+        for (int i = 0; i < operations.length; i++) {
+            String s = operations[i];  // Get the current operation string
+
+            // Check the middle character to determine the type of operation
+            // All operations are either "++X", "X++", "--X", or "X--"
+            // The middle character (index 1) will always be '+' for increment and '-' for decrement
+            if (s.charAt(1) == '-') {
+                ans -= 1;  // Decrement the variable by 1
+            } else {
+                ans += 1;  // Increment the variable by 1
+            }
+        }
+
+        // Return the final result after all operations
+        return ans;
+    }
+}
