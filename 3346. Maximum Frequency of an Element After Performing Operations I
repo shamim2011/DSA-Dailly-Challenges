@@ -20,7 +20,7 @@ class Solution {
 
         // Step 3: Build the prefix sum array (cumulative frequency array)
         // freq[i] now holds the total count of numbers <= i
-        int sum = 0;
+       
         for(int i = 1; i <= maxVal; i++) {
             freq[i] += freq[i - 1];  // Update each element to store cumulative sum
         }
