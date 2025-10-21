@@ -1,3 +1,57 @@
-// Approach - 
-// T.C - 
-// S.C - 
+// Approach -  Prefix Sum + Range Frequency 
+// T.C - O(n)
+// S.C - O(1)
+
+
+class Solution {
+    // Method to calculate the max frequency achievable after at most numOperations
+    public int maxFrequency(int[] nums, int k, int numOperations) {
+        // Step 1: Find the maximum value in the nums array
+        int maxVal = Integer.MIN_VALUE;
+        for(int i = 0; i < nums.length; i++) {
+            maxVal = Math.max(nums[i], maxVal);  // Track the largest number in nums
+        }
+
+        // Step 2: Create a frequency array that counts the occurrence of each number in nums
+        int[] freq = new int[maxVal + 1];  // Frequency array size based on the max value
+        for(int i = 0; i < nums.length; i++) {
+            freq[nums[i]]++;  // Count each number's occurrence in nums
+        }
+
+        // Step 3: Build the prefix sum array (cumulative frequency array)
+        // freq[i] now holds the total count of numbers <= i
+        int sum = 0;
+        for(int i = 1; i <= maxVal; i++) {
+            freq[i] += freq[i - 1];  // Update each element to store cumulative sum
+        }
+
+        // Step 4: Initialize the result variable to track the maximum frequency
+        int result = 0;
+
+        // Step 5: Iterate over each possible target value (from 0 to maxVal)
+        for(int target = 0; target <= maxVal; target++) {
+            // Skip if the current number doesn't appear in the array
+            if(freq[target] == 0) continue;
+
+            // Calculate the range of values that can be converted to the target within ±k
+            int l = Math.max(0, target - k); 
+            int r = Math.min(maxVal, target + k);
+
+            // Step 6: Calculate the total count of numbers in the range [l, r]
+            int totalCount = freq[r] - (l > 0 ? freq[l - 1] : 0);
+
+            // Step 7: Calculate the count of the current target value
+            int targetCount = freq[target] - (target > 0 ? freq[target - 1] : 0);
+
+            // Step 8: Calculate how many more numbers we can convert to the target
+            int needCount = totalCount - targetCount;
+
+            // Step 9: Calculate the maximum frequency of target using available operations
+            int val = targetCount + Math.min(needCount, numOperations);
+            result = Math.max(result, val);  // Update result if we find a better frequency
+        }
+
+        // Return the maximum frequency achieved
+        return result;
+    }
+}
