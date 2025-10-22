@@ -53,3 +53,66 @@ class Solution {
         return result;
     }
 }
+
+
+//Approach 2 - Using Difference Array Technique
+//T.C : O(nlogn)
+//S.C : O(n)
+
+class Solution {
+    public int maxFrequency(int[] nums, int k, int numOperations) {
+        // Step 1: Find the maximum value in nums
+        int maxVal = Integer.MIN_VALUE;
+        for (int i = 0; i < nums.length; i++) {
+            maxVal = Math.max(nums[i], maxVal);
+        }
+
+        // Step 2: TreeMap to represent a difference array
+        // Keys = number values, Values = difference markers (+1 for start, -1 for end)
+        TreeMap<Integer, Integer> diffmp = new TreeMap<>();
+
+        // Step 3: Frequency map to count occurrences of each number
+        Map<Integer, Integer> freq = new HashMap<>();
+
+        // Step 4: Build frequency and difference map
+        for (int num : nums) {
+            freq.put(num, freq.getOrDefault(num, 0) + 1);
+
+            // Determine the range [l, r] each number can reach after ±k
+            int l = Math.max(num - k, 0);
+            int r = Math.min(num + k, maxVal);
+
+            // Mark the start of range with +1
+            diffmp.put(l, diffmp.getOrDefault(l, 0) + 1);
+            // Mark the end of range (r+1) with -1
+            diffmp.put(r + 1, diffmp.getOrDefault(r + 1, 0) - 1);
+
+            // Ensure num is in map to calculate prefix sum later
+            diffmp.putIfAbsent(num, diffmp.getOrDefault(num, 0));
+        }
+
+        // Step 5: Compute prefix sum over diffmp and calculate max achievable frequency
+        int result = 1;
+        int cumSum = 0;
+
+        for (Map.Entry<Integer, Integer> entry : diffmp.entrySet()) {
+            int target = entry.getKey();   // Current value being considered as target
+            int val = entry.getValue();    // Difference update value
+
+            cumSum += val;  // Maintain running prefix sum
+
+            int targetFreq = freq.getOrDefault(target, 0); // Existing freq of this value
+
+            // Number of other numbers that can be converted into this value
+            int needCount = cumSum - targetFreq;
+
+            // We can use at most 'numOperations' conversions
+            int maxPossFreq = Math.min(needCount, numOperations);
+
+            // Update maximum achievable frequency
+            result = Math.max(result, targetFreq + maxPossFreq);
+        }
+
+        return result;
+    }
+}
