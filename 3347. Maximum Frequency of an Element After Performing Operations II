@@ -1,0 +1,55 @@
+//Approach 1- Using Difference Array Technique (TLE)
+//T.C : O(maxVal), maxVal = maximum element in nums + k
+//S.C : O(maxVal), maxVal = maximum element in nums + k
+
+class Solution {
+    // Method to find the maximum frequency possible after at most numOperations
+    public int maxFrequency(int[] nums, int k, int numOperations) {
+        // Initialize maxVal to track the maximum value in nums
+        int maxVal = Integer.MIN_VALUE;
+        // Find the maximum value in the input array
+        for(int i = 0; i < nums.length; i++) {
+            maxVal = Math.max(nums[i], maxVal);
+        }
+        
+        // Create a difference array to track frequency changes within range [l, r]
+        // Size is maxVal + 2 to accommodate boundary conditions
+        int[] diff = new int[maxVal + 2];
+        
+        // Create a HashMap to store the frequency of each number in nums
+        Map<Integer,Integer> mp = new HashMap<>();
+        // Populate the frequency map and update the difference array
+        for(int num : nums) {
+            // Increment frequency of current number in the map
+            mp.put(num, mp.getOrDefault(num, 0) + 1);
+            // Calculate left boundary (l) within k distance, ensuring non-negative
+            int l = Math.max(num - k, 0);
+            // Calculate right boundary (r) within k distance, capped at maxVal
+            int r = Math.min(num + k, maxVal);
+            
+            // Increment diff[l] to mark start of range
+            diff[l]++;
+            // Decrement diff[r+1] to mark end of range
+            diff[r + 1]--;
+        }
+
+        // Initialize result to store the maximum frequency achievable
+        int result = 1;
+        // Iterate through all possible target values from 0 to maxVal
+        for(int target = 0; target <= maxVal; target++) {
+            // Compute cumulative sum for diff array to get frequency at target
+            diff[target] += (target > 0 ? diff[target - 1] : 0);
+            // Get the frequency of the current target value from the map
+            int targetFreq = mp.getOrDefault(target, 0);
+
+            // Calculate additional frequency needed to make numbers equal to target
+            int needCount = diff[target] - targetFreq;
+            // Cap the additional frequency by numOperations
+            int maxPossFreq = Math.min(needCount, numOperations);
+            // Update result with the maximum achievable frequency
+            result = Math.max(result, targetFreq + maxPossFreq);
+        }
+        // Return the maximum frequency achievable
+        return result;
+    }
+}
