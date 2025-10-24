@@ -119,3 +119,55 @@ class Solution {
 //T.C : O(9^d), d = number of digits of n
 //S.C : O(1)
 
+class Solution {
+    // Array to track remaining count for each digit (0–9)
+    // digitCount[d] initially equals d (i.e., digit d can appear d times)
+    int[] digitCount = {0,1,2,3,4,5,6,7,8,9};
+
+    // Main method to find the next beautiful number greater than n
+    public int nextBeautifulNumber(int n) {
+        // Find number of digits in n
+        int numDigit = String.valueOf(n).length();
+
+        // Try generating beautiful numbers with the same digit length first
+        int res = backtrack(n, 0, numDigit);
+
+        // If not found, try with one more digit
+        if (res == 0) {
+            res = backtrack(n, 0, numDigit + 1);
+        }
+        return res;
+    }
+
+    // Recursive helper using backtracking to build beautiful numbers
+    public int backtrack(int n, int currNum, int leftDigit) {
+        // Base case: when all digits have been placed
+        if (leftDigit == 0) {
+            // Check if all digits satisfy the 'digit == frequency' rule
+            for (int d = 1; d <= 9; d++) {
+                if (digitCount[d] != 0 && digitCount[d] != d) {
+                    return 0; // Invalid configuration
+                }
+            }
+            // Return current number if it's greater than n
+            return currNum > n ? currNum : 0;
+        }
+
+        int result = 0;
+
+        // Try placing each digit from 1–9
+        for (int d = 1; d <= 9; d++) {
+            // Only use digit d if it’s still available and can fit in remaining places
+            if (digitCount[d] > 0 && digitCount[d] <= leftDigit) {
+                digitCount[d]--; // Choose (Do)
+                result = backtrack(n, currNum * 10 + d, leftDigit - 1); // Explore
+                digitCount[d]++; // Un-choose (Undo)
+            }
+
+            // If a valid number is found, stop early
+            if (result != 0) break;
+        }
+
+        return result;
+    }
+}
