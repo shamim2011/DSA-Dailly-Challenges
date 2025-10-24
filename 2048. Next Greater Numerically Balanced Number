@@ -1,0 +1,38 @@
+// Approach: Brute Force Check
+
+
+class Solution {
+    public int nextBeautifulNumber(int n) {
+        int num = n + 1;  // Start checking from the next number
+        while (true) {
+            if (isSatis(num)) {  // If the current number is beautiful
+                return num;      // Return it immediately
+            }
+            num++;  // Otherwise, check the next number
+        }
+    }
+
+    // Helper method to check if a number is "beautiful"
+    public boolean isSatis(int num) {
+        // Map to count the frequency of each digit
+        Map<Character, Integer> mp = new TreeMap<>();
+        
+        // Convert the number to string to easily iterate over digits
+        String str = Integer.toString(num);
+        
+        // Count frequency of each digit
+        for (char ch : str.toCharArray()) {
+            mp.put(ch, mp.getOrDefault(ch, 0) + 1);
+        }
+
+        // Check if each digit appears exactly that many times
+        for (Map.Entry<Character, Integer> entry : mp.entrySet()) {
+            int key = entry.getKey() - '0';  // Convert character digit to integer
+            int val = entry.getValue();      // Frequency of this digit
+            if (key != val) {                // If frequency doesn't match the digit value
+                return false;                // Not a beautiful number
+            }
+        }
+        return true;  // All digits satisfied the condition
+    }
+}
