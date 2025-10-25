@@ -36,3 +36,31 @@ class Solution {
         return sum; // Return total money saved after 'n' days
     }
 }
+
+//Approach-1 (Simple simulation)
+//T.C : O(1) - see the video above to know why
+//S.C : O(1)
+
+
+class Solution {
+    public int totalMoney(int n) {
+        int result = 0;       // To store the total amount of money saved
+        int mondayMoney = 1;  // The amount of money saved on the first Monday
+
+        // Loop continues until all days are processed
+        while (n > 0) {
+            int money = mondayMoney;  // Money to be saved on the current day, starting from Monday’s amount
+
+            // For each week, deposit money for up to 7 days
+            for (int day = 1; day <= Math.min(n, 7); day++) {
+                result += money;  // Add the current day's money to total
+                money++;          // Next day’s amount increases by 1
+            }
+
+            n -= 7;              // One week (7 days) is completed
+            mondayMoney++;       // Next week starts with 1 more dollar than the previous Monday
+        }
+
+        return result;  // Return the total amount saved after all days
+    }
+}
