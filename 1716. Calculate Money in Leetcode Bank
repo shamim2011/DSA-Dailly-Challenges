@@ -1,0 +1,38 @@
+// Approach - Simulation Approach 
+// T.C - O(n)
+// S.C - O(1)
+
+
+class Solution {
+    public int totalMoney(int n) {
+        
+        // If there are 7 or fewer days, 
+        // total money is simply the sum of first 'n' natural numbers.
+        if (n <= 7) {
+            return (n * (n + 1) / 2);
+        }
+
+        int start = 1;  // The starting amount for each week (e.g., Monday starts with $1, then $2 next week)
+        int sum = 0;    // To store total money saved
+        int count = 0;  // To track days in a week
+        int val = 1;    // To track total days processed
+        int e = start;  // To remember the week's starting amount for next increment
+
+        // Continue until all 'n' days are processed
+        while (val <= n && count < 7) {
+            sum += start;  // Add today's deposit to total
+            start++;        // Increment for the next day
+            count++;        // Increment day count in current week
+            val++;          // Increment total day count
+
+            // When a week completes (7 days)
+            if (count == 7) {
+                count = 0;    // Reset weekly day counter
+                start = e + 1; // Next week starts with 1 more than previous week's start
+                e++;           // Update week's starting reference
+            }
+        }
+
+        return sum; // Return total money saved after 'n' days
+    }
+}
