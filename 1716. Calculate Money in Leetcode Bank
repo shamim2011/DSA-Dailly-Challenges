@@ -1,4 +1,4 @@
-// Approach - Simulation Approach 
+// Approach 1 - Simulation Approach 
 // T.C - O(n)
 // S.C - O(1)
 
@@ -37,7 +37,7 @@ class Solution {
     }
 }
 
-//Approach-1 (Simple simulation)
+//Approach-2 (Simple simulation)
 //T.C : O(1) - see the video above to know why
 //S.C : O(1)
 
