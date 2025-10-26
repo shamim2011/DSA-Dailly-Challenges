@@ -1,0 +1,55 @@
+// Approach - Sorting + Split-Sum Difference Approach
+// T.C - O(n log n)
+// S.C - O(n)
+
+
+class Solution {
+    public long maxAlternatingSum(int[] nums) {
+
+        // Step 1: Create a new array to store absolute values of elements
+        int[] arr = new int[nums.length];
+        for (int i = 0; i < nums.length; i++) {
+            arr[i] = Math.abs(nums[i]);
+        }
+
+        // Step 2: Sort the array in ascending order
+        Arrays.sort(arr);
+
+        int n = nums.length;
+        int addCount = 0;  // Will hold the number of elements to add
+        long add = 0;      // Sum of squares of elements to be added
+        long sub = 0;      // Sum of squares of elements to be subtracted
+
+        // Step 3: Handle odd and even length of array separately
+        if (n % 2 != 0) {
+            // If array length is odd
+            addCount = n / 2 + 1;
+
+            // Add squares of the largest 'addCount' elements
+            for (int i = nums.length - 1; i >= addCount - 1; i--) {
+                add += (arr[i] * arr[i]);
+            }
+
+            // Subtract squares of the remaining smaller elements
+            for (int i = 0; i < addCount - 1; i++) {
+                sub += (arr[i] * arr[i]);
+            }
+        } else {
+            // If array length is even
+            addCount = n / 2;
+
+            // Add squares of the largest 'addCount' elements
+            for (int i = nums.length - 1; i >= addCount; i--) {
+                add += (arr[i] * arr[i]);
+            }
+
+            // Subtract squares of the smallest 'addCount' elements
+            for (int i = 0; i < addCount; i++) {
+                sub += (arr[i] * arr[i]);
+            }
+        }
+
+        // Step 4: Return the final alternating sum difference
+        return (add - sub);
+    }
+}
