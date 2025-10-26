@@ -1,0 +1,25 @@
+// Approach - String Filtering Approach
+// T.C - O(d), where d = number of digits in the number n.
+// S.C - O(d)
+
+
+class Solution {
+    public long removeZeros(long n) {
+        // Convert the given number 'n' into a string representation
+        String s = Long.toString(n);
+        
+        // Use StringBuilder to efficiently build the new number string without zeros
+        StringBuilder sb = new StringBuilder();
+        
+        // Iterate through each character of the string
+        for (char ch : s.toCharArray()) {
+            // Append only non-zero digits (i.e., digits between '1' and '9')
+            if (ch >= '1' && ch <= '9') {
+                sb.append(ch);
+            }
+        }
+        
+        // Convert the resulting string back to a long and return it
+        return Long.parseLong(sb.toString());
+    }
+}
