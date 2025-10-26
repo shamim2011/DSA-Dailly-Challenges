@@ -2,3 +2,48 @@
 //T.C. : O(n) for Bank(), O(1) for withdraw(), transfer() and deposit()
 //S.C. : O(n) for storing balance for each object
 
+class Bank {
+    long[] balance;  // Array to store the balance of each account
+    int n;           // Number of accounts
+
+    // Constructor to initialize the bank with given account balances
+    public Bank(long[] balance) {
+        this.balance = balance;   // Assign the provided balance array
+        this.n = balance.length;  // Store total number of accounts
+    }
+
+    // Method to transfer money from one account to another
+    public boolean transfer(int account1, int account2, long money) {
+        // Check if account numbers are valid and if the sender has enough balance
+        if (account1 > n || account2 > n || balance[account1 - 1] < money) {
+            return false;  // Invalid account or insufficient funds → transfer fails
+        }
+        // Deduct money from sender’s account
+        balance[account1 - 1] -= money;
+        // Add money to receiver’s account
+        balance[account2 - 1] += money;
+        return true;  // Transfer successful
+    }
+
+    // Method to deposit money into an account
+    public boolean deposit(int account, long money) {
+        // Check if the account number is valid
+        if (account > n) {
+            return false;  // Invalid account → deposit fails
+        }
+        // Add the deposit amount to the account balance
+        balance[account - 1] += money;
+        return true;  // Deposit successful
+    }
+
+    // Method to withdraw money from an account
+    public boolean withdraw(int account, long money) {
+        // Check if the account number is valid and has enough balance
+        if (account > n || balance[account - 1] < money) {
+            return false;  // Invalid account or insufficient funds → withdrawal fails
+        }
+        // Deduct the withdrawal amount from the account balance
+        balance[account - 1] -= money;
+        return true;  // Withdrawal successful
+    }
+}
