@@ -1,0 +1,4 @@
+// Approach (Simple Simulation)
+//T.C. : O(n) for Bank(), O(1) for withdraw(), transfer() and deposit()
+//S.C. : O(n) for storing balance for each object
+
