@@ -1,4 +1,4 @@
-// Approach - 
-// T.C - 
-// S.C - 
+//Approach (Simple iterate and count)
+//T.C : O(m*n) - Total number of characters in all string
+//S.C : O(1)
 
