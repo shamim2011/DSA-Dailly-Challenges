@@ -2,3 +2,38 @@
 //T.C : O(m*n) - Total number of characters in all string
 //S.C : O(1)
 
+class Solution {
+    public int numberOfBeams(String[] bank) {
+        // n = number of rows in the bank (each row represents a security row with devices)
+        int n = bank.length;
+
+        // prevDevice stores the number of devices ('1's) in the previous non-empty row
+        int prevDevice = 0;
+
+        // ans stores the total number of laser beams
+        int ans = 0;
+
+        // Traverse each row in the bank
+        for (int i = 0; i < n; i++) {
+            int currDevice = 0;
+
+            // Count the number of devices ('1') in the current row
+            for (int j = 0; j < bank[i].length(); j++) {
+                if (bank[i].charAt(j) == '1') {
+                    currDevice++;
+                }
+            }
+
+            // If both current and previous rows have devices,
+            // the number of beams between them is (prevDevice * currDevice)
+            ans += (prevDevice * currDevice);
+
+            // Update prevDevice:
+            // Only update if the current row has devices (ignore empty rows)
+            prevDevice = (currDevice == 0) ? prevDevice : currDevice;
+        }
+
+        // Return the total number of beams
+        return ans;
+    }
+}
