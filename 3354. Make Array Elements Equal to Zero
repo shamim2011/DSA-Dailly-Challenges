@@ -63,7 +63,7 @@ class Solution {
     }
 }
 
-// Approach 1- (Simple simulation)
+// Approach 2- (Simple simulation)
 // T.C - O(n*2)
 // S.C - O(n)
 
@@ -126,7 +126,7 @@ class Solution {
 }
 
 
-//Approach-2 - (Using cumulative sum)
+//Approach-3 - (Using cumulative sum)
 //T.C : O(n) 
 //S.C : O(1)
 
