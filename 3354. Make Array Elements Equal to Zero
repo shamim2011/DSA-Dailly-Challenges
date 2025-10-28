@@ -63,3 +63,109 @@ class Solution {
     }
 }
 
+// Approach 1- (Simple simulation)
+// T.C - O(n*2)
+// S.C - O(n)
+
+class Solution {
+    int n;
+
+    public int countValidSelections(int[] nums) {
+        n = nums.length;
+        int ans = 0;
+        int nonZero = 0;
+
+        // Count total number of non-zero elements
+        for (int i = 0; i < n; i++) {
+            if (nums[i] != 0) {
+                nonZero++;
+            }
+        }
+
+        // Try starting from each zero index
+        for (int i = 0; i < n; i++) {
+            if (nums[i] == 0) {
+                // Try moving left first
+                if (isValid(nums, i, nonZero, -1)) {
+                    ans++;
+                }
+                // Try moving right next
+                if (isValid(nums, i, nonZero, 1)) {
+                    ans++;
+                }
+            }
+        }
+        return ans;
+    }
+
+    // Helper method to simulate the process
+    public boolean isValid(int[] nums, int i, int count, int dir) {
+        // Make a copy of the array so that original array remains unchanged
+        int[] arr = Arrays.copyOf(nums, n);
+        int idx = i;
+
+        // Continue until we go out of bounds or all non-zero elements become zero
+        while (idx >= 0 && idx < n && count > 0) {
+
+            // If we encounter a positive element
+            if (arr[idx] > 0) {
+                arr[idx]--;      // Decrease its value by 1
+                dir *= -1;       // Reverse direction after hitting a positive element
+
+                // If this element becomes zero, decrease remaining count
+                if (arr[idx] == 0) count--;
+            }
+
+            // Move in the current direction (either left or right)
+            idx += dir;
+        }
+
+        // Return true if all elements are reduced to zero
+        return count == 0;
+    }
+}
+
+
+//Approach-2 - (Using cumulative sum)
+//T.C : O(n) 
+//S.C : O(1)
+
+
+class Solution {
+    public int countValidSelections(int[] nums) {
+        int n = nums.length;
+        int ans = 0;       // To store the total count of valid selections
+        int currSum = 0;   // To keep track of prefix (left) sum
+        int sum = 0;       // To store the total sum of the array
+
+        // Step 1: Calculate the total sum of the array
+        for (int i = 0; i < n; i++) {
+            sum += nums[i];
+        }
+
+        // Step 2: Traverse each index to check for valid selections
+        for (int i = 0; i < n; i++) {
+            currSum += nums[i];          // Update current prefix sum
+
+            int left = currSum;          // Sum of elements from start to current index
+            int right = sum - left;      // Sum of elements from current index + 1 to end
+
+            // Only check for indices where element is zero
+            if (nums[i] != 0) continue;
+
+            // Case 1: If left and right sums are equal, two valid directions possible
+            if (left == right) {
+                ans += 2;
+            }
+
+            // Case 2: If absolute difference between left and right sum is 1,
+            // only one valid direction is possible
+            if (Math.abs(left - right) == 1) {
+                ans++;
+            }
+        }
+
+        // Step 3: Return total count of valid selections
+        return ans;
+    }
+}
