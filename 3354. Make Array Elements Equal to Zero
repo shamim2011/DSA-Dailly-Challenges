@@ -1,3 +1,65 @@
-// Approach - 
-// T.C - 
-// S.C - 
+// Approach 1- Brute Force Simulation of Ball Movement
+// T.C - O(n2)
+// S.C - O(n)
+
+class Solution {
+    int n;
+
+    public int countValidSelections(int[] nums) {
+        n = nums.length;
+        int ans = 0;
+
+        // collect all zero indices
+        List<Integer> zeroIndices = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            if (nums[i] == 0) {
+                zeroIndices.add(i);
+            }
+        }
+
+        // try moving left and right from each zero
+        for (int idx : zeroIndices) {
+            if (rightMove(nums, idx)) ans++;
+            if (leftMove(nums, idx)) ans++;
+        }
+
+        return ans;
+    }
+    public boolean rightMove(int[] nums, int idx) {
+        int[] arr = Arrays.copyOf(nums, n);
+        int remaining = 0;
+        for (int x : nums) if (x > 0) remaining++;
+
+        int dir = 1; // start moving right
+
+        while (remaining > 0 && idx >= 0 && idx < n) {
+            if (arr[idx] > 0) {
+                arr[idx]--;
+                dir *= -1; // reverse direction
+                if (arr[idx] == 0) remaining--;
+            }
+            idx += dir;
+        }
+
+        return remaining == 0; // all became zero
+    }
+    public boolean leftMove(int[] nums, int idx) {
+        int[] arr = Arrays.copyOf(nums, n);
+        int remaining = 0;
+        for (int x : nums) if (x > 0) remaining++;
+
+        int dir = -1; // start moving left
+
+        while (remaining > 0 && idx >= 0 && idx < n) {
+            if (arr[idx] > 0) {
+                arr[idx]--;
+                dir *= -1; // reverse direction
+                if (arr[idx] == 0) remaining--;
+            }
+            idx += dir;
+        }
+
+        return remaining == 0; // all became zero
+    }
+}
+
