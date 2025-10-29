@@ -22,7 +22,81 @@ class Solution {
 }
 
 
-// Approach - Brute Force with Validation Check
+//Approach-2 (Using properties of power of 2)
+//T.C : O(log2(n))
+//S.C : O(1)
+
+
+class Solution {
+    /**
+     * Finds the smallest number of the form (2^k - 1) that is greater than or equal to n.
+     * These numbers are known as Mersenne numbers (when k is prime) or simply
+     * numbers whose binary representation is all ones (e.g., 1, 3, 7, 15, 31, ...).
+     * * @param n The input integer.
+     * @return The smallest number of the form 2^k - 1 >= n.
+     */
+    public int smallestNumber(int n) {
+        
+        // 'result' stores the current value of the form (2^k - 1).
+        // It starts at k=1, where 2^1 - 1 = 1.
+        int result = 1; 
+
+        // The loop continues as long as the current number is strictly less than n.
+        while(result < n){
+            
+            // This is the core logic. It calculates the next number in the sequence 
+            // (1, 3, 7, 15, 31, ...).
+            // If result = 2^k - 1, then the next term is:
+            // 2 * (2^k - 1) + 1 
+            // = 2^(k+1) - 2 + 1 
+            // = 2^(k+1) - 1.
+            // This effectively increments 'k' by 1.
+            result = 2 * result + 1;
+        }
+        
+        // Once the loop terminates, 'result' holds the first number in the sequence 
+        // that is greater than or equal to n.
+        return result;
+    }
+}
+
+//Approach-3 (constant time but using same power of 2 property)
+//T.C : O(1)
+//S.C : O(1)
+
+class Solution {
+    /**
+     * Finds the smallest number that is a power of 2 minus 1, 
+     * which is greater than or equal to n. 
+     * (e.g., if n=10, the result is 15 (which is 2^4 - 1))
+     * This corresponds to finding the number where all bits are set 
+     * up to and including the most significant bit of n.
+     * * @param n The input integer.
+     * @return The calculated number (e.g., 3, 7, 15, 31, etc.).
+     */
+    public int smallestNumber(int n) {
+        
+        // 1. Calculate the number of bits needed to represent 'n'.
+        //    Math.log(n) / Math.log(2) calculates log base 2 of n (log2(n)).
+        //    For n=10, log2(10) is approx 3.32.
+        //    Adding 1 and casting to (int) gives the ceiling of log2(n+1) 
+        //    which is effectively the index of the Most Significant Bit (MSB) + 1,
+        //    or the total number of bits required.
+        //    For n=10: 3.32 + 1 = 4.32 -> (int) 4.
+        int bits = (int)(Math.log(n)/Math.log(2)+1);
+
+        // 2. The expression (1 << bits) calculates 2^bits.
+        //    It performs a left shift of the bit '1' by 'bits' positions.
+        //    For n=10, bits=4: (1 << 4) = 16 (binary 10000).
+        
+        // 3. Subtracting 1 from 2^bits results in a number where the 'bits' least 
+        //    significant bits are all set to 1. This is the desired number.
+        //    For n=10, bits=4: 16 - 1 = 15 (binary 01111).
+        return (1<<bits)-1;
+    }
+}
+
+// Approach - Brute Force with Validation Check(My Approach)
 // T.C - O(logn)
 // S.C - O(1)
 
