@@ -1,0 +1,34 @@
+// Approach - Brute Force with Validation Check
+// T.C - O(logn)
+// S.C - O(1)
+
+
+class Solution {
+    // Function to find the smallest number >= n that meets a specific condition
+    public int smallestNumber(int n) {
+        // Start checking from 'n' onwards
+        for (int i = n; i >= n; i++) {
+            // If the current number satisfies the given condition, return it
+            if (isValid(i)) {
+                return i;
+            }
+        }
+        // In theory, this line will never be reached since the loop always returns
+        return 0;
+    }
+
+    // Helper function to check if all digits in the number are odd
+    boolean isValid(int num) {
+        // Loop through all digits of the number
+        while (num > 0) {
+            // If any digit is even, the number is invalid
+            if (num % 2 == 0) {
+                return false;
+            }
+            // Remove the last digit and continue
+            num /= 2;
+        }
+        // If all digits are odd, return true
+        return true;
+    }
+}
