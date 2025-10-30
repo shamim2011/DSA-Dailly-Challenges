@@ -2,3 +2,29 @@
 //T.C : O(n)
 //S.C : O(1)
 
+class Solution {
+    public int minNumberOperations(int[] target) {
+        int n = target.length;   // Length of the target array
+        int result = 0;          // To store the total minimum number of operations
+        
+        int curr = 0;            // Current value (target[i])
+        int prev = 0;            // Previous value (target[i - 1])
+        
+        // Traverse through each element of the target array
+        for (int i = 0; i < n; i++) {
+            curr = target[i];    // Current element of the target array
+            
+            // If the current value is greater than the previous one,
+            // it means we need (curr - prev) extra operations to reach this height.
+            if (Math.abs(curr) > Math.abs(prev)) {
+                result += Math.abs(curr - prev);
+            }
+            
+            // Update the previous value for the next iteration
+            prev = curr;
+        }
+        
+        // Return the total minimum number of operations required
+        return result;
+    }
+}
