@@ -1,0 +1,4 @@
+//Simple Approach - Keeping track of prev diff
+//T.C : O(n)
+//S.C : O(1)
+
