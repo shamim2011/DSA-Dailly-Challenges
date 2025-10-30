@@ -1,0 +1,38 @@
+//Simple Approach - Keeping track of prev diff
+//T.C : O(n)
+//S.C : O(1)
+
+class Solution {
+    public long minimumOperations(int[] nums, int[] target) {
+        int n = nums.length;   // Get the length of the input arrays
+        long result = 0;       // Variable to store the total number of operations
+        
+        int curr = 0;          // Represents the current difference between target[i] and nums[i]
+        int prev = 0;          // Represents the previous difference (from i-1 index)
+        
+        // Loop through each element of the array
+        for (int i = 0; i < n; i++) {
+            
+            // Calculate the difference (can be positive or negative)
+            curr = target[i] - nums[i];
+            
+            // Case 1: Sign change detected (from positive to negative or vice versa)
+            // This means the direction of adjustment has changed
+            if ((curr > 0 && prev < 0) || (curr < 0 && prev > 0)) {
+                result += Math.abs(curr);  // Add the absolute value of the current difference
+            } 
+            
+            // Case 2: If the current difference (in magnitude) is greater than the previous
+            // Add the increase in the difference to the result
+            else if (Math.abs(curr) > Math.abs(prev)) {
+                result += Math.abs(curr - prev);
+            }
+            
+            // Update prev for the next iteration
+            prev = curr;
+        }
+        
+        // Return the total number of operations calculated
+        return result;
+    }
+}
