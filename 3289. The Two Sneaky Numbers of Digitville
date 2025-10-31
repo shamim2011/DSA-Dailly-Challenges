@@ -1,6 +1,6 @@
 // Approach 1- HashMap Frequency Counting 
 // T.c - O(n)
-// S.C - O(1)
+// S.C - O(n)
 
 
 class Solution {
