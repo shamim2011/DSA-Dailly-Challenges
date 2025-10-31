@@ -33,7 +33,7 @@ class Solution {
 
 
 
-// Approach 1- Frequency Array (Counting Approach)
+// Approach 2- Frequency Array (Counting Approach)
 // T.c - O(n)
 // S.C - O(1)
 
