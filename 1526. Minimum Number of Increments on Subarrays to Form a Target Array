@@ -1,4 +1,4 @@
-//Simple Approach - Keeping track of prev diff
+//Simple Approach 1- Keeping track of prev diff
 //T.C : O(n)
 //S.C : O(1)
 
@@ -24,6 +24,34 @@ class Solution {
             prev = curr;
         }
         
+        // Return the total minimum number of operations required
+        return result;
+    }
+}
+
+
+//Simple Approach 2- Difference-Based Increment Counting
+//T.C : O(n)
+//S.C : O(1)
+
+
+class Solution {
+    public int minNumberOperations(int[] target) {
+        int n = target.length;
+
+        // Initialize result with the first element value
+        // because we need at least target[0] operations to make the first element.
+        int result = target[0];
+        
+        // Traverse from the 2nd element to the last
+        for (int i = 1; i < n; i++) {
+            // If the current element is greater than the previous one,
+            // we need extra operations equal to the difference.
+            if (target[i] > target[i - 1]) {
+                result += (target[i] - target[i - 1]);
+            }
+        }
+
         // Return the total minimum number of operations required
         return result;
     }
