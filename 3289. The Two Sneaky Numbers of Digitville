@@ -30,3 +30,42 @@ class Solution {
         return ans;
     }
 }
+
+
+
+// Approach 1- Frequency Array (Counting Approach)
+// T.c - O(n)
+// S.C - O(1)
+
+
+class Solution {
+    public int[] getSneakyNumbers(int[] nums) {
+        // Result array to store two sneaky (duplicate) numbers
+        int[] ans = new int[2];
+        
+        // Index pointer to fill the result array
+        int j = 0;
+        
+        // Frequency array to count occurrences of numbers
+        // Assuming all numbers are within the range [0, 99]
+        int[] freq = new int[100];
+        
+        int n = nums.length;
+        
+        // Step 1: Count frequency of each number in the nums array
+        for (int i = 0; i < n; i++) {
+            int idx = nums[i];   // Get the current number
+            freq[idx]++;         // Increment its count in the frequency array
+        }
+        
+        // Step 2: Identify numbers that appear exactly twice
+        for (int i = 0; i < 100; i++) {
+            if (freq[i] == 2) {       // If the frequency of a number is 2
+                ans[j++] = i;         // Store that number in the result array
+            }
+        }
+        
+        // Step 3: Return the array containing both sneaky numbers
+        return ans;
+    }
+}
