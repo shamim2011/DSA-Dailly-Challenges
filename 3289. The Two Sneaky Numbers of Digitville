@@ -1,0 +1,32 @@
+// Approach 1- HashMap Frequency Counting 
+// T.c - O(n)
+// S.C - O(1)
+
+
+class Solution {
+    public int[] getSneakyNumbers(int[] nums) {
+        // Initialize result array to store two sneaky (duplicate) numbers
+        int[] ans = new int[2];
+        
+        // HashMap to store the frequency (count) of each number
+        Map<Integer, Integer> mp = new HashMap<>();
+        
+        // Count the occurrences of each number in the array
+        for (int num : nums) {
+            mp.put(num, mp.getOrDefault(num, 0) + 1);
+        }
+        
+        // Index to fill result array
+        int i = 0;
+        
+        // Traverse the map entries to find numbers that appear exactly twice
+        for (Map.Entry<Integer, Integer> entry : mp.entrySet()) {
+            if (entry.getValue() == 2) {
+                ans[i++] = entry.getKey(); // Store duplicate number in result
+            }
+        }
+        
+        // Return the array containing the two sneaky numbers
+        return ans;
+    }
+}
