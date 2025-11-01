@@ -1,0 +1,33 @@
+//Approach (Using Simple straight forward approach)
+//T.C : O(n)
+//S.C : O(n)
+
+class Solution {
+    public ListNode modifiedList(int[] nums, ListNode head) {
+        // Step 1: Store all values from nums[] into a HashSet for quick lookup
+        Set<Integer> st = new HashSet<>();
+        for (int num : nums) {
+            st.add(num);
+        }
+
+        // Step 2: Remove initial nodes (from head) that are present in the set
+        while (head != null && st.contains(head.val)) {
+            head = head.next; // move head to next valid node
+        }
+
+        // Step 3: Traverse the rest of the list and remove matching nodes
+        ListNode curr = head;
+        while (curr != null && curr.next != null) {
+            if (st.contains(curr.next.val)) {
+                // Skip the next node if its value is in the set
+                curr.next = curr.next.next;
+            } else {
+                // Move to the next node otherwise
+                curr = curr.next;
+            }
+        }
+
+        // Step 4: Return the modified linked list
+        return head;
+    }
+}
