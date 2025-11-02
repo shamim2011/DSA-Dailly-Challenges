@@ -1,5 +1,86 @@
-// Approach - 
-// T.C - 
-// S.C - 
+//Approach-1 (Simple Simulation)
+//T.C : O(m*n + G*(m+n)), where G =  size of guards
+//S.C : O(m*n), considering the size of grid we took
 
+class Solution {
+
+    // Helper function to mark all cells visible by a guard
+    public void markGuard(int r, int c, int[][] grid, int m, int n) {
+        
+        // Move Up from guard position
+        for (int j = r - 1; j >= 0; j--) {
+            // Stop if we encounter another guard (2) or a wall (3)
+            if (grid[j][c] == 2 || grid[j][c] == 3) break;
+            // Mark current cell as guarded (1)
+            grid[j][c] = 1;
+        }
+
+        // Move Down from guard position
+        for (int j = r + 1; j < m; j++) {
+            if (grid[j][c] == 2 || grid[j][c] == 3) break;
+            grid[j][c] = 1;
+        }
+
+        // Move Left from guard position
+        for (int j = c - 1; j >= 0; j--) {
+            if (grid[r][j] == 2 || grid[r][j] == 3) break;
+            grid[r][j] = 1;
+        }
+
+        // Move Right from guard position
+        for (int j = c + 1; j < n; j++) {
+            if (grid[r][j] == 2 || grid[r][j] == 3) break;
+            grid[r][j] = 1;
+        }
+    }
+
+    public int countUnguarded(int m, int n, int[][] guards, int[][] walls) {
+        // Initialize the grid
+        // 0 → unguarded cell
+        // 1 → guarded cell
+        // 2 → guard
+        // 3 → wall
+        int[][] matrix = new int[m][n];
+        int ans = 0;
+
+        // Place all guards in the grid
+        for (int[] arr : guards) {
+            int r = arr[0];
+            int c = arr[1];
+            matrix[r][c] = 2;  // Mark as guard
+        }
+
+        // Place all walls in the grid
+        for (int[] arr : walls) {
+            int r = arr[0];
+            int c = arr[1];
+            matrix[r][c] = 3;  // Mark as wall
+        }
+
+        // For each guard, mark all visible cells as guarded
+        for (int[] arr : guards) {
+            int r = arr[0];
+            int c = arr[1];
+            markGuard(r, c, matrix, m, n);
+        }
+
+        // Count all unguarded cells (value == 0)
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (matrix[i][j] == 0) {
+                    ans++;
+                }
+            }
+        }
+
+        // Return the total count of unguarded cells
+        return ans;
+    }
+}
+
+
+
+//Approach-2 (DFS)
+//T.C : O(m*n + G*(m+n)), where G =  size of guards
+//S.C : O(m*n), considering the size of grid we took
 
