@@ -84,3 +84,81 @@ class Solution {
 //T.C : O(m*n + G*(m+n)), where G =  size of guards
 //S.C : O(m*n), considering the size of grid we took
 
+
+class Solution {
+
+    // Depth-First Search (DFS) to mark all cells visible by a guard in a given direction
+    public void dfs(int[][] grid, int r, int c, int m, int n, int direction) {
+        // Base case: stop if out of bounds or cell is a guard(1) or wall(2)
+        if (r < 0 || c < 0 || r >= m || c >= n || grid[r][c] == 1 || grid[r][c] == 2) {
+            return;
+        }
+
+        // Mark this cell as visited (3 means "guarded")
+        grid[r][c] = 3;
+
+        // Continue moving in the same direction
+        // Up
+        if (direction == 1) {
+            dfs(grid, r - 1, c, m, n, direction);
+        }
+        // Down
+        else if (direction == 2) {
+            dfs(grid, r + 1, c, m, n, direction);
+        }
+        // Left
+        else if (direction == 3) {
+            dfs(grid, r, c - 1, m, n, direction);
+        }
+        // Right
+        else {
+            dfs(grid, r, c + 1, m, n, direction);
+        }
+    }
+
+    public int countUnguarded(int m, int n, int[][] guards, int[][] walls) {
+        // Create a matrix of size m x n
+        // 0 = empty cell
+        // 1 = guard
+        // 2 = wall
+        // 3 = guarded (visible by a guard)
+        int[][] matrix = new int[m][n];
+        int ans = 0;
+
+        // Place guards in the grid
+        for (int[] arr : guards) {
+            int r = arr[0];
+            int c = arr[1];
+            matrix[r][c] = 1; // mark guard position
+        }
+
+        // Place walls in the grid
+        for (int[] arr : walls) {
+            int r = arr[0];
+            int c = arr[1];
+            matrix[r][c] = 2; // mark wall position
+        }
+
+        // For each guard, perform DFS in all four directions
+        for (int[] arr : guards) {
+            int r = arr[0];
+            int c = arr[1];
+            dfs(matrix, r - 1, c, m, n, 1); // Up
+            dfs(matrix, r + 1, c, m, n, 2); // Down
+            dfs(matrix, r, c - 1, m, n, 3); // Left
+            dfs(matrix, r, c + 1, m, n, 4); // Right
+        }
+
+        // Count unguarded cells (still 0)
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (matrix[i][j] == 0) {
+                    ans++;
+                }
+            }
+        }
+
+        // Return total number of unguarded cells
+        return ans;
+    }
+}
