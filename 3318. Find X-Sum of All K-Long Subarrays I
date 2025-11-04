@@ -1,0 +1,75 @@
+//Approach (Using max-heap + sliding window)
+//T.C : O(n * k * log(k))
+//S.C : O(k)
+
+
+class Solution {
+    public int[] findXSum(int[] nums, int k, int x) {
+        int n = nums.length;
+        
+        // Result array to store X-sum for each window
+        int[] ans = new int[n - k + 1];
+        int l = 0;  // index for result array
+        
+        // Map to store frequency of elements in the current window
+        Map<Integer, Integer> mp = new HashMap<>();
+        
+        int i = 0, j = 0;
+        
+        // Traverse the array using sliding window
+        while (j < n) {
+            
+            // Add current element into frequency map
+            mp.put(nums[j], mp.getOrDefault(nums[j], 0) + 1);
+            
+            // When window size == k
+            if (j - i + 1 == k) {
+                
+                // Find the X-sum (sum of top X frequent*value pairs)
+                ans[l++] = findTopXSum(mp, x);
+                
+                // Remove the element going out of the window (leftmost)
+                mp.put(nums[i], mp.get(nums[i]) - 1);
+                if (mp.get(nums[i]) == 0) mp.remove(nums[i]);
+                
+                // Move left pointer to shrink window
+                i++;
+            }
+            // Expand right pointer
+            j++;
+        }
+        return ans;
+    }
+
+    // Helper function to compute the sum of top X (frequency * value) pairs
+    public int findTopXSum(Map<Integer, Integer> mp, int x) {
+        
+        // Min-heap to keep track of top X entries
+        // Sort by frequency first (ascending), if equal then by value
+        PriorityQueue<int[]> pq = new PriorityQueue<>(
+            (a, b) -> (a[0] == b[0]) ? a[1] - b[1] : a[0] - b[0]
+        );
+        
+        // Traverse each entry in the frequency map
+        for (Map.Entry<Integer, Integer> entry : mp.entrySet()) {
+            int key = entry.getKey();
+            int val = entry.getValue();
+            
+            // Add (frequency, value) pair into heap
+            pq.offer(new int[]{val, key});
+            
+            // If heap size exceeds X, remove smallest (lowest freq/value)
+            if (pq.size() > x) {
+                pq.poll();
+            }
+        }
+        
+        // Compute sum of (frequency * value) for top X elements
+        int sum = 0;
+        while (!pq.isEmpty()) {
+            int[] arr = pq.poll();
+            sum += (arr[0] * arr[1]);
+        }
+        return sum;
+    }
+}
