@@ -1,3 +1,120 @@
 //Approach (Sliding Window using map)
 //T.C : O(nlogn)
 //S.C : O(k)
+
+
+class Solution {
+    long sum = 0;  // Stores the running sum of top 'x' elements (based on frequency * value)
+    Map<Integer, Integer> mp;  // Frequency map to store count of each element in the current window
+    TreeSet<int[]> main;  // Stores top 'x' elements contributing to the sum
+    TreeSet<int[]> sec;   // Stores the remaining elements (not in top 'x')
+
+    public long[] findXSum(int[] nums, int k, int x) {
+        int n = nums.length;
+        long[] ans = new long[n - k + 1];  // Result array for each window
+        int l = 0;
+        mp = new HashMap<>();
+
+        // Comparator for sorting pairs by frequency first, then by value
+        Comparator<int[]> comp = (a, b) -> {
+            if (a[0] != b[0]) return Integer.compare(a[0], b[0]);
+            return Integer.compare(a[1], b[1]);
+        };
+
+        // Initialize TreeSets with custom comparator
+        main = new TreeSet<>(comp);
+        sec = new TreeSet<>(comp);
+
+        int i = 0, j = 0;
+
+        // Sliding window traversal
+        while (j < n) {
+
+            // If element already exists, remove its old pair from set (to update frequency)
+            if (mp.getOrDefault(nums[j], 0) > 0) {
+                removeFromSet(new int[]{mp.get(nums[j]), nums[j]}, x);
+            }
+
+            // Update frequency of current element
+            mp.put(nums[j], mp.getOrDefault(nums[j], 0) + 1);
+
+            // Insert updated pair (freq, num) into appropriate TreeSet
+            insertInSet(new int[]{mp.get(nums[j]), nums[j]}, x);
+
+            // When window reaches size k
+            if (j - i + 1 == k) {
+                ans[l++] = sum;  // Store current sum result
+
+                // Element going out of the window
+                int outNumber = nums[i];
+
+                // Remove its current pair from TreeSet
+                removeFromSet(new int[]{mp.get(outNumber), outNumber}, x);
+
+                // Decrease its frequency in map
+                mp.put(outNumber, mp.get(outNumber) - 1);
+
+                // If frequency becomes 0, remove from map
+                if (mp.get(outNumber) == 0) {
+                    mp.remove(outNumber);
+                } else {
+                    // Reinsert the updated frequency pair
+                    insertInSet(new int[]{mp.get(outNumber), outNumber}, x);
+                }
+
+                // Slide window forward
+                i++;
+            }
+            j++;
+        }
+        return ans;
+    }
+
+    // Helper function to insert a pair (freq, num) into correct TreeSet
+    public void insertInSet(int[] p, int x) {
+        // If main set has less than x elements, or current pair is larger than smallest in main
+        if (main.size() < x || comparePairs(p, main.first()) > 0) {
+            // Add to main and update running sum
+            sum += 1L * p[0] * p[1];
+            main.add(p);
+
+            // If main exceeds size x, move smallest to secondary set
+            if (main.size() > x) {
+                int[] small = main.first();
+                sum -= 1L * small[0] * small[1];
+                main.remove(small);
+                sec.add(small);
+            }
+        } else {
+            // Else insert into secondary set
+            sec.add(p);
+        }
+    }
+
+    // Helper function to remove a pair from sets
+    void removeFromSet(int[] p, int x) {
+        // If pair exists in main set
+        if (main.contains(p)) {
+            // Update sum and remove from main
+            sum -= 1L * p[0] * p[1];
+            main.remove(p);
+
+            // Move the largest element from secondary set to main (to maintain top 'x')
+            if (!sec.isEmpty()) {
+                int[] large = sec.last();
+                sec.remove(large);
+                main.add(large);
+                sum += 1L * large[0] * large[1];
+            }
+        } else {
+            // Otherwise, remove from secondary set
+            sec.remove(p);
+        }
+    }
+
+    // Custom comparison function for (freq, value) pairs
+    int comparePairs(int[] a, int[] b) {
+        if (a[0] != b[0]) return Integer.compare(a[0], b[0]);
+        return Integer.compare(a[1], b[1]);
+    }
+}
