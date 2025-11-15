@@ -1,3 +1,37 @@
+//Approach 1 Brute force  TLE
+//T.C :  O(n^2)
+//S.C : O(1)
+
+
+class Solution {
+    public int numberOfSubstrings(String s) {
+        int ans = 0;
+        for(int i=0;i<s.length();i++){
+            for(int j=i+1;j<=s.length();j++){
+                String str = s.substring(i,j);
+                if(isDominant(str)){
+                    ans++;
+                }
+            }
+        }
+        return ans;
+    }
+    public boolean isDominant(String s){
+        int cZero = 0;
+        int cOne = 0;
+        for(char ch:s.toCharArray()){
+            if(ch=='0'){
+                cZero++;
+            }
+            else{
+                cOne++;
+            }
+        }
+        return (cZero*cZero)<=cOne;
+    }
+}
+
+
 //Approach (Improving the brute force by skipping index j wherever possible)
 //T.C : Worst case O(n^2), but since we skip indices we get O(n*sqrt(n))
 //S.C : O(n)
