@@ -62,3 +62,117 @@ class Solution {
         return ans;
     }
 }
+
+
+
+//Approach 3 - (Improving the brute force by skipping index j wherever possible)
+//T.C : Worst case O(n^2), but since we skip indices we get O(n*sqrt(n))
+//S.C : O(n)
+
+
+class Solution {
+    public int numberOfSubstrings(String s) {
+        int n = s.length();
+        int[] cumCountOnes = new int[n];
+
+        cumCountOnes[0] = (s.charAt(0)=='1')?1:0;
+
+        for(int i=1;i<n;i++){
+            cumCountOnes[i] = cumCountOnes[i-1] + (s.charAt(i)=='1' ? 1 : 0);
+        }
+        int ans = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = i; j < n; j++) {
+                int oneCount = cumCountOnes[j] - (i-1>=0?cumCountOnes[i-1]:0);
+                int zeroCount = (j-i+1) - oneCount;
+                if (zeroCount * zeroCount > oneCount) {
+                    int wastIdx = (zeroCount * zeroCount) - oneCount;
+                    j += wastIdx-1;
+                } else if(zeroCount * zeroCount == oneCount){
+                    ans++;
+                }
+                else{   /// zeroCount * zeroCount < oneCount
+                    // [i...j] is a valid substring
+                    ans += 1;
+                    // try to shift j how many dominat can we see
+                    int k = (int) Math.sqrt(oneCount) - zeroCount;
+                    int nextJ = j+k;
+                    if(nextJ>=n){  /// out of bound means all index are valid
+                        ans += (n-j-1);
+                        break; // early return
+                    }
+                    else{
+                        ans += k;
+                    }
+                    j = nextJ;
+                }
+            }
+        }
+        return ans;
+    }
+}
+
+---------------------------------------------------------------------------------
+class Solution {
+    public int numberOfSubstrings(String s) {
+        int n = s.length();
+
+        // Prefix array to store cumulative count of '1's up to index i
+        int[] cumCountOnes = new int[n];
+        cumCountOnes[0] = (s.charAt(0) == '1') ? 1 : 0;
+
+        // Build prefix sum array
+        for(int i = 1; i < n; i++){
+            cumCountOnes[i] = cumCountOnes[i - 1] + (s.charAt(i) == '1' ? 1 : 0);
+        }
+
+        int ans = 0;
+
+        // Check all substrings [i..j]
+        for (int i = 0; i < n; i++) {
+            for (int j = i; j < n; j++) {
+
+                // Compute number of 1s using prefix sum
+                int oneCount = cumCountOnes[j] - (i - 1 >= 0 ? cumCountOnes[i - 1] : 0);
+
+                // Length = (j - i + 1), so zeros = length - ones
+                int zeroCount = (j - i + 1) - oneCount;
+
+                // Case 1: zero² > ones → not dominant
+                // Then, skip ahead using math optimization
+                if (zeroCount * zeroCount > oneCount) {
+                    // Calculate how many extra zeros we need to skip
+                    int wastIdx = (zeroCount * zeroCount) - oneCount;
+                    j += wastIdx - 1; // Smart jump forward
+                }
+
+                // Case 2: zero² == ones → dominant, count it
+                else if (zeroCount * zeroCount == oneCount) {
+                    ans++;
+                }
+
+                // Case 3: zero² < ones → dominant and future may also dominate
+                else {
+                    ans++; // current substring is valid
+
+                    // Estimate how many more future substrings can be valid
+                    int k = (int) Math.sqrt(oneCount) - zeroCount;
+                    int nextJ = j + k;
+
+                    // If jump goes out of boundary → all remaining are valid
+                    if (nextJ >= n) {
+                        ans += (n - j - 1);
+                        break; // exit loop early
+                    }
+                    else {
+                        ans += k; // count valid ahead
+                    }
+
+                    j = nextJ; // move j directly to the next interesting position
+                }
+            }
+        }
+
+        return ans;
+    }
+}
