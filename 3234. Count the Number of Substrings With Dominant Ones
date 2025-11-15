@@ -1,5 +1,5 @@
 //Approach 1 Brute force  TLE
-//T.C :  O(n^2)
+//T.C :  O(n^3)
 //S.C : O(1)
 
 
