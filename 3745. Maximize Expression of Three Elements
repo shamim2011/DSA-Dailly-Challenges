@@ -1,0 +1,28 @@
+// Approach - Greedy + Sorting Approach
+// T.C - O(n log n)
+// S.C - O(1)
+
+class Solution {
+    // Function to maximize the expression: a + b - c
+    // where a, b, c are elements from the given array
+    public int maximizeExpressionOfThree(int[] nums) {
+
+        // Initialize answer variable (not actually required since final return does the job)
+        int ans = Integer.MIN_VALUE;
+
+        // Sort the array to easily get largest and smallest values
+        Arrays.sort(nums);
+
+        // max1 = Largest element
+        int max1 = nums[nums.length - 1];
+
+        // max2 = Second largest element
+        int max2 = nums[nums.length - 2];
+
+        // min = Smallest element
+        int min = nums[0];
+
+        // Return the maximum value of (max1 + max2 - min)
+        return (max1 + max2 - min);
+    }
+}
