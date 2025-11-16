@@ -31,9 +31,3 @@ class Solution {
     }
 }
 
-
-
-
-//Approach-2 (Simple maths formula to count substrings)
-//T.C : O(n)
-//S.C : O(1)
