@@ -3,6 +3,33 @@
 //S.C : O(1)
 
 
+class Solution {
+    // Modulo value to prevent integer overflow
+    static final int M = (int) (1e9 + 7);
+
+    public int numSub(String s) {
+        long ans = 0;     // Stores final count of substrings of '1's
+        long count1 = 0;  // Counts continuous sequence of '1's
+        
+        // Traverse each character of the string
+        for(int i = 0; i < s.length(); i++) {
+            if(s.charAt(i) == '1') {
+                // If character is '1', increase current consecutive count
+                count1++;
+            } else {
+                // When a '0' is found, process previous sequence of '1's
+                // Number of substrings in a block of n '1's = n*(n+1)/2
+                ans = (ans + count1 * (count1 + 1) / 2) % M;
+                count1 = 0; // Reset count for next block
+            }
+        }
+
+        // Process the last sequence if string ends with '1'
+        ans = (ans + count1 * (count1 + 1) / 2) % M;
+
+        return (int) ans; // Return answer as integer
+    }
+}
 
 
 
