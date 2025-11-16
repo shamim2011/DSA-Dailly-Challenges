@@ -1,0 +1,95 @@
+// Approach - 1 : Frequency Counting + Greedy Removal
+// T.C - O(n)
+// S.C - O(1)
+
+class Solution {
+    public int minLengthAfterRemovals(String s) {
+
+        // Using a TreeMap to store the frequency of characters ('a' and 'b')
+        Map<Character, Integer> mp = new TreeMap<>();
+
+        // Count frequency of each character
+        for(char ch : s.toCharArray()) {
+            mp.put(ch, mp.getOrDefault(ch, 0) + 1);
+        }
+
+        // Variables to store count of 'a' and 'b'
+        int countA = 0;
+        int countB = 0;
+
+        // Extract counts from the map
+        for(Map.Entry<Character, Integer> entry : mp.entrySet()) {
+            if(entry.getKey() == 'a') {
+                countA = entry.getValue();
+            } else {
+                countB = entry.getValue();
+            }
+        }
+
+        // If only 'b' characters exist
+        if(countA == 0) {
+            return countB;
+        }
+
+        // If only 'a' characters exist
+        if(countB == 0) {
+            return countA;
+        }
+
+        // We can remove pairs of different characters "ab" or "ba"
+        int minChar = Math.min(countA, countB);
+
+        // If all characters are only 'a' or 'b'
+        if(countA + countB == s.length()) {
+            return s.length() - 2 * minChar;
+        }
+
+        // Default case (technically won't occur for this problem constraints)
+        return 0;
+    }
+}
+
+
+// Approach - 2 : Frequency Counting + Greedy Removal But Fast
+// T.C - O(n)
+// S.C - O(1)
+
+
+class Solution {
+    public int minLengthAfterRemovals(String s) {
+
+        // Frequency array to store count of 'a' and 'b'
+        // freq[0] -> count of 'a'
+        // freq[1] -> count of 'b'
+        int[] freq = new int[2];
+
+        // Count frequency of characters in the string
+        for(int i = 0; i < s.length(); i++){
+            freq[s.charAt(i) - 'a']++;
+        }
+
+        int countA = freq[0];
+        int countB = freq[1];
+
+        // If string contains only 'b'
+        if(countA == 0){
+            return countB;
+        }
+
+        // If string contains only 'a'
+        if(countB == 0){
+            return countA;
+        }
+
+        // Minimum characters that can be removed in pairs
+        int minChar = Math.min(countA, countB);
+
+        // If all characters are 'a' or 'b'
+        if(countA + countB == s.length()){
+            // Final length = Total length - 2 * removed pairs
+            return s.length() - 2 * minChar;
+        }
+
+        return 0; // If mixed cases with other characters (not applicable in this problem)
+    }
+}
