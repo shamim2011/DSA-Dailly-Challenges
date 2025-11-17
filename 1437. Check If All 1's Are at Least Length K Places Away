@@ -29,3 +29,38 @@ class Solution {
         return true;
     }
 }
+
+
+
+// Approach - 2 Linear Scan with Previous Index Tracking
+// T.C - O(n)
+// S.C - O(1)
+
+
+class Solution {
+    public boolean kLengthApart(int[] nums, int k) {
+
+        int n = nums.length;
+        int prev = -1; // Stores the index of the previous 1 found
+
+        // Traverse through the array
+        for(int i = 0; i < n; i++) {
+
+            // Check if current element is 1
+            if(nums[i] == 1) {
+
+                // If a previous 1 exists, check distance between the two 1s
+                // Condition ensures there are at least 'k' zeros between consecutive 1s
+                if(prev != -1 && (i - prev - 1 < k)) {
+                    return false; // Violation found
+                }
+
+                // Update previous 1's index
+                prev = i;
+            }
+        }
+
+        // If no violation, return true
+        return true;
+    }
+}
