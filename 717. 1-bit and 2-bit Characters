@@ -1,0 +1,37 @@
+// Approach - Greedy Simulation
+// T.C - O(n)
+// S.C - O(1)
+
+class Solution {
+    public boolean isOneBitCharacter(int[] bits) {
+        int n = bits.length;
+
+        // If there is only one bit and it is 0, then it's a one-bit character
+        if (n == 1 && bits[0] == 0) return true;
+
+        int i = 0;
+        while (i < n) {
+
+            if (bits[i] == 1) {
+                // If bit is '1', then it represents a 2-bit character
+                i = i + 2;
+
+                // Check if we reached the last index and that index is 0
+                if (i == n - 1 && bits[i] == 0) {
+                    return true;
+                }
+            } else {
+                // If bit is '0', then it represents a 1-bit character
+                i = i + 1;
+
+                // Check if we reached the last index and that index is 0
+                if (i == n - 1 && bits[i] == 0) {
+                    return true;
+                }
+            }
+        }
+
+        // If loop ends without confirming last bit is one-bit character
+        return false;
+    }
+}
