@@ -1,0 +1,27 @@
+// Approach - 1 Linear Scan with Restart (Brute Force Iterative Doubling)
+// T.C - O(n²)
+// S.C - O(1)
+
+class Solution {
+    public int findFinalValue(int[] nums, int original) {
+        int i = 0;
+        // Loop through nums repeatedly until no match for 'original' is found
+        while (i < nums.length) {
+            // If we find original in the array
+            if (nums[i] == original) {
+                original *= 2;  // double it
+                i = 0;          // restart scanning from the beginning
+            } 
+            else {
+                i++;            // otherwise move to next element
+            }
+        }
+        return original;  // return final computed value
+    }
+}
+
+
+
+// Approach - 2 Linear Scan with Restart (Brute Force Iterative Doubling)
+// T.C - O(n)
+// S.C - O(1)
