@@ -22,6 +22,27 @@ class Solution {
 
 
 
-// Approach - 2 Linear Scan with Restart (Brute Force Iterative Doubling)
+// Approach - 2 Using Frequency Array (Optimized Lookup)
 // T.C - O(n)
 // S.C - O(1)
+
+
+
+class Solution {
+    public int findFinalValue(int[] nums, int original) {
+        // Frequency array to mark presence of numbers (0 to 1000)
+        int[] arr = new int[1001];
+        // Mark all numbers present in nums
+        for(int num : nums) {
+            if(num <= 1000) {
+                arr[num]++;
+            }
+        }
+        // While the current 'original' exists in the array, keep doubling it
+        while(original <= 1000 && arr[original] != 0) {
+            original *= 2;
+        }
+        // Return the final value after doubling stops
+        return original;
+    }
+}
