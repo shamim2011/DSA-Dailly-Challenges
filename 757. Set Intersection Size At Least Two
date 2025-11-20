@@ -1,3 +1,48 @@
 //Approach (Using sorting)
 //T.C : O(nlogn)
 //S.C : O(1)
+
+
+class Solution {
+    public int intersectionSizeTwo(int[][] intervals) {
+        int ans = 0;
+
+        // Sort intervals by their end value (ascending)
+        // If ends are equal, sort by start value (descending)
+        Arrays.sort(intervals, (a, b) -> {
+            if(a[1] != b[1]) {
+                return a[1] - b[1]; // smaller end first
+            }
+            return b[0] - a[0]; // for tie, larger start first
+        });
+
+        // Maintain two chosen points in the current set
+        int first = -1;  // Larger point among the last picked
+        int second = -1; // Smaller point among last picked
+
+        // Iterate through sorted intervals
+        for(int[] arr : intervals) {
+            int l = arr[0];  // start of current interval
+            int r = arr[1];  // end of current interval
+
+            // Case 1: Current interval already contains both points
+            if(l <= first) {
+                continue;
+            }
+
+            // Case 2: Current interval contains none of the previous points
+            if(l > second) {
+                ans += 2;        // Need two new points
+                second = r;     // pick the end
+                first = r - 1;  // and one before the end
+            }
+            // Case 3: Current interval contains only one of the previous points
+            else {
+                ans += 1;        // Need one point
+                first = second;  // shift as first
+                second = r;      // pick new point at interval end
+            }
+        }
+        return ans;
+    }
+}
