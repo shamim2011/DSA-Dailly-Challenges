@@ -3,7 +3,44 @@
 //S.C : O(1) - ONly 26 sized always
 
 
-
+class Solution {
+    public int countPalindromicSubsequence(String s) {
+        int n = s.length(); // Length of the string
+        int ans = 0; // Stores final answer
+        
+        Set<Character> uniqueCharSet = new HashSet<>();
+        
+        // Step 1: Add all unique characters from string into set
+        for(char ch : s.toCharArray()) {
+            uniqueCharSet.add(ch);
+        }
+        
+        // Step 2: For each unique character, treat it as the first and last char of palindrome
+        for(char ch : uniqueCharSet) {
+            int firstIdx = -1;
+            int lastIdx = -1;
+            
+            // Find first and last occurrence of this character
+            for(int i = 0; i < n; i++) {
+                if(ch == s.charAt(i)) {
+                    if(firstIdx == -1) firstIdx = i; // first time occurrence
+                    lastIdx = i; // keep updating for last occurrence
+                }
+            }
+            
+            // Step 3: Collect all unique characters between first and last occurrence
+            Set<Character> st = new HashSet<>();
+            for(int idx = firstIdx + 1; idx <= lastIdx - 1; idx++) {
+                st.add(s.charAt(idx));
+            }
+            
+            // Number of unique characters in between contributes to palindrome count
+            ans += st.size();
+        }
+        
+        return ans; // Return total palindromic subsequences of length 3
+    }
+}
 
 
 
