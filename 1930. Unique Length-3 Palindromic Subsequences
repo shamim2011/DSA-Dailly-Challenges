@@ -48,3 +48,53 @@ class Solution {
 //T.C : O(n)
 //S.C : O(1) - Only 26 sized always
 
+
+
+class Solution {
+    public int countPalindromicSubsequence(String s) {
+        int n = s.length();
+        int ans = 0;
+        
+        // Arrays to store first and last occurrences of each character
+        // Index 0 for 'a', 1 for 'b', ..., 25 for 'z'
+        int[] first = new int[26];
+        int[] last = new int[26];
+        
+        // Initialize with -1 because no index visited yet
+        Arrays.fill(first, -1);
+        Arrays.fill(last, -1);
+        
+        // Step 1: Fill first and last occurrence arrays
+        for(int i = 0; i < n; i++) {
+            int curr = s.charAt(i) - 'a';
+            
+            // If seeing this character first time, mark first index
+            if(first[curr] == -1) {
+                first[curr] = i;
+            }
+            
+            // Always update last index
+            last[curr] = i;
+        }
+        
+        // Step 2: For each character from 'a' to 'z'
+        for(int i = 0; i < 26; i++) {
+            
+            // Skip characters not present in string
+            if(first[i] == -1) continue;
+            
+            // Set to collect unique middle characters
+            Set<Character> st = new HashSet<>();
+            
+            // Collect characters between first and last occurrence
+            for(int idx = first[i] + 1; idx < last[i]; idx++) {
+                st.add(s.charAt(idx));
+            }
+            
+            // Add number of unique middle characters
+            ans += st.size();
+        }
+        
+        return ans; // Total palindromic subsequences of length 3
+    }
+}
