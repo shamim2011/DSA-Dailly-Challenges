@@ -1,4 +1,4 @@
-//Approach-1
+//Approach-1 First & Last Occurrence by Iteration
 //T.C : O(n)
 //S.C : O(1) - ONly 26 sized always
 
