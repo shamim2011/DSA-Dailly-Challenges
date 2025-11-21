@@ -1,4 +1,13 @@
-// Approach - 
-// T.C - 
-// S.C - 
+//Approach-1
+//T.C : O(n)
+//S.C : O(1) - ONly 26 sized always
+
+
+
+
+
+
+//Approach-2 (Storing first and last indices before hand
+//T.C : O(n)
+//S.C : O(1) - Only 26 sized always
 
