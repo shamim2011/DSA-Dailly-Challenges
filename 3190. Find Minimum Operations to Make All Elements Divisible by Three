@@ -1,0 +1,29 @@
+// Approach 1: Count elements which are not divisible by 3
+// T C: O(n)
+// S C: O(1)
+
+
+class Solution {
+    public int minimumOperations(int[] nums) {
+        int ans = 0;  // Variable to store number of required operations
+        
+        // Iterate through each element in the array
+        for(int i = 0; i < nums.length; i++){
+            
+            // If the number is not divisible by 3
+            if(nums[i] % 3 != 0){
+                ans++;  // We need one operation to make it divisible by 3
+            }
+        }
+        
+        return ans; // Return the total operations needed
+    }
+}
+
+
+
+// Approach 2: Count elements which are not divisible by 3
+// T C: O(n)
+// S C: O(1)
+
+
