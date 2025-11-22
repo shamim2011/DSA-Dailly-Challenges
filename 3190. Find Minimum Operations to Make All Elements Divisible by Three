@@ -22,8 +22,19 @@ class Solution {
 
 
 
-// Approach 2: Count elements which are not divisible by 3
+// Approach 2: Stream API Filtering Approach
 // T C: O(n)
 // S C: O(1)
+
+class Solution {
+    public int minimumOperations(int[] nums) {
+        // Convert the array to an IntStream, filter numbers not divisible by 3
+        // Count how many such numbers exist
+        // Cast the result to int since count() returns a long
+        return (int) IntStream.of(nums)
+                              .filter(num -> num % 3 != 0)
+                              .count();
+    }
+}
 
 
