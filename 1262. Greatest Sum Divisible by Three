@@ -1,0 +1,61 @@
+// Approach-1 - Greedily using %3 property
+// T.C : O(nlogn)
+// S.C : O(n)
+
+
+class Solution {
+    public int maxSumDivThree(int[] nums) {
+        
+        // Lists to store numbers based on remainder when divided by 3
+        List<Integer> rem1 = new ArrayList<>();
+        List<Integer> rem2 = new ArrayList<>();
+        
+        int sum = 0; // Total sum of all elements
+        
+        // Step 1: Calculate total sum & categorize numbers by their remainders
+        for(int num : nums){
+            sum += num;
+            
+            if(num % 3 == 1){
+                rem1.add(num);
+            }
+            else if(num % 3 == 2){
+                rem2.add(num);
+            }
+        }
+        
+        // If total sum already divisible by 3 → return directly
+        if(sum % 3 == 0){
+            return sum;
+        }
+        
+        // Variable to store final result
+        int ans = 0;
+        
+        // Sort both lists so smallest values are easily accessible when removing
+        Collections.sort(rem1);
+        Collections.sort(rem2);
+        
+        // Case 1: If sum % 3 == 1 → we can remove:
+        // Option A: Remove the smallest number with remainder 1 (need 1 removal)
+        // Option B: Remove two smallest numbers with remainder 2 (2*2 = remainder 1)
+        if(sum % 3 == 1){
+            int remove1 = rem1.size() >= 1 ? rem1.get(0) : Integer.MAX_VALUE;
+            int remove2 = rem2.size() >= 2 ? rem2.get(0) + rem2.get(1) : Integer.MAX_VALUE;
+            ans = sum - Math.min(remove1, remove2);
+        }
+        
+        // Case 2: If sum % 3 == 2 → we can remove:
+        // Option A: Remove the smallest number with remainder 2 (need 1 removal)
+        // Option B: Remove two smallest numbers with remainder 1 (2*1 = remainder 2)
+        else{
+            int remove1 = rem2.size() >= 1 ? rem2.get(0) : Integer.MAX_VALUE;
+            int remove2 = rem1.size() >= 2 ? rem1.get(0) + rem1.get(1) : Integer.MAX_VALUE;
+            ans = sum - Math.min(remove1, remove2);
+        }
+        
+        return ans; // Return the maximum possible sum divisible by 3
+    }
+}
+
+
