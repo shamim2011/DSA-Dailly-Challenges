@@ -1,0 +1,52 @@
+// Approach - Prefix XOR + Balance Tracking + HashMap (State Matching Technique)
+// T.C - O(n)
+// S.C - O(n)
+
+
+class Solution {
+    public int maxBalancedSubarray(int[] nums) {
+        
+        // Special case: If array has only 1 element, balanced subarray length is always 0
+        if((nums.length == 1 && nums[0] == 0) || (nums.length == 1 && nums[0] != 0)){
+            return 0;
+        }
+
+        int n = nums.length;
+        int xor = 0;       // To track prefix XOR
+        int balance = 0;   // Tracks difference: even count (+1) - odd count (-1)
+        
+        // HashMap to store (xor#balance) state and first occurrence index + 1
+        Map<String,Integer> mp = new HashMap<>();
+        
+        // Initial state: before processing any element
+        // XOR = 0, balance = 0, position = 0
+        mp.put("0#0", 0);
+        
+        int best = 0; // Stores maximum length of valid balanced subarray
+        
+        // Iterate through array
+        for(int i = 0; i < n; i++){
+            xor ^= nums[i]; // Update running XOR
+            
+            // Update balance: +1 for even number, -1 for odd number
+            balance += (nums[i] % 2 == 0 ? 1 : -1);
+            
+            // Create unique key using current XOR and balance
+            String key = xor + "#" + balance;
+            
+            // If this state appeared earlier, we found a valid subarray
+            if(mp.containsKey(key)){
+                // Calculate length of subarray and update best answer
+                best = Math.max(best, i + 1 - mp.get(key));
+            }
+            else{
+                // First time seeing this state — store the index + 1
+                mp.put(key, i + 1);
+            }
+        }
+        
+        return best; // Return longest balanced subarray length
+    }
+}
+
+
