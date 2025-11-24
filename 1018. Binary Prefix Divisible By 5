@@ -1,0 +1,23 @@
+// Approach - Prefix Remainder (Modulus Optimization)
+// T.C - O(n)
+// S.C - O(1)
+
+
+class Solution {
+    public List<Boolean> prefixesDivBy5(int[] nums) {
+        int n = nums.length;
+        int pre = 0; // Stores prefix remainder when divided by 5
+        List<Boolean> ans = new ArrayList<>();
+
+        for(int i = 0; i < n; i++){
+            // Construct new prefix number:
+            // Equivalent to: prefix = prefix * 2 + nums[i]
+            pre = (pre * 2 + nums[i]) % 5; // Keep only remainder mod 5
+            
+            // If remainder is zero → divisible by 5
+            ans.add(pre == 0);
+        }
+
+        return ans;
+    }
+}
