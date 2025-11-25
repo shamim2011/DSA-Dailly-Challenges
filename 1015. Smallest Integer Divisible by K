@@ -1,4 +1,63 @@
-// Approach - 
-// T.C - 
-// S.C - 
+//Approach - Observation about Modulo(%) values
+//T.C : O(k)
+//S.C : O(1)
+
+class Solution {
+    public int smallestRepunitDivByK(int k) {
+        
+        // If K is divisible by 2 or 5, then a number consisting only of 1's
+        // can never be divisible by K (because such numbers always end in 1)
+        if(k % 2 == 0 || k % 5 == 0){
+            return -1;
+        }
+
+        int rem = 0; // To store the remainder of the repunit number modulo K
+        
+        // Try lengths from 1 to K (Pigeonhole Principle ensures we find remainder 0 if possible)
+        for(int len = 1; len <= k; len++){
+            
+            // Build the next remainder for repunit:
+            // Example: If number is "111", next becomes "1111" = prev*10 + 1
+            rem = (rem * 10 + 1) % k;
+            
+            // If at any point remainder becomes 0,
+            // it means the current repunit length divides K
+            if(rem == 0){
+                return len;
+            }
+        }
+        
+        // If no such repunit found within K digits, return -1
+        return -1;
+    }
+}
+
+
+
+------------------------------------------------------------  same but delete k%2   -------------------------------------------
+
+class Solution {
+    public int smallestRepunitDivByK(int k) {
+        
+        // Variable to store the remainder of the number formed by repeated '1's
+        int rem = 0;
+
+        // Try lengths from 1 to k (maximum k because remainder will repeat by Pigeonhole Principle)
+        for(int len = 1; len <= k; len++) {
+
+            // Generate the remainder of the next repunit
+            // Example: If current number is "111", new number becomes (111 * 10 + 1)
+            rem = (rem * 10 + 1) % k;
+
+            // If remainder becomes 0, we found the smallest length of repunit divisible by k
+            if(rem == 0) {
+                return len;
+            }
+        }
+
+        // If no such repunit found, return -1
+        return -1;
+    }
+}
+
 
