@@ -4,45 +4,45 @@
 
 
 class Solution {
-    int m;
-    int n;
-    int M = 1_000_000_007; // Modulo value to avoid integer overflow
-    Integer[][][] t; // DP memo: stores results for (row, col, sum_mod_k)
+    int m; // total rows
+    int n; // total columns
+    int M = 1_000_000_007; // Modulo value for large results
+    int[][][] t; // DP memo table: stores results for (row, col, sum % k)
 
     public int numberOfPaths(int[][] grid, int k) {
         m = grid.length;
         n = grid[0].length;
-        t = new Integer[m][n][k]; // Initialize DP table
-
-        // Start DFS from (0,0) with initial sum = 0
+        
+        // Initialize DP cache: dimensions -> m x n x k (sum remainder states)
+        t = new int[m][n][k];
+        
+        // Start DFS from top-left cell with initial sum = 0
         return solve(0, 0, 0, grid, k);
     }
 
     int solve(int r, int c, int sum, int[][] grid, int k) {
-        // If we are out of grid bounds → invalid path
+        // If outside the grid boundaries
         if (r >= m || c >= n) {
             return 0;
         }
 
-        // If we reached the destination (bottom-right)
-        // Check if final sum % k == 0
+        // If we reached last cell (destination)
         if (r == m - 1 && c == n - 1) {
+            // Check if total sum % k == 0 (valid path)
             return (sum + grid[r][c]) % k == 0 ? 1 : 0;
         }
 
-        // If already computed, return cached result
-        if (t[r][c][sum] != null) {
+        // If already computed this state → return memoized result
+        if (t[r][c][sum] != 0) {
             return t[r][c][sum];
         }
 
-        // Add current cell value to sum modulo k
-        int newSum = (sum + grid[r][c]) % k;
+        // Move Down
+        int down = solve(r + 1, c, (sum + grid[r][c]) % k, grid, k);
+        // Move Right
+        int right = solve(r, c + 1, (sum + grid[r][c]) % k, grid, k);
 
-        // Explore both possible moves: Down and Right
-        int down = solve(r + 1, c, newSum, grid, k);
-        int right = solve(r, c + 1, newSum, grid, k);
-
-        // Store and return result with modulo to avoid overflow
+        // Store result in DP table and return
         return t[r][c][sum] = (down + right) % M;
     }
 }
