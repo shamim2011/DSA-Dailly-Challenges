@@ -53,3 +53,51 @@ class Solution {
 //T.C : O(m*n*k)
 //S.C : O(m*n*k)
 
+
+class Solution {
+    int M = 1_000_000_007; // Modulo constant to avoid overflow (10^9 + 7)
+
+    public int numberOfPaths(int[][] grid, int k) {
+        int m = grid.length;      // Total number of rows
+        int n = grid[0].length;   // Total number of columns
+
+        // 3D DP array: t[r][c][rem] → number of paths from (r,c) to bottom-right
+        // such that current path sum % k = rem
+        int[][][] t = new int[m+1][n+1][k+1];
+
+        // Base Case:
+        // Initialize the bottom-right cell for each remainder possibility
+        for (int rem = 0; rem < k; rem++) {
+            // If (current remainder + value) % k == 0, this path is valid (contributes 1)
+            t[m-1][n-1][rem] = ((rem + grid[m-1][n-1]) % k == 0) ? 1 : 0;
+        }
+
+        // Fill DP from bottom-right to top-left
+        for (int r = m - 1; r >= 0; r--) {
+            for (int c = n - 1; c >= 0; c--) {
+                for (int rem = 0; rem < k; rem++) {
+
+                    // Skip the bottom-right cell (already initialized)
+                    if (r == m - 1 && c == n - 1) {
+                        continue;
+                    }
+
+                    // Calculate new remainder after adding current cell value
+                    int newRem = (rem + grid[r][c]) % k;
+
+                    // Number of ways if we go down
+                    long down = t[r + 1][c][newRem];
+
+                    // Number of ways if we go right
+                    long right = t[r][c + 1][newRem];
+
+                    // Store the result modulo M
+                    t[r][c][rem] = (int)((down + right) % M);
+                }
+            }
+        }
+
+        // Final answer: number of valid paths starting from (0,0) with remainder 0
+        return t[0][0][0];
+    }
+}
