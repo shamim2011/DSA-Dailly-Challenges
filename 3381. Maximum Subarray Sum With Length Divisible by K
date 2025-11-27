@@ -1,3 +1,45 @@
 //Approach (Using Kadane's Algorithm Concept)
 //T.C : O(n)
 //S.C : O(n)
+
+
+class Solution {
+    public long maxSubarraySum(int[] nums, int k) {
+        int n = nums.length;
+
+        // Prefix Sum array to compute sum of a range quickly
+        long[] preSum = new long[n];
+        preSum[0] = nums[0];
+        for(int i = 1; i < n; i++){
+            preSum[i] = preSum[i - 1] + nums[i];
+        }
+
+        long maxSubSum = Long.MIN_VALUE; // to store max subarray sum
+
+        // We will start k different sequences: indices 0, k, 2k ... / 1, 1+k ... / etc.
+        for(int start = 0; start < k; start++){
+            long currSum = 0; // for maintaining running sum (Kadane-like)
+            int i = start;
+
+            // Traverse elements jumping by step k
+            while(i < n && i + k - 1 < n){
+                // End index of this subarray
+                int j = i + k - 1;
+
+                // Compute subarray sum from index i to j using prefix sum
+                long subSum = preSum[j] - (i > 0 ? preSum[i - 1] : 0);
+
+                // Kadane’s algorithm step:
+                // Either start a new subarray or continue previous one
+                currSum = Math.max(subSum, currSum + subSum);
+
+                // Update the global maximum
+                maxSubSum = Math.max(maxSubSum, currSum);
+
+                // Move to the next valid block separated by k
+                i += k;
+            }
+        }
+        return maxSubSum;
+    }
+}
