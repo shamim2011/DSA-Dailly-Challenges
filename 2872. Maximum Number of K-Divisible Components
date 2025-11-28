@@ -1,0 +1,3 @@
+//Approach (Using DFS) - You can easily replace DFS with BFS as well
+//T.C : O(n) - We visit all nodes once
+//S.C : O(n-1) ~ O(n) - We store edges in the adjacency list
