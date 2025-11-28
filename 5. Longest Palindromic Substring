@@ -1,0 +1,62 @@
+// Approach - Brute Force + Palindrome Checking
+// T.C - O(n³)
+// S.C - O(1)
+
+
+class Solution {
+
+    public String longestPalindrome(String s) {
+
+        // If string has only 1 character → itself is the longest palindrome
+        if(s.length() == 1){
+            return s;
+        }
+
+        // If string has 2 characters → return the character if not equal or return the whole string
+        if(s.length() == 2){
+            if(s.charAt(0) != s.charAt(1)){
+                return s.substring(0, 1); // return first char
+            } else {
+                return s; // both characters same
+            }
+        }
+
+        String str = ""; // To store the longest palindrome substring
+        int n = s.length();
+
+        // Generate all possible substrings using two loops
+        for(int i = 0; i < n - 1; i++){
+            for(int j = i + 1; j <= n; j++){
+
+                // Extract substring from i to j-1
+                String substr = s.substring(i, j);
+
+                // Check if this substring is a palindrome
+                if(isValid(substr)){
+
+                    // Update result if we find a longer palindrome
+                    if(str.length() < substr.length()){
+                        str = substr;
+                    }
+                }
+            }
+        }
+
+        return str; // Return the longest palindrome found
+    }
+
+    // Function to check if a given string is a palindrome
+    boolean isValid(String s){
+        int i = 0, j = s.length() - 1;
+
+        // Two-pointer check from both ends
+        while(i <= j){
+            if(s.charAt(i) != s.charAt(j)){
+                return false; // Not palindrome
+            }
+            i++;
+            j--;
+        }
+        return true; // Palindrome
+    }
+}
