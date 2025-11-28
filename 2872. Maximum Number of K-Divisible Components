@@ -1,3 +1,63 @@
 //Approach (Using DFS) - You can easily replace DFS with BFS as well
 //T.C : O(n) - We visit all nodes once
 //S.C : O(n-1) ~ O(n) - We store edges in the adjacency list
+
+
+
+class Solution {
+
+    int count = 0; // To count the number of components whose sum is divisible by k
+
+    // DFS function to compute subtree sum modulo k
+    int dfs(int curr, int parent, Map<Integer, List<Integer>> mp, int[] values, int k) {
+
+        int sum = values[curr]; // Start with current node value
+
+        // Traverse all neighbors (children in the DFS tree)
+        for (int ngbr : mp.get(curr)) {
+
+            // Avoid going back to parent in the undirected graph
+            if (ngbr != parent) {
+
+                // Add subtree sum returned from DFS and take modulo k
+                sum += dfs(ngbr, curr, mp, values, k);
+                sum %= k;
+            }
+        }
+
+        sum %= k; // Ensure sum is within modulo range
+
+        // If current subtree sum is divisible by k → valid component
+        if (sum == 0) {
+            count++; // Increase count of valid components
+        }
+
+        return sum; // Return sum to parent call
+    }
+
+    public int maxKDivisibleComponents(int n, int[][] edges, int[] values, int k) {
+
+        // Adjacency list representation of the graph
+        Map<Integer, List<Integer>> mp = new HashMap<>();
+
+        // Initialize adjacency list
+        for (int i = 0; i < n; i++) {
+            mp.put(i, new ArrayList<>());
+        }
+
+        // Build the undirected graph
+        for (int[] e : edges) {
+            int u = e[0];
+            int v = e[1];
+            mp.get(u).add(v);
+            mp.get(v).add(u);
+        }
+
+        count = 0; // Reset counter
+
+        // Start DFS from root node (0), with no parent (-1)
+        dfs(0, -1, mp, values, k);
+
+        return count; // Total valid components
+    }
+}
