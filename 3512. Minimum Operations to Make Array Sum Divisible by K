@@ -1,0 +1,16 @@
+// Approach - Mathematical (Modulo property)
+// T.C - O(n)
+// S.C - O(1)
+
+
+class Solution {
+    public int minOperations(int[] nums, int k) {
+        int sum = 0;
+        // Calculate total sum of all numbers in the array
+        for(int num : nums) {
+            sum += num;
+        }
+        // The remainder tells us how many operations are needed
+        return sum % k;
+    }
+}
