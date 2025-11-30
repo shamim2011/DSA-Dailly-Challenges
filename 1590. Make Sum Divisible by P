@@ -3,4 +3,48 @@
 // S.C -  O(n)
 
 
+class Solution {
+    public int minSubarray(int[] nums, int p) {
+        int n = nums.length;
+        long totalSum = 0;
+        
+        // Calculate the total sum of the array
+        for(int num : nums){
+            totalSum += num;
+        }
+        
+        // We want to remove a subarray whose sum % p == remainder
+        int rem = (int)(totalSum % p);
+        
+        // If total sum already divisible by p → no need to remove any subarray
+        if(rem == 0) return 0;
+        
+        // Map to store prefixSum % p and its latest index
+        Map<Integer, Integer> mp = new HashMap<>();
+        mp.put(0, -1);   // For subarrays starting from index 0
+        
+        int preSum = 0;
+        int ans = n;     // Store min length → initialize with max possible
+        
+        // Iterate through array to compute prefix sum % p
+        for(int i = 0; i < n; i++){
+            preSum = (preSum + nums[i]) % p;
+            
+            // We want: (prefixSum - subarraySum) % p == rem
+            // So: target = (prefixSum - rem + p) % p
+            int target = (preSum - rem + p) % p;
 
+            // If we found a matching prefix modulo earlier,
+            // we get a valid subarray to remove
+            if(mp.containsKey(target)){
+                ans = Math.min(ans, i - mp.get(target));
+            }
+            
+            // Store prefix modulo with latest index
+            mp.put(preSum, i);
+        }
+        
+        // If no valid subarray found → return -1
+        return ans == n ? -1 : ans;
+    }
+}
