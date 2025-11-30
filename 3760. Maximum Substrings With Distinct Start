@@ -1,0 +1,24 @@
+// Approch - HashSet for Counting Distinct Characters
+// T.C - O(n)
+// S.C - O(1)
+
+
+class Solution {
+    public int maxDistinct(String s) {
+        
+        // Create a HashSet to store distinct characters
+        Set<Character> st = new HashSet<>();
+        
+        int n = s.length();
+
+        // Traverse the entire string
+        for (int i = 0; i < n; i++) {
+            // Add each character to the set
+            // Duplicate characters will automatically be ignored
+            st.add(s.charAt(i));
+        }
+
+        // Size of the set = number of distinct characters
+        return st.size();
+    }
+}
