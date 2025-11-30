@@ -1,0 +1,50 @@
+// Approach - HashMap Lookup + On-the-fly Digit Reversal
+// T.C - O(n)
+// S.C - O(n)
+
+
+
+class Solution {
+    public int minMirrorPairDistance(int[] nums) {
+        
+        // Initialize answer as a large value to track minimum distance
+        int ans = Integer.MAX_VALUE;
+        
+        int n = nums.length;
+        
+        // HashMap to store number -> its index (latest index during traversal)
+        Map<Integer, Integer> mp = new HashMap<>();
+
+        // Traverse from right to left to ensure we calculate distance properly
+        for (int i = n - 1; i >= 0; i--) {
+            
+            // Reverse digits of the current number
+            int rev = reverse(nums[i]);
+            
+            // If reversed number exists in map, we found a mirror pair
+            if (mp.containsKey(rev)) {
+                // Update minimum distance between the indices
+                ans = Math.min(ans, mp.get(rev) - i);
+            }
+            
+            // Store the index of current number
+            mp.put(nums[i], i);
+        }
+
+        // If no mirror pair found, return -1
+        return ans == Integer.MAX_VALUE ? -1 : ans;
+    }
+
+    // Function to reverse digits of a given number
+    int reverse(int n) {
+        int sum = 0;
+        
+        // Reverse logic: build reversed number digit by digit
+        while (n > 0) {
+            sum = sum * 10 + n % 10;
+            n /= 10;
+        }
+        
+        return sum;
+    }
+}
