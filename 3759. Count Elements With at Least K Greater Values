@@ -1,0 +1,37 @@
+// Approch - Sorting + Reverse traversal
+// T.C - O(n log n)
+// S.C - O(1)
+
+class Solution {
+    public int countElements(int[] nums, int k) {
+
+        // Sort the array to easily compare elements and find how many are greater
+        Arrays.sort(nums);
+
+        int count = 0;     // To count valid elements
+        int greater = 0;   // Tracks how many elements greater than current
+        int n = nums.length;
+
+        // If k = 0, then every element satisfies the condition
+        if (k == 0) {
+            return n;
+        }
+
+        // Traverse array from right side (second last index to 0)
+        // because we compare nums[i] with nums[i+1]
+        for (int i = n - 2; i >= 0; i--) {
+
+            // If next element is greater, update number of greater elements
+            if (nums[i] < nums[i + 1]) {
+                greater = n - (i + 1); // positions to the right side
+            }
+
+            // If count of greater elements is >= k, include the current element
+            if (greater >= k) {
+                count++;
+            }
+        }
+
+        return count;
+    }
+}
