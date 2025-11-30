@@ -1,6 +1,6 @@
-// Approach - 
-// T.C - 
-// S.C - 
+// Approach - (Using prefix sum modulo and storing in hashmap)
+// T.C -  O(n)
+// S.C -  O(n)
 
 
 
