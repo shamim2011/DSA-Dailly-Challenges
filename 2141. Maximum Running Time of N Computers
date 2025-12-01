@@ -49,3 +49,49 @@ class Solution {
 //S.C : O(1)
 
 
+class Solution {
+
+    // Function to check if we can run all n computers for "time" duration
+    boolean isPossible(int[] batteries, long time, int n) {
+        long target = time * n; // Total needed power
+
+        for (int num : batteries) {
+            // Each battery can only contribute up to "time"
+            target -= Math.min(time, num);
+
+            // If total needed power is satisfied, return true
+            if (target <= 0) return true;
+        }
+        return false; // Not enough power to support required time
+    }
+
+    public long maxRunTime(int n, int[] batteries) {
+        long sum = 0;
+        long l = Long.MAX_VALUE; // Lower bound (min battery)
+        
+        // Compute sum of all battery power & find smallest battery value
+        for (int num : batteries) {
+            sum += (long) num;
+            l = Math.min(l, num);
+        }
+
+        // Upper bound = max possible average runtime
+        long r = sum / n; 
+        long ans = 0;
+
+        // Binary search between l and r to find max possible runtime
+        while (l <= r) {
+            long mid = l + (r - l) / 2;
+
+            // Check if mid time is feasible
+            if (isPossible(batteries, mid, n)) {
+                ans = mid;   // mid is valid → try increasing
+                l = mid + 1;
+            } else {
+                r = mid - 1; // mid not valid → decrease
+            }
+        }
+
+        return ans; // Final maximum possible runtime
+    }
+}
