@@ -1,6 +1,51 @@
-// Approach - 
-// T.C - 
-// S.C - 
+// Approach - 1 (Using Linesr search from minute = max_limit till minute = 1
+// T.C -  O(m*k)
+// S.C -  O(1)
 
+
+
+class Solution {
+    public long maxRunTime(int n, int[] batteries) {
+        long sum = 0;
+        
+        // Calculate total battery power available
+        for (int num : batteries) {
+            sum += (long) num;
+        }
+        
+        // Start checking from the maximum possible runtime (sum/n) downwards
+        for (long t = sum / n; t >= 1; t--) {
+            // Check if we can run all n computers for t time
+            if (isPossible(batteries, t, n)) {
+                return t; // Return the first valid time
+            }
+        }
+        
+        return 0; // If no valid runtime found
+    }
+    
+    // Helper method to check if it's possible to run n computers for given time
+    boolean isPossible(int[] batteries, long time, int n) {
+        long target = time * n; // total required power
+        
+        // Reduce the required target using available battery power
+        for (int num : batteries) {
+            target -= Math.min(time, num); // contribute limited to battery capacity
+            
+            if (target <= 0) {
+                return true; // requirement fulfilled early
+            }
+        }
+        
+        return false; // not enough power to support runtime
+    }
+}
+
+
+
+
+//Approach-2 (Using Binary Search on the result minutes) . T.C. : O(m⋅logk) - m = input array length and k = range of minutes
+//T.C : O(m*log(k))
+//S.C : O(1)
 
 
