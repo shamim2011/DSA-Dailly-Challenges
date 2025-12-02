@@ -1,5 +1,40 @@
-// Approach - 
-// T.C - 
-// S.C - 
+//Approach - Simple Maths counting
+//T.C : O(n)
+//S.C : O(n)
 
 
+class Solution {
+    final static long mod = 1_000_000_007;
+
+    public int countTrapezoids(int[][] points) {
+        
+        // Map to store count of points for each y-coordinate
+        Map<Integer, Integer> mp = new HashMap<>();
+
+        // Count how many points exist at each horizontal level (same y)
+        for (int[] arr : points) {
+            int y = arr[1];
+            mp.put(y, mp.getOrDefault(y, 0) + 1);
+        }
+
+        long prev = 0; // Stores total horizontal line pairs from previous y-levels
+        long ans = 0;  // Final answer → number of trapezoids
+
+        // Iterate through each horizontal y-level
+        // NOTE: HashMap iterates in random order
+        for (int count : mp.values()) {
+
+            // Number of horizontal point pairs on this level: C(n, 2)
+            long pair = (long) count * (count - 1) / 2;
+
+            // Combine with all previous horizontal pairs to form trapezoids
+            ans = (ans + pair * prev) % mod;
+
+            // Add current level's pairs to previous total
+            prev += pair;
+        }
+
+        // Return result under modulo
+        return (int)(ans % mod);
+    }
+}
