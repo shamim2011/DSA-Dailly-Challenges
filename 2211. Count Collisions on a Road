@@ -1,3 +1,35 @@
 //Approach (Simple iteration and simulation)
 //T.C : O(n)
 //S.C : O(1)
+
+
+class Solution {
+    public int countCollisions(String directions) {
+        int n = directions.length();
+        int l = 0, r = n - 1;
+
+        // Skip all leading cars moving left ('L'), as they will never collide
+        while (l < n && directions.charAt(l) == 'L') {
+            l++;
+        }
+
+        // Skip all trailing cars moving right ('R'), as they will never collide
+        while (r >= 0 && directions.charAt(r) == 'R') {
+            r--;
+        }
+
+        int ans = 0;
+
+        // Count collisions for all cars between l and r
+        // Any car that is not stationary ('S') will eventually collide
+        while (l <= r) {
+            if (directions.charAt(l) != 'S') {
+                ans++;
+            }
+            l++;
+        }
+
+        // Return total number of collisions
+        return ans;
+    }
+}
