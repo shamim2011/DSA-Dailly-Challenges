@@ -1,5 +1,40 @@
-// Approach - 
-// T.C - 
-// S.C - 
+// Approach - Prefix Sum + Parity Check
+// T.C - O(n)
+// S.C - O(1)
 
 
+class Solution {
+    public int countPartitions(int[] nums) {
+
+        // Step 1: Calculate the total sum of array elements
+        int sum = 0;
+        for (int num : nums) {
+            sum += num;
+        }
+
+        // 'left' will store the sum of the left partition
+        int left = 0;
+        int ans = 0; // count of valid partitions
+
+        // Step 2: Traverse until the second last index
+        // because partition occurs *between* elements
+        for (int i = 0; i < nums.length - 1; i++) {
+
+            // Add current element to left partition sum
+            left += nums[i];
+
+            // Right partition sum will be total sum minus left sum
+            int right = sum - left;
+
+            // Step 3: Check condition
+            // If difference between right and left is even,
+            // then (right - left) % 2 == 0 means both have same parity
+            if ((right - left) % 2 == 0) {
+                ans++; // valid partition found
+            }
+        }
+
+        // Return total valid partitions
+        return ans;
+    }
+}
