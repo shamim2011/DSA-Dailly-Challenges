@@ -1,0 +1,63 @@
+// Approach 1- top-Down DP (Memoized Recursion)   (TLE)
+// T.C - O(n²)
+// S.C - O(n)
+
+
+class Solution {
+    int n;
+    int mod = 100_000_007;
+
+    // Recursive function to count partitions starting from index i
+    int solve(int i, int[] nums, int k, int[] dp) {
+
+        // If we have reached the end, it means one valid partitioning is completed
+        if (i == n) {
+            return 1;
+        }
+
+        // If already computed, return cached result
+        if (dp[i] != -1) {
+            return dp[i];
+        }
+
+        int ans = 0;
+        int min = nums[i];
+        int max = nums[i];
+
+        // Try to extend the segment from i to j
+        for (int j = i; j < n; j++) {
+
+            // Update min and max in the current segment
+            min = Math.min(min, nums[j]);
+            max = Math.max(max, nums[j]);
+
+            // If the segment becomes invalid, stop further expansion
+            if (max - min > k) {
+                break;
+            }
+
+            // Valid segment → recursively partition rest of the array
+            ans = (ans + solve(j + 1, nums, k, dp)) % mod;
+        }
+
+        // Store result in DP and return
+        return dp[i] = ans;
+    }
+
+    public int countPartitions(int[] nums, int k) {
+        n = nums.length;
+        int[] dp = new int[n];
+
+        // Initialize DP array with -1 (meaning not computed)
+        for (int i = 0; i < n; i++) {
+            dp[i] = -1;
+        }
+
+        // Start solving from index 0
+        return solve(0, nums, k, dp);
+    }
+}
+
+
+
+
