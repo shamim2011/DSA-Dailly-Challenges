@@ -1,0 +1,76 @@
+//Approach-1 - Brute Force  (TLE)
+//T.C : O(n)
+//S.C : O(1)
+
+
+class Solution {
+    public int countOdds(int low, int high) {
+        int ans = 0;
+        for(int i=low;i<=high;i++){
+            if(i%2!=0){
+                ans++;
+            }
+        }
+        return ans;
+    }
+}
+
+
+//Approach-2 - Brute Force 
+//T.C : O(n)
+//S.C : O(1)
+
+
+class Solution {
+    public int countOdds(int low, int high) {
+
+        int ans = 0;  // To store the count of odd numbers
+
+        // If low is even, move to the next number (which will be odd)
+        low = (low % 2 == 1) ? low : low + 1;
+
+        // Loop from the first odd number to high, jumping by 2 (only odd numbers)
+        for (int i = low; i <= high; i += 2) {
+            ans++;  // Count each odd number
+        }
+
+        return ans;  // Return total odd numbers in the range
+    }
+}
+
+
+
+// Approach-3 (Simple maths)
+// T.C : O(1)
+// S.C : O(1)
+
+class Solution {
+    public int countOdds(int low, int high) {
+
+        // If low is even, move to the next odd number
+        if (low % 2 == 0) {
+            low++;
+        }
+
+        // If high is even, move to the previous odd number
+        if (high % 2 == 0) {
+            high--;
+        }
+
+        // If after adjustments low becomes greater than high,
+        // there are no odd numbers in the range
+        if (low > high) return 0;
+
+        // Count how many odd numbers lie between two odd endpoints
+        // Formula: number of odds = ((high - low) / 2) + 1
+        return (high - low) / 2 + 1;
+    }
+}
+
+
+
+// Approach-4 (Simple maths)
+// T.C : O(1)
+// S.C : O(1)
+
+
