@@ -35,3 +35,43 @@ class Solution {
         return ans;
     }
 }
+
+
+// Approach 2- Brute Force Using Math (Check All (a, b) Pairs and Verify c = √(a² + b²))
+// T.C - O(n2)
+// S.C - O(1)
+
+
+class Solution {
+    public int countTriples(int n) {
+        int ans = 0;
+
+        // Loop for 'i' as the first number (a)
+        for (int i = 1; i <= n - 1; i++) {
+
+            // Loop for 'j' as the second number (b)
+            for (int j = i + 1; j <= n; j++) {
+
+                // Calculate squares of i and j
+                int a = (int) Math.pow(i, 2);
+                int b = (int) Math.pow(j, 2);
+
+                // Sum = a² + b²
+                int sum = a + b;
+
+                // Compute square root of the sum
+                int sq = (int) Math.sqrt(sum);
+
+                // Check if sq * sq == sum (perfect square)
+                // and sq <= n (valid c)
+                if (sq * sq == sum && sq <= n) {
+
+                    // Count both (i, j, sq) and (j, i, sq)
+                    ans += 2;
+                }
+            }
+        }
+
+        return ans;
+    }
+}
