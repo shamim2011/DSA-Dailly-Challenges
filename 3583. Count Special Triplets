@@ -88,3 +88,40 @@ class Solution {
 //Approach-2 (Using map :  Pass Solution)
 //T.C : O(n)
 //S.C : O(n)
+
+
+
+class Solution {
+    public int specialTriplets(int[] nums) {
+        int mod = 1_000_000_007;
+        int ans = 0;
+
+        // mpValidI = counts of numbers that appear before current index (left side)
+        Map<Integer,Integer> mpValidI = new HashMap<>();
+        
+        // mpValidJ = counts of valid middle elements formed so far
+        Map<Integer,Integer> mpValidJ = new HashMap<>();
+        
+        for(int num : nums){
+
+            // If num is even, it can act as the “k” of a triplet (j, k)
+            // We add how many valid “j” exist for num/2
+            if(num % 2 == 0){
+                ans = (ans + mpValidJ.getOrDefault(num/2, 0)) % mod;
+            }
+
+            // Count new valid “j” positions:
+            // → existing j count for this num
+            // → plus how many i exist such that i = 2 * num (this forms new j candidates)
+            int countJ = (mpValidJ.getOrDefault(num, 0) 
+                        + mpValidI.getOrDefault(num * 2, 0)) % mod;
+
+            mpValidJ.put(num, countJ);
+
+            // Add current number to mpValidI for future j or k processing
+            mpValidI.put(num, mpValidI.getOrDefault(num, 0) + 1);
+        }
+
+        return ans;
+    }
+}
