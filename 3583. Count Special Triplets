@@ -38,3 +38,47 @@ class Solution {
 //Approach-2 (Using map : 2 Pass Solution)
 //T.C : O(2*n)
 //S.C : O(n)
+
+
+class Solution {
+    public int specialTriplets(int[] nums) {
+
+        int mod = 1_000_000_007;   // Mod value for large results
+        int ans = 0;               // Final answer
+
+        // mpRight stores frequencies of elements to the RIGHT of current index
+        Map<Integer,Integer> mpRight = new HashMap<>();
+
+        // mpLeft stores frequencies of elements to the LEFT of current index
+        Map<Integer,Integer> mpLeft = new HashMap<>();
+
+        // Initially, all elements are on the right side
+        for(int num : nums){
+            mpRight.put(num, mpRight.getOrDefault(num, 0) + 1);
+        }
+
+        // Process each element as the middle element of the triplet
+        for(int num : nums){
+
+            // Move one occurrence of num from right side (future) to current index
+            mpRight.put(num, mpRight.get(num) - 1);
+
+            // Count how many values equal to 2*num exist on the left
+            int left  = mpLeft.getOrDefault(num * 2, 0);
+
+            // Count how many values equal to 2*num exist on the right
+            int right = mpRight.getOrDefault(num * 2, 0);
+
+            // Triplets formed at this index = left * right
+            long add = (1L * left * right) % mod;
+
+            // Add to answer with modulo
+            ans = (int)((ans + add) % mod);
+
+            // Now add current num to left map (it becomes past for next iterations)
+            mpLeft.put(num, mpLeft.getOrDefault(num, 0) + 1);
+        }
+
+        return ans;
+    }
+}
