@@ -1,4 +1,4 @@
-// Approach: Brute Force (Check all possible triplets)
+// Approach 1 : Brute Force (Check all possible triplets)
 // Time Complexity: O(n^3)
 // Space Complexity: O(1)
 
@@ -32,3 +32,9 @@ class Solution {
         return ans; // Return total valid triplets
     }
 }
+
+
+
+//Approach-2 (Using map : 2 Pass Solution)
+//T.C : O(2*n)
+//S.C : O(n)
