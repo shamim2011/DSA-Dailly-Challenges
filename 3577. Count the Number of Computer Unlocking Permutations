@@ -1,3 +1,28 @@
 //Approach - Simple observation and maths factorial
 //T.C : O(n)
 //S.C : O(1)
+
+
+
+class Solution {
+    public int countPermutations(int[] complexity) {
+        int mod = 1_000_000_007;   // Mod value for large numbers
+        long ans = 1;              // To store the total permutations
+        int n = complexity.length; // Size of the array
+        
+        // Check from index 1 to n-1
+        for(int i = 1; i < n; i++){
+            
+            // If any value is <= first value, return 0 (invalid)
+            if(complexity[i] <= complexity[0]){
+                return 0;
+            }
+            
+            // Multiply ans by i (for counting permutations)
+            ans = (ans * i) % mod;
+        }
+        
+        // Return the final answer
+        return (int) ans;
+    }
+}
