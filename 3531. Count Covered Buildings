@@ -1,3 +1,58 @@
 //Approach (storing in Map and checking)
 //T.C : O(n)
 //S.C : O(n)
+
+
+
+class Solution {
+    public int countCoveredBuildings(int n, int[][] buildings) {
+
+        // Map: y → {minX, maxX} for all buildings having same y-coordinate
+        Map<Integer,int[]> yToMinMaxX = new HashMap<>();
+
+        // Map: x → {minY, maxY} for all buildings having same x-coordinate
+        Map<Integer,int[]> xToMinMaxY = new HashMap<>();
+
+        // Step 1: Build ranges for each row(y) and column(x)
+        for(int[] b : buildings){
+            int x = b[0];
+            int y = b[1];
+
+            // For each y, store initial minX and maxX if not already present
+            yToMinMaxX.putIfAbsent(y, new int[]{Integer.MAX_VALUE, Integer.MIN_VALUE});
+
+            // For each x, store initial minY and maxY if not already present
+            xToMinMaxY.putIfAbsent(x, new int[]{Integer.MAX_VALUE, Integer.MIN_VALUE});
+
+            // Update row range for this y
+            int[] xr = yToMinMaxX.get(y);
+            xr[0] = Math.min(xr[0], x); // update minX
+            xr[1] = Math.max(xr[1], x); // update maxX
+
+            // Update column range for this x
+            int[] yr = xToMinMaxY.get(x);
+            yr[0] = Math.min(yr[0], y); // update minY
+            yr[1] = Math.max(yr[1], y); // update maxY
+        }
+        
+        int ans = 0;
+
+        // Step 2: Check if each building is strictly inside both its row and column ranges
+        for (int[] b : buildings) {
+            int x = b[0];
+            int y = b[1];
+
+            int[] xr = yToMinMaxX.get(y); // row's x-range
+            int[] yr = xToMinMaxY.get(x); // column's y-range
+
+            // Covered means:
+            // x is strictly between minX and maxX of its row
+            // AND y is strictly between minY and maxY of its column
+            if (xr[0] < x && x < xr[1] && yr[0] < y && y < yr[1]) {
+                ans++;
+            }
+        }
+
+        return ans;
+    }
+}
