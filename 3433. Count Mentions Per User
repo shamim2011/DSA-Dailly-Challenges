@@ -4,3 +4,85 @@
 
 
 
+class Solution {
+
+    // Main function to count mentions for each user
+    public int[] countMentions(int numberOfUsers, List<List<String>> events) {
+
+        int[] mentionCount = new int[numberOfUsers];   // Stores total mentions per user
+        int[] offlineTime = new int[numberOfUsers];    // Stores last offline timestamp for each user
+
+        // Sort events based on timestamp.
+        // If timestamps are equal, sort MESSAGE before OFFLINE using event type's 2nd character.
+        Collections.sort(events, (a, b) -> {
+            int t1 = Integer.parseInt(a.get(1));
+            int t2 = Integer.parseInt(b.get(1));
+
+            // If timestamps are equal, decide using event type priority
+            if (t1 == t2) {
+                char ch1 = a.get(0).charAt(1);   // 'E' in MESSAGE, 'F' in OFFLINE
+                char ch2 = b.get(0).charAt(1);
+                if (ch1 > ch2) return -1;        // MESSAGE before OFFLINE
+                if (ch1 < ch2) return 1;
+                return 0;
+            }
+
+            return Integer.compare(t1, t2);
+        });
+
+        // Process each event in sorted order
+        for (List<String> event : events) {
+
+            // MESSAGE event → process mentions
+            if (event.get(0).equals("MESSAGE")) {
+                applyMessageEvent(event, mentionCount, offlineTime);
+            }
+
+            // OFFLINE event → update last offline time
+            else if (event.get(0).equals("OFFLINE")) {
+                int timestamp = Integer.parseInt(event.get(1));
+                int id = Integer.parseInt(event.get(2));
+                offlineTime[id] = timestamp;
+            }
+        }
+
+        return mentionCount;
+    }
+
+
+    // Helper to process a MESSAGE event
+    public void applyMessageEvent(List<String> event, int[] mentionCount, int[] offlineTime) {
+
+        int timestamp = Integer.parseInt(event.get(1));  // Message timestamp
+        String[] ids = event.get(2).split(" ");          // Mentions list (ALL, HERE, @U0 etc.)
+
+        for (String id : ids) {
+
+            // Case 1: ALL → mention every user
+            if (id.equals("ALL")) {
+                for (int i = 0; i < mentionCount.length; i++) {
+                    mentionCount[i]++;
+                }
+            }
+
+            // Case 2: HERE → mention only users who are online
+            else if (id.equals("HERE")) {
+                for (int i = 0; i < mentionCount.length; i++) {
+
+                    // User considered online if:
+                    // 1. Never went offline
+                    // 2. Offline time + 60 <= message timestamp
+                    if (offlineTime[i] == 0 || offlineTime[i] + 60 <= timestamp) {
+                        mentionCount[i]++;
+                    }
+                }
+            }
+
+            // Case 3: @Ux → direct mention of a specific user
+            else {
+                int userId = Integer.parseInt(id.substring(2));  // Extract number from "@U5"
+                mentionCount[userId]++;
+            }
+        }
+    }
+}
