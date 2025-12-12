@@ -1,0 +1,3 @@
+//Approach - Simply sort and simulate
+//T.C : O(E log E + E * N), N = number of users , E = number of events
+//S.C : O(N + E)
