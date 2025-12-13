@@ -1,0 +1,3 @@
+//Approach (Using map and sorting)
+//T.C : O(n*l + nlogn) where n = code.size() and l = average length of codes
+//S.C : O(n)
