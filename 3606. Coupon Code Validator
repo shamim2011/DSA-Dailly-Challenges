@@ -1,3 +1,93 @@
 //Approach (Using map and sorting)
 //T.C : O(n*l + nlogn) where n = code.size() and l = average length of codes
 //S.C : O(n)
+
+
+
+class Solution {
+
+    // Main method to validate and sort coupon codes
+    public List<String> validateCoupons(String[] code, String[] businessLine, boolean[] isActive) {
+
+        // Map to define priority/order of business lines
+        Map<String, Integer> mp = new HashMap<>();
+        mp.put("electronics", 0);
+        mp.put("grocery", 1);
+        mp.put("pharmacy", 2);
+        mp.put("restaurant", 3);
+
+        // Temporary list to store valid coupons with their order
+        List<Pair> temp = new ArrayList<>();
+
+        // Iterate through all coupons
+        for (int i = 0; i < code.length; i++) {
+
+            // Check:
+            // 1. Coupon is active
+            // 2. Business line is valid
+            // 3. Coupon code format is valid
+            if (isActive[i] && mp.containsKey(businessLine[i]) && isCodeValid(code[i])) {
+
+                // Add valid coupon with its business line order
+                temp.add(new Pair(mp.get(businessLine[i]), code[i]));
+            }
+        }
+
+        // Sort coupons:
+        // 1. By business line order
+        // 2. By coupon code (lexicographically) if order is same
+        Collections.sort(temp);
+
+        // Extract only coupon codes in sorted order
+        List<String> ans = new ArrayList<>();
+        for (Pair p : temp) {
+            ans.add(p.code);
+        }
+
+        return ans;
+    }
+
+    // Helper method to validate coupon code format
+    boolean isCodeValid(String s) {
+
+        // Null or empty string is invalid
+        if (s == null || s.isEmpty()) {
+            return false;
+        }
+
+        // Check each character:
+        // allowed -> letter, digit, or underscore
+        for (char ch : s.toCharArray()) {
+            if (!Character.isLetterOrDigit(ch) && ch != '_') {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    // Helper class to store coupon order and code
+    static class Pair implements Comparable<Pair> {
+
+        int order;   // Business line priority
+        String code; // Coupon code
+
+        Pair(int order, String code) {
+            this.order = order;
+            this.code = code;
+        }
+
+        // Defines sorting logic for Pair objects
+        @Override
+        public int compareTo(Pair other) {
+
+            // First sort by business line order
+            if (this.order != other.order) {
+                return Integer.compare(this.order, other.order);
+            }
+
+            // If order is same, sort lexicographically by coupon code
+            return this.code.compareTo(other.code);
+        }
+    }
+}
