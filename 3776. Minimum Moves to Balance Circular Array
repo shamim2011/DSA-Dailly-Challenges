@@ -1,5 +1,84 @@
-// Approach - 
-// T.C - 
-// S.C - 
+// Approach - Greedy with Distance Optimization (Circular Array)
+// T.C - O(n log n)
+// S.C - O(n)
 
 
+class Solution {
+    public long minMoves(int[] balance) {
+
+        int n = balance.length;
+        long total = 0;
+
+        // Store index of a negative balance person
+        int negIdx = -1;
+
+        // Calculate total balance and find a negative index
+        for (int i = 0; i < n; i++) {
+            if (balance[i] < 0) {
+                negIdx = i; // last negative index found
+            }
+            total += balance[i];
+        }
+
+        // If total balance is negative, it's impossible to fix
+        if (total < 0) {
+            return -1;
+        }
+
+        // If no one has negative balance, no moves needed
+        if (negIdx == -1) return 0;
+
+        // Amount needed to make balance[negIdx] non-negative
+        long required = -balance[negIdx];
+
+        // List to store contributors as {distance, available balance}
+        List<int[]> contributers = new ArrayList<>();
+
+        // Collect all positive balance contributors
+        for (int i = 0; i < n; i++) {
+
+            // Skip the negative index itself or non-positive balances
+            if (i == negIdx || balance[i] <= 0) {
+                continue;
+            }
+
+            // Direct distance in circular array
+            int direct = Math.abs(i - negIdx);
+
+            // Minimum circular distance
+            int distance = Math.min(direct, n - direct);
+
+            contributers.add(new int[] { distance, balance[i] });
+        }
+
+        // Sort contributors by shortest distance first
+        contributers.sort(Comparator.comparingInt(a -> a[0]));
+
+        long moves = 0;
+
+        // Take balance from nearest contributors first
+        for (int[] c : contributers) {
+
+            // Stop if requirement is fulfilled
+            if (required == 0) {
+                break;
+            }
+
+            // Amount that can be transferred
+            long take = Math.min(required, c[1]);
+
+            // Moves = units transferred × distance
+            moves += take * c[0];
+
+            // Reduce required amount
+            required -= take;
+        }
+
+        // If still required balance remains, impossible
+        if (required > 0) {
+            return -1;
+        }
+
+        return moves;
+    }
+}
