@@ -1,0 +1,86 @@
+// Approach: Vowel-Balance Based Conditional Word Reversal
+// T.c - O(n)
+// S.C - O(n)
+
+
+
+
+class Solution {
+    public String reverseWords(String s) {
+
+        // Split the input string by spaces into words
+        String[] arr = s.split(" ");
+
+        // First word
+        String fw = arr[0];
+
+        // Count vowels in the first word
+        int countVowels = 0;
+
+        // Set to store vowels for quick lookup
+        Set<Character> st = new HashSet<>();
+        st.add('a');
+        st.add('e');
+        st.add('i');
+        st.add('o');
+        st.add('u');
+
+        // Count vowels in the first word
+        for (char ch : fw.toCharArray()) {
+            if (st.contains(ch)) {
+                countVowels++;
+            }
+        }
+
+        // Result array to store processed words
+        String[] res = new String[arr.length];
+
+        // First word remains unchanged
+        res[0] = arr[0];
+
+        // Process remaining words
+        for (int i = 1; i < arr.length; i++) {
+
+            // If vowel count matches, reverse the word
+            if (balanceVowels(arr[i], countVowels, st)) {
+                res[i] = reverseString(arr[i]);
+            } 
+            // Otherwise, keep the word as it is
+            else {
+                res[i] = arr[i];
+            }
+        }
+
+        // Build the final string
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < res.length; i++) {
+            sb.append(res[i]);
+            if (i != res.length - 1) {
+                sb.append(" ");
+            }
+        }
+
+        return sb.toString();
+    }
+
+    // Helper method to reverse a string
+    String reverseString(String s) {
+        String sb = new StringBuilder(s).reverse().toString();
+        return sb;
+    }
+
+    // Helper method to check if vowel count matches the given count
+    boolean balanceVowels(String s, int count, Set<Character> st) {
+        int total = 0;
+
+        // Count vowels in the current word
+        for (char ch : s.toCharArray()) {
+            if (st.contains(ch)) {
+                total++;
+            }
+        }
+
+        // Check if vowel count matches the first word's vowel count
+        return total == count;
+    }
+}
