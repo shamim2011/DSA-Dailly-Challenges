@@ -1,5 +1,42 @@
-// Approach - 
-// T.C - 
-// S.C - 
+//Approach-1 (Using simple iteration)
+//T.C : O(n)
+//S.C : O(n)
 
 
+class Solution {
+    int mod = 1_000_000_007;
+
+    public int numberOfWays(String corridor) {
+        long ans = 1;   // Stores total number of ways (start with 1 for multiplication)
+
+        List<Integer> li = new ArrayList<>(); // Stores indices of all seats ('S')
+
+        // Collect indices of all seats
+        for (int i = 0; i < corridor.length(); i++) {
+            if (corridor.charAt(i) == 'S') {
+                li.add(i);
+            }
+        }
+
+        // If number of seats is odd or zero, division is impossible
+        if (li.size() % 2 != 0 || li.size() == 0) return 0;
+
+        // End index of the previous seat-pair
+        int prev_endIdx = li.get(1);
+
+        // Process each next pair of seats
+        for (int i = 2; i < li.size(); i += 2) {
+
+            // Number of positions where a divider can be placed
+            int length = li.get(i) - prev_endIdx;
+
+            // Multiply ways for current section
+            ans = (ans * length) % mod;
+
+            // Update end index to current pair’s second seat
+            prev_endIdx = li.get(i + 1);
+        }
+
+        return (int) ans; // Return final result modulo
+    }
+}
