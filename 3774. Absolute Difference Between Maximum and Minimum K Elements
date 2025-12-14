@@ -1,0 +1,35 @@
+// Approach: Sorting + Sum of Extremes
+// T.C - O(n log n)
+// S.C - O(1)
+
+
+
+class Solution {
+    public int absDifference(int[] nums, int k) {
+        int ans = 0; // Variable declared (not used further, but kept as in original code)
+
+        // Sort the array in ascending order
+        Arrays.sort(nums);
+
+        // Edge case: if there is only one element and k = 1,
+        // both minSum and maxSum will be the same, so answer is 0
+        if (nums.length == 1 && k == 1) {
+            return 0;
+        }
+
+        // Calculate the minimum sum by taking the first k elements
+        int minSum = 0;
+        for (int i = 0; i < k; i++) {
+            minSum += nums[i];
+        }
+
+        // Calculate the maximum sum by taking the last k elements
+        int maxSum = 0;
+        for (int i = nums.length - 1; i >= nums.length - k; i--) {
+            maxSum += nums[i];
+        }
+
+        // Return the absolute difference between maxSum and minSum
+        return Math.abs(maxSum - minSum);
+    }
+}
