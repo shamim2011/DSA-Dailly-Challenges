@@ -24,3 +24,35 @@ class Solution {
         return ans;
     }
 }
+
+
+
+// Approach - Two Pointers / Sliding Window (Greedy)
+// T.C - O(n)
+// S.C - O(1)
+
+
+class Solution {
+    public long getDescentPeriods(int[] prices) {
+        int n = prices.length;   // Total number of days (prices)
+        
+        long ans = 1;            // First element itself forms one descent period
+        long count = 1;          // Length of current smooth descent sequence
+        
+        // Start from the second element
+        for (int i = 1; i < n; i++) {
+            
+            // Check if current price is exactly 1 less than previous price
+            if (prices[i - 1] - prices[i] == 1) {
+                count++;         // Extend the descent sequence
+            } else {
+                count = 1;       // Reset count if descent breaks
+            }
+            
+            // Add number of descent periods ending at index i
+            ans += count;
+        }
+        
+        return ans;              // Total smooth descent periods
+    }
+}
