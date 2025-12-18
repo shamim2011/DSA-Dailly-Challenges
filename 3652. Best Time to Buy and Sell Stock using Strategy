@@ -1,3 +1,73 @@
 //Approach (Using khandani Sliding Window)
 //T.C : O(n)
 //S.C : O(n)
+
+
+
+class Solution {
+    public long maxProfit(int[] prices, int[] strategy, int k) {
+        int n = prices.length;
+
+        // actualProfit = profit obtained without applying any modification window
+        long actualProfit = 0;
+
+        // profit[i] = prices[i] * strategy[i]
+        // strategy[i] can be -1, 0, or 1
+        long[] profit = new long[n];
+
+        for (int i = 0; i < n; i++) {
+            profit[i] = (long) prices[i] * strategy[i];
+            actualProfit += profit[i];
+        }
+
+        // originalWinProfit = sum of original profit inside current window
+        long originalWinProfit = 0;
+
+        // modifiedWinProfit = profit if we modify strategy inside window
+        // (buy in first k/2 days, sell in remaining k/2 days)
+        long modifiedWinProfit = 0;
+
+        // Stores the maximum extra profit gained by modifying a window
+        long maxProfit = 0;
+
+        // Sliding window pointers
+        int i = 0, j = 0;
+
+        while (j < n) {
+
+            // Add current day's original profit to window
+            originalWinProfit += profit[j];
+
+            // For the second half of the window (sell phase),
+            // we add prices[j] as profit
+            if (j - i + 1 > k / 2) {
+                modifiedWinProfit += prices[j];
+            }
+
+            // If window size exceeds k, shrink from left
+            if (j - i + 1 > k) {
+                // Remove original profit of the outgoing index
+                originalWinProfit -= profit[i];
+
+                // Remove modified profit corresponding to index i + k/2
+                modifiedWinProfit -= prices[i + k / 2];
+
+                i++;
+            }
+
+            // When window size is exactly k,
+            // compute extra profit gained by modification
+            if (j - i + 1 == k) {
+                maxProfit = Math.max(
+                    maxProfit,
+                    modifiedWinProfit - originalWinProfit
+                );
+            }
+
+            j++;
+        }
+
+        // Total profit = original profit + best extra profit
+        return maxProfit + actualProfit;
+    }
+}
