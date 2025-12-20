@@ -1,0 +1,30 @@
+//Approach - Column-wise Lexicographical Check (Greedy)
+// T.C - O(n×k)                  --   n = number of strings , k = length of each string
+// S.C - O(1)
+
+
+class Solution {
+    public int minDeletionSize(String[] strs) {
+        int n = strs.length;
+        // Length of each string (number of columns)
+        int k = strs[0].length();
+        // Count of columns that need to be deleted
+        int count = 0;
+        // Traverse each column
+        for (int i = 0; i < k; i++) {
+            // Compare characters in the current column row by row
+            for (int j = 1; j < n; j++) { 
+                // If current character is smaller than the previous one,
+                // the column is not sorted
+                if (strs[j].charAt(i) < strs[j - 1].charAt(i)) {   
+                    // Increment deletion count
+                    count++;  
+                    // Stop checking this column further
+                    break;
+                }
+            }
+        }
+        // Return total columns to be deleted
+        return count;
+    }
+}
