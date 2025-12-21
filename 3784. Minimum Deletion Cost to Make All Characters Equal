@@ -1,0 +1,44 @@
+// Approach - Global Character Cost Aggregation (Map-based Approach)
+// T.C - O(n)
+// S.C - O(n)
+
+
+class Solution {
+    public long minCost(String s, int[] cost) {
+
+        // Stores the minimum result
+        long ans = Long.MAX_VALUE;
+
+        // Total cost of all characters
+        long total = 0;
+        for (int num : cost) {
+            total += num;
+        }
+
+        // Map to store character -> list of costs
+        Map<Character, List<Integer>> mp = new HashMap<>();
+
+        // Group costs by character
+        for (int i = 0; i < s.length(); i++) {
+            char ch = s.charAt(i);
+            mp.computeIfAbsent(ch, k -> new ArrayList<>()).add(cost[i]);
+        }
+
+        // Traverse each character's cost list
+        for (Map.Entry<Character, List<Integer>> entry : mp.entrySet()) {
+            List<Integer> li = entry.getValue();
+
+            // Sum of costs for current character
+            long sum = 0;
+            for (int num : li) {
+                sum += num;
+            }
+
+            // Update answer by removing all other characters
+            ans = Math.min(ans, total - sum);
+        }
+
+        // Return minimum cost
+        return ans;
+    }
+}
