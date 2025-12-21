@@ -1,0 +1,22 @@
+// Approach - Digit Reversal & Absolute Difference
+// T.C - O(d)
+// S.C - O(1)
+
+
+
+class Solution {
+    public int mirrorDistance(int n) {
+        return Math.abs(n-reverse(n));
+    }
+    int reverse(int n){
+        if(n<=9){
+            return n;
+        }
+        int pro = 0;
+        while(n>0){
+            pro = pro*10 + n%10;
+            n /= 10;
+        }
+        return pro;
+    }
+}
