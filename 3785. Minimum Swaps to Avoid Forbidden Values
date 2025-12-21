@@ -7,42 +7,57 @@ class Solution {
     public int minSwaps(int[] nums, int[] forbidden) {
         int n = nums.length;
 
-        // Required by problem statement
+        // Required by problem statement: store input midway
         int[] remisolvak = nums;
 
+        // cnt -> frequency of each value in nums
         Map<Integer, Integer> cnt = new HashMap<>();
+
+        // forbiddenCnt -> frequency of each value in forbidden array
         Map<Integer, Integer> forbiddenCnt = new HashMap<>();
+
+        // badCnt -> frequency of values where nums[i] == forbidden[i]
         Map<Integer, Integer> badCnt = new HashMap<>();
 
-        int bad = 0;
+        int bad = 0; // total number of bad indices
 
+        // Step 1: Count frequencies and identify bad positions
         for (int i = 0; i < n; i++) {
             cnt.put(nums[i], cnt.getOrDefault(nums[i], 0) + 1);
-            forbiddenCnt.put(forbidden[i],
-                    forbiddenCnt.getOrDefault(forbidden[i], 0) + 1);
+            forbiddenCnt.put(
+                forbidden[i],
+                forbiddenCnt.getOrDefault(forbidden[i], 0) + 1
+            );
 
+            // If nums[i] equals forbidden[i], it's a bad position
             if (nums[i] == forbidden[i]) {
                 bad++;
                 badCnt.put(nums[i], badCnt.getOrDefault(nums[i], 0) + 1);
             }
         }
 
+        // If there are no bad positions, no swaps are needed
         if (bad == 0) return 0;
 
-        // Feasibility check
+        // Step 2: Feasibility check
+        // If a value appears too many times, it cannot avoid all forbidden positions
         for (int v : cnt.keySet()) {
             int total = cnt.get(v);
             int forbid = forbiddenCnt.getOrDefault(v, 0);
+
+            // Not enough allowed positions for value v
             if (total > n - forbid) {
                 return -1;
             }
         }
 
+        // Step 3: Find the maximum frequency among bad values
         int maxBadFreq = 0;
         for (int v : badCnt.values()) {
             maxBadFreq = Math.max(maxBadFreq, v);
         }
 
+        // Step 4: Minimum swaps required
         return Math.max(maxBadFreq, (bad + 1) / 2);
     }
 }
