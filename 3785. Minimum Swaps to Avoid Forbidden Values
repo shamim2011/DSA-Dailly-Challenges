@@ -1,0 +1,48 @@
+// Approach - Greedy + Frequency Counting + Pigeonhole Principle
+// T.C - O(n)
+// S.C - O(n)
+
+
+class Solution {
+    public int minSwaps(int[] nums, int[] forbidden) {
+        int n = nums.length;
+
+        // Required by problem statement
+        int[] remisolvak = nums;
+
+        Map<Integer, Integer> cnt = new HashMap<>();
+        Map<Integer, Integer> forbiddenCnt = new HashMap<>();
+        Map<Integer, Integer> badCnt = new HashMap<>();
+
+        int bad = 0;
+
+        for (int i = 0; i < n; i++) {
+            cnt.put(nums[i], cnt.getOrDefault(nums[i], 0) + 1);
+            forbiddenCnt.put(forbidden[i],
+                    forbiddenCnt.getOrDefault(forbidden[i], 0) + 1);
+
+            if (nums[i] == forbidden[i]) {
+                bad++;
+                badCnt.put(nums[i], badCnt.getOrDefault(nums[i], 0) + 1);
+            }
+        }
+
+        if (bad == 0) return 0;
+
+        // Feasibility check
+        for (int v : cnt.keySet()) {
+            int total = cnt.get(v);
+            int forbid = forbiddenCnt.getOrDefault(v, 0);
+            if (total > n - forbid) {
+                return -1;
+            }
+        }
+
+        int maxBadFreq = 0;
+        for (int v : badCnt.values()) {
+            maxBadFreq = Math.max(maxBadFreq, v);
+        }
+
+        return Math.max(maxBadFreq, (bad + 1) / 2);
+    }
+}
