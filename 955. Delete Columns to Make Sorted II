@@ -1,3 +1,55 @@
 //Approach (Iterate while keeping a check if it's safe to delete the column or not)
 //T.C : O(rows * cols)
 //S.C : O(rows)
+
+
+
+class Solution {
+    public int minDeletionSize(String[] strs) {
+        // Number of strings (rows)
+        int rows = strs.length;
+        
+        // Length of each string (columns)
+        int cols = strs[0].length();
+        
+        // Count of columns to be deleted
+        int deletion = 0;
+        
+        // alreadySort[i] = true means
+        // strs[i] and strs[i+1] are already confirmed sorted
+        boolean[] alreadySort = new boolean[rows];
+        
+        // Traverse column by column
+        for(int c = 0; c < cols; c++){
+            boolean delete = false;
+            
+            // Check if this column breaks lexicographical order
+            for(int r = 0; r < rows - 1; r++){
+                // Only compare rows that are not yet confirmed sorted
+                if(!alreadySort[r] && 
+                   strs[r].charAt(c) > strs[r + 1].charAt(c)){
+                    
+                    // Column must be deleted
+                    deletion++;
+                    delete = true;
+                    break;
+                }
+            }
+            
+            // If column is deleted, move to next column
+            if(delete){
+                continue;
+            }
+            
+            // Update alreadySort array
+            for(int i = 0; i < rows - 1; i++){
+                // Mark as sorted if current column strictly increases
+                alreadySort[i] = alreadySort[i] || 
+                                 (strs[i].charAt(c) < strs[i + 1].charAt(c));
+            }
+        }
+        
+        // Return total deleted columns
+        return deletion;
+    }
+}
