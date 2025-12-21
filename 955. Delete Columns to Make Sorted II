@@ -1,0 +1,3 @@
+//Approach (Iterate while keeping a check if it's safe to delete the column or not)
+//T.C : O(rows * cols)
+//S.C : O(rows)
