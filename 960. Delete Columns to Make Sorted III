@@ -1,5 +1,57 @@
-// Approach - 
-// T.C - 
-// S.C - 
+// Approach - Dynamic Programming – Longest Increasing Subsequence (LIS) on Columns
+// T.C - O(cols^2×rows)
+// S.C - O(cols)
 
 
+class Solution {
+    public int minDeletionSize(String[] strs) {
+
+        // Number of strings (rows)
+        int rows = strs.length;
+
+        // Length of each string (columns)
+        int cols = strs[0].length();
+
+        // dp[i] = length of the longest valid increasing subsequence
+        // ending at column i
+        int[] dp = new int[cols];
+
+        // Length of Longest Increasing Subsequence (LIS)
+        int LIS = 1;
+
+        // Iterate over each column
+        for (int i = 0; i < cols; i++) {
+
+            // Each column alone forms a subsequence of length 1
+            dp[i] = 1;
+
+            // Compare current column with all previous columns
+            for (int j = 0; j < i; j++) {
+
+                boolean valid = true;
+
+                // Check if column i can come after column j
+                // for all rows
+                for (int k = 0; k < rows; k++) {
+
+                    // If order breaks in any row, it's invalid
+                    if (strs[k].charAt(i) < strs[k].charAt(j)) {
+                        valid = false;
+                        break;
+                    }
+                }
+
+                // If valid, update LIS ending at column i
+                if (valid) {
+                    dp[i] = Math.max(dp[i], dp[j] + 1);
+                }
+            }
+
+            // Update global LIS
+            LIS = Math.max(LIS, dp[i]);
+        }
+
+        // Minimum deletions = total columns - LIS
+        return cols - LIS;
+    }
+}
