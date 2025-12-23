@@ -116,3 +116,74 @@ class Solution {
 
 
 
+class Solution {
+    // Number of events
+    int n;
+
+    // DP table:
+    // dp[i][count] = maximum value achievable starting from event i
+    // after attending 'count' events
+    int[][] dp = new int[100001][3];
+
+    // Binary search to find the next event whose start time
+    // is strictly greater than the given endTime
+    int binarySearch(int[][] events, int endTime) {
+        int l = 0, r = n - 1;
+        int res = n; // Default: no valid next event
+
+        while (l <= r) {
+            int mid = l + (r - l) / 2;
+
+            // If the next event starts after the current event ends
+            if (events[mid][0] > endTime) {
+                res = mid;      // Potential valid next event
+                r = mid - 1;    // Try to find an earlier valid event
+            } else {
+                l = mid + 1;    // Move right if overlap exists
+            }
+        }
+        return res;
+    }
+
+    // Recursive DP function
+    int solve(int[][] events, int i, int count) {
+        // Base cases:
+        // - All events processed
+        // - Already attended 2 events
+        if (i >= n || count == 2) return 0;
+
+        // Return memoized result if available
+        if (dp[i][count] != -1) {
+            return dp[i][count];
+        }
+
+        // Find the next valid (non-overlapping) event index
+        int nextVEvntIdx = binarySearch(events, events[i][1]);
+
+        // Option 1: Take the current event
+        int take = events[i][2] + solve(events, nextVEvntIdx, count + 1);
+
+        // Option 2: Skip the current event
+        int not_take = solve(events, i + 1, count);
+
+        // Store and return the maximum of both choices
+        dp[i][count] = Math.max(take, not_take);
+        return dp[i][count];
+    }
+
+    public int maxTwoEvents(int[][] events) {
+        // Initialize number of events
+        n = events.length;
+
+        // Sort events by start time to enable binary search
+        Arrays.sort(events, (a, b) -> Integer.compare(a[0], b[0]));
+
+        // Initialize DP table with -1 (uncomputed states)
+        for (int[] row : dp) {
+            Arrays.fill(row, -1);
+        }
+
+        // Start DP from index 0 with 0 events attended
+        return solve(events, 0, 0);
+    }
+}
