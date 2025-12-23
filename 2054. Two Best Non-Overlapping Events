@@ -46,3 +46,12 @@ class Solution {
     }
 }
 
+
+
+
+//Approach-2 (Recursion + Memoization and Sorting)
+//T.C : O(n * logn, After memoizing, we will visit at max n states and for binarysearch it will take log(n))
+//S.C : O(n*3) ~= O(n)
+
+
+
