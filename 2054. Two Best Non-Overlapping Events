@@ -59,7 +59,7 @@ class Solution {
         int l = 0, r = n - 1;
 
         // Default result index
-        int res = n - 1;
+        int res = n;
 
         while (l <= r) {
             int mid = l + (r - l) / 2;
@@ -107,7 +107,6 @@ class Solution {
         return solve(events, 0, 0);
     }
 }
-
 
 
 
