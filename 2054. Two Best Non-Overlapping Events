@@ -1,4 +1,48 @@
-// Approach - 
-// T.C - 
-// S.C - 
+//Approach-1 (Brute Force) - TLE
+//T.C : O(n^2)
+//S.C : O(1)
+
+
+class Solution {
+    public int maxTwoEvents(int[][] events) {
+        // Number of events
+        int n = events.length;
+
+        // Variable to store the maximum value result
+        int result = 0;
+
+        // Iterate through each event as the first chosen event
+        for(int i = 0; i < n; i++) {
+
+            // Case 1: Choose only one event
+            // Update result with the value of the current event
+            result = Math.max(result, events[i][2]);
+
+            // Store the value of the current event
+            int val = events[i][2];
+
+            // Try pairing the current event with every other event
+            for(int j = 0; j < n; j++) {
+
+                // Skip if both indices refer to the same event
+                if(i == j) continue;
+
+                // Check if events[i] and events[j] overlap
+                // Overlap condition:
+                // start_j <= end_i AND end_j >= start_i
+                if(events[j][0] <= events[i][1] && events[j][1] >= events[i][0]) {
+                    // If they overlap, we cannot attend both
+                    continue;
+                }
+
+                // If events do NOT overlap, update result
+                // by taking the sum of their values
+                result = Math.max(result, val + events[j][2]);
+            }
+        }
+
+        // Return the maximum value obtainable from at most two non-overlapping events
+        return result;
+    }
+}
 
