@@ -1,4 +1,4 @@
-// Approach - Greedy Approach (Sorting + Accumulation)
+// Approach 1 - Greedy Approach (Sorting + Accumulation)
 // T.C - O(n+m*logm)         n=length of Apple array, m = length of capacity
 // S.C - O(1)
 
@@ -42,3 +42,9 @@ class Solution {
         return count;
     }
 }
+
+
+
+// Approach 2- Greedy Approach (Sorting + Accumulation)
+// T.C - O(n+m)         n=length of Apple array, m = length of capacity
+// S.C - O(1)
