@@ -45,6 +45,54 @@ class Solution {
 
 
 
-// Approach 2- Greedy Approach (Sorting + Accumulation)
+// Approach 2- (Using counting sort so that we can simply assign the apples to largest boxes first)
 // T.C - O(n+m)         n=length of Apple array, m = length of capacity
 // S.C - O(1)
+
+
+class Solution {
+    public int minimumBoxes(int[] apple, int[] capacity) {
+
+        // Variable to store the total number of apples
+        int totalApple = 0;
+
+        // Calculate the total apples
+        for (int num : apple) {
+            totalApple += num;
+        }
+
+        // Frequency array to store how many boxes exist
+        // for each capacity (1 to 50)
+        int[] freq = new int[51];
+
+        // Fill the frequency array based on capacity values
+        for (int num : capacity) {
+            freq[num]++;
+        }
+
+        // Count of boxes used
+        int count = 0;
+
+        // Traverse capacities from highest to lowest (greedy choice)
+        for (int i = 50; i >= 1 && totalApple > 0; i--) {
+
+            // Use boxes of current capacity while available
+            // and while apples are still left
+            while (freq[i] > 0 && totalApple > 0) {
+
+                // Place apples into the current box
+                totalApple -= i;
+
+                // Reduce the frequency of this capacity
+                freq[i]--;
+
+                // Increment the number of boxes used
+                count++;
+            }
+        }
+
+        // Return the minimum number of boxes required
+        return count;
+    }
+}
+
