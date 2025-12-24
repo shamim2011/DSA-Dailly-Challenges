@@ -44,3 +44,46 @@ class Solution {
         return ans;
     }
 }
+
+
+
+----------------------------------------------------------
+
+class Solution {
+    public int romanToInt(String s) {
+        Map<Character,Integer> mp = new HashMap<>();
+        mp.put('I',1); mp.put('V',5); mp.put('X',10);
+        mp.put('L',50); mp.put('C',100); mp.put('D',500); mp.put('M',1000);
+
+        int ans = 0;
+        int i = 0;
+
+        while (i < s.length()) {
+            if (i + 1 < s.length()) {
+                if (s.charAt(i) == 'I' && s.charAt(i + 1) == 'V') {
+                    ans += 4; i += 2; continue;
+                }
+                if (s.charAt(i) == 'I' && s.charAt(i + 1) == 'X') {
+                    ans += 9; i += 2; continue;
+                }
+                if (s.charAt(i) == 'X' && s.charAt(i + 1) == 'L') {
+                    ans += 40; i += 2; continue;
+                }
+                if (s.charAt(i) == 'X' && s.charAt(i + 1) == 'C') {
+                    ans += 90; i += 2; continue;
+                }
+                if (s.charAt(i) == 'C' && s.charAt(i + 1) == 'D') {
+                    ans += 400; i += 2; continue;
+                }
+                if (s.charAt(i) == 'C' && s.charAt(i + 1) == 'M') {
+                    ans += 900; i += 2; continue;
+                }
+            }
+
+            ans += mp.get(s.charAt(i));
+            i++;
+        }
+
+        return ans;
+    }
+}
