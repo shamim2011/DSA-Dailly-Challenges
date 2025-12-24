@@ -1,0 +1,38 @@
+// Approach - (Two Pointer / Sliding Window)
+// T.C - O(n)
+// S.C - O(1)
+
+
+class Solution {
+    public int findMaxConsecutiveOnes(int[] nums) {
+
+        // Stores the maximum number of consecutive 1s found
+        int ans = Integer.MIN_VALUE;
+
+        // Length of the array
+        int n = nums.length;
+
+        // Two pointers for sliding window
+        int j = 0;  // start of window
+        int i = 0;  // end of window
+
+        // Traverse the array
+        while (j < nums.length) {
+
+            // Move 'i' forward while we keep seeing 1s
+            while (i < nums.length && nums[i] == 1) {
+                i++;
+            }
+
+            // Update maximum length of consecutive 1s
+            ans = Math.max(ans, i - j);
+
+            // Move both pointers past the 0
+            j = i + 1;
+            i++;
+        }
+
+        // Return the maximum consecutive 1s
+        return ans;
+    }
+}
