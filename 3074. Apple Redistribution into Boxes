@@ -1,0 +1,44 @@
+// Approach - Greedy Approach (Sorting + Accumulation)
+// T.C - O(n*logn)
+// S.C - O(1)
+
+
+class Solution {
+    public int minimumBoxes(int[] apple, int[] capacity) {
+
+        // Variable to store the total number of apples
+        int sum = 0;
+
+        // Sort the capacity array in ascending order
+        Arrays.sort(capacity);
+
+        // Calculate the total number of apples
+        for (int num : apple) {
+            sum += num;
+        }
+
+        // Count of boxes used
+        int count = 0;
+
+        // Variable to keep track of total capacity used so far
+        int breakSum = 0;
+
+        // Traverse the capacity array from the largest capacity
+        for (int i = capacity.length - 1; i >= 0; i--) {
+
+            // Add the current box capacity
+            breakSum += capacity[i];
+
+            // Increment the number of boxes used
+            count++;
+
+            // If total capacity is enough to hold all apples, stop
+            if (breakSum >= sum) {
+                break;
+            }
+        }
+
+        // Return the minimum number of boxes required
+        return count;
+    }
+}
