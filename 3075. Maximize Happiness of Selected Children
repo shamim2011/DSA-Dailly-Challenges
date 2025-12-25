@@ -1,0 +1,51 @@
+//Approach-1 (Using Sorting)
+//T.C : O(nlogn)
+//S.C : O(1)
+
+
+
+class Solution {
+    public long maximumHappinessSum(int[] happiness, int k) {
+
+        // Variable to store the final maximum happiness sum
+        long ans = 0;
+
+        // Total number of people
+        int n = happiness.length;
+
+        // Since we are selecting the largest happiness first manually,
+        // we reduce k by 1
+        k = k - 1;
+
+        // Sort the happiness array in ascending order
+        Arrays.sort(happiness);
+
+        // Add the maximum happiness value (last element after sorting)
+        ans += happiness[n - 1];
+
+        // Start from the second largest element
+        int i = n - 2;
+
+        // Continue while there are elements left and selections remaining
+        while (i >= 0 && k > 0) {
+
+            // Reduce happiness based on how many people
+            // have already been considered from the right
+            int num = happiness[i] - (n - (i + 1));
+
+            // If reduced happiness is still positive
+            if (num > 0) {
+                ans += num;  // add to total happiness
+                i--;         // move to next largest element
+                k--;         // decrease remaining selections
+            }
+            // If happiness becomes zero or negative, stop
+            else {
+                break;
+            }
+        }
+
+        // Return the maximum happiness sum
+        return ans;
+    }
+}
