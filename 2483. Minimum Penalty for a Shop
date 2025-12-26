@@ -77,10 +77,64 @@ class Solution {
 
 
 
-//Approach-2 (keeping track of count of 'N' and 'Y' for any index)
+//Approach-2 Prefix Sum + Suffix Sum (Penalty Minimization)
 //Note that for any index i we close at that time, we want to know 
 //--how many 'N' were there from [0, i-1]
 //--how many 'Y' were there from [i, n-1]
 //T.C : O(n)
 //S.C : O(n)
 
+class Solution {
+    public int bestClosingTime(String customers) {
+
+        // Length of the customers string
+        int n = customers.length();
+
+        // prefix_N[i] = number of 'N' from index 0 to i-1
+        int[] prefix_N = new int[n + 1];
+
+        // suffix_Y[i] = number of 'Y' from index i to n-1
+        int[] suffix_Y = new int[n + 1];
+
+        // Base case for prefix array
+        prefix_N[0] = 0;
+
+        // Build prefix_N array
+        for (int i = 1; i <= n; i++) {
+            if (customers.charAt(i - 1) == 'N') {
+                prefix_N[i] = prefix_N[i - 1] + 1;
+            } else {
+                prefix_N[i] = prefix_N[i - 1];
+            }
+        }
+
+        // Build suffix_Y array
+        for (int i = n - 1; i >= 0; i--) {
+            if (customers.charAt(i) == 'Y') {
+                suffix_Y[i] = suffix_Y[i + 1] + 1;
+            } else {
+                suffix_Y[i] = suffix_Y[i + 1];
+            }
+        }
+
+        // Variables to track minimum penalty and best hour
+        int minPenalty = Integer.MAX_VALUE;
+        int minHour = Integer.MAX_VALUE;
+
+        // Try closing the shop at every hour from 0 to n
+        for (int i = 0; i <= n; i++) {
+
+            // Penalty if closed at hour i
+            int currPenalty = prefix_N[i] + suffix_Y[i];
+
+            // Update minimum penalty and hour
+            if (currPenalty < minPenalty) {
+                minPenalty = currPenalty;
+                minHour = i;
+            }
+        }
+
+        // Return the hour with minimum penalty
+        return minHour;
+    }
+}
