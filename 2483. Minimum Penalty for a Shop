@@ -74,3 +74,13 @@ class Solution {
         return minHour;
     }
 }
+
+
+
+//Approach-2 (keeping track of count of 'N' and 'Y' for any index)
+//Note that for any index i we close at that time, we want to know 
+//--how many 'N' were there from [0, i-1]
+//--how many 'Y' were there from [i, n-1]
+//T.C : O(n)
+//S.C : O(n)
+
