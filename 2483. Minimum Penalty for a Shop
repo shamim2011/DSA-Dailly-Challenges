@@ -1,2 +1,76 @@
-//Approach-1 : 
-// T.C - O(n^2) - TLE
+//Approach-1 : Brute Force / Simulation Approach  - TLE
+// T.C - O(n^2)
+// S.C - O(1)
+
+
+
+class Solution {
+    public int bestClosingTime(String customers) {
+
+        // To store the minimum penalty found so far
+        int minPenalty = Integer.MAX_VALUE;
+
+        // To store the hour at which minimum penalty occurs
+        int minHour = Integer.MAX_VALUE;
+
+        // Total number of hours
+        int n = customers.length();
+
+        // Try closing the shop at every hour from 0 to n-1
+        for(int i = 0; i < n; i++){
+
+            // Pointer to check hours before closing
+            int j = i - 1;
+
+            // Penalty for current closing hour
+            int penalty = 0;
+
+            // Count penalty for 'N' when shop was open
+            // (Shop open from 0 to i-1)
+            while(j >= 0){
+                if(customers.charAt(j) == 'N'){
+                    penalty++;
+                }
+                j--;
+            }
+
+            // Reset pointer to check hours after closing
+            j = i;
+
+            // Count penalty for 'Y' when shop was closed
+            // (Shop closed from i to n-1)
+            while(j < n){
+                if(customers.charAt(j) == 'Y'){
+                    penalty++;
+                }
+                j++;
+            }
+
+            // Update minimum penalty and corresponding hour
+            if(minPenalty > penalty){
+                minPenalty = penalty;
+                minHour = i;
+            }
+        }
+
+        // Special case: shop closes after the last hour (hour = n)
+        int nthHourPenalty = 0;
+
+        // Count penalty when shop is open for all hours
+        // (Penalty only comes from 'N')
+        for(int i = 0; i < n; i++){
+            if(customers.charAt(i) == 'N'){
+                nthHourPenalty++;
+            }
+        }
+
+        // Compare penalty of closing at hour n
+        if(nthHourPenalty < minPenalty){
+            minPenalty = nthHourPenalty;
+            minHour = n;
+        }
+
+        // Return the hour with minimum penalty
+        return minHour;
+    }
+}
