@@ -141,6 +141,50 @@ class Solution {
 
 
 
-//Approach-3 - 2 Pass Solution
+//Approach-3 - Prefix Penalty Optimization (Greedy Simulation)
 //(T.C : O(n)
 //S.C : O(1)
+
+
+class Solution {
+    public int bestClosingTime(String customers) {
+
+        int n = customers.length();
+
+        // Stores the hour with minimum penalty
+        int minHour = 0;
+
+        // Initial penalty if shop is closed at hour 0:
+        // All 'Y' customers will be missed
+        int penalty = 0;
+        for (int i = 0; i < n; i++) {
+            if (customers.charAt(i) == 'Y') {
+                penalty++;
+            }
+        }
+
+        // Minimum penalty found so far
+        int minPenalty = penalty;
+
+        // Try closing the shop at every hour from 1 to n
+        for (int i = 0; i < n; i++) {
+
+            // If customer is 'Y', opening shop avoids a missed customer → penalty decreases
+            if (customers.charAt(i) == 'Y') {
+                penalty--;
+            }
+            // If customer is 'N', opening shop causes idle time → penalty increases
+            else {
+                penalty++;
+            }
+
+            // Update minimum penalty and best closing hour
+            if (minPenalty > penalty) {
+                minPenalty = penalty;
+                minHour = i + 1;
+            }
+        }
+
+        return minHour;
+    }
+}
