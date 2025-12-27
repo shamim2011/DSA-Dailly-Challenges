@@ -2,7 +2,6 @@
 //T.C : O(mlogm +m*n) , where Let n = number of rooms, m =  number of meetings
 //S.C : O(n)
 
-import java.util.Arrays;
 
 class Solution {
     public int mostBooked(int n, int[][] meetings) {
