@@ -80,3 +80,85 @@ class Solution {
 //S.C : O(n)
 
 
+class Solution {
+    public int mostBooked(int n, int[][] meetings) {
+
+        // Sort all meetings by their start time
+        Arrays.sort(meetings, (a, b) -> Integer.compare(a[0], b[0]));
+
+        // Array to count how many times each room is used
+        int[] roomUseCount = new int[n];
+
+        // Min-heap to store free rooms (smallest index first)
+        PriorityQueue<Integer> unusedRooms = new PriorityQueue<>();
+
+        // Min-heap to store used rooms
+        // Each entry: [endTime, roomIndex]
+        // Sorted by earliest endTime, then smallest roomIndex
+        PriorityQueue<long[]> usedRooms = new PriorityQueue<>(
+            (a, b) -> a[0] != b[0]
+                ? Long.compare(a[0], b[0])
+                : Long.compare(a[1], b[1])
+        );
+
+        // Initially, all rooms are free
+        for (int room = 0; room < n; room++) {
+            unusedRooms.offer(room);
+        }
+
+        // Process each meeting one by one
+        for (int[] meet : meetings) {
+
+            int start = meet[0];
+            int end = meet[1];
+            int duration = end - start;
+
+            // Free all rooms whose meetings end before or at the current start time
+            while (!usedRooms.isEmpty() && usedRooms.peek()[0] <= start) {
+                unusedRooms.offer((int) usedRooms.poll()[1]);
+            }
+
+            // Case 1: A free room is available
+            if (!unusedRooms.isEmpty()) {
+
+                // Assign the meeting to the smallest indexed free room
+                int room = unusedRooms.poll();
+
+                // Mark this room as occupied until 'end'
+                usedRooms.offer(new long[]{end, room});
+
+                // Increase usage count for this room
+                roomUseCount[room]++;
+            }
+            // Case 2: No room is free → delay the meeting
+            else {
+
+                // Take the room that gets free the earliest
+                long[] earliest = usedRooms.poll();
+
+                int room = (int) earliest[1];
+                long newEndTime = earliest[0] + duration;
+
+                // Schedule the meeting after the earliest end time
+                usedRooms.offer(new long[]{newEndTime, room});
+
+                // Increase usage count for this room
+                roomUseCount[room]++;
+            }
+        }
+
+        // Find the room with the maximum usage count
+        int resultRoom = -1;
+        int maxUse = 0;
+
+        for (int room = 0; room < n; room++) {
+            if (roomUseCount[room] > maxUse) {
+                maxUse = roomUseCount[room];
+                resultRoom = room;
+            }
+        }
+
+        // Return the most booked room index
+        return resultRoom;
+    }
+}
