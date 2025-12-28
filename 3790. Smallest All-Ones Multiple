@@ -44,3 +44,46 @@ class Solution {
         }
     }
 }
+
+
+-----------------------------------------   Same code but different logic  ----------------------------------------
+
+
+
+class Solution {
+    public int minAllOneMultiple(int k) {
+
+        // If k is divisible by 2 or 5, 
+        // a number consisting only of '1's cannot be divisible by k
+        if (k % 2 == 0 || k % 5 == 0) {
+            return -1;
+        }
+
+        // Remainder of the current all-ones number modulo k
+        int rem = 1 % k;
+
+        // Length of the current all-ones number
+        int len = 1;
+
+        // We try at most k iterations (pigeonhole principle)
+        for (int i = 1; i < k; i++) {
+
+            // If remainder becomes 0, we found a valid multiple
+            if (rem == 0) {
+                return len;
+            }
+
+            // Append '1' to the current number:
+            // new_number = old_number * 10 + 1
+            // We only keep the remainder to avoid large numbers
+            rem = (rem * 10 + 1) % k;
+
+            // Increase the length since we added one more '1'
+            len++;
+        }
+
+        // If no remainder became 0 within k steps,
+        // then such a number does not exist
+        return len;
+    }
+}
