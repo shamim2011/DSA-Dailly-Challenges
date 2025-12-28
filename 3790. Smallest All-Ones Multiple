@@ -1,0 +1,46 @@
+// Approach:  Remainder Tracking Approach
+// T.C - O(k)
+// S.c - O(k)
+
+
+class Solution {
+    public int minAllOneMultiple(int k) {
+
+        // If k is divisible by 2 or 5, it's impossible to form a number of all 1s divisible by k
+        // because any number made of 1s is odd and not divisible by 5
+        if (k % 2 == 0 || k % 5 == 0) {
+            return -1;
+        }
+
+        // visited array to track remainders we've already seen
+        boolean[] visit = new boolean[k];
+
+        // Start with the number "1", remainder modulo k
+        int rem = 1 % k;
+
+        // Length of the number, starting with 1
+        int len = 1;
+
+        while (true) {
+            // If remainder is 0, the current number is divisible by k
+            if (rem == 0) {
+                return len;
+            }
+
+            // If we have already seen this remainder, a cycle is detected → impossible
+            if (visit[rem]) {
+                return -1;
+            }
+
+            // Mark this remainder as visited
+            visit[rem] = true;
+
+            // Append another '1' to the number
+            // Update remainder: (currentNumber * 10 + 1) % k
+            rem = (rem * 10 + 1) % k;
+
+            // Increment the length since we added one more digit
+            len++;
+        }
+    }
+}
