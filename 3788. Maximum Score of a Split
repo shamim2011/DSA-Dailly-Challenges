@@ -1,0 +1,38 @@
+// Approach: Prefix Sum + Suffix Minimum
+// T.C -  O(n)
+// S.C -  O(n)
+
+
+class Solution {
+    public long maximumScore(int[] nums) {
+        int n = nums.length;
+
+        // Initialize answer with minimum possible value
+        long ans = Long.MIN_VALUE;
+
+        // Step 1: Compute prefix sums
+        long[] preSum = new long[n];  // preSum[i] stores sum of nums[0..i]
+        preSum[0] = nums[0];
+        long sum = nums[0];
+        for (int i = 1; i < n; i++) {
+            sum += nums[i];
+            preSum[i] = sum;
+        }
+
+        // Step 2: Compute suffix minimums
+        int[] sufMin = new int[n];  // sufMin[i] stores minimum of nums[i..n-1]
+        int minValue = Integer.MAX_VALUE;
+        for (int i = n - 1; i >= 0; i--) {
+            minValue = Math.min(minValue, nums[i]);
+            sufMin[i] = minValue;
+        }
+
+        // Step 3: Compute maximum score by splitting at each index
+        // Score = sum of left part - minimum of right part
+        for (int i = 0; i + 1 < n; i++) {
+            ans = Math.max(ans, preSum[i] - sufMin[i + 1]);
+        }
+
+        return ans;
+    }
+}
