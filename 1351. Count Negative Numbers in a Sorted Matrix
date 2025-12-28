@@ -49,6 +49,45 @@ class Solution {
 
 
 
+// Approach 2 -  Binary Search (Row-wise)
+// T.C - O(m × log n)     -> where m = number of rows in the grid, n = number of columns in the grid
+// S.C - O(1)
 
 
+class Solution {
+
+    public int countNegatives(int[][] grid) {
+
+        int ans = 0;
+
+        // Traverse each row
+        for (int[] arr : grid) {
+            ans += countNegative(arr);
+        }
+
+        return ans;
+    }
+
+    // Binary search to find count of negatives in a row
+    int countNegative(int[] arr) {
+
+        int n = arr.length;
+        int l = 0, r = n - 1;
+        int count = n; // default: no negatives
+
+        while (l <= r) {
+            int mid = l + (r - l) / 2;
+
+            if (arr[mid] < 0) {
+                count = mid; // possible answer
+                r = mid - 1;              // search left part
+            } else {
+                l = mid + 1;              // search right part
+            }
+        }
+
+        // Count of negatives = total elements - first negative index
+        return n - count;
+    }
+}
 
