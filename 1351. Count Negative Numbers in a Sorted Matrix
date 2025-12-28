@@ -1,0 +1,54 @@
+// Approach 1 - Brute Force / Linear Scan
+// T.C - O(m * n)     -> where m = number of rows in the grid, n = number of columns in the grid
+// S.C - O(1)
+
+
+class Solution {
+
+    // Function to count total number of negative numbers in the grid
+    public int countNegatives(int[][] grid) {
+
+        // Variable to store the final count of negative numbers
+        int ans = 0;
+
+        // Traverse each row of the grid
+        for (int[] arr : grid) {
+
+            // Count negatives in the current row
+            int count = countNegative(arr);
+
+            // Add to the total count
+            ans += count;
+        }
+
+        // Return total negative count
+        return ans;
+    }
+
+    // Helper function to count negative numbers in a single row
+    int countNegative(int[] arr) {
+
+        int n = arr.length;
+
+        // Variable to store count of negative numbers in this row
+        int count = 0;
+
+        // Traverse the row
+        for (int i = 0; i < n; i++) {
+
+            // Check if the current element is negative
+            if (arr[i] < 0) {
+                count++;
+            }
+        }
+
+        // Return count of negatives in this row
+        return count;
+    }
+}
+
+
+
+
+
+
