@@ -75,6 +75,90 @@ class Solution {
 
 
 
-// Approach 1 - Backtracking / DFS with Pruning (Recursive Pyramid Construction)
-// T.C - O(B^(n*n)) 
-// S.C - 
+// Approach 2 - DFS + Backtracking with Memoization (Top-Down DP)
+// T.C - O(B^(n*n))                n = length of the bottom string,      B = maximum number of possible characters for any pair (branching factor, ≤ 7 in constraints)
+// S.C - O(n^2*B)
+
+
+
+class Solution {
+
+    // Memoization map to store already computed states
+    // Key   -> "currentString_index_aboveString"
+    // Value -> true / false (whether pyramid can be built from this state)
+    Map<String, Boolean> t = new HashMap<>();
+
+    public boolean pyramidTransition(String bottom, List<String> allowed) {
+
+        // Map to store valid transitions
+        // Key   -> bottom pair (length 2)
+        // Value -> list of possible characters above
+        Map<String, List<Character>> mp = new HashMap<>();
+
+        // Build transition map from allowed list
+        for (String pattern : allowed) {
+            String pair = pattern.substring(0, 2); // bottom pair
+            char ch = pattern.charAt(2);           // upper character
+
+            mp.computeIfAbsent(pair, k -> new ArrayList<>()).add(ch);
+        }
+
+        // Start DFS + backtracking with memoization
+        return solve(bottom, mp, 0, new StringBuilder());
+    }
+
+    boolean solve(String curr, Map<String, List<Character>> mp, int idx, StringBuilder above) {
+
+        // Base case:
+        // Pyramid successfully built to the top
+        if (curr.length() == 1) {
+            return true;
+        }
+
+        // Create a unique key representing current DFS state
+        String key = curr + "_" + idx + "_" + above.toString();
+
+        // If this state was already computed, return stored result
+        if (t.containsKey(key)) {
+            return t.get(key);
+        }
+
+        // If all pairs in current level are processed,
+        // move to the next upper level
+        if (idx == curr.length() - 1) {
+            boolean res = solve(above.toString(), mp, 0, new StringBuilder());
+            t.put(key, res); // memoize result
+            return res;
+        }
+
+        // Current adjacent pair
+        String pair = curr.substring(idx, idx + 2);
+
+        // If no transition exists for this pair, fail early
+        if (!mp.containsKey(pair)) {
+            t.put(key, false);
+            return false;
+        }
+
+        // Try all possible characters above this pair
+        for (char ch : mp.get(pair)) {
+
+            // Do: place character
+            above.append(ch);
+
+            // Explore: move to next pair
+            if (solve(curr, mp, idx + 1, above)) {
+                t.put(key, true);
+                return true;
+            }
+
+            // Undo: backtrack
+            above.deleteCharAt(above.length() - 1);
+        }
+
+        // No valid pyramid found from this state
+        t.put(key, false);
+        return false;
+    }
+}
+
