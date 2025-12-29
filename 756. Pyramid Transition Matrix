@@ -1,6 +1,80 @@
-// Approach - 
-// T.C - 
+// Approach 1 - Backtracking / DFS with Pruning (Recursive Pyramid Construction)
+// T.C - O(B^(n*n))        n = length of the bottom string,      B = maximum number of possible characters for any pair (branching factor, ≤ 7 in constraints)
+// S.C - O(n*n)
+
+
+class Solution {
+
+    public boolean pyramidTransition(String bottom, List<String> allowed) {
+
+        // Map to store all allowed transitions
+        // Key   -> pair of characters (length 2)
+        // Value -> list of characters that can be placed above the pair
+        Map<String, List<Character>> mp = new HashMap<>();
+
+        // Build the mapping from allowed patterns
+        for (String pattern : allowed) {
+            String pair = pattern.substring(0, 2); // bottom pair
+            char ch = pattern.charAt(2);           // character placed above
+
+            // Add mapping pair -> ch
+            mp.computeIfAbsent(pair, k -> new ArrayList<>()).add(ch);
+        }
+
+        // Start recursive backtracking
+        // bottom -> current level
+        // mp     -> transition map
+        // idx    -> current index in the level
+        // above  -> building the upper level
+        return solve(bottom, mp, 0, new StringBuilder());
+    }
+
+    boolean solve(String curr, Map<String, List<Character>> mp, int idx, StringBuilder above) {
+
+        // Base case:
+        // If current level has only one block, pyramid is successfully built
+        if (curr.length() == 1) {
+            return true;
+        }
+
+        // If we have processed all adjacent pairs in current level
+        // Move to the next upper level
+        if (idx == curr.length() - 1) {
+            return solve(above.toString(), mp, 0, new StringBuilder());
+        }
+
+        // Take the current adjacent pair
+        String pair = curr.substring(idx, idx + 2);
+
+        // If no block can be placed above this pair, fail early
+        if (!mp.containsKey(pair)) {
+            return false;
+        }
+
+        // Try all possible characters that can be placed above this pair
+        for (char ch : mp.get(pair)) {
+
+            // Do: place character in the upper level
+            above.append(ch);
+
+            // Explore: move to next pair
+            if (solve(curr, mp, idx + 1, above)) {
+                return true; // valid pyramid found
+            }
+
+            // Undo: backtrack
+            above.deleteCharAt(above.length() - 1);
+        }
+
+        // If no valid configuration found
+        return false;
+    }
+}
+
+
+
+
+
+// Approach 1 - Backtracking / DFS with Pruning (Recursive Pyramid Construction)
+// T.C - O(B^(n*n)) 
 // S.C - 
-
-
-
