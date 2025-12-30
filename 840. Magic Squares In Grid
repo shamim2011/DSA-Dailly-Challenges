@@ -1,6 +1,80 @@
-// Approach - 
-// T.C - 
-// S.C - 
+// Approach - Brute Force / Sliding Window over 3×3 Subgrids (Simulation)
+// T.C - O(rows × cols)
+// S.C - O(1)
 
 
 
+class Solution {
+
+    // Main function to count how many 3x3 magic squares exist in the grid
+    public int numMagicSquaresInside(int[][] grid) {
+
+        int rows = grid.length;        // Total number of rows
+        int cols = grid[0].length;     // Total number of columns
+        int count = 0;                 // To store number of magic squares
+
+        // Iterate over all possible 3x3 sub-grids
+        for (int i = 0; i <= rows - 3; i++) {
+            for (int j = 0; j <= cols - 3; j++) {
+
+                // Check if current 3x3 grid is a magic square
+                if (isMagic(grid, i, j)) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+
+    // Helper method to check if a 3x3 sub-grid is a magic square
+    boolean isMagic(int[][] grid, int r, int c) {
+
+        // Set to track unique numbers (must be 1 to 9)
+        Set<Integer> st = new HashSet<>();
+
+        // Check all numbers in the 3x3 grid
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+
+                int num = grid[r + i][c + j];
+
+                // Numbers must be between 1 and 9 and all must be unique
+                if (num < 1 || num > 9 || st.contains(num)) {
+                    return false;
+                } else {
+                    st.add(num);
+                }
+            }
+        }
+
+        // Calculate sum of the first row
+        int sum = grid[r][c] + grid[r][c + 1] + grid[r][c + 2];
+
+        // Check sum of all rows and columns
+        for (int i = 0; i < 3; i++) {
+
+            // Row sum check
+            if (grid[r + i][c] + grid[r + i][c + 1] + grid[r + i][c + 2] != sum) {
+                return false;
+            }
+
+            // Column sum check
+            if (grid[r][c + i] + grid[r + 1][c + i] + grid[r + 2][c + i] != sum) {
+                return false;
+            }
+        }
+
+        // Check main diagonal
+        if (grid[r][c] + grid[r + 1][c + 1] + grid[r + 2][c + 2] != sum) {
+            return false;
+        }
+
+        // Check secondary diagonal
+        if (grid[r][c + 2] + grid[r + 1][c + 1] + grid[r + 2][c] != sum) {
+            return false;
+        }
+
+        // If all conditions are satisfied
+        return true;
+    }
+}
