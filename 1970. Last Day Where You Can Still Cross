@@ -100,3 +100,119 @@ class Solution {
         return ans;
     }
 }
+
+
+//Approach-2 (Using Binary Search + BFS)
+// T.C - O((R×C)*log(R×C))​
+// S.C - O(R×C)
+
+
+
+class Solution {
+
+    // Total number of rows and columns
+    int ROW;
+    int COL;
+
+    // 4 possible movement directions: down, up, right, left
+    int[][] directions = {
+        {1, 0},
+        {-1, 0},
+        {0, 1},
+        {0, -1}
+    };
+
+    // BFS to check if we can reach the bottom row starting from (i, j)
+    boolean bfs(int[][] grid, int i, int j) {
+
+        // Queue for BFS traversal
+        Queue<int[]> queue = new LinkedList<>();
+
+        // Start from the given cell
+        queue.offer(new int[]{i, j});
+        grid[i][j] = 1;  // Mark as visited
+
+        while (!queue.isEmpty()) {
+
+            // Get current cell
+            int[] temp = queue.poll();
+            int x = temp[0];
+            int y = temp[1];
+
+            // If we reached the last row, crossing is possible
+            if (x == ROW - 1) {
+                return true;
+            }
+
+            // Explore all 4 adjacent cells
+            for (int[] dir : directions) {
+                int new_x = x + dir[0];
+                int new_y = y + dir[1];
+
+                // Check boundaries and if the cell is unvisited land
+                if (new_x >= 0 && new_x < ROW &&
+                    new_y >= 0 && new_y < COL &&
+                    grid[new_x][new_y] == 0) {
+
+                    queue.offer(new int[]{new_x, new_y});
+                    grid[new_x][new_y] = 1;  // Mark visited
+                }
+            }
+        }
+
+        // Could not reach bottom row
+        return false;
+    }
+
+    // Checks whether crossing is possible on a given day
+    boolean canCross(int[][] cells, int day) {
+
+        // Grid where 0 = land, 1 = water
+        int[][] grid = new int[ROW][COL];
+
+        // Flood cells up to the given day
+        for (int i = 0; i <= day; i++) {
+            int r = cells[i][0] - 1;  // Convert to 0-based index
+            int c = cells[i][1] - 1;
+            grid[r][c] = 1;
+        }
+
+        // Try to start BFS from every land cell in the top row
+        for (int j = 0; j < COL; j++) {
+            if (grid[0][j] == 0 && bfs(grid, 0, j)) {
+                return true;  // Crossing is possible
+            }
+        }
+
+        // No valid path found
+        return false;
+    }
+
+    // Uses binary search to find the latest day to cross the grid
+    public int latestDayToCross(int row, int col, int[][] cells) {
+
+        // Initialize grid dimensions
+        ROW = row;
+        COL = col;
+
+        int l = 0;
+        int r = cells.length - 1;
+        int ans = 0;
+
+        // Binary search on days
+        while (l <= r) {
+
+            int mid = l + (r - l) / 2;
+
+            // If crossing is possible on this day
+            if (canCross(cells, mid)) {
+                ans = mid + 1;   // Days are 1-based in the result
+                l = mid + 1;     // Try later days
+            } else {
+                r = mid - 1;     // Try earlier days
+            }
+        }
+
+        return ans;
+    }
+}
