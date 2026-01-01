@@ -1,0 +1,33 @@
+// Approach - Carry Propagation (Right-to-Left Digit Simulation)
+// T.C - O(n)
+// S.C - O(1)
+
+
+
+class Solution {
+    public int[] plusOne(int[] digits) {
+        // Length of the digits array
+        int n = digits.length;
+        // Start from the last digit
+        int i = n - 1;
+        // Traverse digits from right to left
+        while (i >= 0) {
+            // If current digit is less than 9,
+            // we can safely add 1 and return the result
+            if (digits[i] < 9) {
+                digits[i] += 1;
+                return digits;
+            }
+            // If digit is 9, it becomes 0 due to carry
+            digits[i] = 0;
+            // Move to the next left digit
+            i--;
+        }
+        // If all digits were 9 (e.g., 9,9,9),
+        // we need one extra digit at the beginning
+        int[] ans = new int[n + 1];
+        // First digit will be 1, rest are already 0
+        ans[0] = 1;
+        return ans;
+    }
+}
