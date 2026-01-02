@@ -59,3 +59,24 @@ class Solution {
         return 0; // safety return
     }
 }
+
+
+// Approach 3- Neighbor Comparison / Pattern Observation
+// T.C - O(n)
+// S.C - O(1)
+
+
+class Solution {
+    public int repeatedNTimes(int[] nums) {
+
+        for (int i = 2; i < nums.length; i++) {
+            // Check last 2 and last 3 positions
+            if (nums[i] == nums[i - 1] || nums[i] == nums[i - 2]) {
+                return nums[i];
+            }
+        }
+
+        // Edge case
+        return nums[0];
+    }
+}
