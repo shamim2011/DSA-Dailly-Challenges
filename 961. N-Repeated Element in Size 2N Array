@@ -1,6 +1,6 @@
-// Approach - Hash Map Frequency Counting
+// Approach 1- Hash Map Frequency Counting
 // T.C - O(n)
-/ S.C - O(n)
+// S.C - O(n)
 
 
 class Solution {
@@ -28,5 +28,34 @@ class Solution {
 
         // Return the repeated number
         return ans;
+    }
+}
+
+
+
+
+// Approach 2- Frequency Array Counting
+// T.C - O(n)
+// S.C - O(1)
+
+
+class Solution {
+    public int repeatedNTimes(int[] nums) {
+
+        int n = nums.length / 2;
+
+        // Frequency array (0 <= nums[i] <= 10^4)
+        int[] arr = new int[10000];
+
+        // Count frequency of each number
+        for (int num : nums) {
+            arr[num]++;
+            // Early exit if frequency becomes n
+            if (arr[num] == n) {
+                return num;
+            }
+        }
+
+        return 0; // safety return
     }
 }
