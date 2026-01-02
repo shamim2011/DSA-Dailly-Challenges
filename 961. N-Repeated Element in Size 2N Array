@@ -1,5 +1,32 @@
-// Approach - 
-// T.C - 
-/ S.C - 
+// Approach - Hash Map Frequency Counting
+// T.C - O(n)
+/ S.C - O(n)
 
 
+class Solution {
+    public int repeatedNTimes(int[] nums) {
+
+        // The repeated number appears exactly n times
+        int n = nums.length / 2;
+
+        // HashMap to store frequency of each number
+        Map<Integer, Integer> mp = new HashMap<>();
+
+        // Count frequency of each number
+        for (int num : nums) {
+            mp.put(num, mp.getOrDefault(num, 0) + 1);
+        }
+
+        int ans = 0;
+
+        // Find the number whose frequency is exactly n
+        for (Map.Entry<Integer, Integer> entry : mp.entrySet()) {
+            if (entry.getValue() == n) {
+                ans = entry.getKey();
+            }
+        }
+
+        // Return the repeated number
+        return ans;
+    }
+}
