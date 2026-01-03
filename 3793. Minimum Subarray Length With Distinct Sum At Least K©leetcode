@@ -1,0 +1,33 @@
+// Approach - sliding window + map
+// T.C - O(n)
+// S.C - O(n)
+
+
+
+class Solution {
+    public int minLength(int[] nums, int k) {
+        int n = nums.length;
+        int i=0;
+        int sum = 0;
+        int ans = Integer.MAX_VALUE;
+        Map<Integer,Integer> mp = new HashMap<>();
+        for(int j=0;j<n;j++){
+            int num = nums[j];
+            mp.put(num,mp.getOrDefault(num,0)+1);
+            if(mp.get(num)==1){
+                sum += num;
+            }
+            while(sum>=k){
+                ans = Math.min(ans,j-i+1);
+                int lnum = nums[i];
+                int freq = mp.get(lnum)-1;
+                mp.put(lnum,freq);
+                if(mp.get(lnum)==0){
+                    sum -= lnum;
+                }
+                i++;
+            }
+        }
+        return ans == Integer.MAX_VALUE?-1:ans;
+    }
+}©leetcode
