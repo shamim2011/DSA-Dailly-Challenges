@@ -1,0 +1,16 @@
+// Approach -
+// T.C - 
+// S.C -
+
+
+class Solution {
+    public String reversePrefix(String s, int k) {
+        StringBuilder sb = new StringBuilder();
+        int n = s.length();
+        String sub = s.substring(k,n);
+        String kSub = s.substring(0,k);
+        sb.append(kSub).reverse();
+        sb.append(sub);
+        return sb.toString();
+    }
+}©leetcode
