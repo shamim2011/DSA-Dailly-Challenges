@@ -1,0 +1,85 @@
+//Approach - Top-Down Dynamic Programming (Recursion + Memoization using State Enumeration)
+//T.C : O(n)
+//S.C : O(n)
+
+
+
+class Solution {
+
+    // Modulo value as per problem constraints
+    int mod = (int) 1e9 + 7;
+
+    // dp[n][prev] stores number of ways to paint
+    // remaining n rows when previous row pattern is 'prev'
+    int[][] dp;
+
+    // All 12 valid color patterns for one row
+    // (no two adjacent cells in a row have the same color)
+    String[] states = {
+        "RYG","RGY","RYR","RGR",
+        "YRG","YGR","YGY","YRY",
+        "GRY","GYR","GRG","GYG"
+    };
+
+    public int numOfWays(int n) {
+        int ans = 0;
+
+        // Initialize dp array with -1 (uncomputed states)
+        dp = new int[n][12];
+        for (int i = 0; i < n; i++) {
+            Arrays.fill(dp[i], -1);
+        }
+
+        // Try each possible pattern for the first row
+        for (int i = 0; i < 12; i++) {
+            ans = (ans + solve(n - 1, i)) % mod;
+        }
+
+        return ans;
+    }
+
+    // Recursive function to count number of ways
+    // n    -> remaining rows to paint
+    // prev -> index of previous row pattern
+    int solve(int n, int prev) {
+
+        // Base case: no more rows to paint
+        if (n == 0) {
+            return 1;
+        }
+
+        // If already computed, return stored value
+        if (dp[n][prev] != -1) {
+            return dp[n][prev];
+        }
+
+        int res = 0;
+        String last = states[prev];
+
+        // Try all possible current row patterns
+        for (int curr = 0; curr < 12; curr++) {
+
+            // Skip same pattern (vertical conflict guaranteed)
+            if (curr == prev) continue;
+
+            String currPattern = states[curr];
+            boolean invalid = false;
+
+            // Check vertical constraint (same column cannot have same color)
+            for (int col = 0; col < 3; col++) {
+                if (currPattern.charAt(col) == last.charAt(col)) {
+                    invalid = true;
+                    break;
+                }
+            }
+
+            // If valid, recurse for next row
+            if (!invalid) {
+                res = (res + solve(n - 1, curr)) % mod;
+            }
+        }
+
+        // Store result in dp and return
+        return dp[n][prev] = res;
+    }
+}
