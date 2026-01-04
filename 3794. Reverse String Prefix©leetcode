@@ -1,6 +1,6 @@
-// Approach -
-// T.C - 
-// S.C -
+// Approach - Prefix Reversal Using StringBuilder
+// T.C - O(n)
+// S.C - O(n)
 
 
 class Solution {
@@ -13,4 +13,4 @@ class Solution {
         sb.append(sub);
         return sb.toString();
     }
-}©leetcode
+}
