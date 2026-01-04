@@ -1,0 +1,54 @@
+// Approach - 1 : Brute Force Divisor Counting (TLE)
+// T.C - O(N * M)              N = number of elements in nums, M = maximum value in nums
+// S.C - O(1)
+
+
+class Solution {
+
+    // This method calculates the total sum of divisors
+    // for numbers in the array that have exactly 4 divisors
+    public int sumFourDivisors(int[] nums) {
+        int ans = 0;
+
+        // Traverse each number in the array
+        for (int num : nums) {
+
+            // Check if the current number has exactly 4 divisors
+            boolean countDivi = isFourDivisors(num);
+
+            // If yes, add the sum of all its divisors to answer
+            if (countDivi) {
+                ans += sumOfAllDivi(num);
+            }
+        }
+        return ans;
+    }
+
+    // This method checks whether a number has exactly 4 divisors
+    boolean isFourDivisors(int n) {
+        int count = 0;
+
+        // Count all divisors of n
+        for (int i = 1; i <= n; i++) {
+            if (n % i == 0) {
+                count++;
+            }
+        }
+
+        // Return true if divisor count is exactly 4
+        return count == 4;
+    }
+
+    // This method calculates the sum of all divisors of n
+    int sumOfAllDivi(int n) {
+        int sum = 0;
+
+        // Add all divisors of n
+        for (int i = 1; i <= n; i++) {
+            if (n % i == 0) {
+                sum += i;
+            }
+        }
+        return sum;
+    }
+}
