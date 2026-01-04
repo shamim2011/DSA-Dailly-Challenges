@@ -1,0 +1,57 @@
+// Approach - Brute Force Enumeration (4-Nested Loops)
+// T.C - O(n⁴)
+// S.C - O(k)
+
+
+class Solution {
+    public List<List<String>> wordSquares(String[] words) {
+
+        // List to store all valid word squares
+        List<List<String>> ans = new ArrayList<>();
+        int n = words.length;
+
+        // Choose the top word
+        for (int i = 0; i < n; i++) {
+            String top = words[i];
+
+            // Choose the left word (different from top)
+            for (int j = 0; j < n; j++) {
+                if (j == i) continue;
+                String left = words[j];
+
+                // Choose the right word (different from top and left)
+                for (int k = 0; k < n; k++) {
+                    if (k == i || k == j) continue;
+                    String right = words[k];
+
+                    // Choose the bottom word (all indices distinct)
+                    for (int l = 0; l < n; l++) {
+                        if (l == i || l == j || l == k) continue;
+                        String bottom = words[l];
+
+                        // Check word square conditions (assuming word length = 4)
+                        if (top.charAt(0) == left.charAt(0) &&
+                            top.charAt(3) == right.charAt(0) &&
+                            bottom.charAt(0) == left.charAt(3) &&
+                            bottom.charAt(3) == right.charAt(3)) {
+
+                            // Valid word square found
+                            ans.add(Arrays.asList(top, left, right, bottom));
+                        }
+                    }
+                }
+            }
+        }
+
+        // Sort the result lexicographically
+        Collections.sort(ans, (a, b) -> {
+            for (int i = 0; i < 4; i++) {
+                int cmp = a.get(i).compareTo(b.get(i));
+                if (cmp != 0) return cmp;
+            }
+            return 0;
+        });
+
+        return ans;
+    }
+}
