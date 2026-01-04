@@ -5,50 +5,60 @@
 
 class Solution {
 
-    // This method calculates the total sum of divisors
-    // for numbers in the array that have exactly 4 divisors
+    // Main function to calculate the sum of divisors
+    // for numbers having exactly four divisors
     public int sumFourDivisors(int[] nums) {
         int ans = 0;
 
         // Traverse each number in the array
         for (int num : nums) {
 
-            // Check if the current number has exactly 4 divisors
+            // Check if the number has exactly four divisors
             boolean countDivi = isFourDivisors(num);
 
-            // If yes, add the sum of all its divisors to answer
+            // If yes, add the sum of all its divisors
             if (countDivi) {
                 ans += sumOfAllDivi(num);
             }
         }
+
         return ans;
     }
 
-    // This method checks whether a number has exactly 4 divisors
+    // Function to check whether a number has exactly four divisors
     boolean isFourDivisors(int n) {
         int count = 0;
 
-        // Count all divisors of n
+        // Check divisibility from 1 to n
         for (int i = 1; i <= n; i++) {
+
+            // If i divides n, increase divisor count
             if (n % i == 0) {
                 count++;
             }
+
+            // Early stopping if divisors exceed 4
+            if (count > 4) {
+                return false;
+            }
         }
 
-        // Return true if divisor count is exactly 4
+        // Return true only if divisor count is exactly 4
         return count == 4;
     }
 
-    // This method calculates the sum of all divisors of n
+    // Function to calculate the sum of all divisors of a number
     int sumOfAllDivi(int n) {
         int sum = 0;
 
-        // Add all divisors of n
+        // Traverse from 1 to n and add divisors
         for (int i = 1; i <= n; i++) {
             if (n % i == 0) {
                 sum += i;
             }
         }
+
         return sum;
     }
 }
+
