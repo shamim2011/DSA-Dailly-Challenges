@@ -62,3 +62,60 @@ class Solution {
     }
 }
 
+
+
+
+// Approach - 2 : Divisor Counting Using Square Root Iteration
+// T.C - O(N×sqrt(M))           N = number of elements in nums, M = maximum value in nums
+// S.C - O(1)
+
+
+class Solution {
+
+    // This method iterates over each number in the array
+    // and adds the sum of its divisors only if it has exactly 4 divisors
+    public int sumFourDivisors(int[] nums) {
+        int ans = 0;
+
+        // Process each number in the array
+        for (int num : nums) {
+            ans += sumOfAllDivi(num);
+        }
+
+        return ans;
+    }
+
+    // This helper method returns:
+    // - the sum of all divisors if the number has exactly 4 divisors
+    // - otherwise returns 0
+    int sumOfAllDivi(int n) {
+        int sum = 0;    // To store sum of divisors
+        int count = 0;  // To count number of divisors
+
+        // Iterate till sqrt(n) to find divisor pairs
+        for (int i = 1; i * i <= n; i++) {
+
+            // If i is a divisor
+            if (n % i == 0) {
+                int d1 = i;      // First divisor
+                int d2 = n / i;  // Corresponding paired divisor
+
+                // Count and add first divisor
+                count++;
+                sum += d1;
+
+                // If divisors are different, count and add second divisor
+                if (d1 != d2) {
+                    count++;
+                    sum += d2;
+                }
+
+                // If divisors exceed 4, no need to continue
+                if (count > 4) return 0;
+            }
+        }
+
+        // Return sum only if exactly 4 divisors are found
+        return count == 4 ? sum : 0;
+    }
+}
