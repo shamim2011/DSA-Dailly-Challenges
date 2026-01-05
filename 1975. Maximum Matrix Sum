@@ -1,5 +1,46 @@
-// Approach - 
-// T.C - 
-// S.C - 
+// Approach - Greedy + Math
+// T.C - O(n²)
+// S.C - O(1)
 
 
+class Solution {
+    public long maxMatrixSum(int[][] matrix) {
+
+        // Size of the square matrix
+        int n = matrix.length;
+
+        // To store the minimum absolute value in the matrix
+        int minVal = Integer.MAX_VALUE;
+
+        // Count of negative numbers in the matrix
+        int negCount = 0;
+
+        // Sum of absolute values of all elements
+        long sum = 0;
+
+        // Traverse the entire matrix
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < n; j++){
+
+                // Add absolute value of current element to sum
+                sum += Math.abs(matrix[i][j]);
+
+                // Count negative elements
+                if(matrix[i][j] < 0){
+                    negCount++;
+                }
+
+                // Track the smallest absolute value
+                minVal = Math.min(Math.abs(matrix[i][j]), minVal);
+            }
+        }
+
+        // If number of negatives is even, maximum sum is achievable
+        if(negCount % 2 == 0){
+            return sum;
+        }
+
+        // If odd negatives, subtract twice the smallest absolute value
+        return (sum - 2 * minVal);
+    }
+}
