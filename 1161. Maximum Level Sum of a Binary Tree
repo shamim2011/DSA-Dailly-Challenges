@@ -1,0 +1,158 @@
+// Approach -1 : BFS
+// T.C - O(n)
+// S.C - O(n)
+
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    // Function to return the level which has the maximum sum
+    public int maxLevelSum(TreeNode root) {
+
+        // Queue for level order traversal (BFS)
+        Queue<TreeNode> q = new LinkedList<>();
+
+        // Add root node to start BFS
+        q.offer(root);
+
+        // Current level number (root is level 1)
+        int level = 1;
+
+        // Stores maximum sum found so far
+        int maxSum = Integer.MIN_VALUE;
+
+        // Stores the level having maximum sum
+        int maxLevel = 1;
+
+        // Traverse tree level by level
+        while (!q.isEmpty()) {
+
+            // Number of nodes at current level
+            int n = q.size();
+
+            // Sum of nodes at current level
+            int sum = 0;
+
+            // Process all nodes of the current level
+            while (n-- > 0) {
+
+                // Remove node from queue
+                TreeNode curr = q.poll();
+
+                // Add current node value to level sum
+                sum += curr.val;
+
+                // Add left child if it exists
+                if (curr.left != null) {
+                    q.offer(curr.left);
+                }
+
+                // Add right child if it exists
+                if (curr.right != null) {
+                    q.offer(curr.right);
+                }
+            }
+
+            // Update maximum sum and level if current sum is greater
+            if (sum > maxSum) {
+                maxSum = sum;
+                maxLevel = level;
+            }
+
+            // Move to next level
+            level++;
+        }
+
+        // Return the level having maximum sum
+        return maxLevel;
+    }
+}
+
+
+
+// Approach -2 : DFS and Map
+// T.C - O(n*logn)
+// S.C - O(n)
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    // TreeMap to store level -> sum of node values at that level
+    // TreeMap keeps keys (levels) in sorted order
+    Map<Integer, Integer> map = new TreeMap<>();
+
+    // Returns the level having the maximum sum
+    public int maxLevelSum(TreeNode root) {
+
+        // Perform DFS traversal starting from level 1
+        dfs(root, 1);
+
+        // Variable to track maximum sum across all levels
+        int maxSum = Integer.MIN_VALUE;
+
+        // Variable to store the level having maximum sum
+        int ansLevel = 1;
+
+        // Iterate through each level and its corresponding sum
+        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+
+            int level = entry.getKey();   // current level
+            int sum = entry.getValue();   // sum at this level
+
+            // Update max sum and answer level if current sum is greater
+            if (sum > maxSum) {
+                maxSum = sum;
+                ansLevel = level;
+            }
+        }
+
+        // Return the level with maximum sum
+        return ansLevel;
+    }
+
+    // DFS helper method to traverse the tree
+    public void dfs(TreeNode root, int level) {
+
+        // Base case: if node is null, stop recursion
+        if (root == null) return;
+
+        // Add current node's value to its corresponding level sum
+        map.put(level, map.getOrDefault(level, 0) + root.val);
+
+        // Recursively traverse left subtree with next level
+        dfs(root.left, level + 1);
+
+        // Recursively traverse right subtree with next level
+        dfs(root.right, level + 1);
+    }
+}
