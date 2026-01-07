@@ -1,6 +1,132 @@
-// Approach - 
-// T.C - 
-// S.C - 
+// Approach - Two-Pass DFS (Tree Partitioning using Subtree Sum)
+// T.C -  O(n)
+// S.C - O(n)
 
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    long totalSum = 0;
+    long maxPro = 0;
+    static int mod = 1_000_000_007;
+    // Total nodes sum using preOrder
+    long getTotal(TreeNode root){
+        if(root == null) return 0;
+        return root.val + getTotal(root.left) + getTotal(root.right);
+    }
+    // Post Order dfs
+    public long dfs(TreeNode root){
+        if(root == null) return 0;
+        long left = dfs(root.left);
+        long right = dfs(root.right);
+        long subTreeSum = root.val + left + right;
+
+        long product = subTreeSum*(totalSum-subTreeSum);
+        maxPro = Math.max(maxPro,product);
+
+        return subTreeSum;
+    }
+    public int maxProduct(TreeNode root) {
+        totalSum = getTotal(root);
+        dfs(root);
+        return (int)(maxPro%mod);
+    }
+}
+
+
+
+
+-------------------------------------------------------------------------------------
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    // Stores the total sum of all nodes in the tree
+    long totalSum = 0;
+
+    // Stores the maximum product found so far
+    long maxPro = 0;
+
+    // Modulo value as required by the problem
+    static int mod = 1_000_000_007;
+
+    // Function to calculate the total sum of all nodes in the tree
+    // Uses recursive traversal (Preorder-style accumulation)
+    long getTotal(TreeNode root){
+        // Base case: empty node contributes 0 to sum
+        if(root == null) return 0;
+
+        // Current node value + sum of left subtree + sum of right subtree
+        return root.val + getTotal(root.left) + getTotal(root.right);
+    }
+
+    // DFS function using Postorder traversal
+    // Returns the sum of the subtree rooted at the current node
+    public long dfs(TreeNode root){
+        // Base case: empty subtree
+        if(root == null) return 0;
+
+        // Recursively compute left subtree sum
+        long left = dfs(root.left);
+
+        // Recursively compute right subtree sum
+        long right = dfs(root.right);
+
+        // Total sum of current subtree
+        long subTreeSum = root.val + left + right;
+
+        // Product obtained by splitting the tree at this node
+        // One part = subTreeSum
+        // Other part = totalSum - subTreeSum
+        long product = subTreeSum * (totalSum - subTreeSum);
+
+        // Update maximum product found
+        maxPro = Math.max(maxPro, product);
+
+        // Return current subtree sum to parent
+        return subTreeSum;
+    }
+
+    // Main function
+    public int maxProduct(TreeNode root) {
+
+        // Step 1: Calculate total sum of all nodes
+        totalSum = getTotal(root);
+
+        // Step 2: Find maximum product using DFS
+        dfs(root);
+
+        // Step 3: Return result modulo 10^9 + 7
+        return (int)(maxPro % mod);
+    }
+}
 
 
