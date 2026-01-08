@@ -1,3 +1,64 @@
+// Approach 1 -  Recursive Dynamic Programming (Brute Force DFS / Backtracking) (TLE)
+// T.C - O(2^(m+n))(worst case)​
+// S.C - O(m*n)
+
+
+
+class Solution {
+
+    // Lengths of nums1 and nums2
+    int m, n;
+
+    // Recursive function to find maximum dot product
+    // starting from index i in nums1 and index j in nums2
+    int solve(int[] nums1, int[] nums2, int i, int j) {
+
+        // Base case:
+        // If either array is exhausted, return a very large negative value
+        // to avoid choosing empty subsequence
+        if (i == m || j == n) {
+            return -100000000;
+        }
+
+        // Dot product if we start a subsequence with nums1[i] and nums2[j]
+        int val = nums1[i] * nums2[j];
+
+        // Option 1:
+        // Take both nums1[i] and nums2[j] and move both pointers
+        int take_i_j = nums1[i] * nums2[j] + solve(nums1, nums2, i + 1, j + 1);
+
+        // Option 2:
+        // Skip nums2[j], keep nums1[i]
+        int take_i = solve(nums1, nums2, i, j + 1);
+
+        // Option 3:
+        // Skip nums1[i], keep nums2[j]
+        int take_j = solve(nums1, nums2, i + 1, j);
+
+        // Return the maximum among:
+        // 1) starting fresh with current pair
+        // 2) extending subsequence
+        // 3) skipping one element
+        return Math.max(val, Math.max(take_i_j, Math.max(take_i, take_j)));
+    }
+
+    // Main function
+    public int maxDotProduct(int[] nums1, int[] nums2) {
+
+        // Store lengths globally for easy access
+        m = nums1.length;
+        n = nums2.length;
+
+        // Start recursion from index 0 of both arrays
+        return solve(nums1, nums2, 0, 0);
+    }
+}
+
+
+
+
+
+
 // Approach 2 -  Dynamic Programming ( Memoization)
 // T.C - O(m*n)
 // S.C - O(m*n)
