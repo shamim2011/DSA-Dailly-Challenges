@@ -1,6 +1,65 @@
-// Approach - 
-// T.C - 
-// S.C - 
+// Approach 2 -  Dynamic Programming ( Memoization)
+// T.C - O(m*n)
+// S.C - O(m*n)
 
 
 
+class Solution {
+
+    // Length of nums1 and nums2
+    int m, n;
+
+    // DP memoization table
+    int[][] t;
+
+    // Recursive function to calculate maximum dot product
+    int solve(int[] nums1, int[] nums2, int i, int j) {
+
+        // Base case:
+        // If either array is exhausted, return a very large negative value
+        // This ensures at least one pair is chosen
+        if (i == m || j == n) {
+            return -100000000;
+        }
+
+        // If already computed, return memoized value
+        if (t[i][j] != -100000000) return t[i][j];
+
+        // Dot product of current pair
+        int val = nums1[i] * nums2[j];
+
+        // Option 1: Take both current elements and move both pointers
+        int take_i_j = nums1[i] * nums2[j] + solve(nums1, nums2, i + 1, j + 1);
+
+        // Option 2: Skip current element of nums1, move j
+        int take_i = solve(nums1, nums2, i, j + 1);
+
+        // Option 3: Skip current element of nums2, move i
+        int take_j = solve(nums1, nums2, i + 1, j);
+
+        // Store and return the maximum among all choices
+        return t[i][j] = Math.max(
+                val,
+                Math.max(take_i_j, Math.max(take_i, take_j))
+        );
+    }
+
+    // Main function
+    public int maxDotProduct(int[] nums1, int[] nums2) {
+
+        // Initialize lengths
+        m = nums1.length;
+        n = nums2.length;
+
+        // Initialize DP table
+        t = new int[501][501];
+
+        // Fill DP table with a large negative value
+        for (int i = 0; i < 501; i++) {
+            Arrays.fill(t[i], -100000000);
+        }
+
+        // Start recursion from index (0, 0)
+        return solve(nums1, nums2, 0, 0);
+    }
+}
