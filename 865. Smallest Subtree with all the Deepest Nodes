@@ -1,5 +1,82 @@
-// Approach - 
-// T.C - 
-// S.C - 
+// Approach -1  (Using 2 Pass Solution and LCA code)
+// T.C - O(n)
+// S.C - O(maxDepth) System stack space
 
 
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+
+class Solution {
+
+    // Map to store depth of each node (key = node value, value = depth)
+    Map<Integer, Integer> mp = new HashMap<>();
+
+    // Variable to store the maximum depth found in the tree
+    int maxD = 0;
+
+    // Function to find the Lowest Common Ancestor (LCA)
+    // of all nodes which are at the maximum depth
+    TreeNode LCA(TreeNode root) {
+
+        // If root is null OR this node itself is at maximum depth,
+        // return this node
+        if (root == null || mp.getOrDefault(root.val, -1) == maxD) {
+            return root;
+        }
+
+        // Recursively find LCA in left subtree
+        TreeNode l = LCA(root.left);
+
+        // Recursively find LCA in right subtree
+        TreeNode r = LCA(root.right);
+
+        // If both left and right return non-null,
+        // current node is the LCA
+        if (l != null && r != null) return root;
+
+        // Otherwise return the non-null child
+        return l != null ? l : r;
+    }
+
+    // DFS function to calculate depth of each node
+    void depth(TreeNode root, int d) {
+
+        // Base case
+        if (root == null) return;
+
+        // Update maximum depth
+        maxD = Math.max(maxD, d);
+
+        // Store depth of current node in map
+        mp.put(root.val, d);
+
+        // Traverse left subtree with depth + 1
+        depth(root.left, d + 1);
+
+        // Traverse right subtree with depth + 1
+        depth(root.right, d + 1);
+    }
+
+    // Main function
+    public TreeNode subtreeWithAllDeepest(TreeNode root) {
+
+        // First DFS to compute depth of each node
+        depth(root, 0);
+
+        // Second DFS to find LCA of deepest nodes
+        return LCA(root);
+    }
+}
