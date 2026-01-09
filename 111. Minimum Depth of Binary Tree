@@ -1,0 +1,67 @@
+// Approach - Breadth-First Search (BFS) / Level-Order Traversal
+// T.C - O(n)
+// S.C - O(n)
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+
+class Solution {
+    public int minDepth(TreeNode root) {
+
+        // If tree is empty, minimum depth is 0
+        if (root == null) return 0;
+
+        // Depth starts from 1 because root exists
+        int depth = 1;
+
+        // Queue for level order traversal (BFS)
+        Queue<TreeNode> q = new LinkedList<>();
+
+        // Add root node to the queue
+        q.offer(root);
+
+        // Continue traversal while queue is not empty
+        while (!q.isEmpty()) {
+
+            // Number of nodes at current level
+            int size = q.size();
+
+            // Process all nodes of current level
+            for (int i = 0; i < size; i++) {
+
+                // Remove front node from queue
+                TreeNode temp = q.poll();
+
+                // If leaf node is found, return current depth
+                if (temp.left == null && temp.right == null) {
+                    return depth;
+                }
+
+                // Add left child to queue if it exists
+                if (temp.left != null) q.offer(temp.left);
+
+                // Add right child to queue if it exists
+                if (temp.right != null) q.offer(temp.right);
+            }
+
+            // Increase depth after finishing one level
+            depth++;
+        }
+
+        return depth;
+    }
+}
