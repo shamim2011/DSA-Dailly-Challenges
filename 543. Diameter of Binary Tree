@@ -59,3 +59,67 @@ class Solution {
         return diameter;
     }
 }
+
+
+
+
+// Approach 2 - Depth First Search (Postorder Traversal)
+// T.C - O(n)
+// S.C - O(n)
+
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+
+class Solution {
+
+    // Stores the maximum diameter found so far
+    int diameter = Integer.MIN_VALUE;
+
+    // Function to calculate depth of a subtree
+    int findDepth(TreeNode root) {
+
+        // Base case: empty tree has depth 0
+        if (root == null) return 0;
+
+        // Recursively find depth of left subtree
+        int lh = findDepth(root.left);
+
+        // Recursively find depth of right subtree
+        int rh = findDepth(root.right);
+
+        // Update diameter using left and right subtree depths
+        diameter = Math.max(diameter, lh + rh);
+
+        // Return height of current node
+        return 1 + Math.max(rh, lh);
+    }
+
+    // Main function to compute diameter of binary tree
+    public int diameterOfBinaryTree(TreeNode root) {
+
+        // If tree is empty, diameter is 0
+        if (root == null) return 0;
+
+        // Start DFS traversal
+        findDepth(root);
+
+        // Return the maximum diameter found
+        return diameter;
+    }
+}
+
