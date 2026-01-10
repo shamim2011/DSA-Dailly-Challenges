@@ -1,3 +1,52 @@
-// Approach-1 : 
-// T.C : O(n)
-// S.C : 
+// Approach-1 : Recursive Brute Force (Exponential DP without Memoization)
+// T.C : O(2^(m+n))
+// S.C : O(m+n)
+
+
+
+class Solution {
+
+    // Lengths of both strings
+    int m, n;
+
+    // Recursive function to compute minimum ASCII delete sum
+    int solve(int i, int j, String s1, String s2) {
+
+        // Base case:
+        // If both strings are fully processed
+        if (i >= m && j >= n) return 0;
+
+        // If s1 is exhausted, delete remaining characters of s2
+        if (i >= m) {
+            return (int) s2.charAt(j) + solve(i, j + 1, s1, s2);
+        }
+
+        // If s2 is exhausted, delete remaining characters of s1
+        if (j >= n) {
+            return (int) s1.charAt(i) + solve(i + 1, j, s1, s2);
+        }
+
+        // If characters match, no deletion needed
+        if (s1.charAt(i) == s2.charAt(j)) {
+            return solve(i + 1, j + 1, s1, s2);
+        }
+
+        // Option 1: delete current character from s1
+        int delete_s1_i = (int) s1.charAt(i) + solve(i + 1, j, s1, s2);
+
+        // Option 2: delete current character from s2
+        int delete_s2_j = (int) s2.charAt(j) + solve(i, j + 1, s1, s2);
+
+        // Take minimum cost of both choices
+        return Math.min(delete_s1_i, delete_s2_j);
+    }
+
+    // Main function
+    public int minimumDeleteSum(String s1, String s2) {
+        m = s1.length();
+        n = s2.length();
+
+        // Start recursion from index 0 of both strings
+        return solve(0, 0, s1, s2);
+    }
+}
