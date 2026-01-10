@@ -50,3 +50,77 @@ class Solution {
         return solve(0, 0, s1, s2);
     }
 }
+
+
+
+// Approach-2 : Dynamic Programming (Top-Down / Memoization)
+// T.C : O(m × n)
+// S.C : O(m × n)
+
+
+class Solution {
+
+    // Lengths of the two strings
+    int m, n;
+
+    // DP memoization table
+    // t[i][j] stores the minimum ASCII delete sum
+    // for substrings s1[i...] and s2[j...]
+    int[][] t;
+
+    // Recursive helper function
+    int solve(int i, int j, String s1, String s2) {
+
+        // Base case:
+        // If both strings are completely processed
+        if (i >= m && j >= n) {
+            return 0;
+        }
+
+        // If already computed, return stored result
+        if (t[i][j] != -1) {
+            return t[i][j];
+        }
+
+        // If s1 is exhausted, delete all remaining characters of s2
+        if (i >= m) {
+            return t[i][j] = (int) s2.charAt(j) + solve(i, j + 1, s1, s2);
+        }
+
+        // If s2 is exhausted, delete all remaining characters of s1
+        if (j >= n) {
+            return t[i][j] = (int) s1.charAt(i) + solve(i + 1, j, s1, s2);
+        }
+
+        // If current characters are equal, no deletion needed
+        if (s1.charAt(i) == s2.charAt(j)) {
+            return t[i][j] = solve(i + 1, j + 1, s1, s2);
+        }
+
+        // Option 1: delete current character from s1
+        int delete_s1_i = (int) s1.charAt(i) + solve(i + 1, j, s1, s2);
+
+        // Option 2: delete current character from s2
+        int delete_s2_j = (int) s2.charAt(j) + solve(i, j + 1, s1, s2);
+
+        // Store and return the minimum cost
+        return t[i][j] = Math.min(delete_s1_i, delete_s2_j);
+    }
+
+    // Main function
+    public int minimumDeleteSum(String s1, String s2) {
+
+        // Initialize lengths
+        m = s1.length();
+        n = s2.length();
+
+        // Initialize DP table with -1 (uncomputed)
+        t = new int[m + 1][n + 1];
+        for (int[] arr : t) {
+            Arrays.fill(arr, -1);
+        }
+
+        // Start recursion from index (0, 0)
+        return solve(0, 0, s1, s2);
+    }
+}
