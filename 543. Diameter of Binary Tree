@@ -1,3 +1,61 @@
-// Approach - Top-Down Recursive (Height Check + Balance Check)
+// Approach - Brute Force using Depth Calculation (Postorder DFS)
 // T.C - O(n²)
 // S.C - O(n)
+
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+
+class Solution {
+
+    // Stores the maximum diameter found so far
+    int diameter = Integer.MIN_VALUE;
+
+    // Helper function to calculate depth of a tree
+    int findDepth(TreeNode root) {
+
+        // Base case: empty tree has depth 0
+        if (root == null) return 0;
+
+        // Recursively find depth of left and right subtrees
+        int lh = findDepth(root.left);
+        int rh = findDepth(root.right);
+
+        // Depth of current node = 1 + max(left, right)
+        return 1 + Math.max(lh, rh);
+    }
+
+    public int diameterOfBinaryTree(TreeNode root) {
+
+        // Base case
+        if (root == null) return 0;
+
+        // Find depth of left and right subtrees
+        int lh = findDepth(root.left);
+        int rh = findDepth(root.right);
+
+        // Update diameter at current node
+        diameter = Math.max(diameter, lh + rh);
+
+        // Recursively compute diameter for left and right subtrees
+        diameterOfBinaryTree(root.left);
+        diameterOfBinaryTree(root.right);
+
+        // Return the maximum diameter found
+        return diameter;
+    }
+}
