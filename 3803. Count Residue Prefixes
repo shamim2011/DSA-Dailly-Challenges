@@ -1,0 +1,19 @@
+// Approach - HashSet to track distinct characters
+// T.C - O(n)
+// S.C - O(1)
+
+
+
+class Solution {
+    public int residuePrefixes(String s) {
+        Set<Character> st = new HashSet<>();
+        int count = 0;
+        for(int i=0;i<s.length();i++){
+            st.add(s.charAt(i));
+            if(st.size() == (i+1)%3){
+                count++;
+            }
+        }
+        return count;
+    }
+}
