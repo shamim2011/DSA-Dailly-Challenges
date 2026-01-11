@@ -1,0 +1,62 @@
+//Approach-Depth-First Search (DFS) – Postorder Traversal with Global Maximum Tracking
+//T.C : O(n)
+//S.C : O(n)
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    // Not used, but harmless
+    int maxi = 0;
+
+    // Main function to compute maximum path sum
+    public int maxPathSum(TreeNode root) {
+
+        // Using array to store global maximum (acts like pass-by-reference)
+        int[] maxVal = new int[1];
+
+        // Initialize with the smallest possible value
+        maxVal[0] = Integer.MIN_VALUE;
+
+        // Start DFS traversal
+        maxPathDown(root, maxVal);
+
+        // Final answer stored in maxVal[0]
+        return maxVal[0];
+    }
+
+    // Helper function to compute maximum downward path sum
+    int maxPathDown(TreeNode root, int[] maxVal) {
+
+        // Base case
+        if (root == null) return 0;
+
+        // Recursively compute left subtree max path
+        // Ignore negative paths using Math.max(0, ...)
+        int leftSum = Math.max(0, maxPathDown(root.left, maxVal));
+
+        // Recursively compute right subtree max path
+        int rightSum = Math.max(0, maxPathDown(root.right, maxVal));
+
+        // Update global maximum considering current node as highest point
+        // Path may include both left and right child
+        maxVal[0] = Math.max(maxVal[0], leftSum + rightSum + root.val);
+
+        // Return max path extending downward (only one side allowed)
+        return root.val + Math.max(leftSum, rightSum);
+    }
+}
