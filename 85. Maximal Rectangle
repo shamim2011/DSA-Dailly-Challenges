@@ -1,0 +1,4 @@
+//Approach-1 (using NSL and NSR to find MAH (Maximum Area in Histogram)
+//T.C : O(row*(col+col)) ~= O(row*col)
+//S.C : O(col)
+
