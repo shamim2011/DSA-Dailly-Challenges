@@ -1,0 +1,23 @@
+// Approach - DFS (preorder) traversal
+// T.C - O(n)
+// S.C - O(n)
+
+
+
+class Solution {
+    public boolean isSameTree(TreeNode p, TreeNode q) {
+
+        // If both are null → same
+        if (p == null && q == null) return true;
+
+        // If one is null → not same
+        if (p == null || q == null) return false;
+
+        // If values differ → not same
+        if (p.val != q.val) return false;
+
+        // Compare left and right subtrees
+        return isSameTree(p.left, q.left) &&
+               isSameTree(p.right, q.right);
+    }
+}
