@@ -1,0 +1,82 @@
+// Approach  -  Breadth-First Search (Level Order Traversal) with Zigzag Pattern
+// T.C - O(n)
+// S.C - O(n)
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+
+        // Stores the final zigzag level order traversal
+        List<List<Integer>> ans = new ArrayList<>();
+
+        // If tree is empty, return empty list
+        if (root == null) return ans;
+
+        // Queue for BFS (level order traversal)
+        Queue<TreeNode> q = new LinkedList<>();
+        q.offer(root);
+
+        // Level counter to decide traversal direction
+        int level = 0;
+
+        // Process nodes level by level
+        while (!q.isEmpty()) {
+
+            // Number of nodes in current level
+            int n = q.size();
+
+            // Stores values of current level
+            List<Integer> li = new ArrayList<>();
+
+            // Even level → Left to Right
+            if (level % 2 == 0) {
+                for (int i = 0; i < n; i++) {
+                    TreeNode curr = q.poll();
+
+                    // Add value normally
+                    li.add(curr.val);
+
+                    // Add children for next level
+                    if (curr.left != null) q.offer(curr.left);
+                    if (curr.right != null) q.offer(curr.right);
+                }
+            }
+            // Odd level → Right to Left
+            else {
+                for (int i = n - 1; i >= 0; i--) {
+                    TreeNode curr = q.poll();
+
+                    // Insert at beginning to reverse order
+                    li.add(0, curr.val);
+
+                    // Add children for next level
+                    if (curr.left != null) q.offer(curr.left);
+                    if (curr.right != null) q.offer(curr.right);
+                }
+            }
+
+            // Add current level to answer
+            ans.add(li);
+
+            // Move to next level
+            level++;
+        }
+
+        return ans;
+    }
+}
