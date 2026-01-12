@@ -1,0 +1,111 @@
+// Approach - Boundary Traversal of Binary Tree (Anti-Clockwise)
+// T.C - O(N)
+// S.C - O(N)
+
+
+/*
+class Node {
+    int data;
+    Node left, right;
+
+    public Node(int d) {
+        data = d;
+        left = right = null;
+    }
+}
+*/
+
+class Solution {
+
+    // Adds left boundary nodes (excluding leaf nodes)
+    void addLeftBoundary(Node root, List<Integer> ans) {
+
+        // If there is no left subtree, nothing to add
+        if (root.left == null) return;
+
+        Node curr = root.left;
+
+        // Traverse down the left boundary
+        while (curr != null) {
+
+            // Add only non-leaf nodes
+            if (curr.left != null || curr.right != null)
+                ans.add(curr.data);
+
+            // Prefer left child, otherwise go right
+            if (curr.left != null)
+                curr = curr.left;
+            else
+                curr = curr.right;
+        }
+    }
+
+    // Adds all leaf nodes in left-to-right order
+    void addLevels(Node root, List<Integer> ans) {
+
+        if (root == null) return;
+
+        // If current node is a leaf, add it
+        if (root.left == null && root.right == null) {
+            ans.add(root.data);
+            return;
+        }
+
+        // Recur for left and right subtrees
+        addLevels(root.left, ans);
+        addLevels(root.right, ans);
+    }
+
+    // Adds right boundary nodes (excluding leaf nodes) in reverse order
+    void addRightBoundary(Node root, List<Integer> ans) {
+
+        // If there is no right subtree, nothing to add
+        if (root.right == null) return;
+
+        Node curr = root.right;
+        ArrayList<Integer> li = new ArrayList<>();
+
+        // Traverse down the right boundary
+        while (curr != null) {
+
+            // Add only non-leaf nodes
+            if (curr.left != null || curr.right != null)
+                li.add(curr.data);
+
+            // Prefer right child, otherwise go left
+            if (curr.right != null)
+                curr = curr.right;
+            else
+                curr = curr.left;
+        }
+
+        // Add right boundary nodes in reverse order
+        for (int i = li.size() - 1; i >= 0; i--) {
+            ans.add(li.get(i));
+        }
+    }
+
+    // Main function for boundary traversal
+    ArrayList<Integer> boundaryTraversal(Node root) {
+
+        ArrayList<Integer> ans = new ArrayList<>();
+
+        // If tree is empty, return empty list
+        if (root == null) return ans;
+
+        // Add root node
+        ans.add(root.data);
+
+        // Add left boundary
+        addLeftBoundary(root, ans);
+
+        // Add all leaf nodes (excluding root)
+        addLevels(root.left, ans);
+        addLevels(root.right, ans);
+
+        // Add right boundary
+        addRightBoundary(root, ans);
+
+        return ans;
+    }
+}
