@@ -1,5 +1,80 @@
-// Approach 1 - 
-// T.C - 
-// S.C - 
+// Approach 1 - BFS (level-order traversal).
+// T.C - O(n)
+// S.C - O(n)
 
 
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public int widthOfBinaryTree(TreeNode root) {
+
+        // If tree is empty, width is 0
+        if (root == null) return 0;
+
+        // Queue for BFS traversal
+        // Stores (TreeNode, index) where index represents
+        // the node's position as in a complete binary tree
+        Queue<Pair<TreeNode, Long>> q = new LinkedList<>();
+
+        // Start with root at index 0
+        q.offer(new Pair<>(root, 0L));
+
+        long ans = 0;
+
+        // Perform level-order traversal
+        while (!q.isEmpty()) {
+
+            int n = q.size(); // number of nodes at current level
+
+            // Index of first node in this level
+            long f = q.peek().getValue();
+
+            // Index of last node in this level
+            long l = ((LinkedList<Pair<TreeNode, Long>>) q)
+                        .getLast().getValue();
+
+            // Width of current level = last index - first index + 1
+            ans = Math.max(ans, l - f + 1);
+
+            // Process all nodes of current level
+            while (n-- > 0) {
+                Pair<TreeNode, Long> p = q.poll();
+                TreeNode curr = p.getKey();
+                long d = p.getValue();
+
+                // Assign index to left child
+                if (curr.left != null) {
+                    q.offer(new Pair<>(curr.left, 2 * d + 1));
+                }
+
+                // Assign index to right child
+                if (curr.right != null) {
+                    q.offer(new Pair<>(curr.right, 2 * d + 2));
+                }
+            }
+        }
+
+        // Maximum width found
+        return (int) ans;
+    }
+}
+
+
+
+// Approach 2 - Using DFS
+// T.C - O(n)
+// S.C - O(n)
