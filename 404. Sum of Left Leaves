@@ -1,0 +1,56 @@
+// Approach 1 - Depth-First Search (DFS)
+// T.C - O(n)
+// S.C - O(n)
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    // Helper function to calculate sum of left leaves
+    int solve(TreeNode curr, TreeNode parrent) {
+
+        // Base case: if current node is null, contribute 0 to sum
+        if (curr == null) {
+            return 0;
+        }
+
+        // Check if current node is a leaf node
+        if (curr.left == null && curr.right == null) {
+
+            // Check if this leaf is a left child of its parent
+            if (parrent != null && parrent.left == curr) {
+                return curr.val; // add value of left leaf
+            }
+        }
+
+        // Recursively calculate sum from left subtree
+        int left = solve(curr.left, curr);
+
+        // Recursively calculate sum from right subtree
+        int right = solve(curr.right, curr);
+
+        // Return total sum from both subtrees
+        return left + right;
+    }
+
+    // Main function
+    public int sumOfLeftLeaves(TreeNode root) {
+
+        // Start recursion with root and no parent
+        return solve(root, null);
+    }
+}
