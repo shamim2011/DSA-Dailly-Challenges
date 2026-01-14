@@ -1,0 +1,99 @@
+// Approach - (Vertical Order Traversal)
+// T.C - O(n)
+// S.C - O(n)
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+
+// Helper class to store node along with its vertical and level
+class Tuple {
+    TreeNode node;   // current tree node
+    int row;         // vertical index (x-coordinate)
+    int col;         // level index (y-coordinate)
+
+    public Tuple(TreeNode _node, int _row, int _col) {
+        node = _node;
+        row = _row;
+        col = _col;
+    }
+}
+
+class Solution {
+    public List<List<Integer>> verticalTraversal(TreeNode root) {
+
+        // TreeMap<vertical, TreeMap<level, PriorityQueue<values>>>
+        // TreeMap keeps keys sorted automatically
+        TreeMap<Integer, TreeMap<Integer, PriorityQueue<Integer>>> map = new TreeMap<>();
+
+        // Queue for BFS traversal
+        Queue<Tuple> q = new LinkedList<>();
+
+        // Start BFS from root at vertical = 0 and level = 0
+        q.offer(new Tuple(root, 0, 0));
+
+        while (!q.isEmpty()) {
+
+            // Get current node information
+            Tuple tuple = q.poll();
+            TreeNode curr = tuple.node;
+            int vertical = tuple.row;
+            int level = tuple.col;
+
+            // Create vertical entry if not present
+            if (!map.containsKey(vertical)) {
+                map.put(vertical, new TreeMap<>());
+            }
+
+            // Create level entry if not present
+            if (!map.get(vertical).containsKey(level)) {
+                map.get(vertical).put(level, new PriorityQueue<>());
+            }
+
+            // Store node value in PriorityQueue to maintain sorted order
+            map.get(vertical).get(level).offer(curr.val);
+
+            // Move to left child (vertical - 1, level + 1)
+            if (curr.left != null) {
+                q.offer(new Tuple(curr.left, vertical - 1, level + 1));
+            }
+
+            // Move to right child (vertical + 1, level + 1)
+            if (curr.right != null) {
+                q.offer(new Tuple(curr.right, vertical + 1, level + 1));
+            }
+        }
+
+        // Prepare final answer
+        List<List<Integer>> ans = new ArrayList<>();
+
+        // Traverse verticals from left to right
+        for (TreeMap<Integer, PriorityQueue<Integer>> ys : map.values()) {
+            ans.add(new ArrayList<>());
+
+            // Traverse levels from top to bottom
+            for (PriorityQueue<Integer> nodes : ys.values()) {
+
+                // Extract nodes in sorted order
+                while (!nodes.isEmpty()) {
+                    ans.get(ans.size() - 1).add(nodes.poll());
+                }
+            }
+        }
+
+        return ans;
+    }
+}
