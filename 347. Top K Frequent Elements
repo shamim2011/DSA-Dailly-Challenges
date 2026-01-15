@@ -1,0 +1,36 @@
+// approach - Top-K Frequent Elements using Min-Heap
+// T.C - O(n log k)
+// S.C - O(n)
+
+
+class Solution {
+    public int[] topKFrequent(int[] nums, int k) {
+
+        // Step 1: Frequency map
+        Map<Integer, Integer> freq = new HashMap<>();
+        for (int num : nums) {
+            freq.put(num, freq.getOrDefault(num, 0) + 1);
+        }
+
+        // Step 2: Min heap based on frequency
+        PriorityQueue<Integer> pq =
+                new PriorityQueue<>((a, b) -> freq.get(a) - freq.get(b));
+
+        // Step 3: Keep only top k elements
+        for (int num : freq.keySet()) {
+            pq.add(num);
+            if (pq.size() > k) {
+                pq.poll();
+            }
+        }
+
+        // Step 4: Build answer
+        int[] ans = new int[k];
+        int i = 0;
+        while (!pq.isEmpty()) {
+            ans[i++] = pq.poll();
+        }
+
+        return ans;
+    }
+}
