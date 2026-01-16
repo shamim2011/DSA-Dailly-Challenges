@@ -1,0 +1,86 @@
+// Approach - Level Order Traversal (BFS)
+// T.C - O(N log N)
+// S.C - O(N)
+
+
+
+/*
+class Node {
+    int data;
+    Node left, right;
+
+    Node(int val) {
+        this.data = val;
+        this.left = null;
+        this.right = null;
+    }
+}
+*/
+
+class Solution {
+    public ArrayList<Integer> topView(Node root) {
+
+        // Stores the final top view result
+        ArrayList<Integer> ans = new ArrayList<>();
+
+        // If tree is empty, return empty list
+        if (root == null) return ans;
+
+        // TreeMap to store first node at each horizontal distance (HD)
+        // Key   -> Horizontal Distance
+        // Value -> Node value
+        // TreeMap keeps keys sorted (left to right)
+        Map<Integer, Integer> mp = new TreeMap<>();
+
+        // Queue for level order traversal
+        // Each element stores a node and its horizontal distance
+        Queue<Pair> q = new LinkedList<>();
+
+        // Start with root node at horizontal distance 0
+        q.offer(new Pair(root, 0));
+
+        // Perform BFS traversal
+        while (!q.isEmpty()) {
+
+            // Remove current element from queue
+            Pair it = q.remove();
+            int hd = it.hd;        // Horizontal distance
+            Node curr = it.node;  // Current node
+
+            // If this horizontal distance is seen first time,
+            // then this node is the topmost node for this HD
+            if (mp.get(hd) == null) {
+                mp.put(hd, curr.data);
+            }
+
+            // Move left child with HD - 1
+            if (curr.left != null) {
+                q.offer(new Pair(curr.left, hd - 1));
+            }
+
+            // Move right child with HD + 1
+            if (curr.right != null) {
+                q.offer(new Pair(curr.right, hd + 1));
+            }
+        }
+
+        // Extract the values from TreeMap in sorted order of HD
+        for (Map.Entry<Integer, Integer> entry : mp.entrySet()) {
+            ans.add(entry.getValue());
+        }
+
+        // Return the top view of the binary tree
+        return ans;
+    }
+}
+
+// Helper class to store a node and its horizontal distance
+class Pair {
+    Node node;  // Tree node
+    int hd;     // Horizontal distance
+
+    public Pair(Node node, int hd) {
+        this.node = node;
+        this.hd = hd;
+    }
+}
