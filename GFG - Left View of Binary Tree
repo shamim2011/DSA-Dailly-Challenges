@@ -1,0 +1,46 @@
+// Approach - Depth-First Search (DFS) – Left-First Preorder Traversal
+// T.C - O(N)
+// S.C - O(H)    H = Height of the Tree
+
+
+
+/*
+class Node {
+    int data;
+    Node left, right;
+
+    Node(int val) {
+        this.data = val;
+        this.left = null;
+        this.right = null;
+    }
+}
+*/
+
+class Solution {
+
+    ArrayList<Integer> ans = new ArrayList<>();
+
+    public ArrayList<Integer> leftView(Node root) {
+        if (root == null) return ans;
+        dfsLeft(root, 0);
+        return ans;
+    }
+
+    // FIX 1: TreeNode → Node
+    void dfsLeft(Node root, int level) {
+
+        if (root == null) {
+            return;
+        }
+
+        // First node encountered at each level (leftmost)
+        if (level == ans.size()) {
+            ans.add(root.data); // FIX 2: val → data
+        }
+
+        // Visit left subtree first
+        dfsLeft(root.left, level + 1);
+        dfsLeft(root.right, level + 1);
+    }
+}
