@@ -1,0 +1,60 @@
+// Approach - Depth-First Search (DFS) – Right-First Preorder Traversal
+// T.C - O(N)
+// S.C - O(H)     H=Hieght of the Tree
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+
+class Solution {
+
+    // Stores the right side view result
+    List<Integer> ans = new ArrayList<>();
+
+    // Main function to return right side view of binary tree
+    public List<Integer> rightSideView(TreeNode root) {
+
+        // If tree is empty, return empty list
+        if (root == null) return ans;
+
+        // Start DFS traversal from root at level 0
+        dfsReverse(root, 0);
+
+        // Return the collected right side view
+        return ans;
+    }
+
+    // DFS helper function (Right → Left traversal)
+    void dfsReverse(TreeNode root, int level) {
+
+        // Base case: if node is null, stop recursion
+        if (root == null) {
+            return;
+        }
+
+        // If this is the first node visited at this level,
+        // then it is the rightmost node for that level
+        if (level == ans.size()) {
+            ans.add(root.val);
+        }
+
+        // First go to right subtree to ensure rightmost node is visited first
+        dfsReverse(root.right, level + 1);
+
+        // Then go to left subtree
+        dfsReverse(root.left, level + 1);
+    }
+}
