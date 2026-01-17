@@ -1,0 +1,63 @@
+// Approach - Recursive Tree Construction using Preorder & Inorder Traversals
+// T.c - O(n*n)
+// S.C - O(n)
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    // Global index to track current root in preorder traversal
+    int idx = 0;
+
+    // Recursive function to build tree from inorder range [start, end]
+    TreeNode solve(int[] preorder, int[] inorder, int start, int end) {
+
+        // Base case: no elements to construct subtree
+        if (start > end) {
+            return null;
+        }
+
+        // Current root value taken from preorder traversal
+        int rootVal = preorder[idx++];
+
+        // Find the root value index in inorder traversal
+        int i = start;
+        for (; i <= end; i++) {
+            if (inorder[i] == rootVal) {
+                break;
+            }
+        }
+
+        // Create the root node
+        TreeNode root = new TreeNode(rootVal);
+
+        // Recursively construct left subtree
+        root.left = solve(preorder, inorder, start, i - 1);
+
+        // Recursively construct right subtree
+        root.right = solve(preorder, inorder, i + 1, end);
+
+        // Return constructed subtree
+        return root;
+    }
+
+    // Main function
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        int n = preorder.length;
+        return solve(preorder, inorder, 0, n - 1);
+    }
+}
