@@ -1,0 +1,80 @@
+//Approach -  Using Post Order + set
+//T.C : O(n)
+//S.C : O(n) 
+
+
+
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    // Helper function to delete nodes and form forest
+    TreeNode deleteFunction(TreeNode root, Set<Integer> st, List<TreeNode> li) {
+
+        // Base case: if current node is null
+        if (root == null) return null;
+
+        // Recursively process left and right subtrees
+        root.left = deleteFunction(root.left, st, li);
+        root.right = deleteFunction(root.right, st, li);
+
+        // If current node needs to be deleted
+        if (st.contains(root.val)) {
+
+            // If left child exists, it becomes a new tree root
+            if (root.left != null)
+                li.add(root.left);
+
+            // If right child exists, it becomes a new tree root
+            if (root.right != null)
+                li.add(root.right);
+
+            // Return null to delete the current node
+            return null;
+        } 
+        else {
+            // If not deleted, return the current node
+            return root;
+        }
+    }
+
+    public List<TreeNode> delNodes(TreeNode root, int[] to_delete) {
+
+        // List to store roots of all remaining trees (forest)
+        List<TreeNode> ans = new ArrayList<>();
+
+        // Set for fast lookup of nodes to be deleted
+        Set<Integer> st = new HashSet<>();
+
+        // Add all nodes to be deleted into the set
+        for (int num : to_delete) {
+            st.add(num);
+        }
+
+        // Call recursive delete function
+        deleteFunction(root, st, ans);
+
+        // If original root is not deleted, add it to answer
+        if (!st.contains(root.val)) {
+            ans.add(root);
+        }
+
+        // Return the list of tree roots
+        return ans;
+    }
+}
