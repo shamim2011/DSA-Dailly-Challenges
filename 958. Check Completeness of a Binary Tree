@@ -55,3 +55,67 @@ class Solution {
         return true;
     }
 }
+
+
+// Approach 2 - Index-Based Depth First Search (DFS) Approach
+// T.c - O(n)
+// S.C - O(h)
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    // Function to count total number of nodes in the binary tree
+    int countNode(TreeNode root) {
+        // If tree is empty, return 0
+        if (root == null) return 0;
+
+        // Count current node + left subtree nodes + right subtree nodes
+        return 1 + countNode(root.left) + countNode(root.right);
+    }
+
+    // DFS function to check completeness using index-based logic
+    boolean dfs(TreeNode root, int i, int n) {
+
+        // If node is null, it does not violate completeness
+        if (root == null) return true;
+
+        // If index exceeds total nodes, tree is not complete
+        if (i > n) {
+            return false;
+        }
+
+        // Recursively check left and right subtrees
+        // Left child index = 2 * i
+        // Right child index = 2 * i + 1
+        return dfs(root.left, 2 * i, n) 
+            && dfs(root.right, 2 * i + 1, n);
+    }
+
+    // Main function to check if the binary tree is complete
+    public boolean isCompleteTree(TreeNode root) {
+
+        // Step 1: Count total nodes in the tree
+        int totalNodes = countNode(root);
+
+        // Root index starts from 1
+        int i = 1;
+
+        // Step 2: Verify completeness using DFS
+        return dfs(root, i, totalNodes);
+    }
+}
