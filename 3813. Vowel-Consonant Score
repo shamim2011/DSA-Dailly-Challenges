@@ -1,0 +1,42 @@
+// Approach - Character Classification using Linear Traversal
+// T.C - O(n)
+// S.C - O(1)
+
+
+class Solution {
+    public int vowelConsonantScore(String s) {
+
+        // v = vowel count, c = consonant count
+        int v = 0;
+        int c = 0;
+
+        // String containing all lowercase vowels
+        String vowels = "aeiou";
+
+        // Loop through each character of the string
+        for(int i = 0; i < s.length(); i++) {
+
+            // Check if current character is a vowel
+            if (vowels.indexOf(s.charAt(i)) != -1) {
+                v++; // increment vowel count
+            }
+
+            // Ignore digits (0-9) and spaces
+            else if ((s.charAt(i) >= '0' && s.charAt(i) <= '9') 
+                     || s.charAt(i) == ' ') {
+                continue; // skip this character
+            }
+
+            // Otherwise, it is a consonant
+            else {
+                c++; // increment consonant count
+            }
+        }
+
+        // If there are no consonants, avoid division by zero
+        if (c == 0) return 0;
+
+        // Return vowel to consonant ratio (integer division)
+        return (v / c);
+    }
+}
