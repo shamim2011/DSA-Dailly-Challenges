@@ -1,0 +1,72 @@
+// Approach - Depth First Search (DFS) + Backtracking
+// T.C - O(N)
+// S.C - O(H)
+
+
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    // Main function that returns all root-to-leaf paths
+    // whose sum equals targetSum
+    public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
+
+        // Stores final answer
+        List<List<Integer>> ans = new ArrayList<>();
+
+        // If tree is empty, return empty list
+        if (root == null) return ans;
+
+        // Temporary list to store current path
+        List<Integer> temp = new ArrayList<>();
+
+        // Start DFS traversal
+        collectPath(root, targetSum, ans, temp);
+
+        return ans;
+    }
+
+    // Helper function for DFS + Backtracking
+    void collectPath(TreeNode root, int sum,
+                     List<List<Integer>> ans,
+                     List<Integer> temp) {
+
+        // Base case
+        if (root == null) return;
+
+        // Add current node value to path
+        temp.add(root.val);
+
+        // If leaf node and remaining sum equals node value
+        if (root.left == null && root.right == null && root.val == sum) {
+            // Add a copy of current path to answer
+            ans.add(new ArrayList<>(temp));
+        }
+
+        // Recur for left subtree with reduced sum
+        collectPath(root.left, sum - root.val, ans, temp);
+
+        // Recur for right subtree with reduced sum
+        collectPath(root.right, sum - root.val, ans, temp);
+
+        // Backtracking: remove last node before returning
+        temp.remove(temp.size() - 1);
+    }
+}
+
+
