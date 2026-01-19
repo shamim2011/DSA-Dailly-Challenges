@@ -61,3 +61,49 @@ class Solution {
         return root;
     }
 }
+
+
+
+// Approach 2 - Post-Order DFS (Bottom-Up Pruning)
+// T.C - O(N)
+// S.C - O(h)
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    // Function to prune the binary tree
+    public TreeNode pruneTree(TreeNode root) {
+
+        // Base case: if node is null, return null
+        if (root == null) return null;
+
+        // Recursively prune left subtree
+        root.left = pruneTree(root.left);
+
+        // Recursively prune right subtree
+        root.right = pruneTree(root.right);
+
+        // If current node is a leaf and value is 0, prune it
+        if (root.left == null && root.right == null && root.val == 0) {
+            return null;
+        }
+
+        // Otherwise, keep the node
+        return root;
+    }
+}
