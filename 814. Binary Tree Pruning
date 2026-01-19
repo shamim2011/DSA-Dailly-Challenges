@@ -1,5 +1,63 @@
-// Approach - 
-// T.C - 
-// S.C - 
+// Approach 1 - Recursive Pruning using DFS + Subtree Check
+// T.C - O(N²)
+// S.C - O(h)
 
 
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    // Helper function to check whether a subtree contains at least one '1'
+    boolean isOnePresent(TreeNode root){
+        // If subtree is empty, it cannot contain 1
+        if(root == null) return false;
+
+        // If current node value is 1, return true
+        if(root.val == 1){
+            return true;
+        }
+
+        // Otherwise, check left and right subtrees
+        return isOnePresent(root.left) || isOnePresent(root.right);
+    }
+
+    public TreeNode pruneTree(TreeNode root) {
+        // Base case
+        if(root == null) return null;
+
+        // If left subtree does NOT contain 1, prune it
+        if(!isOnePresent(root.left)){
+            root.left = null;
+        }
+
+        // If right subtree does NOT contain 1, prune it
+        if(!isOnePresent(root.right)){
+            root.right = null;
+        }
+
+        // Recursively prune remaining left and right subtrees
+        pruneTree(root.left);
+        pruneTree(root.right);
+
+        // If current node is 0 and both children are null, prune this node
+        if(root.left == null && root.right == null && root.val == 0){
+            return null;
+        }
+
+        // Otherwise, keep the node
+        return root;
+    }
+}
