@@ -1,0 +1,65 @@
+// Approach - Post-Order DFS using Height Grouping
+// T.C - O(n)
+// S.C - O(n)
+
+
+
+package TUF_Tree_AND_MIK;
+import java.util.*;
+public class BTreeLeaves {
+	static Map<Integer,List<Integer>> mp = new HashMap<>();
+	public static void main(String[] args) {
+		Node root = new Node(1);
+		root.left = new Node(2);
+		root.right = new Node(3);
+		root.left.left = new Node(4);
+		root.left.right = new Node(5);
+		root.left.right.left = new Node(11);
+		root.left.right.right = new Node(15);
+		root.right.left = new Node(6);
+		root.right.right = new Node(7);
+		root.left.left.left = new Node(8);
+		int[][] arr = findLeaves(root);
+		for(int i=0;i<arr.length;i++) {
+			for(int j=0;j<arr[i].length;j++) {
+				System.out.print(arr[i][j]+" ");
+			}
+			System.out.println();
+		}
+	}
+	public static int[][] findLeaves(Node root){
+		height(root);
+		int[][] res = new int[mp.size()][];
+		int idx = 0;
+		for(int h=1;h<=mp.size();h++) {
+			List<Integer> li = mp.get(h);
+			res[idx] = new int[li.size()];
+			for(int i=0;i<li.size();i++) {
+				res[idx][i] = li.get(i);
+			}
+			idx++;
+		}
+		return res;
+	}
+	static int height(Node root) {
+		if(root==null) return 0;
+		int lh = height(root.left);
+		int rh = height(root.right);
+		int h = 1+Math.max(lh, rh);
+		mp.computeIfAbsent(h, k -> new ArrayList<>())
+	      .add(root.data);
+
+	    return h;
+	}
+}
+
+
+class Node{
+	int data;
+	Node left,right;
+	public Node(int data) {
+		this.data = data;
+		left=null;
+		right = null;
+	}
+}
