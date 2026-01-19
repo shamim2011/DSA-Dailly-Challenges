@@ -1,0 +1,49 @@
+//Approach-Depth-First Search (DFS) – Root to Leaf Path Sum
+//T.C : O(n)
+//S.C : O(h)
+
+
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    // Main function to check if any root-to-leaf path sum equals targetSum
+    public boolean hasPathSum(TreeNode root, int targetSum) {
+        // If tree is empty, no path exists
+        if (root == null && targetSum >= 0) return false;
+
+        // Start DFS with current sum = 0
+        return collectPath(root, targetSum, 0);
+    }
+
+    // Helper DFS function
+    boolean collectPath(TreeNode root, int sum, int curr) {
+        // If current node is null, no valid path
+        if (root == null) return false;
+
+        // If leaf node is reached
+        if (root.left == null && root.right == null) {
+            // Check if path sum equals target
+            return curr == sum - root.val;
+        }
+
+        // Recursively check left or right subtree
+        return collectPath(root.left, sum, curr + root.val) ||
+               collectPath(root.right, sum, curr + root.val);
+    }
+}
