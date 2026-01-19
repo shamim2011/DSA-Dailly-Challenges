@@ -1,0 +1,48 @@
+//Approach- Recursive Tree Traversal (DFS – Preorder style counting)
+//T.C : O(n)
+//S.C : O(h)
+
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+
+class Solution {
+
+    // Helper function to count nodes in a binary tree
+    int countNode(TreeNode root) {
+        // Base case: if tree/subtree is empty
+        if (root == null) return 0;
+
+        // Count current node + left subtree nodes + right subtree nodes
+        return 1 + countNode(root.left) + countNode(root.right);
+    }
+
+    // Main function to count total nodes in the binary tree
+    public int countNodes(TreeNode root) {
+        // If root is null, no nodes exist
+        if (root == null) return 0;
+
+        // Count nodes in left subtree
+        int l = countNode(root.left);
+
+        // Count nodes in right subtree
+        int r = countNode(root.right);
+
+        // Total nodes = root + left subtree + right subtree
+        return 1 + (l + r);
+    }
+}
