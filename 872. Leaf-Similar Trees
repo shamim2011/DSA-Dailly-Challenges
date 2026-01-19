@@ -1,0 +1,79 @@
+//Approach- DFS (Depth-First Search) – Leaf Node Sequence Comparison
+//T.C : O(n + m)
+//S.C : O(n + m)
+
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    // List to store leaf nodes of first tree
+    List<Integer> li1 = new LinkedList<>();
+
+    // List to store leaf nodes of second tree
+    List<Integer> li2 = new LinkedList<>();
+
+    public boolean leafSimilar(TreeNode root1, TreeNode root2) {
+
+        // If any tree is null, they cannot be leaf-similar
+        if(root1 == null || root2 == null) return false;
+
+        // Collect leaf nodes of both trees
+        list1Node(root1);
+        list2Node(root2);
+
+        // If number of leaf nodes is different, return false
+        if(li1.size() != li2.size()) return false;
+
+        // Compare leaf nodes one by one
+        for(int i = 0; i < li1.size(); i++){
+            if(!li1.get(i).equals(li2.get(i))) 
+                return false;
+        }
+
+        // All leaf nodes are same
+        return true;
+    }
+
+    // DFS to collect leaf nodes of first tree
+    void list1Node(TreeNode root){
+        if(root == null) return;
+
+        // If current node is a leaf, add its value
+        if(root.left == null && root.right == null){
+            li1.add(root.val);
+        }
+
+        // Traverse left and right subtrees
+        list1Node(root.left);
+        list1Node(root.right);
+    }
+
+    // DFS to collect leaf nodes of second tree
+    void list2Node(TreeNode root){
+        if(root == null) return;
+
+        // If current node is a leaf, add its value
+        if(root.left == null && root.right == null){
+            li2.add(root.val);
+        }
+
+        // Traverse left and right subtrees
+        list2Node(root.left);
+        list2Node(root.right);
+    }
+}
