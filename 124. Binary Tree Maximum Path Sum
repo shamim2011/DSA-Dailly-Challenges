@@ -1,4 +1,4 @@
-//Approach-Depth-First Search (DFS) – Postorder Traversal with Global Maximum Tracking
+//Approach 1 - Depth-First Search (DFS) – Postorder Traversal with Global Maximum Tracking
 //T.C : O(n)
 //S.C : O(n)
 
@@ -39,5 +39,75 @@ class Solution {
 
         // Return max path extending downward (only one side allowed)
         return root.val + Math.max(leftSum, rightSum);
+    }
+}
+
+
+
+//Approach 2 - Post-Order DFS (Maximum Path Sum in Binary Tree)
+//T.C : O(n)
+//S.C : O(h)
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    // Global variable to store the maximum path sum found so far
+    int maxVal;
+
+    public int maxPathSum(TreeNode root) {
+        // Initialize with minimum value to handle negative nodes
+        maxVal = Integer.MIN_VALUE;
+
+        // Start post-order traversal
+        maxPathDown(root);
+
+        // Final answer stored in maxVal
+        return maxVal;
+    }
+    
+    // Returns maximum path sum starting from current node and going DOWNWARD
+    int maxPathDown(TreeNode root) {
+
+        // Base case: null node contributes 0
+        if (root == null) return 0;
+
+        // Recursively get max path sum from left subtree
+        int leftSum = maxPathDown(root.left);
+
+        // Recursively get max path sum from right subtree
+        int rightSum = maxPathDown(root.right);
+
+        // Case 1: Path passes through current node and both children (U-turn)
+        int OnlyUturn = leftSum + rightSum + root.val;
+
+        // Case 2: Path includes current node and either left or right subtree
+        int anyOneLorR = Math.max(leftSum, rightSum) + root.val;
+
+        // Case 3: Path consists of only the current node
+        int onlyRoot = root.val;
+
+        // Update global maximum with best of all cases
+        maxVal = Math.max(
+                    maxVal,
+                    Math.max(OnlyUturn, Math.max(anyOneLorR, onlyRoot))
+                 );
+
+        // Return the maximum downward path sum to parent
+        return Math.max(anyOneLorR, onlyRoot);
     }
 }
