@@ -1,5 +1,56 @@
-// Approach - 
-// T.C - 
-// S.C - 
+// Approach - Postorder DFS + Subtree Serialization (HashMap)
+// T.C - O(n × k)    n = number of nodes, k = average length of subtree serialization
+// S.C - O(n × k)
 
 
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    // Helper function to serialize each subtree
+    String solve(TreeNode root, List<TreeNode> ans, Map<String, Integer> mp) {
+
+        // Base case: null node
+        if (root == null) return "NULL";
+
+        // Serialize current subtree using preorder traversal
+        String s = root.val + "," 
+                   + solve(root.left, ans, mp) + "," 
+                   + solve(root.right, ans, mp);
+
+        // If this subtree serialization is seen exactly once before,
+        // it means we found a duplicate subtree
+        if (mp.getOrDefault(s, 0) == 1) {
+            ans.add(root);
+        }
+
+        // Update frequency of this subtree serialization
+        mp.put(s, mp.getOrDefault(s, 0) + 1);
+
+        // Return serialization to parent call
+        return s;
+    }
+
+    public List<TreeNode> findDuplicateSubtrees(TreeNode root) {
+        List<TreeNode> ans = new ArrayList<>();
+        Map<String, Integer> mp = new HashMap<>();
+
+        // Start DFS traversal
+        solve(root, ans, mp);
+
+        return ans;
+    }
+}
