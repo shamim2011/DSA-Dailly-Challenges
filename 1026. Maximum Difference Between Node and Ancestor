@@ -72,6 +72,55 @@ class Solution {
 
 
 
-// Approach 2 - 
+// Approach 2 - Depth First Search (DFS) with Min–Max Tracking
 //T.C : O(n)
-//S.C : O(n) (string s) - I am ignoring the recursion stack space here
+//S.C : O(h)
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    // Main function to calculate maximum ancestor difference
+    public int maxAncestorDiff(TreeNode root) {
+        // Start DFS with initial min and max as root value
+        return findMaxDiff(root, root.val, root.val);
+    }
+
+    // Helper function using DFS
+    int findMaxDiff(TreeNode root, int minV, int maxV) {
+
+        // If node is null, return difference between max and min so far
+        if (root == null) 
+            return Math.abs(minV - maxV);
+
+        // Update minimum value encountered in the path
+        minV = Math.min(minV, root.val);
+
+        // Update maximum value encountered in the path
+        maxV = Math.max(maxV, root.val);
+
+        // Recursively calculate for left subtree
+        int l = findMaxDiff(root.left, minV, maxV);
+
+        // Recursively calculate for right subtree
+        int r = findMaxDiff(root.right, minV, maxV);
+
+        // Return the maximum difference found in both subtrees
+        return Math.max(l, r);
+    }
+}
+
