@@ -1,4 +1,4 @@
-// Approach - Recursive Mirror Comparison (DFS)
+// Approach 1 - Recursive Mirror Comparison (DFS)
 // T.C - O(n)
 // S.C - O(h)
 
@@ -43,5 +43,72 @@ class Solution {
         // right subtree of left node with left subtree of right node
         return isSymetricHelp(left.left, right.right) &&
                isSymetricHelp(left.right, right.left);
+    }
+}
+
+
+
+// Approach 2 - Tree Serialization with Mirror Preorder Traversal
+// T.C - O(n)
+// S.C - O(h)
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    // Main function to check whether the tree is symmetric
+    public boolean isSymmetric(TreeNode root) {
+
+        // An empty tree is symmetric
+        if (root == null) return true;
+
+        // A single node tree is symmetric
+        if (root != null && root.left == null && root.right == null) return true;
+
+        // If only one child exists, tree is not symmetric
+        if (root.left == null || root.right == null) return false;
+
+        // Serialize left subtree (normal preorder)
+        String l = solveLeft(root.left);
+
+        // Serialize right subtree (mirror preorder)
+        String r = solveRight(root.right);
+
+        // Compare both serialized strings
+        return l.equals(r);
+    }
+
+    // Preorder traversal: Root -> Left -> Right
+    String solveLeft(TreeNode root) {
+        // Use '#' to represent null nodes
+        if (root == null) return "#";
+
+        return root.val + "," 
+               + solveLeft(root.left) 
+               + solveLeft(root.right);
+    }
+
+    // Mirror preorder traversal: Root -> Right -> Left
+    String solveRight(TreeNode root) {
+        // Use '#' to represent null nodes
+        if (root == null) return "#";
+
+        return root.val + "," 
+               + solveRight(root.right) 
+               + solveRight(root.left);
     }
 }
