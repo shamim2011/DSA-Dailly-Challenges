@@ -1,4 +1,4 @@
-// Approach - DFS (preorder) traversal
+// Approach 1 - DFS (preorder) traversal
 // T.C - O(n)
 // S.C - O(n)
 
@@ -19,5 +19,76 @@ class Solution {
         // Compare left and right subtrees
         return isSameTree(p.left, q.left) &&
                isSameTree(p.right, q.right);
+    }
+}
+
+
+
+// Approach 2 - Level Order Traversal (BFS) using Two Queues
+// T.C - O(n)
+// S.C - O(n)
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public boolean isSameTree(TreeNode p, TreeNode q) {
+
+        // If both trees are empty, they are same
+        if (p == null && q == null) return true;
+
+        // If one tree is empty and the other is not, they are not same
+        if (p == null || q == null) return false;
+
+        // Queues for level order traversal of both trees
+        Queue<TreeNode> q1 = new LinkedList<>();
+        Queue<TreeNode> q2 = new LinkedList<>();
+
+        // Add root nodes to respective queues
+        q1.offer(p);
+        q2.offer(q);
+
+        // Traverse both trees simultaneously
+        while (!q1.isEmpty() && !q2.isEmpty()) {
+
+            // Get current nodes from both trees
+            TreeNode f = q1.poll();
+            TreeNode s = q2.poll();
+
+            // If values differ, trees are not identical
+            if (f.val != s.val) return false;
+
+            // Check left children
+            if (f.left != null && s.left != null) {
+                q1.offer(f.left);
+                q2.offer(s.left);
+            }
+            // If structure differs, return false
+            else if (f.left != null || s.left != null) return false;
+
+            // Check right children
+            if (f.right != null && s.right != null) {
+                q1.offer(f.right);
+                q2.offer(s.right);
+            }
+            // If structure differs, return false
+            else if (f.right != null || s.right != null) return false;
+        }
+
+        // If traversal completes without mismatch, trees are same
+        return true;
     }
 }
