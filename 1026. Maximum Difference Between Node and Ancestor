@@ -1,3 +1,77 @@
-// Approach - 
+// Approach 1 - Brute Force Ancestor–Descendant Comparison (DFS Traversal)
+//T.C : O(n*n)
+//S.C : O(h)
+
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    // Stores the maximum absolute difference found so far
+    int ans = Integer.MIN_VALUE;
+
+    // Main function called by the platform
+    public int maxAncestorDiff(TreeNode root) {
+        // Start processing the tree
+        findMaxDiff(root);
+        return ans;
+    }
+
+    // This function compares a fixed ancestor (root)
+    // with all of its descendants (child subtree)
+    int findMaxUtil(TreeNode root, TreeNode child) {
+
+        // If no descendant, return current answer
+        if (child == null) return ans;
+
+        // Update the maximum difference using ancestor and descendant values
+        ans = Math.max(ans, Math.abs(root.val - child.val));
+
+        // Continue checking left subtree of the descendant
+        findMaxUtil(root, child.left);
+
+        // Continue checking right subtree of the descendant
+        findMaxUtil(root, child.right);
+
+        return ans;
+    }
+
+    // Traverses every node and treats it as an ancestor
+    void findMaxDiff(TreeNode root) {
+
+        // Base case
+        if (root == null) return;
+
+        // Compare current node with all nodes in its left subtree
+        findMaxUtil(root, root.left);
+
+        // Compare current node with all nodes in its right subtree
+        findMaxUtil(root, root.right);
+
+        // Recursively process left subtree
+        findMaxDiff(root.left);
+
+        // Recursively process right subtree
+        findMaxDiff(root.right);
+    }
+}
+
+
+
+// Approach 2 - 
 //T.C : O(n)
 //S.C : O(n) (string s) - I am ignoring the recursion stack space here
