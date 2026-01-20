@@ -4,10 +4,6 @@
 
 
 class Solution {
-
-    // Not used, but harmless
-    int maxi = 0;
-
     // Main function to compute maximum path sum
     public int maxPathSum(TreeNode root) {
 
