@@ -1,3 +1,69 @@
-// Approach - 
+// Approach - DFS (Recursive) – Level Tracking Approach
 //T.C : O(n)
-//S.C : O(n) (string s) - I am ignoring the recursion stack space here
+//S.C : O(h) 
+
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    // Main function to add one row at given depth
+    public TreeNode addOneRow(TreeNode root, int val, int depth) {
+
+        // Special case: if depth is 1, create new root
+        if (depth == 1) {
+            TreeNode newRoot = new TreeNode(val);
+            newRoot.left = root;
+            return newRoot;
+        }
+
+        // Start DFS from level 1
+        int level = 1;
+        return add(root, val, depth, level);
+    }
+
+    // Helper recursive function
+    TreeNode add(TreeNode root, int val, int depth, int level) {
+
+        // Base case: if node is null
+        if (root == null) return null;
+
+        // When current level is just above target depth
+        if (level == depth - 1) {
+
+            // Store original children
+            TreeNode leftTemp = root.left;
+            TreeNode rightTemp = root.right;
+
+            // Insert new nodes with given value
+            root.left = new TreeNode(val);
+            root.right = new TreeNode(val);
+
+            // Attach original subtrees
+            root.left.left = leftTemp;
+            root.right.right = rightTemp;
+
+            return root;
+        }
+
+        // Recur for left and right subtrees
+        root.left = add(root.left, val, depth, level + 1);
+        root.right = add(root.right, val, depth, level + 1);
+
+        return root;
+    }
+}
