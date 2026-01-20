@@ -46,3 +46,69 @@ class Solution {
         return 1 + (l + r);
     }
 }
+
+
+//Approach 2- Height Comparison Method (Optimized for Complete Binary Tree)
+//T.C : O(log² N)
+//S.C : O(log N)
+
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    // Calculates height by moving only through left children
+    int getLeftHeight(TreeNode root) {
+        TreeNode curr = root;
+        int h = 0;
+
+        while (curr != null) {
+            h++;               // count current level
+            curr = curr.left;  // move to left child
+        }
+        return h;
+    }
+
+    // Calculates height by moving only through right children
+    int getRightHeight(TreeNode root) {
+        TreeNode curr = root;
+        int h = 0;
+
+        while (curr != null) {
+            h++;                // count current level
+            curr = curr.right;  // move to right child
+        }
+        return h;
+    }
+
+    public int countNodes(TreeNode root) {
+        // Base case
+        if (root == null) return 0;
+
+        // Find leftmost and rightmost heights
+        int lh = getLeftHeight(root);
+        int rh = getRightHeight(root);
+
+        // If heights are equal, tree is perfect
+        if (lh == rh) {
+            return (int) Math.pow(2, lh) - 1;
+        }
+
+        // Otherwise, recursively count left and right subtrees
+        return 1 + countNodes(root.left) + countNodes(root.right);
+    }
+}
