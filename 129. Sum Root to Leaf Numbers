@@ -1,4 +1,4 @@
-// Approach - Depth-First Search (DFS) — Preorder Traversal with Path Sum
+// Approach 1 - Depth-First Search (DFS) — Preorder Traversal with Path Sum
 // T.C - O(n)
 // S.C - O(h)
 
@@ -47,6 +47,62 @@ class Solution {
         int r = solve(root.right, sum * 10 + root.val);
 
         // Return total sum from both subtrees
+        return l + r;
+    }
+}
+
+
+
+// Approach 2-Depth First Search (DFS) – Root to Leaf Path Sum
+// T.C - O(n)
+// S.C - O(h)
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    // Main function to start the recursion
+    public int sumNumbers(TreeNode root) {
+        // If tree is empty, sum is 0
+        if (root == null) return 0;
+
+        // Start DFS with initial sum = 0
+        return solve(root, 0);
+    }
+
+    // Helper function to calculate sum from root to leaf paths
+    int solve(TreeNode root, int sum) {
+
+        // Base case: if node is null, contribute 0 to sum
+        if (root == null) return 0;
+
+        // Update current number by appending current node value
+        sum = sum * 10 + root.val;
+
+        // If leaf node, return the formed number
+        if (root.left == null && root.right == null) {
+            return sum;
+        }
+
+        // Recursively calculate sum from left and right subtrees
+        int l = solve(root.left, sum);
+        int r = solve(root.right, sum);
+
+        // Return total sum from both sides
         return l + r;
     }
 }
