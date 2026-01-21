@@ -1,3 +1,68 @@
-// 
+// Approach 1 - Depth First Search (DFS) with Direction Tracking
 // T.C : O(n)
-// S.C : O(1)
+// S.C : O(h)
+
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    // Stores the maximum ZigZag path length found so far
+    int maxPro = 0;
+
+    public int longestZigZag(TreeNode root) {
+
+        // Start ZigZag assuming first move is to the left
+        solve(root, 0, true);
+
+        // Start ZigZag assuming first move is to the right
+        solve(root, 0, false);
+
+        return maxPro;
+    }
+
+    /**
+     * root    → current node
+     * steps   → length of ZigZag path till now
+     * goleft  → indicates expected direction of next move
+     */
+    void solve(TreeNode root, int steps, boolean goleft) {
+
+        // Base case: if node is null, stop recursion
+        if (root == null) return;
+
+        // Update the maximum ZigZag length
+        maxPro = Math.max(maxPro, steps);
+
+        // If last move was to the left, now we should go right
+        if (goleft) {
+            // Continue ZigZag by going left
+            solve(root.left, steps + 1, false);
+
+            // Break ZigZag by going right, restart count
+            solve(root.right, 1, true);
+        }
+        // If last move was to the right, now we should go left
+        else {
+            // Continue ZigZag by going right
+            solve(root.right, steps + 1, true);
+
+            // Break ZigZag by going left, restart count
+            solve(root.left, 1, false);
+        }
+    }
+}
