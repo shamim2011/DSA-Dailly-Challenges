@@ -1,0 +1,76 @@
+// Approach - Recursive Tree Construction using Inorder & Postorder Traversal
+// T.C : O(n*n)
+// S.C : O(n)
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    // Main function to build tree
+    public TreeNode buildTree(int[] inorder, int[] postorder) {
+        int n = inorder.length;
+
+        // Start and end pointers for inorder and postorder arrays
+        int iStart = 0, iEnd = n - 1;
+        int pStart = 0, pEnd = n - 1;
+
+        // Recursive helper function
+        return solve(inorder, postorder, iStart, iEnd, pStart, pEnd);
+    }
+
+    // Recursive function to construct tree
+    TreeNode solve(int[] inorder, int[] postorder,
+                   int iStart, int iEnd,
+                   int pStart, int pEnd) {
+
+        // Base case: no elements to construct subtree
+        if (iStart > iEnd || pStart > pEnd) {
+            return null;
+        }
+
+        // Last element of postorder is the root
+        TreeNode root = new TreeNode(postorder[pEnd]);
+
+        // Find root index in inorder array
+        int i = iStart;
+        for (; i <= iEnd; i++) {
+            if (inorder[i] == root.val) {
+                break;
+            }
+        }
+
+        // Number of nodes in left and right subtrees
+        int leftSize = i - iStart;
+        int rightSize = iEnd - i;
+
+        // Recursively build left subtree
+        root.left = solve(
+                inorder, postorder,
+                iStart, i - 1,
+                pStart, pStart + leftSize - 1
+        );
+
+        // Recursively build right subtree
+        root.right = solve(
+                inorder, postorder,
+                i + 1, iEnd,
+                pEnd - rightSize, pEnd - 1
+        );
+
+        return root;
+    }
+}
