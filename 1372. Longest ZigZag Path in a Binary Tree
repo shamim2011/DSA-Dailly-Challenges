@@ -93,26 +93,30 @@ class Solution {
 
 class Solution {
 
+    // Stores maximum ZigZag length
     int maxPro = 0;
 
-    // ✔️ Correct method signature
     public int longestZigZag(TreeNode root) {
+        // Start DFS with both directions as 0
         solve(root, 0, 0);
         return maxPro;
     }
 
-    void solve(TreeNode root, int l, int r) {
+    /**
+     * leftLen  -> ZigZag length if last move was left
+     * rightLen -> ZigZag length if last move was right
+     */
+    void solve(TreeNode root, int leftLen, int rightLen) {
 
         if (root == null) return;
 
-        // Update maximum ZigZag length
-        maxPro = Math.max(maxPro, Math.max(l, r));
+        // Update global maximum
+        maxPro = Math.max(maxPro, Math.max(leftLen, rightLen));
 
-        // Move right → previous move must be left
-        solve(root.right, 0, l + 1);
+        // If we go left, previous move must be right
+        solve(root.left, rightLen + 1, 0);
 
-        // Move left → previous move must be right
-        solve(root.left, r + 1, 0);
+        // If we go right, previous move must be left
+        solve(root.right, 0, leftLen + 1);
     }
 }
-
