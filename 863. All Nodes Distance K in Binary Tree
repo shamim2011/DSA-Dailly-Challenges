@@ -1,5 +1,99 @@
-// Approach - 
-// T.C - 
-// S.C - 
+// Approach - BFS with Parent Mapping (Graph Traversal on Binary Tree)
+// T.C - O(N)
+// S.C - O(N)
 
 
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+
+    // Map to store parent of each node
+    Map<TreeNode, TreeNode> parent = new HashMap<>();
+
+    // Step 1: Build parent mapping using DFS
+    void addParent(TreeNode root) {
+        if (root == null) return;
+
+        // If left child exists, map its parent
+        if (root.left != null) {
+            parent.put(root.left, root);
+        }
+        addParent(root.left);
+
+        // If right child exists, map its parent
+        if (root.right != null) {
+            parent.put(root.right, root);
+        }
+        addParent(root.right);
+    }
+
+    // Step 2: BFS from target node to find nodes at distance K
+    void collectKDivisible(TreeNode target, int k, List<Integer> ans) {
+
+        Queue<TreeNode> q = new LinkedList<>();
+        q.offer(target);
+
+        // Set to track visited nodes (avoid revisiting)
+        Set<Integer> st = new HashSet<>();
+        st.add(target.val);
+
+        while (!q.isEmpty()) {
+            int n = q.size();
+
+            // When distance becomes 0, stop BFS
+            if (k == 0) break;
+
+            while (n-- > 0) {
+                TreeNode curr = q.poll();
+
+                // Visit left child
+                if (curr.left != null && !st.contains(curr.left.val)) {
+                    q.offer(curr.left);
+                    st.add(curr.left.val);
+                }
+
+                // Visit right child
+                if (curr.right != null && !st.contains(curr.right.val)) {
+                    q.offer(curr.right);
+                    st.add(curr.right.val);
+                }
+
+                // Visit parent
+                if (parent.containsKey(curr) && 
+                    !st.contains(parent.get(curr).val)) {
+
+                    q.offer(parent.get(curr));
+                    st.add(parent.get(curr).val);
+                }
+            }
+            k--;
+        }
+
+        // Remaining nodes in queue are exactly K distance away
+        while (!q.isEmpty()) {
+            TreeNode temp = q.poll();
+            ans.add(temp.val);
+        }
+    }
+
+    // Main function
+    public List<Integer> distanceK(TreeNode root, TreeNode target, int k) {
+
+        List<Integer> ans = new ArrayList<>();
+
+        // Build parent references
+        addParent(root);
+
+        // Collect nodes at distance K
+        collectKDivisible(target, k, ans);
+
+        return ans;
+    }
+}
