@@ -119,9 +119,72 @@ class Solution {
     }
 }
 
+-----------------------------------------------------  Approach 2  -----------------------------
 
-// Approach 2 - 
+// Approach 2 - Post-Order Traversal (Bottom-Up DFS)
 // T.C - O(n)
 // S.C - O(h)
 
 
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+
+class Solution {
+
+    // This will store the count of nodes
+    // whose value equals the average of its subtree
+    int ans = 0;
+
+    // Main function
+    public int averageOfSubtree(TreeNode root) {
+        solve(root);   // Start post-order traversal
+        return ans;    // Return final count
+    }
+
+    // Helper function that returns:
+    // Pair<sum of subtree, count of nodes in subtree>
+    Pair<Integer, Integer> solve(TreeNode root) {
+
+        // Base case: empty tree
+        if (root == null)
+            return new Pair<>(0, 0);
+
+        // Recursively get sum and count from left subtree
+        Pair<Integer, Integer> left = solve(root.left);
+
+        // Recursively get sum and count from right subtree
+        Pair<Integer, Integer> right = solve(root.right);
+
+        int leftSum = left.getKey();
+        int leftCount = left.getValue();
+
+        int rightSum = right.getKey();
+        int rightCount = right.getValue();
+
+        // Total sum of current subtree
+        int totalSum = leftSum + rightSum + root.val;
+
+        // Total number of nodes in current subtree
+        int totalCount = leftCount + rightCount + 1;
+
+        // Check if average equals the current node's value
+        if (totalSum / totalCount == root.val)
+            ans++;
+
+        // Return sum and count to parent call
+        return new Pair<>(totalSum, totalCount);
+    }
+}
