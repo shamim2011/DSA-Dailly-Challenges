@@ -1,3 +1,84 @@
-// Approach - Level Order Traversal (Breadth-First Search – BFS)
+// Approach 1 - Brute Force DFS (Postorder Traversal for Subtree Sum & Count)
+// T.C - O(n*n)
+// S.C - O(h)
+
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    // This variable will store the final count of nodes
+    int ans = 0;
+
+    // Main function
+    public int averageOfSubtree(TreeNode root) {
+        solve(root);     // Start DFS traversal
+        return ans;      // Return total count
+    }
+
+    // This function checks each node
+    void solve(TreeNode root) {
+        // Base case
+        if (root == null) return;
+
+        int count = 0;   // Dummy variable (actual count calculated in findSum)
+
+        // Get sum and count of subtree rooted at current node
+        int[] arr = findSum(root, count);
+
+        // Check if node value equals average of its subtree
+        if (root.val == arr[0] / arr[1]) {
+            ans++;
+        }
+
+        // Recursively check left and right subtrees
+        solve(root.left);
+        solve(root.right);
+    }
+
+    // This function returns:
+    // arr[0] -> sum of subtree
+    // arr[1] -> number of nodes in subtree
+    int[] findSum(TreeNode root, int count) {
+
+        // Base case
+        if (root == null) return new int[]{0, 0};
+
+        // Get sum and count from left subtree
+        int[] leftSum = findSum(root.left, count);
+
+        // Get sum and count from right subtree
+        int[] rightSum = findSum(root.right, count);
+
+        // Calculate total sum including current node
+        int sum = root.val + leftSum[0] + rightSum[0];
+
+        // Calculate total node count
+        count = 1 + leftSum[1] + rightSum[1];
+
+        // Return sum and count
+        return new int[]{sum, count};
+    }
+}
+
+
+
+// Approach 2 - 
 // T.C - O(n)
-// S.C - O(n)
+// S.C - O(h)
+
+
