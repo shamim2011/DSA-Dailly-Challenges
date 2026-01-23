@@ -1,3 +1,73 @@
-// Approach - 
+// Approach - Level Order Traversal (Breadth-First Search – BFS)
 // T.C - O(n)
 // S.C - O(n)
+
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public List<Integer> largestValues(TreeNode root) {
+
+        // List to store the largest value at each level
+        List<Integer> ans = new ArrayList<>();
+
+        // If tree is empty, return empty list
+        if (root == null) return ans;
+
+        // Queue for level order traversal
+        Queue<TreeNode> q = new LinkedList<>();
+
+        // Add root node to queue
+        q.offer(root);
+
+        // Traverse the tree level by level
+        while (!q.isEmpty()) {
+
+            // Number of nodes at current level
+            int n = q.size();
+
+            // Initialize maximum value for current level
+            int maxV = Integer.MIN_VALUE;
+
+            // Process all nodes at current level
+            for (int i = 0; i < n; i++) {
+
+                // Remove node from queue
+                TreeNode curr = q.poll();
+
+                // Update maximum value
+                maxV = Math.max(maxV, curr.val);
+
+                // Add left child to queue if exists
+                if (curr.left != null) {
+                    q.offer(curr.left);
+                }
+
+                // Add right child to queue if exists
+                if (curr.right != null) {
+                    q.offer(curr.right);
+                }
+            }
+
+            // Store largest value of current level
+            ans.add(maxV);
+        }
+
+        // Return result list
+        return ans;
+    }
+}
