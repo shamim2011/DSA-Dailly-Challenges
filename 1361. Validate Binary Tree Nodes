@@ -1,3 +1,100 @@
-// Approach - 
-// T.C - 
-// S.C - 
+// Approach 1 - Graph + Parent Tracking + BFS Connectivity Check
+// T.C - O(n)
+// S.C - O(n)
+
+
+
+class Solution {
+
+    // Maps each child node to its parent
+    // Used to ensure that each node has only one parent
+    Map<Integer, Integer> child_to_parent = new HashMap<>();
+
+    // Adjacency list representation of the tree
+    // Helps in BFS traversal to check connectivity
+    Map<Integer, List<Integer>> adj = new HashMap<>();
+
+    public boolean validateBinaryTreeNodes(int n, int[] leftChild, int[] rightChild) {
+
+        // Step 1: Build parent mapping and adjacency list
+        for (int i = 0; i < n; i++) {
+            int node = i;
+            int leftC = leftChild[i];
+            int rightC = rightChild[i];
+
+            // If left child exists
+            if (leftC != -1) {
+
+                // Add edge: parent -> left child
+                adj.computeIfAbsent(node, k -> new ArrayList<>()).add(leftC);
+
+                // If left child already has a parent → invalid tree
+                if (child_to_parent.containsKey(leftC)) {
+                    return false;
+                }
+
+                // Assign parent to left child
+                child_to_parent.put(leftC, node);
+            }
+
+            // If right child exists
+            if (rightC != -1) {
+
+                // Add edge: parent -> right child
+                adj.computeIfAbsent(node, k -> new ArrayList<>()).add(rightC);
+
+                // If right child already has a parent → invalid tree
+                if (child_to_parent.containsKey(rightC)) {
+                    return false;
+                }
+
+                // Assign parent to right child
+                child_to_parent.put(rightC, node);
+            }
+        }
+
+        // Step 2: Find the root (node with no parent)
+        int root = -1;
+        for (int i = 0; i < n; i++) {
+
+            // Node not present in child_to_parent → candidate root
+            if (!child_to_parent.containsKey(i)) {
+
+                // More than one root found → invalid tree
+                if (root != -1) return false;
+
+                root = i;
+            }
+        }
+
+        // No root found → invalid tree
+        if (root == -1) return false;
+
+        // Step 3: BFS to check connectivity and cycles
+        boolean[] visit = new boolean[n];
+        Queue<Integer> q = new LinkedList<>();
+
+        // Start BFS from root
+        q.offer(root);
+        visit[root] = true;
+        int count = 1;
+
+        while (!q.isEmpty()) {
+            int node = q.poll();
+
+            // Traverse all children
+            for (int child : adj.getOrDefault(node, Collections.emptyList())) {
+
+                // Visit unvisited child
+                if (!visit[child]) {
+                    visit[child] = true;
+                    count++;
+                    q.offer(child);
+                }
+            }
+        }
+
+        // All nodes must be reachable from root
+        return count == n;
+    }
+}
