@@ -71,3 +71,65 @@ class Solution {
         return ans;
     }
 }
+
+
+
+// Approach 2 - Depth-First Search (DFS) with Level Tracking
+// T.C - O(n)
+// S.C - O(h)
+
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    // List to store the maximum value at each level
+    List<Integer> ans = new ArrayList<>();
+
+    // Main function to find largest values in each tree row
+    public List<Integer> largestValues(TreeNode root) {
+        // If tree is empty, return empty list
+        if (root == null) return ans;
+
+        // Start DFS from root at depth 0
+        dfs(root, 0);
+
+        return ans;
+    }
+
+    // DFS helper function
+    void dfs(TreeNode root, int depth) {
+
+        // Base case: if node is null, return
+        if (root == null) return;
+
+        // If visiting this level for the first time
+        if (depth == ans.size()) {
+            ans.add(root.val);
+        }
+        // If level already exists, update max value
+        else {
+            ans.set(depth, Math.max(ans.get(depth), root.val));
+        }
+
+        // Recurse on left subtree with increased depth
+        dfs(root.left, depth + 1);
+
+        // Recurse on right subtree with increased depth
+        dfs(root.right, depth + 1);
+    }
+}
