@@ -85,8 +85,69 @@ class Solution {
     }
 }
 
-
+-------------------------------------------------------------------------------------------------------
 
 // Approach - Morris Traversal
-// T.C - 
-// S.C - 
+// T.C - O(n)
+// S.C - O(1)
+
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public List<Integer> inorderTraversal(TreeNode root) {
+
+        // List to store inorder traversal result
+        List<Integer> inorder = new ArrayList<>();
+
+        // Start traversal from root
+        TreeNode curr = root;
+
+        // Iterate until all nodes are processed
+        while (curr != null) {
+
+            // Case 1: If left child is null, visit current node
+            if (curr.left == null) {
+                inorder.add(curr.val);      // Add current node value
+                curr = curr.right;          // Move to right subtree
+            }
+            else {
+                // Find the rightmost node in left subtree (inorder predecessor)
+                TreeNode leftChild = curr.left;
+                while (leftChild.right != null) {
+                    leftChild = leftChild.right;
+                }
+
+                // Create a temporary link (thread) back to current node
+                leftChild.right = curr;
+
+                // Store current node temporarily
+                TreeNode temp = curr;
+
+                // Move current to its left child
+                curr = curr.left;
+
+                // Break the original left link to avoid infinite loop
+                temp.left = null;
+            }
+        }
+
+        // Return inorder traversal result
+        return inorder;
+    }
+}
+
