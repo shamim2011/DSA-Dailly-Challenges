@@ -1,3 +1,91 @@
-// Approach - 
-// T.C - 
-// S.C - 
+// Approach 1 - Graph Conversion + Breadth-First Search (BFS)
+// T.C - O(N)
+// S.C - O(N)
+
+
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    // Converts the binary tree into an undirected graph (adjacency list)
+    void convert(TreeNode curr, int parent, Map<Integer, List<Integer>> adj) {
+        // Base case
+        if (curr == null) return;
+
+        // Add edge between current node and its parent
+        if (parent != -1) {
+            adj.computeIfAbsent(curr.val, k -> new ArrayList<>()).add(parent);
+        }
+
+        // Add edge between current node and left child
+        if (curr.left != null) {
+            adj.computeIfAbsent(curr.val, k -> new ArrayList<>()).add(curr.left.val);
+        }
+
+        // Add edge between current node and right child
+        if (curr.right != null) {
+            adj.computeIfAbsent(curr.val, k -> new ArrayList<>()).add(curr.right.val);
+        }
+
+        // Recursively process left and right subtrees
+        convert(curr.left, curr.val, adj);
+        convert(curr.right, curr.val, adj);
+    }
+
+    public int amountOfTime(TreeNode root, int start) {
+
+        // Adjacency list to represent the tree as a graph
+        Map<Integer, List<Integer>> adj = new HashMap<>();
+
+        // Build the graph
+        convert(root, -1, adj);
+
+        // BFS queue starting from the infected node
+        Queue<Integer> q = new LinkedList<>();
+        q.offer(start);
+
+        // Set to track visited (infected) nodes
+        Set<Integer> st = new HashSet<>();
+        st.add(start);
+
+        int minutes = 0;
+
+        // Perform BFS level by level
+        while (!q.isEmpty()) {
+            int n = q.size();
+
+            // Process all nodes at the current minute
+            while (n-- > 0) {
+                int curr = q.poll();
+
+                // Traverse all adjacent nodes
+                for (int nghb : adj.getOrDefault(curr, Collections.emptyList())) {
+                    if (!st.contains(nghb)) {
+                        st.add(nghb);
+                        q.offer(nghb);
+                    }
+                }
+            }
+            // One minute passes after each BFS level
+            minutes++;
+        }
+
+        // Subtract 1 because last increment happens after infection is complete
+        return minutes - 1;
+    }
+}
