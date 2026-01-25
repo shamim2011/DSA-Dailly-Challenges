@@ -89,3 +89,74 @@ class Solution {
         return minutes - 1;
     }
 }
+
+
+// Approach 2 - Postorder DFS with Distance Propagation
+// T.C - O(N)
+// S.C - O(h)
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    // Stores the maximum time needed to infect all nodes
+    int ans = Integer.MIN_VALUE;
+
+    // This function returns:
+    //  - height of subtree if start node is NOT found
+    //  - negative distance from current node to start node if found
+    int solve(TreeNode root, int start) {
+
+        // Base case: empty tree has height 0
+        if (root == null) return 0;
+
+        // Recursively compute left and right subtree values
+        int lh = solve(root.left, start);
+        int rh = solve(root.right, start);
+
+        // If current node is the starting node
+        if (root.val == start) {
+            // Infection spreads downward to the farthest child
+            ans = Math.max(lh, rh);
+            // Return -1 to indicate start node found at distance 0
+            return -1;
+        }
+
+        // If start node is NOT found in either subtree
+        else if (lh >= 0 && rh >= 0) {
+            // Normal height calculation
+            return Math.max(lh, rh) + 1;
+        }
+
+        // If start node is found in one of the subtrees
+        else {
+            // Distance between left and right paths via current node
+            int d = Math.abs(lh) + Math.abs(rh);
+
+            // Update maximum infection time
+            ans = Math.max(ans, d);
+
+            // Propagate negative distance upward
+            return Math.min(lh, rh) - 1;
+        }
+    }
+
+    public int amountOfTime(TreeNode root, int start) {
+        solve(root, start);
+        return ans;
+    }
+}
