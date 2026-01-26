@@ -1,3 +1,70 @@
-//Approach-
-//T.C : 
-//S.C : 
+//Approach 1 - DFS + Backtracking with Frequency Count
+//T.C : O(n)
+//S.C : O(h)
+
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    // Stores the count of pseudo-palindromic root-to-leaf paths
+    int ans = 0;
+
+    public int pseudoPalindromicPaths(TreeNode root) {
+
+        // Frequency array to store count of digits (1–9) along the path
+        int[] temp = new int[10];
+
+        // Start DFS traversal from root
+        solve(root, temp);
+
+        return ans;
+    }
+
+    void solve(TreeNode root, int[] temp) {
+
+        // Base condition
+        if (root != null) {
+
+            // Include current node value in the frequency array
+            temp[root.val]++;
+
+            // If it is a leaf node
+            if (root.left == null && root.right == null) {
+
+                int oddFreq = 0;
+
+                // Count how many digits appear odd number of times
+                for (int i = 0; i <= 9; i++) {
+                    if (temp[i] % 2 != 0) {
+                        oddFreq++;
+                    }
+                }
+
+                // Path is pseudo-palindromic if at most one digit has odd frequency
+                ans += (oddFreq <= 1) ? 1 : 0;
+            }
+
+            // Recur for left and right subtrees
+            solve(root.left, temp);
+            solve(root.right, temp);
+
+            // Backtrack: remove current node value from path
+            temp[root.val]--;
+        }
+    }
+}
