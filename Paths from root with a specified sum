@@ -1,6 +1,52 @@
-//Approach-
-//T.C : 
-//S.C : 
+//Approach - Depth First Search (DFS) with Backtracking
+//T.C : O(m)
+//S.C : O(height of tree)
 
 
 
+// User function Template for Java
+
+/* Tree Node
+class Node {
+    int data;
+    Node left;
+    Node right;
+    Node(int data) {
+        this.data = data;
+        left = null;
+        right = null;
+    }
+}
+*/
+
+class Solution {
+
+    ArrayList<ArrayList<Integer>> result = new ArrayList<>();
+
+    void solve(Node root, int sum, ArrayList<Integer> temp, int curr_sum) {
+
+        if (root == null) {
+            return;
+        }
+
+        curr_sum += root.data;
+        temp.add(root.data);
+
+        if (sum == curr_sum) {
+            result.add(new ArrayList<>(temp));
+        }
+
+        solve(root.left, sum, temp, curr_sum);
+        solve(root.right, sum, temp, curr_sum);
+
+        temp.remove(temp.size() - 1);
+    }
+
+    ArrayList<ArrayList<Integer>> printPaths(Node root, int sum) {
+
+        ArrayList<Integer> temp = new ArrayList<>();
+        solve(root, sum, temp, 0);
+
+        return result;
+    }
+}
