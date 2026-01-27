@@ -69,6 +69,43 @@ class Solution {
     }
 }
 
-//Approach 2 - 
+//Approach 2 - (Without storing all root-leaf paths)
 //T.C : O(n)
-//S.C : O(N²)
+//S.C : O(h)
+
+
+
+// class Node
+// {
+//     int data;
+//     Node left, right;
+
+//     public Node(int d)
+//     {
+//         data = d;
+//         left = right = null;
+//     }
+// }
+
+class Solution {
+    ArrayList<ArrayList<Node>> paths = new ArrayList<>();
+    void solve(Node root,int level,Set<Node> st,ArrayList<Node> temp,int k){
+        if(root == null) return;
+        temp.add(root);
+        if(root.left == null && root.right == null){
+            if(level-k>=0){
+                st.add(temp.get(level-k));
+            }
+        }
+        solve(root.left,level+1,st,temp,k);
+        solve(root.right,level+1,st,temp,k);
+        temp.remove(temp.size()-1);
+    }
+    int kthFromLeaf(Node root, int k) {
+        ArrayList<Node> path = new ArrayList<>();
+        Set<Node> st = new HashSet<>();
+        solve(root,0,st,path,k);
+        
+        return st.size();
+    }
+}
