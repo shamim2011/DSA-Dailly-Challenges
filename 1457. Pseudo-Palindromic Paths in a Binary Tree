@@ -100,8 +100,59 @@ class Solution {
 
 
 
-//Approach 2 - DFS + Backtracking with Frequency Count
+//Approach 2 - DFS + Bitmasking (Parity Tracking)
 //T.C : O(n)
 //S.C : O(h)
 
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    // Stores the count of pseudo-palindromic paths
+    int ans = 0;
+
+    // Main function
+    public int pseudoPalindromicPaths(TreeNode root) {
+        // Start DFS with initial bitmask = 0
+        solve(root, 0);
+        return ans;
+    }
+
+    // DFS traversal
+    void solve(TreeNode root, int temp) {
+
+        // Base case
+        if (root == null) return;
+
+        // Toggle the bit corresponding to current node value
+        temp = temp ^ (1 << root.val);
+
+        // If it is a leaf node
+        if (root.left == null && root.right == null) {
+
+            // Check if at most one bit is set in temp
+            // (means it can form a palindrome)
+            if ((temp & (temp - 1)) == 0) {
+                ans++;
+            }
+        }
+
+        // Recurse for left and right subtrees
+        solve(root.left, temp);
+        solve(root.right, temp);
+    }
+}
 
