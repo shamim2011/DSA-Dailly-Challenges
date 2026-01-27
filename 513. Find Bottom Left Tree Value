@@ -1,3 +1,61 @@
-// Approach 1 - 
+// Approach 1 - Depth-First Search (DFS) – Preorder Traversal (Root → Left → Right)
 //T.C : O(n)
 //S.C : O(depth of tree) - Recursion System Stack Space
+
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    // Stores the maximum depth encountered so far
+    int maxDepth;
+
+    // Stores the value of the bottom-left node
+    int bottomLeft;
+
+    // DFS traversal with depth tracking
+    void dfs(TreeNode root, int depth) {
+
+        // Base case: if node is null, return
+        if (root == null) return;
+
+        // If current depth is deeper than maxDepth,
+        // update maxDepth and store current node value
+        if (depth > maxDepth) {
+            maxDepth = depth;
+            bottomLeft = root.val;
+        }
+
+        // Traverse left subtree first
+        dfs(root.left, depth + 1);
+
+        // Traverse right subtree
+        dfs(root.right, depth + 1);
+    }
+
+    public int findBottomLeftValue(TreeNode root) {
+
+        // Initialize maxDepth to a very small value
+        maxDepth = -1;
+
+        // Start DFS from root at depth 0
+        dfs(root, 0);
+
+        // Return the bottom-left value found
+        return bottomLeft;
+    }
+}
