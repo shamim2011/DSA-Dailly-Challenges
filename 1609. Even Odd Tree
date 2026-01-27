@@ -56,3 +56,37 @@ class Solution {
     }
 }
 
+
+
+----------------------------------------------------
+
+class Solution {
+    public boolean isEvenOddTree(TreeNode root) {
+        Queue<TreeNode> q = new LinkedList<>();
+        q.offer(root);
+        boolean evenL = true;
+        while(!q.isEmpty()){
+            int n = q.size();
+            int prev = evenL?Integer.MIN_VALUE:Integer.MAX_VALUE;
+            while(n-->0){
+                TreeNode curr = q.poll();
+                if((evenL && (curr.val%2==0 || prev>=curr.val))){
+                    return false;
+                }
+                if((!evenL && (curr.val%2==1 || prev<=curr.val))) return false;
+                prev = curr.val;
+                if(curr.left!=null) q.offer(curr.left);
+                if(curr.right!=null) q.offer(curr.right);
+            }
+            evenL = !evenL;
+        }
+        return true;
+    }
+}
+
+
+
+//Approach 2 - 
+//T.C : O(n)
+//S.C : O(n) for queue
+
