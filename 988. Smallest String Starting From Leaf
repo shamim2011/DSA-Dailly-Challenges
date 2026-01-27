@@ -1,5 +1,50 @@
-//Approach-1 (DFS)
-//T.C : O(n)
-//S.C : O(n)
+//Approach-1 Depth First Search (DFS) with Backtracking
+//T.C : O(n*h)
+//S.C : O(h)
 
 
+
+class Solution {
+
+    // StringBuilder to store current path from root to current node
+    StringBuilder sb = new StringBuilder();
+
+    // Stores the smallest string found so far
+    String s = "";
+
+    public String smallestFromLeaf(TreeNode root) {
+        dfs(root);          // start DFS traversal
+        return s;           // return smallest string from leaf to root
+    }
+
+    void dfs(TreeNode root){
+        // Base case
+        if(root == null) return;
+
+        // Append current node's character to path
+        sb.append((char)('a' + root.val));
+
+        // If current node is a leaf
+        if(root.left == null && root.right == null){
+
+            // Reverse to get leaf-to-root string
+            sb.reverse();
+            String rev = sb.toString();
+
+            // Restore original order (root-to-leaf)
+            sb.reverse();
+
+            // Update answer if first string or smaller lexicographically
+            if(s == "" || rev.compareTo(s) < 0){
+                s = rev;
+            }
+        }
+
+        // DFS on left and right child
+        dfs(root.left);
+        dfs(root.right);
+
+        // Backtrack: remove last added character
+        sb.deleteCharAt(sb.length() - 1);
+    }
+}
