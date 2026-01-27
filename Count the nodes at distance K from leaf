@@ -1,3 +1,74 @@
-//Approach - 
+//Approach 1 - DFS + Backtracking with Root-to-Leaf Path Storage
 //T.C : O(n)
-//S.C : 
+//S.C : O(N²)
+
+
+
+// class Node
+// {
+//     int data;
+//     Node left, right;
+
+//     public Node(int d)
+//     {
+//         data = d;
+//         left = right = null;
+//     }
+// }
+
+class Solution {
+
+    // Stores all root-to-leaf paths
+    ArrayList<ArrayList<Node>> paths = new ArrayList<>();
+
+    // DFS to generate all root-to-leaf paths
+    void solve(Node root, ArrayList<Node> temp) {
+
+        // Base case: if node is null, return
+        if (root == null) return;
+
+        // Add current node to path
+        temp.add(root);
+
+        // If leaf node, store the current path
+        if (root.left == null && root.right == null) {
+            paths.add(new ArrayList<>(temp));
+        }
+
+        // Recur for left and right subtrees
+        solve(root.left, temp);
+        solve(root.right, temp);
+
+        // Backtrack: remove last node
+        temp.remove(temp.size() - 1);
+    }
+
+    // Returns count of distinct nodes which are kth from leaf
+    int kthFromLeaf(Node root, int k) {
+
+        ArrayList<Node> temp = new ArrayList<>();
+
+        // Collect all root-to-leaf paths
+        solve(root, temp);
+
+        // Set to store unique kth nodes
+        Set<Node> st = new HashSet<>();
+
+        // For each path, pick kth node from leaf
+        for (ArrayList<Node> li : paths) {
+            int n = li.size();
+
+            // Check if kth from leaf exists
+            if (n - k > 0) {
+                st.add(li.get(n - k - 1));
+            }
+        }
+
+        // Return count of unique nodes
+        return st.size();
+    }
+}
+
+//Approach 2 - 
+//T.C : O(n)
+//S.C : O(N²)
