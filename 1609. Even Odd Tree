@@ -86,7 +86,66 @@ class Solution {
 
 
 
-//Approach 2 - 
+//Approach 2 - DFS with Level Tracking (Preorder Traversal)
 //T.C : O(n)
-//S.C : O(n) for queue
+//S.C : Auxiliary Space O(n) + Recursion Space O(depth)
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    // Stores the previous value seen at each level
+    List<Integer> levelPrev = new ArrayList<>();
+
+    public boolean isEvenOddTree(TreeNode root) {
+        // Start DFS from root at level 0
+        return solve(root, 0);
+    }
+
+    boolean solve(TreeNode root, int level) {
+
+        // Base case: empty node is valid
+        if (root == null) return true;
+
+        // Even level → value must be ODD
+        if (level % 2 == 0 && root.val % 2 == 0) return false;
+
+        // Odd level → value must be EVEN
+        if (level % 2 != 0 && root.val % 2 != 0) return false;
+
+        // First node at this level
+        if (level >= levelPrev.size()) {
+            levelPrev.add(root.val);
+        } 
+        else {
+            // Even level → values must be strictly increasing
+            if (level % 2 == 0 && root.val <= levelPrev.get(level)) return false;
+
+            // Odd level → values must be strictly decreasing
+            if (level % 2 != 0 && root.val >= levelPrev.get(level)) return false;
+
+            // Update last value for this level
+            levelPrev.set(level, root.val);
+        }
+
+        // DFS on left and right subtrees
+        return solve(root.left, level + 1) &&
+               solve(root.right, level + 1);
+    }
+}
+
 
