@@ -102,3 +102,71 @@ class Solution {
         return ans;
     }
 }
+
+
+
+// Approach 3 - Breadth-First Search (Level Order Traversal – Right to Left)
+//T.C : O(n)
+//S.C : O(depth of tree) - Recursion System Stack Space
+
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+
+class Solution {
+    public int findBottomLeftValue(TreeNode root) {
+        // Edge case: if tree is empty
+        if (root == null) return 0;
+
+        // Queue for BFS (level-order traversal)
+        Queue<TreeNode> q = new LinkedList<>();
+
+        // This will store the bottom-left value
+        int ans = 0;
+
+        // Start BFS from root
+        q.offer(root);
+
+        // Continue until all levels are processed
+        while (!q.isEmpty()) {
+            int n = q.size(); // number of nodes at current level
+
+            // Process all nodes at this level
+            while (n-- > 0) {
+                TreeNode curr = q.poll();
+
+                // Update ans with current node value
+                // Due to right-to-left insertion, last updated value
+                // will be the leftmost node of the last level
+                ans = curr.val;
+
+                // Push right child first
+                if (curr.right != null) {
+                    q.offer(curr.right);
+                }
+
+                // Push left child after
+                if (curr.left != null) {
+                    q.offer(curr.left);
+                }
+            }
+        }
+
+        // Final answer is the bottom-left value
+        return ans;
+    }
+}
