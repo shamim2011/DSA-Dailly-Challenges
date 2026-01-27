@@ -1,3 +1,58 @@
-//Approach- 
+//Approach 1 - Level Order Traversal (BFS) with Parity & Order Validation
 //T.C : O(n)
 //S.C : O(n) for queue
+
+
+class Solution {
+    public boolean isEvenOddTree(TreeNode root) {
+
+        // Queue for level order traversal (BFS)
+        Queue<TreeNode> q = new LinkedList<>();
+        q.offer(root);
+
+        // true  -> even level (0, 2, 4...)
+        // false -> odd level  (1, 3, 5...)
+        boolean evenL = true;
+
+        // Traverse tree level by level
+        while (!q.isEmpty()) {
+
+            int n = q.size(); // number of nodes in current level
+
+            // Initialize previous value depending on level
+            // Even level  -> values must be strictly increasing
+            // Odd level   -> values must be strictly decreasing
+            int prev = evenL ? Integer.MIN_VALUE : Integer.MAX_VALUE;
+
+            // Process all nodes of current level
+            while (n-- > 0) {
+                TreeNode curr = q.poll();
+
+                // Validation rules:
+                // Even level:
+                //   - values must be odd
+                //   - values must be strictly increasing
+                // Odd level:
+                //   - values must be even
+                //   - values must be strictly decreasing
+                if ((evenL && (curr.val % 2 == 0 || prev >= curr.val)) ||
+                    (!evenL && (curr.val % 2 == 1 || prev <= curr.val))) {
+                    return false;
+                }
+
+                // Update previous value
+                prev = curr.val;
+
+                // Add children for next level
+                if (curr.left != null) q.offer(curr.left);
+                if (curr.right != null) q.offer(curr.right);
+            }
+
+            // Switch level (even <-> odd)
+            evenL = !evenL;
+        }
+
+        return true;
+    }
+}
+
