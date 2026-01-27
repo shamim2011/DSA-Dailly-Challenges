@@ -48,3 +48,68 @@ class Solution {
         sb.deleteCharAt(sb.length() - 1);
     }
 }
+
+
+
+//Approach-2 Breadth-First Search (BFS) with String Construction
+//T.C : O(n*h)
+//S.C : O(h)
+
+
+class Solution {
+
+    public String smallestFromLeaf(TreeNode root) {
+
+        // Queue for BFS traversal
+        // Each element stores: (current node, string formed from leaf to this node)
+        Queue<Pair<TreeNode, String>> q = new LinkedList<>();
+
+        // Stores the lexicographically smallest string found so far
+        String ans = "";
+
+        // Start BFS from root
+        // Convert root value to corresponding character and store as initial string
+        q.offer(new Pair<>(root, String.valueOf((char)(root.val + 'a'))));
+
+        while (!q.isEmpty()) {
+
+            // Get current node and its corresponding string
+            Pair<TreeNode, String> pair = q.poll();
+            TreeNode curr = pair.getKey();
+            String s = pair.getValue();
+
+            // If leaf node is reached
+            if (curr.left == null && curr.right == null) {
+
+                // Update answer if:
+                // 1) ans is empty OR
+                // 2) current string is lexicographically smaller
+                if (ans.equals("") || ans.compareTo(s) > 0) {
+                    ans = s;
+                }
+            }
+
+            // Move to left child
+            // Prepend character because string is from leaf to root
+            if (curr.left != null) {
+                q.offer(new Pair<>(
+                    curr.left,
+                    (char)('a' + curr.left.val) + s
+                ));
+            }
+
+            // Move to right child
+            // Prepend character because string is from leaf to root
+            if (curr.right != null) {
+                q.offer(new Pair<>(
+                    curr.right,
+                    (char)('a' + curr.right.val) + s
+                ));
+            }
+        }
+
+        // Return the smallest string from leaf to root
+        return ans;
+    }
+}
+
