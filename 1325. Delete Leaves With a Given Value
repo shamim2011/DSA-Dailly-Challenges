@@ -1,3 +1,43 @@
-//Approach-
+//Approach- Post-Order Traversal (Bottom-Up DFS)
 //T.C : O(n)
-//S.C : O(n)
+//S.C : O(h)
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public TreeNode removeLeafNodes(TreeNode root, int target) {
+
+        // Base case: if tree is empty
+        if (root == null) return null;
+
+        // Recursively process left subtree
+        root.left = removeLeafNodes(root.left, target);
+
+        // Recursively process right subtree
+        root.right = removeLeafNodes(root.right, target);
+
+        // After recursion, check if current node is a leaf
+        // and its value equals target
+        if (root.left == null && root.right == null && root.val == target) {
+            return null; // Remove this leaf node
+        }
+
+        // Otherwise, keep the current node
+        return root;
+    }
+}
