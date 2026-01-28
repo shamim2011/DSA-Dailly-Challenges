@@ -1,3 +1,54 @@
-//Approach - 
+//Approach - HashMap + HashSet Based Tree Construction
 //T.C : O(n)
 //S.C : O(n)
+
+
+class Solution {
+
+    // Map to store value -> TreeNode mapping
+    Map<Integer, TreeNode> mp = new HashMap<>();
+
+    // Set to store all child nodes
+    Set<Integer> st = new HashSet<>();
+
+    public TreeNode createBinaryTree(int[][] descriptions) {
+
+        // Step 1: Create nodes and build parent-child relationships
+        for (int[] arr : descriptions) {
+            int parent = arr[0];
+            int child = arr[1];
+            int isLeft = arr[2];
+
+            // Create parent node if not present
+            if (!mp.containsKey(parent)) {
+                mp.put(parent, new TreeNode(parent));
+            }
+
+            // Create child node if not present
+            if (!mp.containsKey(child)) {
+                mp.put(child, new TreeNode(child));
+            }
+
+            // Attach child to parent (left or right)
+            if (isLeft == 1) {
+                mp.get(parent).left = mp.get(child);
+            } else {
+                mp.get(parent).right = mp.get(child);
+            }
+
+            // Mark child node
+            st.add(child);
+        }
+
+        // Step 2: Find the root node
+        // Root is the node that never appears as a child
+        for (int[] arr : descriptions) {
+            int parent = arr[0];
+            if (!st.contains(parent)) {
+                return mp.get(parent);
+            }
+        }
+
+        return null;
+    }
+}
