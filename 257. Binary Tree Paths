@@ -1,0 +1,47 @@
+// Approach : 
+//T.C : O(n) 
+//S.C : O(n)
+
+
+
+class Solution {
+
+    // Stores all root-to-leaf paths
+    List<String> ans = new ArrayList<>();
+
+    // Used to build the current path efficiently
+    StringBuilder sb = new StringBuilder();
+
+    // Helper DFS function
+    void solve(TreeNode root) {
+
+        // Base case: if node is null, stop
+        if (root == null) return;
+
+        // Save current length of StringBuilder (for backtracking)
+        int len = sb.length();
+
+        // Append current node value
+        sb.append(Integer.toString(root.val));
+
+        // If leaf node, add the built path to result
+        if (root.left == null && root.right == null) {
+            ans.add(sb.toString());
+        } 
+        // Otherwise, continue DFS
+        else {
+            sb.append("->");     // Add path separator
+            solve(root.left);    // Recurse left
+            solve(root.right);   // Recurse right
+        }
+
+        // Backtrack: restore StringBuilder to previous state
+        sb.setLength(len);
+    }
+
+    // Main function
+    public List<String> binaryTreePaths(TreeNode root) {
+        solve(root);   // Start DFS from root
+        return ans;    // Return all paths
+    }
+}
