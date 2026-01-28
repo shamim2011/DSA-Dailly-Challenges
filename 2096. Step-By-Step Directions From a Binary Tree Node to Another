@@ -1,6 +1,6 @@
 // Approach 1 : Lowest Common Ancestor (LCA) + DFS Path Tracking
 //T.C : O(n) 
-//S.C : O(n)
+//S.C : O(h)
 
 
 class Solution {
