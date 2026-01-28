@@ -1,3 +1,80 @@
-// Approach : 
+// Approach 1 : Lowest Common Ancestor (LCA) + DFS Path Tracking
 //T.C : O(n) 
 //S.C : O(n)
+
+
+class Solution {
+
+    // Step 1: Find Lowest Common Ancestor (LCA) of start and destination nodes
+    TreeNode lowerCommonAncester(TreeNode root, int start, int end) {
+        // Base case
+        if (root == null) return null;
+
+        // If current node matches either start or end, return it
+        if (root.val == start || root.val == end) return root;
+
+        // Recur for left and right subtrees
+        TreeNode leftN = lowerCommonAncester(root.left, start, end);
+        TreeNode rightN = lowerCommonAncester(root.right, start, end);
+
+        // If both sides return non-null, current node is LCA
+        if (leftN != null && rightN != null) return root;
+
+        // Otherwise return the non-null child
+        if (leftN != null && rightN == null) return leftN;
+        if (rightN != null && leftN == null) return rightN;
+
+        return null;
+    }
+
+    // Step 2: Find path from a given root to target node
+    // 'L' -> move left, 'R' -> move right
+    boolean findpath(TreeNode root, int target, StringBuilder sb) {
+        if (root == null) return false;
+
+        // Target found
+        if (root.val == target) return true;
+
+        // Explore left subtree
+        sb.append('L');
+        if (findpath(root.left, target, sb)) {
+            return true;
+        }
+        sb.deleteCharAt(sb.length() - 1); // Backtrack
+
+        // Explore right subtree
+        sb.append('R');
+        if (findpath(root.right, target, sb)) {
+            return true;
+        }
+        sb.deleteCharAt(sb.length() - 1); // Backtrack
+
+        return false;
+    }
+
+    // Step 3: Build final directions string
+    public String getDirections(TreeNode root, int startValue, int destValue) {
+
+        // Find LCA of start and destination
+        TreeNode lca = lowerCommonAncester(root, startValue, destValue);
+
+        // Paths from LCA to start and destination
+        StringBuilder lcaToStart = new StringBuilder();
+        StringBuilder lcaToDest = new StringBuilder();
+
+        // Find paths
+        findpath(lca, startValue, lcaToStart);
+        findpath(lca, destValue, lcaToDest);
+
+        // Convert LCA → start path into 'U'
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < lcaToStart.length(); i++) {
+            sb.append('U');
+        }
+
+        // Append LCA → destination path
+        sb.append(lcaToDest);
+
+        return sb.toString();
+    }
+}
