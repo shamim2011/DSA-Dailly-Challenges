@@ -1,6 +1,6 @@
-// Approach : 
+// Approach : Depth-First Search (DFS) with Backtracking
 //T.C : O(n) 
-//S.C : O(n)
+//S.C : O(h)
 
 
 
