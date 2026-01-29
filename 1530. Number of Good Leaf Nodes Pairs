@@ -1,3 +1,94 @@
-//Approach - 
-//T.C : O(n)
+//Approach 1 -  Root-to-Leaf Path Encoding + Pairwise Distance Calculation(TLE)
+//T.C : O(n^3)
+//S.C : O(n)
+
+
+class Solution {
+
+    // Stores all leaf nodes of the tree
+    List<TreeNode> leaf = new ArrayList<>();
+
+    // Collect all leaf nodes using DFS
+    void getAllLeaf(TreeNode root){
+        if(root == null) return;
+
+        // If both children are null, it's a leaf node
+        if(root.left == null && root.right == null){
+            leaf.add(root);
+        }
+
+        // Recur for left and right subtrees
+        getAllLeaf(root.left);
+        getAllLeaf(root.right);
+    }
+
+    // Finds path from root to target node
+    // Stores path as 'L' and 'R' characters
+    boolean pathFind(TreeNode root, TreeNode target, StringBuilder sb) {
+        if (root == null) return false;
+
+        // Target found
+        if (root == target) return true;
+
+        // Try going left
+        sb.append('L');
+        if (pathFind(root.left, target, sb)) {
+            return true;
+        }
+        sb.deleteCharAt(sb.length() - 1); // Backtrack
+
+        // Try going right
+        sb.append('R');
+        if (pathFind(root.right, target, sb)) {
+            return true;
+        }
+        sb.deleteCharAt(sb.length() - 1); // Backtrack
+
+        return false;
+    }
+
+    public int countPairs(TreeNode root, int distance) {
+        int ans = 0;
+
+        // Step 1: Get all leaf nodes
+        getAllLeaf(root);
+
+        // Step 2: Check every pair of leaf nodes
+        for(int i = 0; i < leaf.size(); i++){
+            for(int j = i + 1; j < leaf.size(); j++){
+
+                // Path from root to first leaf
+                StringBuilder rootToStart = new StringBuilder();
+                // Path from root to second leaf
+                StringBuilder rootToDest = new StringBuilder();
+
+                pathFind(root, leaf.get(i), rootToStart);
+                pathFind(root, leaf.get(j), rootToDest);
+
+                // Find length of common prefix (LCA path)
+                int l = 0;
+                while(l < rootToStart.length() &&
+                      l < rootToDest.length() &&
+                      rootToStart.charAt(l) == rootToDest.charAt(l)) {
+                    l++;
+                }
+
+                // Distance between two leaf nodes
+                int dist = (rootToStart.length() - l) +
+                           (rootToDest.length() - l);
+
+                // Count good leaf pairs
+                if(dist <= distance){
+                    ans++;
+                }
+            }
+        }
+        return ans;
+    }
+}
+
+
+
+//Approach 2 -  
+//T.C : O(n^2)
 //S.C : O(n)
