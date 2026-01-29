@@ -72,6 +72,58 @@ class Solution {
 
 
 
-//Approach 2 - 
+//Approach 2 - Level Order Traversal (BFS) with Level Sum Tracking
 //T.C : O(n)
 //S.C : O(n)
+
+
+
+class Solution {
+    public TreeNode replaceValueInTree(TreeNode root) {
+        // If tree is empty, return null
+        if (root == null) return root;
+
+        // Queue for level order traversal (BFS)
+        Queue<TreeNode> q = new LinkedList<>();
+        q.offer(root);
+
+        // Initial level sum (root level)
+        int levelSum = root.val;
+
+        // Traverse tree level by level
+        while (!q.isEmpty()) {
+            int n = q.size();          // Number of nodes at current level
+            int nextLeveSum = 0;       // Sum of values of next level nodes
+
+            while (n-- > 0) {
+                TreeNode curr = q.poll();
+
+                // Replace current node value with (level sum - its own value)
+                curr.val = levelSum - curr.val;
+
+                // Calculate sum of its children (siblings)
+                int siblingSum = curr.left != null ? curr.left.val : 0;
+                siblingSum += curr.right != null ? curr.right.val : 0;
+
+                // Process left child
+                if (curr.left != null) {
+                    nextLeveSum += curr.left.val;  // Add original value to next level sum
+                    curr.left.val = siblingSum;    // Temporarily store sibling sum
+                    q.offer(curr.left);
+                }
+
+                // Process right child
+                if (curr.right != null) {
+                    nextLeveSum += curr.right.val; // Add original value to next level sum
+                    curr.right.val = siblingSum;   // Temporarily store sibling sum
+                    q.offer(curr.right);
+                }
+            }
+
+            // Move to next level
+            levelSum = nextLeveSum;
+        }
+
+        return root;
+    }
+}
