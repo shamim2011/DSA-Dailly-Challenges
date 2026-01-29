@@ -1,3 +1,71 @@
-//Approach - 
-//T.C : 
-//S.C : 
+//Approach 1 - Level Order Traversal (BFS) with Level Sum Precomputation
+//T.C : O(n)
+//S.C : O(n)
+
+
+class Solution {
+    public TreeNode replaceValueInTree(TreeNode root) {
+
+        // Edge case
+        if (root == null) return root;
+
+        Queue<TreeNode> q = new LinkedList<>();
+        List<Integer> levelSum = new ArrayList<>();
+
+        // -------------------------------
+        // 1️⃣ BFS to calculate level sums
+        // -------------------------------
+        q.offer(root);
+
+        while (!q.isEmpty()) {
+            int n = q.size();   // number of nodes at current level
+            int sum = 0;
+
+            while (n-- > 0) {
+                TreeNode curr = q.poll();
+                sum += curr.val;  // add node value to level sum
+
+                if (curr.left != null) q.offer(curr.left);
+                if (curr.right != null) q.offer(curr.right);
+            }
+            // store sum of current level
+            levelSum.add(sum);
+        }
+
+        // ----------------------------------------
+        // 2️⃣ BFS again to update node values
+        // ----------------------------------------
+        q.offer(root);
+
+        root.val = 0;   // root has no cousins
+        int i = 1;      // index for next level sum
+
+        while (!q.isEmpty()) {
+            int n = q.size();  // nodes at current level
+
+            while (n-- > 0) {
+                TreeNode curr = q.poll();
+
+                // Calculate sibling sum (left + right)
+                int siblingSum = 0;
+                if (curr.left != null) siblingSum += curr.left.val;
+                if (curr.right != null) siblingSum += curr.right.val;
+
+                // Update left child value
+                if (curr.left != null) {
+                    curr.left.val = levelSum.get(i) - siblingSum;
+                    q.offer(curr.left);
+                }
+
+                // Update right child value
+                if (curr.right != null) {
+                    curr.right.val = levelSum.get(i) - siblingSum;
+                    q.offer(curr.right);
+                }
+            }
+            i++;  // move to next level
+        }
+
+        return root;
+    }
+}
