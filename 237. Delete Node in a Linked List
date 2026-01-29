@@ -1,3 +1,46 @@
-// Approach 
+// Approach 1 - Value Shifting Approach (Forward Copy Method)
+// T:C - O(n)
+// S:C - O(1)
+
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public void deleteNode(ListNode node) {
+
+        // This will keep track of the previous node
+        ListNode prev = null;
+
+        // Start from the next node of the given node
+        ListNode curr = node.next;
+
+        // Traverse until the second last node
+        // Copy the value of next node into current node
+        while (node != null && node.next != null) {
+
+            // Copy next node's value into current node
+            node.val = node.next.val;
+
+            // Store current node as previous
+            prev = node;
+
+            // Move to the next node
+            node = node.next;
+        }
+
+        // Remove the last node by making previous node's next null
+        prev.next = null;
+    }
+}
+
+
+
+// Approach 1 - Value Shifting Approach (Forward Copy Method)
 // T:C - O(n)
 // S:C - O(1)
