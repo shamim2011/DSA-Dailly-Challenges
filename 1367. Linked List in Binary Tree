@@ -1,5 +1,5 @@
 //Approach - DFS + Backtracking (Tree Traversal with Path Matching)
-//T.C : O(n+m)
+//T.C : O(n+m)       M = length of linked list (during matching)
 //S.C : O(n+m)
 
 
