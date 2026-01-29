@@ -81,6 +81,75 @@ class Solution {
 
 
 
-// Approach 2 : Without (LCA)
+// Approach 2 : Without (LCA) - Root-to-Node Path + Lowest Common Ancestor (LCA) using String Backtracking
 //T.C : O(n) 
 //S.C : O(h)
+
+
+class Solution {
+
+    // Helper function to find path from root to target node
+    // 'L' -> move left, 'R' -> move right
+    boolean findpath(TreeNode root, int target, StringBuilder sb) {
+
+        // Base case: reached null node
+        if (root == null) return false;
+
+        // Target node found
+        if (root.val == target) return true;
+
+        // Try going to left child
+        sb.append('L');
+        if (findpath(root.left, target, sb)) {
+            return true;
+        }
+        // Backtrack if left path fails
+        sb.deleteCharAt(sb.length() - 1);
+
+        // Try going to right child
+        sb.append('R');
+        if (findpath(root.right, target, sb)) {
+            return true;
+        }
+        // Backtrack if right path fails
+        sb.deleteCharAt(sb.length() - 1);
+
+        // Target not found in this subtree
+        return false;
+    }
+
+    public String getDirections(TreeNode root, int startValue, int destValue) {
+
+        // Stores path from root to start node
+        StringBuilder rootToStart = new StringBuilder();
+
+        // Stores path from root to destination node
+        StringBuilder rootToDest = new StringBuilder();
+
+        // Find both paths
+        findpath(root, startValue, rootToStart);
+        findpath(root, destValue, rootToDest);
+
+        // Find Lowest Common Ancestor (LCA) by removing common prefix
+        int l = 0;
+        while (l < rootToStart.length() &&
+               l < rootToDest.length() &&
+               rootToStart.charAt(l) == rootToDest.charAt(l)) {
+            l++;
+        }
+
+        StringBuilder sb = new StringBuilder();
+
+        // Move up from start node to LCA
+        for (int i = 0; i < rootToStart.length() - l; i++) {
+            sb.append('U');
+        }
+
+        // Move down from LCA to destination node
+        for (int i = l; i < rootToDest.length(); i++) {
+            sb.append(rootToDest.charAt(i));
+        }
+
+        return sb.toString();
+    }
+}
