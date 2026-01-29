@@ -89,6 +89,90 @@ class Solution {
 
 
 
-//Approach 2 -  
+//Approach 2 -  Graph Conversion + BFS from Each Leaf Node
 //T.C : O(n^2)
+//S.C : O(n)
+
+
+
+class Solution {
+
+    // This method converts the binary tree into an undirected graph
+    // and also collects all leaf nodes
+    void makeGraph(TreeNode root, TreeNode prev,
+                   Map<TreeNode, List<TreeNode>> adj,
+                   Set<TreeNode> leaf) {
+
+        // Base case
+        if (root == null) return;
+
+        // If current node is a leaf, add it to leaf set
+        if (root.left == null && root.right == null)
+            leaf.add(root);
+
+        // Create bidirectional edge between current node and its parent
+        if (prev != null) {
+            adj.computeIfAbsent(root, k -> new ArrayList<>()).add(prev);
+            adj.computeIfAbsent(prev, k -> new ArrayList<>()).add(root);
+        }
+
+        // Recursive calls for left and right subtree
+        makeGraph(root.left, root, adj, leaf);
+        makeGraph(root.right, root, adj, leaf);
+    }
+
+    public int countPairs(TreeNode root, int distance) {
+
+        // Adjacency list representation of tree as graph
+        Map<TreeNode, List<TreeNode>> adj = new HashMap<>();
+
+        // Set to store all leaf nodes
+        Set<TreeNode> leaf = new HashSet<>();
+
+        // Build graph and collect leaf nodes
+        makeGraph(root, null, adj, leaf);
+
+        int count = 0;
+
+        // For every leaf node, perform BFS
+        for (TreeNode leafNode : leaf) {
+
+            Queue<TreeNode> q = new LinkedList<>();
+            Set<TreeNode> visit = new HashSet<>();
+
+            // Start BFS from current leaf
+            q.offer(leafNode);
+            visit.add(leafNode);
+
+            // BFS up to given distance
+            for (int level = 0; level <= distance; level++) {
+                int n = q.size();
+
+                while (n-- > 0) {
+                    TreeNode curr = q.poll();
+
+                    // If another leaf is found within distance
+                    if (curr != leafNode && leaf.contains(curr)) {
+                        count++;
+                    }
+
+                    // Traverse neighbors
+                    for (TreeNode ngbr : adj.getOrDefault(curr, new ArrayList<>())) {
+                        if (!visit.contains(ngbr)) {
+                            q.offer(ngbr);
+                            visit.add(ngbr);
+                        }
+                    }
+                }
+            }
+        }
+
+        // Each valid pair counted twice, so divide by 2
+        return count / 2;
+    }
+}
+
+
+//Approach 3 -  
+//T.C : O(n)
 //S.C : O(n)
