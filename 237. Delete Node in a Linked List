@@ -41,6 +41,33 @@ class Solution {
 
 
 
-// Approach 1 - Value Shifting Approach (Forward Copy Method)
-// T:C - O(n)
+// Approach 2 - Value Copy & Node Bypass Technique
+// T:C - O(1)
 // S:C - O(1)
+
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public void deleteNode(ListNode node) {
+
+        // Store reference of the next node
+        ListNode temp = node.next;
+
+        // Copy the value of next node into current node
+        node.val = temp.val;
+
+        // Skip (unlink) the next node
+        node.next = temp.next;
+
+        // Disconnect the removed node
+        temp.next = null;
+    }
+}
+
