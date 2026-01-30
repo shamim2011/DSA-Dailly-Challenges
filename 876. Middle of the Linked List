@@ -1,4 +1,39 @@
-// Approach - 
-// T.C - 
-// S.C - 
+// Approach - Two Pointer Approach (Slow & Fast Pointer / Tortoise and Hare)
+// T.C - O(n)
+// S.C - O(1)
 
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode middleNode(ListNode head) {
+
+        // 'first' pointer moves one step at a time (slow pointer)
+        ListNode first = head;
+
+        // 'second' pointer moves two steps at a time (fast pointer)
+        ListNode second = head;
+
+        // Traverse the list while fast pointer and its next are not null
+        while (first != null && second != null && second.next != null) {
+
+            // Move slow pointer by one node
+            first = first.next;
+
+            // Move fast pointer by two nodes
+            second = second.next.next;
+        }
+
+        // When fast pointer reaches the end,
+        // slow pointer will be at the middle node
+        return first;
+    }
+}
