@@ -51,3 +51,70 @@ class Solution {
         return head;
     }
 }
+
+
+
+// Approach 2 -  End Pointer Re-linking (Odd–Even Rearrangement using Tail Insertion)
+// T.C - O(n)
+// S.C - O(1)
+
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode oddEvenList(ListNode head) {
+
+        // Edge cases: if list has less than 3 nodes, no rearrangement needed
+        if (head == null || head.next == null || head.next.next == null)
+            return head;
+
+        // 'start' will point to current odd node
+        ListNode start = head;
+
+        // 'end' will finally point to the last node of the list
+        ListNode end = head;
+
+        // Count total nodes in the list
+        int count = 1;
+        while (end != null && end.next != null) {
+            end = end.next;
+            count++;
+        }
+
+        // Number of even nodes to move = total_nodes / 2
+        count = count / 2;
+
+        // Move each even-positioned node to the end
+        while (count-- > 0) {
+
+            // Store the even node
+            ListNode startNext = start.next;
+
+            // Link current odd node to the next odd node
+            start.next = start.next.next;
+
+            // Attach the even node at the end
+            end.next = startNext;
+
+            // Move 'start' to next odd node
+            start = start.next;
+
+            // Move 'end' to newly added even node
+            end = end.next;
+        }
+
+        // Ensure last node points to null to avoid cycle
+        end.next = null;
+
+        // Return modified list
+        return head;
+    }
+}
