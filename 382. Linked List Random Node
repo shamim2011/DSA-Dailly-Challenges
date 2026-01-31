@@ -1,3 +1,49 @@
-// Approach 
-//T.C : O()
-//S.C : O()
+// Approach 1 - Array Conversion + Random Index Selection
+//T.C : O(n)
+//S.C : O(n)
+
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    // List to store all node values from the linked list
+    List<Integer> list;
+
+    // Random object to generate random index
+    Random rand;
+
+    // Constructor: converts linked list into an ArrayList
+    public Solution(ListNode head) {
+        list = new ArrayList<>();   // Initialize list
+        rand = new Random();        // Initialize random generator
+
+        // Traverse the linked list
+        ListNode temp = head;
+        while (temp != null) {
+            list.add(temp.val);     // Store node value
+            temp = temp.next;       // Move to next node
+        }
+    }
+
+    // Returns a random node's value
+    public int getRandom() {
+        int n = list.size();            // Total number of elements
+        int rIdx = rand.nextInt(n);     // Generate random index [0, n-1]
+        return list.get(rIdx);          // Return value at random index
+    }
+}
+
+/**
+ * Your Solution object will be instantiated and called as such:
+ * Solution obj = new Solution(head);
+ * int param_1 = obj.getRandom();
+ */
