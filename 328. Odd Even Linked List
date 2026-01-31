@@ -1,4 +1,53 @@
-// Approach - 
-// T.C - 
-// S.C - 
+// Approach 1 -  Two Pointer Approach (Odd–Even Index Separation)
+// T.C - O(n)
+// S.C - O(1)
 
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode oddEvenList(ListNode head) {
+
+        // Edge case: if list is empty or has only one node
+        if (head == null || head.next == null) return head;
+
+        // odd pointer starts at first node
+        ListNode odd = head;
+
+        // even pointer starts at second node
+        ListNode even = head.next;
+
+        // Store the starting node of even list
+        ListNode evenStart = head.next;
+
+        // Traverse while there are available even and odd nodes
+        while (even != null && even.next != null) {
+
+            // Link current odd node to the next odd node
+            odd.next = even.next;
+
+            // Link current even node to the next even node
+            even.next = even.next.next;
+
+            // Move odd pointer forward
+            odd = odd.next;
+
+            // Move even pointer forward
+            even = even.next;
+        }
+
+        // Attach even list at the end of odd list
+        odd.next = evenStart;
+
+        // Return the modified list head
+        return head;
+    }
+}
