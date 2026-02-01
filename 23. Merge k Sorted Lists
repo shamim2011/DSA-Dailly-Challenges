@@ -1,3 +1,74 @@
-// Approach 
-//T.C : O(n)
+// Approach - Divide and Conquer
+//T.C : O(log(k) * k * n)
 //S.C : O(n)
+
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    // Function to merge two sorted linked lists
+    ListNode mergeTwoSortedList(ListNode li1, ListNode li2) {
+
+        // If first list is empty, return second list
+        if (li1 == null) return li2;
+
+        // If second list is empty, return first list
+        if (li2 == null) return li1;
+
+        // Compare current nodes of both lists
+        if (li1.val <= li2.val) {
+
+            // Attach smaller node and recurse for remaining list
+            li1.next = mergeTwoSortedList(li1.next, li2);
+            return li1;
+
+        } else {
+
+            // Attach smaller node and recurse for remaining list
+            li2.next = mergeTwoSortedList(li2.next, li1);
+            return li2;
+        }
+    }
+
+    // Divide the lists into two halves and merge them
+    ListNode partitionAndMerge(int start, int end, ListNode[] lists) {
+
+        // If only one list remains, return it
+        if (start == end) return lists[start];
+
+        // Invalid range
+        if (start > end) return null;
+
+        // Find middle index
+        int mid = start + (end - start) / 2;
+
+        // Recursively merge left half
+        ListNode l1 = partitionAndMerge(start, mid, lists);
+
+        // Recursively merge right half
+        ListNode l2 = partitionAndMerge(mid + 1, end, lists);
+
+        // Merge the two sorted halves
+        return mergeTwoSortedList(l1, l2);
+    }
+
+    // Main function to merge K sorted linked lists
+    public ListNode mergeKLists(ListNode[] lists) {
+
+        // Start index
+        int start = 0;
+
+        // Apply divide and conquer approach
+        return partitionAndMerge(start, lists.length - 1, lists);
+    }
+}
+
