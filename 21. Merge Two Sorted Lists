@@ -1,0 +1,42 @@
+// Approach - Recursive Merge (Two-Pointer using Recursion)
+//T.C : O(n + m)
+//S.C :O(n + m)
+
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
+
+        // Base case: if first list is empty, return second list
+        if (list1 == null) return list2;
+
+        // Base case: if second list is empty, return first list
+        if (list2 == null) return list1;
+
+        // Compare current nodes of both lists
+        if (list1.val <= list2.val) {
+
+            // Attach the smaller node and recursively merge the rest
+            list1.next = mergeTwoLists(list1.next, list2);
+
+            // Return the selected node
+            return list1;
+        } else {
+
+            // Attach the smaller node and recursively merge the rest
+            list2.next = mergeTwoLists(list2.next, list1);
+
+            // Return the selected node
+            return list2;
+        }
+    }
+}
