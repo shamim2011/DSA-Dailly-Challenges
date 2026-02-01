@@ -1,3 +1,63 @@
-// Approach - 
+// Approach 1 - Two-Pass Length Calculation Approach
 // T.C - O(n)
-// S.C - O(n)
+// S.C - O(1)
+
+
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode swapNodes(ListNode head, int k) {
+        // If list is empty
+        if(head == null) return null;
+
+        // If list has only one node
+        if(head.next == null) return head;
+
+        // Step 1: Find length of the linked list
+        int len = 0;
+        ListNode temp = head;
+        while(temp != null){
+            len++;
+            temp = temp.next;
+        }
+
+        // Step 2: Find kth node from the start
+        ListNode node1 = head;
+        int count = 1;
+        while(node1 != null){
+            if(count == k){
+                break;
+            }
+            count++;
+            node1 = node1.next;
+        }
+
+        // Step 3: Find kth node from the end (position = len - k + 1)
+        ListNode node2 = head;
+        int count1 = 1;
+        while(node2 != null){
+            if(count1 == len - k + 1){
+                break;
+            }
+            count1++;
+            node2 = node2.next;
+        }
+
+        // Step 4: Swap values of the two nodes
+        int tempVal = node1.val;
+        node1.val = node2.val;
+        node2.val = tempVal;
+
+        // Return modified list
+        return head;
+    }
+}
