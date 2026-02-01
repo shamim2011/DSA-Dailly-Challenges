@@ -64,6 +64,54 @@ class Solution {
 
 
 
-// Approach 2 - 
+// Approach 2 - Two-pointer traversal / Single-pass approach
 // T.C - O(n)
 // S.C - O(1)
+
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+
+class Solution {
+    public ListNode swapNodes(ListNode head, int k) {
+        // Edge case: empty list or single node, nothing to swap
+        if(head == null) return null;
+        if(head.next == null) return head;
+
+        ListNode node1 = head;  // Will point to the k-th node from the start
+        ListNode node2 = head;  // Will point to the k-th node from the end
+        ListNode temp = head;   // Temporary pointer to traverse the list
+
+        // Traverse the list
+        while(temp != null){
+            // Move node2 only after node1 is found
+            if(node2 != null){
+                node2 = node2.next;
+            }
+
+            k--;  // Count down to find k-th node
+            if(k == 0){
+                node1 = temp; // Found k-th node from start
+                node2 = head; // Start node2 to find k-th from end
+            }
+
+            temp = temp.next; // Move forward
+        }
+
+        // Swap values of node1 (k-th from start) and node2 (k-th from end)
+        int tempVal = node1.val;
+        node1.val = node2.val;
+        node2.val = tempVal;
+
+        return head;
+    }
+}
+
