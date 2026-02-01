@@ -1,3 +1,70 @@
-// Approach 
+// Approach - Prefix Sum + HashMap
 // T.C - O(n)
 // S.C - O(n)
+
+
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode removeZeroSumSublists(ListNode head) {
+
+        // Map to store prefixSum -> ListNode mapping
+        Map<Integer, ListNode> mp = new HashMap<>();
+
+        int sum = 0;
+
+        // Dummy node to handle edge cases (like removal from head)
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+
+        // Initial prefix sum 0 mapped to dummy node
+        mp.put(sum, dummy);
+
+        while (head != null) {
+
+            // Update prefix sum
+            sum += head.val;
+
+            // If same prefix sum is found again
+            // then nodes between form a zero-sum sublist
+            if (mp.containsKey(sum)) {
+
+                // Node where this prefix sum was first seen
+                ListNode key = mp.get(sum);
+                ListNode start = key;
+                int pSum = sum;
+
+                // Remove intermediate prefix sums from map
+                while (start != head) {
+                    start = start.next;
+                    pSum += start.val;
+                    if (start != head) {
+                        mp.remove(pSum);
+                    }
+                }
+
+                // Skip the zero-sum sublist
+                key.next = head.next;
+            } 
+            else {
+                // Store prefix sum with current node
+                mp.put(sum, head);
+            }
+
+            // Move to next node
+            head = head.next;
+        }
+
+        // Return updated list
+        return dummy.next;
+    }
+}
