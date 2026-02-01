@@ -50,6 +50,84 @@ class Solution {
 
 
 
-// Approach 2 - 
+-------------------------------------------------------------------------- Reservoir Formula  ------------------------------------
+
+
+For Reservoir Sampling (k = 1), the formula is:
+
+📌 Probability Formula
+
+For the i-th node in the linked list:
+P(select current node)=i/1
+
+📌 Final Probability for Any Node
+
+After traversing n nodes, the probability that any specific node is chosen is:
+P(node is selected) = 1/n
+
+📌 Why this works (compact form)
+
+For the k-th node:
+1/𝑘 * ^n∏(j=k+1) * (1-1/j) = 1/n
+So every node has equal probability
+
+
+
+// Approach 2 - Reservoir Sampling (Size = 1)
 //T.C : O(n)
-//S.C : O(n)
+//S.C : O(1)
+
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;           // Value of the node
+ *     ListNode next;     // Pointer to next node
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { 
+ *         this.val = val; 
+ *         this.next = next; 
+ *     }
+ * }
+ */
+class Solution {
+
+    ListNode temp;     // Stores the head of the linked list
+    Random rand;       // Random number generator
+
+    // Constructor initializes the list head and Random object
+    public Solution(ListNode head) {
+        temp = head;
+        rand = new Random();
+    }
+    
+    // Returns a random node's value from the linked list
+    public int getRandom() {
+
+        int count = 1;     // Counts number of nodes seen so far
+        int res = 0;       // Stores the selected random value
+        ListNode curr = temp;  // Pointer to traverse the list
+
+        // Traverse the linked list
+        while (curr != null) {
+
+            // Generate a random number between 0 and count-1
+            // If it is 0, select current node's value
+            if (rand.nextInt(count) == 0) {
+                res = curr.val;
+            }
+
+            count++;            // Increment node count
+            curr = curr.next;   // Move to next node
+        }
+
+        return res;   // Return the randomly selected value
+    }
+}
+
+/**
+ * Your Solution object will be instantiated and called as such:
+ * Solution obj = new Solution(head);
+ * int param_1 = obj.getRandom();
+ */
