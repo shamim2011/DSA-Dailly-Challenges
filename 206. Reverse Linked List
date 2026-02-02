@@ -1,0 +1,49 @@
+// Approach - Iterative Linked List Reversal (Three-Pointer Technique)
+// T.C - O(n)
+// S.C - O(1)
+
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;          // Value of the node
+ *     ListNode next;    // Reference to next node
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode reverseList(ListNode head) {
+        
+        // Base case: if list is empty or has only one node
+        if(head == null || head.next == null) return head;
+
+        // prev will store the previous node (initially null)
+        ListNode prev = null;
+
+        // temp is used to traverse the list
+        ListNode temp = head;
+
+        // nextNode will store the next node temporarily
+        ListNode nextNode = null;
+        
+        // Traverse the linked list
+        while(temp != null){
+            // Save the next node
+            nextNode = temp.next;
+
+            // Reverse the current node's pointer
+            temp.next = prev;
+
+            // Move prev one step forward
+            prev = temp;
+
+            // Move temp one step forward
+            temp = nextNode;
+        }
+
+        // prev will be the new head of the reversed list
+        return prev;
+    }
+}
