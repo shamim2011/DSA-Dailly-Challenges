@@ -46,6 +46,48 @@ class Solution {
 
 
 
-// Approach 2 - 
+// Approach 2 - Stack-Based Twin Sum Approach
 // T.C - O(n)
 // S.C - O(n)
+
+
+
+class Solution {
+    public int pairSum(ListNode head){
+
+        // Stack to store all node values
+        Stack<Integer> st = new Stack<>();
+
+        // Temporary pointer to traverse the linked list
+        ListNode temp = head;
+
+        // Push all node values into the stack
+        while(temp != null){
+            st.push(temp.val);
+            temp = temp.next;
+        }
+
+        // Total number of nodes
+        int size = st.size();
+
+        // Stores maximum twin sum
+        int ans = Integer.MIN_VALUE;
+
+        // Counter to process only first half of the list
+        int count = 1;
+
+        // Reset temp to head for second traversal
+        temp = head;
+
+        // Calculate twin sums for first half of nodes
+        while(count <= size / 2){
+            ans = Math.max(ans, temp.val + st.pop());
+            temp = temp.next;
+            count++;
+        }
+
+        // Return maximum twin sum
+        return ans;
+    }
+}
+
