@@ -1,3 +1,79 @@
-// Approach - 
-// T . C- O(n)
-// S . C - O(1)
+// Approach 1 - Reverse Linked List + Digit-wise Addition
+// T . C- O(n + m)            Reversing both lists + traversing them once
+// S . C - O(n + m)
+
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    // Function to reverse a linked list using recursion
+    ListNode reverseLL(ListNode head){
+        // Base case: empty list or single node
+        if(head == null || head.next == null) return head;
+
+        // Reverse the rest of the list
+        ListNode last = reverseLL(head.next);
+
+        // Fix the current node
+        head.next.next = head;
+        head.next = null;
+
+        // Return new head of reversed list
+        return last;
+    }
+
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+
+        // Reverse both linked lists
+        l1 = reverseLL(l1);
+        l2 = reverseLL(l2);
+
+        int sum = 0;
+        int carry = 0;
+
+        // Dummy node to build result
+        ListNode ans = new ListNode();
+
+        // Traverse until both lists are exhausted
+        while(l1 != null || l2 != null){
+
+            // Add value from l1 if exists
+            if(l1 != null){
+                sum += l1.val;
+                l1 = l1.next;
+            }
+
+            // Add value from l2 if exists
+            if(l2 != null){
+                sum += l2.val;
+                l2 = l2.next;
+            }
+
+            // Store current digit
+            ans.val = sum % 10;
+
+            // Calculate carry
+            carry = sum / 10;
+
+            // Create new node for carry
+            ListNode newNode = new ListNode(carry);
+            newNode.next = ans;
+            ans = newNode;
+
+            // Carry goes to next iteration
+            sum = carry;
+        }
+
+        // If no extra carry, skip dummy node
+        return carry == 0 ? ans.next : ans;
+    }
+}
