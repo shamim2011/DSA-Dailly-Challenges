@@ -1,3 +1,51 @@
-// Approach - 
+// Approach 1 - Array Conversion + Two Pointer Approach
+// T.C - O(n)
+// S.C - O(n)
+
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public int pairSum(ListNode head){
+        
+        // List to store all node values
+        List<Integer> li = new ArrayList<>();
+        
+        // Traverse the linked list and store values in the list
+        while(head != null){
+            li.add(head.val);
+            head = head.next;
+        }
+        
+        // Two pointers: start and end of the list
+        int i = 0;
+        int j = li.size() - 1;
+        
+        // To store the maximum twin sum
+        int ans = Integer.MIN_VALUE;
+        
+        // Calculate twin sums using two-pointer approach
+        while(i < j){
+            ans = Math.max(ans, li.get(i) + li.get(j));
+            i++;
+            j--;
+        }
+        
+        // Return the maximum twin sum
+        return ans;
+    }
+}
+
+
+
+// Approach 2 - 
 // T.C - O(n)
 // S.C - O(n)
