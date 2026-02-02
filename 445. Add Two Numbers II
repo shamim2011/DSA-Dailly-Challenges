@@ -77,3 +77,80 @@ class Solution {
         return carry == 0 ? ans.next : ans;
     }
 }
+
+
+
+// Approach 2 - Stack-Based Addition (Reverse Traversal Simulation)
+// T . C- O(n + m)            Reversing both lists + traversing them once
+// S . C - O(n + m)
+
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+
+        // Stacks to store digits of both linked lists
+        Stack<Integer> s1 = new Stack<>();
+        Stack<Integer> s2 = new Stack<>();
+
+        // Push all digits of l1 into stack s1
+        while (l1 != null) {
+            s1.push(l1.val);
+            l1 = l1.next;
+        }
+
+        // Push all digits of l2 into stack s2
+        while (l2 != null) {
+            s2.push(l2.val);
+            l2 = l2.next;
+        }
+
+        int sum = 0;      // stores current sum
+        int carry = 0;    // stores carry after addition
+
+        // Dummy node to build result list
+        ListNode ans = new ListNode();
+
+        // Continue while any stack has digits left
+        while (!s1.isEmpty() || !s2.isEmpty()) {
+
+            // Add digit from s1 if available
+            if (!s1.isEmpty()) {
+                sum += s1.peek();
+                s1.pop();
+            }
+
+            // Add digit from s2 if available
+            if (!s2.isEmpty()) {
+                sum += s2.peek();
+                s2.pop();
+            }
+
+            // Store unit digit in current node
+            ans.val = sum % 10;
+
+            // Calculate carry
+            carry = sum / 10;
+
+            // Create new node for carry
+            ListNode newNode = new ListNode(carry);
+            newNode.next = ans;
+            ans = newNode;
+
+            // Prepare sum for next iteration
+            sum = carry;
+        }
+
+        // If no extra carry, skip dummy node
+        return carry == 0 ? ans.next : ans;
+    }
+}
