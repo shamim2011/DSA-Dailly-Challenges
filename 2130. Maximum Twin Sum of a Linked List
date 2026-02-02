@@ -91,3 +91,50 @@ class Solution {
     }
 }
 
+
+// Approach 3 - Two Pointer + Reverse Second Half
+// T.C - O(n)
+// S.C - O(1)
+
+
+class Solution {
+    public int pairSum(ListNode head){
+
+        // Step 1: Find the middle of the linked list
+        ListNode slow = head;
+        ListNode fast = head;
+
+        // Slow moves 1 step, fast moves 2 steps
+        while(fast != null && fast.next != null){
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+
+        // 'slow' is now at the middle of the list
+        ListNode mid = slow;
+
+        // Step 2: Reverse the second half of the linked list
+        ListNode prev = null;
+        ListNode nextNode = null;
+
+        while(mid != null){
+            nextNode = mid.next;  // store next node
+            mid.next = prev;      // reverse the link
+            prev = mid;           // move prev forward
+            mid = nextNode;       // move mid forward
+        }
+
+        // Step 3: Calculate maximum twin sum
+        int ans = 0;
+        ListNode curr = head;
+
+        // Compare first half and reversed second half
+        while(prev != null){
+            ans = Math.max(ans, curr.val + prev.val);
+            curr = curr.next;
+            prev = prev.next;
+        }
+
+        return ans;
+    }
+}
