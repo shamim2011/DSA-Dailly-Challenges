@@ -1,3 +1,40 @@
-// Approach 
+// Approach - Recursive Pairwise Swapping
 // T.C - O(n)
-// S.C - O(1)
+// S.C - O(n)
+
+
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;              // value of the node
+ *     ListNode next;        // reference to next node
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) {
+ *         this.val = val;
+ *         this.next = next;
+ *     }
+ * }
+ */
+class Solution {
+    public ListNode swapPairs(ListNode head) {
+        
+        // Base case:
+        // If list is empty OR has only one node, no swap needed
+        if (head == null || head.next == null) 
+            return head;
+
+        // Store the second node
+        ListNode temp = head.next;
+
+        // Recursively swap the remaining list starting from the 3rd node
+        head.next = swapPairs(head.next.next);
+
+        // Make second node point to first node
+        temp.next = head;
+
+        // Return new head after swapping
+        return temp;
+    }
+}
