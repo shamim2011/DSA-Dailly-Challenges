@@ -1,3 +1,148 @@
-// Approach 
-// T . C- O(n + m)            
+// Approach 1 - Carry Forward with Reverse Construction
+// T . C- O(n)            
+// S . C - O(n)
+
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    // Main function to add two numbers represented as linked lists
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+
+        int sum = 0;      // Stores sum of digits + carry
+        int carry = 0;    // Stores carry after addition
+
+        // Dummy node to build result list
+        ListNode ans = new ListNode();
+
+        // Loop until both lists are fully traversed
+        while (l1 != null || l2 != null) {
+
+            // Add value from l1 if available
+            if (l1 != null) {
+                sum += l1.val;
+                l1 = l1.next;
+            }
+
+            // Add value from l2 if available
+            if (l2 != null) {
+                sum += l2.val;
+                l2 = l2.next;
+            }
+
+            // Store unit digit in current node
+            ans.val = sum % 10;
+
+            // Calculate carry
+            carry = sum / 10;
+
+            // Create a new node with carry
+            ListNode newNode = new ListNode(carry);
+
+            // Link new node before current result
+            newNode.next = ans;
+            ans = newNode;
+
+            // Reset sum to carry for next iteration
+            sum = carry;
+        }
+
+        // Skip leading zero node if carry is 0
+        ListNode prev = (carry == 0) ? ans.next : ans;
+
+        // Reverse the result list before returning
+        return reverseLL(prev);
+    }
+
+    // Function to reverse a linked list
+    ListNode reverseLL(ListNode head) {
+
+        // Base case
+        if (head == null || head.next == null) return head;
+
+        ListNode prev = null;
+        ListNode temp = head;
+        ListNode nextNode = null;
+
+        // Iterative reversal
+        while (temp != null) {
+            nextNode = temp.next;
+            temp.next = prev;
+            prev = temp;
+            temp = nextNode;
+        }
+
+        return prev;
+    }
+}
+
+
+
+// Approach 2 - Queue-Based Digit-by-Digit Addition
+// T . C- O(n + m)         
 // S . C - O(n + m)
+
+
+class Solution {
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+
+        // Queues to store digits of both linked lists
+        Queue<Integer> q1 = new LinkedList<>();
+        Queue<Integer> q2 = new LinkedList<>();
+
+        // Store all digits of l1 into q1
+        while (l1 != null) {
+            q1.offer(l1.val);
+            l1 = l1.next;
+        }
+
+        // Store all digits of l2 into q2
+        while (l2 != null) {
+            q2.offer(l2.val);
+            l2 = l2.next;
+        }
+
+        int carry = 0;   // Carry for addition
+        int sum = 0;     // Sum of digits
+
+        // Dummy head to build the result linked list
+        ListNode head = new ListNode(0);
+        ListNode temp = head;
+
+        // Process digits until both queues are empty
+        while (!q1.isEmpty() || !q2.isEmpty()) {
+
+            // Add digit from first queue if available
+            if (!q1.isEmpty()) sum += q1.poll();
+
+            // Add digit from second queue if available
+            if (!q2.isEmpty()) sum += q2.poll();
+
+            // Calculate carry
+            carry = sum / 10;
+
+            // Create new node with current digit
+            ListNode node = new ListNode(sum % 10);
+            temp.next = node;
+            temp = node;
+
+            // Carry becomes the next sum
+            sum = carry;
+        }
+
+        // If carry remains, add a new node
+        if (carry > 0) temp.next = new ListNode(carry);
+
+        // Return result (excluding dummy head)
+        return head.next;
+    }
+}
