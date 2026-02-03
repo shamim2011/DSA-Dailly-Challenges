@@ -1,5 +1,59 @@
-// Approach - 
-// T.C - O(n)
-// S.C - O(n)
+// Approach - Length Calculation + Equal Distribution (Greedy Splitting)
+// T.C - O(l+k)
+// S.C - O(k)
 
 
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode[] splitListToParts(ListNode head, int k) {
+
+        // Step 1: Find the length of the linked list
+        ListNode curr = head;
+        int l = 0;
+        while (curr != null) {
+            l++;
+            curr = curr.next;
+        }
+
+        // Step 2: Calculate base size of each part
+        int eachBucketNodes = l / k;     // minimum nodes per part
+        int remainDerNodes = l % k;      // extra nodes to distribute
+
+        // Result array to store heads of k parts
+        ListNode[] res = new ListNode[k];
+
+        curr = head;
+        ListNode prev = null;
+
+        // Step 3: Split the list into k parts
+        for (int i = 0; i < k; i++) {
+
+            // Current part head
+            res[i] = curr;
+
+            // Determine size of this part
+            for (int count = 1; count <= eachBucketNodes + (remainDerNodes > 0 ? 1 : 0); count++) {
+                prev = curr;
+                curr = curr.next;
+            }
+
+            // Cut the connection to form an independent part
+            if (prev != null)
+                prev.next = null;
+
+            // One extra node used
+            remainDerNodes--;
+        }
+
+        return res;
+    }
+}
