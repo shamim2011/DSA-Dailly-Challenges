@@ -1,3 +1,72 @@
-// Approach - 
+// Approach - HashMap (Two-Pass Deep Copy Approach)
 // T.C - O(n)
-// S.C - O(1)
+// S.C - O(n)
+
+
+/*
+// Definition for a Node.
+class Node {
+    int val;
+    Node next;
+    Node random;
+
+    public Node(int val) {
+        this.val = val;
+        this.next = null;
+        this.random = null;
+    }
+}
+*/
+
+class Solution {
+    public Node copyRandomList(Node head) {
+        // Edge case: if original list is empty
+        if(head == null) return null;
+
+        // HashMap to map original nodes -> copied nodes
+        Map<Node, Node> mp = new HashMap<>();
+
+        Node curr = head;      // Pointer to traverse original list
+        Node prev = null;      // Pointer to build copied list
+        Node newHead = null;   // Head of copied list
+
+        // First pass: create copy of each node (only val & next)
+        while(curr != null) {
+            // Create new node with same value
+            Node temp = new Node(curr.val);
+
+            // Store mapping from original node to copied node
+            mp.put(curr, temp);
+
+            // Set head of copied list
+            if(newHead == null) {
+                newHead = temp;
+                prev = newHead;
+            } else {
+                // Link copied nodes using next pointer
+                prev.next = temp;
+                prev = temp;
+            }
+            curr = curr.next;
+        }
+
+        // Second pass: assign random pointers
+        curr = head;
+        Node newCurr = newHead;
+
+        while(curr != null) {
+            // If original random is null, copied random is also null
+            if(curr.random == null) {
+                newCurr.random = null;
+            } else {
+                // Get copied node of original random using map
+                newCurr.random = mp.get(curr.random);
+            }
+            curr = curr.next;
+            newCurr = newCurr.next;
+        }
+
+        // Return head of deep-copied list
+        return newHead;
+    }
+}
