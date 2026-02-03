@@ -1,3 +1,61 @@
-// Approach - Prefix Remainder (Modulus Optimization)
+// Approach - Two Dummy Linked Lists (Stable Partitioning)
 // T.C - O(n)
 // S.C - O(1)
+
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode partition(ListNode head, int x) {
+
+        // Dummy node for nodes with value < x
+        ListNode small = new ListNode(0);
+
+        // Dummy node for nodes with value >= x
+        ListNode large = new ListNode(0);
+
+        // To store the head of the "small" list
+        ListNode ans = small;
+
+        // Pointer to traverse the original list
+        ListNode temp = head;
+
+        // To store the head of the "large" list
+        ListNode start = large;
+
+        // Traverse the original linked list
+        while (temp != null) {
+
+            // If current value is smaller than x, add to "small" list
+            if (temp.val < x) {
+                small.next = temp;
+                small = small.next;
+            }
+            // Otherwise, add to "large" list
+            else {
+                large.next = temp;
+                large = large.next;
+            }
+
+            // Move to next node
+            temp = temp.next;
+        }
+
+        // Connect small list with large list
+        small.next = start.next;
+
+        // End the large list
+        large.next = null;
+
+        // Return the partitioned list (skipping dummy node)
+        return ans.next;
+    }
+}
