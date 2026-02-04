@@ -1,3 +1,46 @@
-// Approach -  
-// T.C - O(n)
+// Approach -  Pointer Manipulation (Linked List Splicing)
+// T.C - O(n + m)
 // S.C - O(1)
+
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode mergeInBetween(ListNode list1, int a, int b, ListNode list2) {
+
+        // Step 1: Move prevA to the node just before index 'a' (a-1)
+        ListNode prevA = list1;
+        for (int i = 0; i < a - 1; i++) {
+            prevA = prevA.next;
+        }
+
+        // Step 2: Move afterB to the node at index 'b'
+        ListNode afterB = prevA;
+        for (int i = a; i <= b; i++) {
+            afterB = afterB.next;
+        }
+
+        // Step 3: Find the last node (tail) of list2
+        ListNode tail2 = list2;
+        while (tail2.next != null) {
+            tail2 = tail2.next;
+        }
+
+        // Step 4: Connect (a-1)th node of list1 to head of list2
+        prevA.next = list2;
+
+        // Step 5: Connect tail of list2 to node after index 'b'
+        tail2.next = afterB.next;
+
+        // Step 6: Return modified list1
+        return list1;
+    }
+}
