@@ -1,4 +1,4 @@
-// Approach - HashMap (Two-Pass Deep Copy Approach)
+// Approach 1 - HashMap (Two-Pass Deep Copy Approach)
 // T.C - O(n)
 // S.C - O(n)
 
@@ -67,6 +67,70 @@ class Solution {
         }
 
         // Return head of deep-copied list
+        return newHead;
+    }
+}
+
+
+
+// Approach 2 - Interweaving / In-place Deep Copy (Without HashMap)
+// T.C - O(n)
+// S.C - O(1)
+
+
+/*
+// Definition for a Node.
+class Node {
+    int val;
+    Node next;
+    Node random;
+
+    public Node(int val) {
+        this.val = val;
+        this.next = null;
+        this.random = null;
+    }
+}
+*/
+
+class Solution {
+    public Node copyRandomList(Node head) {
+        if (head == null) return null;
+
+        // STEP 1: Insert copied nodes in between original nodes
+        // A -> B -> C
+        // A -> A' -> B -> B' -> C -> C'
+        Node curr = head;
+        while (curr != null) {
+            Node currNext = curr.next;          // store next original node
+            curr.next = new Node(curr.val);     // create copied node
+            curr.next.next = currNext;          // link copied node to next original
+            curr = currNext;
+        }
+
+        // STEP 2: Copy random pointers for copied nodes
+        curr = head;
+        while (curr != null && curr.next != null) {
+            if (curr.random == null) {
+                curr.next.random = null;
+            } else {
+                curr.next.random = curr.random.next;
+            }
+            curr = curr.next.next; // move to next original node
+        }
+
+        // STEP 3: Separate the original and copied linked lists
+        Node newHead = head.next;
+        Node newCurr = newHead;
+        curr = head;
+
+        while (curr != null && newCurr != null) {
+            curr.next = (curr.next == null) ? null : curr.next.next;
+            newCurr.next = (newCurr.next == null) ? null : newCurr.next.next;
+            curr = curr.next;
+            newCurr = newCurr.next;
+        }
+
         return newHead;
     }
 }
