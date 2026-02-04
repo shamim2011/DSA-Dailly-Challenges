@@ -1,3 +1,66 @@
-// Approach -  
+// Approach -  Dummy Node + Sublist Isolation & Reversal
 // T.C - O(n)
-// S.C - O(n)
+// S.C - O(1)
+
+
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode reverseBetween(ListNode head, int left, int right) {
+
+        // Edge case: empty list or no need to reverse
+        if (head == null || left == right) return head;
+
+        // Dummy node helps handle edge cases (like left = 1)
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+
+        // 1️⃣ Move `before` to the node just before `left`
+        ListNode before = dummy;
+        for (int i = 1; i < left; i++) {
+            before = before.next;
+        }
+
+        // 2️⃣ Identify start (left) and end (right) of sublist
+        ListNode start = before.next;   // first node to reverse
+        ListNode end = start;
+        for (int i = left; i < right; i++) {
+            end = end.next;
+        }
+
+        // 3️⃣ Cut the sublist from the main list
+        ListNode after = end.next;  // node after the sublist
+        end.next = null;            // detach sublist
+
+        // 4️⃣ Reverse the isolated sublist
+        ListNode reversed = reverseLL(start);
+
+        // 5️⃣ Reconnect the reversed sublist
+        before.next = reversed;
+        start.next = after;   // start is now the last node after reverse
+
+        return dummy.next;
+    }
+
+    // Helper function to reverse a linked list
+    private ListNode reverseLL(ListNode head) {
+        ListNode prev = null;
+        while (head != null) {
+            ListNode next = head.next;
+            head.next = prev;
+            prev = head;
+            head = next;
+        }
+        return prev;
+    }
+}
