@@ -1,3 +1,52 @@
-// Approach -  Pointer Manipulation (Linked List Splicing)
-// T.C - O(n + m)
-// S.C - O(1)
+// Approach 1 -  Array / Two Pointer Approach
+// T.C - O(n)
+// S.C - O(n)
+
+
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public boolean isPalindrome(ListNode head) {
+
+        // Step 1: Create a list to store linked list values
+        List<Integer> li = new ArrayList<>();
+
+        // Step 2: Traverse the linked list and add values to list
+        ListNode temp = head;
+        while (temp != null) {
+            li.add(temp.val);
+            temp = temp.next;
+        }
+
+        // Step 3: Use two pointers to compare values from start and end
+        int i = 0;
+        int j = li.size() - 1;
+
+        while (i < j) {
+            // If values do not match, it's not a palindrome
+            if (li.get(i) != li.get(j)) {
+                return false;
+            }
+            i++;
+            j--;
+        }
+
+        // Step 4: If all values match, it is a palindrome
+        return true;
+    }
+}
+
+
+
+// Approach 2 - 
+// T.C - O(n)
+// S.C - O(n)
