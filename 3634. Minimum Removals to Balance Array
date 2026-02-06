@@ -1,0 +1,45 @@
+//Approach - Two Pointers / Sliding Window (after Sorting)
+//T.C : O(nlogn)
+//S.C : O(1)
+
+
+
+class Solution {
+    public int minRemoval(int[] nums, int k) {
+
+        // Length of the array
+        int n = nums.length;
+
+        // Sort the array to apply two-pointer / sliding window technique
+        Arrays.sort(nums);
+
+        // Left pointer of the window
+        int i = 0;
+
+        // Stores the maximum valid subarray length
+        int maxLen = 1;
+
+        // Right pointer of the window
+        for (int j = 0; j < n; j++) {
+
+            // Current maximum element in the window
+            long maxE = nums[j];
+
+            // Current minimum element in the window
+            long minE = nums[i];
+
+            // Shrink the window until condition is satisfied
+            // Condition: max element <= k * min element
+            while (i < j && maxE > (long) k * minE) {
+                i++;               // Move left pointer forward
+                minE = nums[i];    // Update minimum element
+            }
+
+            // Update maximum valid window size
+            maxLen = Math.max(maxLen, j - i + 1);
+        }
+
+        // Minimum removals = total elements - largest valid subarray
+        return n - maxLen;
+    }
+}
