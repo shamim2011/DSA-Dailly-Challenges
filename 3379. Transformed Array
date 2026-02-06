@@ -1,0 +1,46 @@
+// Approach - Array Traversal with Circular Indexing (Modulo Arithmetic)
+// T.C - O(n)
+// S.C - O(1)
+
+
+class Solution {
+    public int[] constructTransformedArray(int[] nums) {
+        int n = nums.length;
+
+        // Result array to store transformed values
+        int[] ans = new int[n];
+
+        // Traverse each index of the array
+        for(int i = 0; i < n; i++){
+
+            // Case 1: Positive value → move forward
+            if(nums[i] > 0){
+                // Calculate new index using circular movement
+                int idx = (nums[i] + i) % n;
+
+                // Assign value from the calculated index
+                ans[i] = nums[idx];
+            }
+
+            // Case 2: Negative value → move backward
+            else if(nums[i] < 0){
+                // Calculate backward index
+                int idx = (i - Math.abs(nums[i])) % n;
+
+                // Handle negative index by wrapping around
+                if(idx < 0) idx = (idx + n) % n;
+
+                // Assign value from the calculated index
+                ans[i] = nums[idx];
+            }
+
+            // Case 3: Zero → value remains the same
+            else{
+                ans[i] = nums[i];
+            }
+        }
+
+        // Return the transformed array
+        return ans;
+    }
+}
