@@ -1,3 +1,56 @@
-// Approach - 
+// Approach - Inorder Traversal + Divide & Conquer (Rebuild Balanced BST)
 // T.C - O(n)
 // S.C - O(n)
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    // Perform inorder traversal to store BST elements in sorted order
+    void inOrder(TreeNode root, List<Integer> li) {
+        if (root == null) return;
+        inOrder(root.left, li);     // Visit left subtree
+        li.add(root.val);           // Store current node value
+        inOrder(root.right, li);    // Visit right subtree
+    }
+
+    // Construct a balanced BST from sorted list using divide & conquer
+    TreeNode construct(int s, int e, List<Integer> li) {
+        if (s > e) return null;
+
+        // Choose middle element as root to keep tree balanced
+        int mid = s + (e - s) / 2;
+        TreeNode root = new TreeNode(li.get(mid));
+
+        // Recursively build left and right subtrees
+        root.left = construct(s, mid - 1, li);
+        root.right = construct(mid + 1, e, li);
+
+        return root;
+    }
+
+    // Main function to balance the BST
+    public TreeNode balanceBST(TreeNode root) {
+        List<Integer> li = new ArrayList<>();
+
+        // Step 1: Store inorder traversal of BST
+        inOrder(root, li);
+
+        // Step 2: Build balanced BST from sorted list
+        return construct(0, li.size() - 1, li);
+    }
+}
