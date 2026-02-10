@@ -104,6 +104,56 @@ class Solution {
 }
 
 
-// Approach 3 -  
+// Approach 3 -  Recursive Two-Pointer Reordering
 // T.C - O(n)
 // S.C - O(1)
+
+
+
+class Solution {
+
+    // Pointer that always starts from the front of the list
+    ListNode curr;
+
+    // Recursive function to process nodes from the end
+    void solve(ListNode head) {
+
+        // Base case: if list is empty
+        if (head == null) return;
+
+        // Go to the end of the list
+        solve(head.next);
+
+        // Store next node of curr (front pointer)
+        ListNode tempn = curr.next;
+
+        // If curr has already reached the end, stop processing
+        if (tempn == null) {
+            return;
+        }
+        // If front and back pointers meet, terminate the list
+        else if (head == curr) {
+            head.next = null;
+            return;
+        }
+
+        // Reorder links:
+        // curr -> head (front connects to back)
+        curr.next = head;
+
+        // back connects to next front node
+        // If tempn == head, avoid creating a cycle
+        head.next = (tempn == head) ? null : tempn;
+
+        // Move curr forward
+        curr = tempn;
+    }
+
+    public void reorderList(ListNode head) {
+        // Initialize front pointer
+        curr = head;
+
+        // Start recursive reordering
+        solve(head);
+    }
+}
