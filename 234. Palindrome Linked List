@@ -47,6 +47,62 @@ class Solution {
 
 
 
-// Approach 2 -  
+// Approach 2 -  Two Pointers + Reverse Second Half
 // T.C - O(n)
-// S.C - O(n)
+// S.C - O(1)
+
+
+
+class Solution {
+
+    // Function to reverse a linked list
+    ListNode reverseLL(ListNode head){
+        // Base case: empty list or single node
+        if(head == null || head.next == null) return head;
+
+        ListNode nextNode = null; // stores next node
+        ListNode curr = head;     // current node
+        ListNode prev = null;     // previous node
+
+        // Reverse the linked list iteratively
+        while(curr != null){
+            nextNode = curr.next; // save next node
+            curr.next = prev;     // reverse pointer
+            prev = curr;          // move prev forward
+            curr = nextNode;      // move curr forward
+        }
+        // prev becomes new head after reversal
+        return prev;
+    }
+
+    public boolean isPalindrome(ListNode head) {
+        // If list has 0 or 1 node, it's always a palindrome
+        if(head == null || head.next == null) return true;
+
+        ListNode slow = head;
+        ListNode fast = head;
+        ListNode prev = null;
+
+        // Find the middle of the linked list
+        while(fast != null && fast.next != null){
+            prev = slow;
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+
+        // Reverse the second half of the list
+        ListNode revHead = reverseLL(slow);
+
+        // Break the list into two halves
+        prev.next = null;
+
+        // Compare first half and reversed second half
+        while(revHead != null && head != null){
+            if(revHead.val != head.val) return false;
+            revHead = revHead.next;
+            head = head.next;
+        }
+
+        return true;
+    }
+}
