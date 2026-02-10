@@ -50,6 +50,60 @@ class Solution {
 }
 
 
-// Approach 2 -  
+// Approach 2 -  Slow–Fast Pointer + Reverse Second Half + Merge Alternately
 // T.C - O(n)
-// S.C - O(n)
+// S.C - O(1)
+
+
+class Solution {
+
+    // Helper function to reverse a linked list
+    ListNode reverse(ListNode head){
+        ListNode prev = null;       // Will become new head after reversal
+        ListNode curr = head;       // Current node for traversal
+        ListNode nextNode = null;   // To store next node
+
+        while(curr != null){
+            nextNode = curr.next;   // Save next node
+            curr.next = prev;       // Reverse current node's pointer
+            prev = curr;            // Move prev forward
+            curr = nextNode;        // Move curr forward
+        }
+        return prev;                // New head of reversed list
+    }
+
+    public void reorderList(ListNode head) {
+
+        // Step 1: Find middle of the linked list using slow & fast pointers
+        ListNode slow = head;
+        ListNode fast = head;
+
+        while(fast != null && fast.next != null){
+            slow = slow.next;       // Moves 1 step
+            fast = fast.next.next; // Moves 2 steps
+        }
+
+        // Step 2: Reverse second half of the list starting from slow
+        ListNode rev = reverse(slow);
+
+        // Step 3: Merge first half and reversed second half alternately
+        ListNode curr = head;
+
+        while(rev.next != null){
+            ListNode temp = curr.next;     // Save next node of first half
+            curr.next = rev;               // Link first half node to reversed node
+
+            ListNode tempBack = rev.next;  // Save next node of reversed half
+            rev.next = temp;               // Link reversed node to next first-half node
+
+            // Move pointers forward
+            rev = tempBack;
+            curr = temp;
+        }
+    }
+}
+
+
+// Approach 3 -  
+// T.C - O(n)
+// S.C - O(1)
