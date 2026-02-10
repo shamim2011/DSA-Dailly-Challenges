@@ -1,4 +1,55 @@
-// Approach 1 -  
+// Approach 1 -  Stack-based Reordering (L0 → Ln → L1 → Ln-1 …)
 // T.C - O(n)
 // S.C - O(n)
  
+
+class Solution {
+    public void reorderList(ListNode head) {
+
+        // Stack to store all nodes of the linked list
+        Stack<ListNode> st = new Stack<>();
+
+        // Pointer to traverse the list
+        ListNode curr = head;
+
+        // Push all nodes into the stack
+        while (curr != null) {
+            st.push(curr);
+            curr = curr.next;
+        }
+
+        // Number of reorder operations needed (half of the list)
+        int k = st.size() / 2;
+
+        // Reset curr to the head of the list
+        curr = head;
+
+        // Reorder the list
+        while (k-- > 0) {
+
+            // Get the last node from the stack
+            ListNode top = st.pop();
+
+            // Store next node of current
+            ListNode temp = curr.next;
+
+            // Place last node after current node
+            curr.next = top;
+
+            // Connect last node to the next original node
+            top.next = temp;
+
+            // Move current pointer forward
+            curr = temp;
+        }
+
+        // Terminate the list to avoid cycle
+        if (curr != null)
+            curr.next = null;
+    }
+}
+
+
+// Approach 2 -  
+// T.C - O(n)
+// S.C - O(n)
