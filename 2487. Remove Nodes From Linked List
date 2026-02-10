@@ -51,3 +51,38 @@ class Solution {
         return dummy.next;
     }
 }
+
+---------------------
+
+class Solution {
+    public ListNode removeNodes(ListNode head) {
+        if(head == null || head.next == null) return head;
+        Stack<Integer> st = new Stack<>();
+        ListNode curr = head;
+        while(curr!=null){
+            st.push(curr.val);
+            curr = curr.next;
+        }
+        ListNode dummy = new ListNode(-1);
+        int max = Integer.MIN_VALUE;
+        while(!st.isEmpty()){
+            int elem = st.pop();
+            if(elem>=max){
+                ListNode newNode = new ListNode(elem);
+                // Insert at front (since we are moving right → left)
+                newNode.next = dummy.next;
+                dummy.next = newNode;
+
+                max = elem;
+            }
+        }
+        
+        
+        return dummy.next;
+    }
+}
+
+
+// Approach 2 -  
+// T.C - O(n)
+// S.C - O(n)
