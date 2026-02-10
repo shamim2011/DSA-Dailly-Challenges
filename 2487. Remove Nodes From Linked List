@@ -1,0 +1,53 @@
+// Approach 1 -  Stack + Reverse Traversal (Right Maximum Tracking)
+// T.C - O(n)
+// S.C - O(n)
+
+
+
+class Solution {
+    public ListNode removeNodes(ListNode head) {
+
+        // Base case: if list is empty or has only one node
+        if (head == null || head.next == null) return head;
+
+        // Stack to store all node values
+        Stack<Integer> st = new Stack<>();
+
+        // Traverse the linked list and push values into stack
+        ListNode curr = head;
+        while (curr != null) {
+            st.push(curr.val);
+            curr = curr.next;
+        }
+
+        // List to store values that should remain in final list
+        List<Integer> li = new ArrayList<>();
+
+        // Track the maximum value seen so far from the right
+        int max = Integer.MIN_VALUE;
+
+        // Process values from right to left using stack
+        while (!st.isEmpty()) {
+            int elem = st.pop();
+
+            // Keep the node if it is >= max on its right
+            if (elem >= max) {
+                li.add(elem);
+                max = Math.max(max, elem);
+            }
+        }
+
+        // Dummy node to build the result list
+        ListNode dummy = new ListNode(-1);
+        curr = dummy;
+
+        // Rebuild the linked list in correct order
+        for (int i = li.size() - 1; i >= 0; i--) {
+            curr.next = new ListNode(li.get(i));
+            curr = curr.next;
+        }
+
+        // Return the final modified list
+        return dummy.next;
+    }
+}
