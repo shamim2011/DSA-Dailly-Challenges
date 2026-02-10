@@ -106,3 +106,61 @@ class Solution {
         return true;
     }
 }
+
+
+
+// Approach 3 -  Two Pointers + In-place Reversal
+// T.C - O(n)
+// S.C - O(1)
+
+
+
+class Solution {
+    public boolean isPalindrome(ListNode head) {
+
+        // If the list has 0 or 1 node, it is always a palindrome
+        if (head == null || head.next == null) return true;
+
+        // slow -> moves one step
+        // fast -> moves two steps
+        // prev -> used to reverse the first half
+        ListNode slow = head;
+        ListNode fast = head;
+        ListNode prev = null;
+
+        // Find the middle of the linked list
+        // At the same time, reverse the first half
+        while (fast != null && fast.next != null) {
+            fast = fast.next.next;
+
+            // Reverse the link for slow pointer
+            ListNode nextNode = slow.next;
+            slow.next = prev;
+            prev = slow;
+            slow = nextNode;
+        }
+
+        // If the number of nodes is odd,
+        // skip the middle node
+        if (fast != null) {
+            slow = slow.next;
+        }
+
+        // Compare the reversed first half (prev)
+        // with the second half (slow)
+        while (prev != null && slow != null) {
+            if (prev.val != slow.val) return false;
+            prev = prev.next;
+            slow = slow.next;
+        }
+
+        // If all values matched
+        return true;
+    }
+}
+
+
+
+// Approach 4 -  
+// T.C - O(n)
+// S.C - O(1)
