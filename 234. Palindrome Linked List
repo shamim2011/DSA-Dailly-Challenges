@@ -161,6 +161,39 @@ class Solution {
 
 
 
-// Approach 4 -  
+// Approach 4 -  Recursive Two-Pointer Technique (Front pointer + Recursion stack)
 // T.C - O(n)
 // S.C - O(1)
+
+
+class Solution {
+
+    // Pointer to traverse the list from the front
+    ListNode curr;
+
+    // Recursive function to check palindrome
+    boolean recure(ListNode head) {
+
+        // Base case: reached end of list
+        if (head == null) return true;
+
+        // Recursively move to the end
+        if (!recure(head.next) || curr.val != head.val) {
+            return false; // mismatch found
+        }
+
+        // Move front pointer forward
+        curr = curr.next;
+
+        return true; // values matched
+    }
+
+    public boolean isPalindrome(ListNode head) {
+        // Initialize front pointer
+        curr = head;
+
+        // Start recursive palindrome check
+        return recure(head);
+    }
+}
+
