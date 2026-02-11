@@ -83,6 +83,37 @@ class Solution {
 }
 
 
+-----------------
+
+class Solution {
+    public ListNode removeNodes(ListNode head) {
+        if(head == null || head.next == null) return head;
+        Stack<Integer> st = new Stack<>();
+        ListNode curr = head;
+        while(curr!=null){
+            st.push(curr.val);
+            curr = curr.next;
+        }
+        ListNode newHead = null;
+        int max = Integer.MIN_VALUE;
+        while(!st.isEmpty()){
+            int elem = st.pop();
+            if(elem>=max){
+                ListNode newNode = new ListNode(elem);
+                newNode.next = newHead;   // insert at front
+                newHead = newNode;       // move head
+                max = elem;
+            }
+        }
+        
+        
+        return newHead;
+    }
+}
+
+
+
+
 // Approach 2 -  
 // T.C - O(n)
 // S.C - O(n)
