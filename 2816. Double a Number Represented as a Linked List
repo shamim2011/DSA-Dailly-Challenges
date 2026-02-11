@@ -107,7 +107,97 @@ class Solution {
     }
 }
 
+--------------------------------------  Using Stack -----------------------------------
 
-// Approach - 3 :  
+
+class Solution {
+    public ListNode doubleIt(ListNode head) {
+        Stack<ListNode> st = new Stack<>();
+        ListNode curr = head;
+
+        // Push all nodes into stack
+        while (curr != null) {
+            st.push(curr);
+            curr = curr.next;
+        }
+        int carry = 0;
+        // Process from right to left
+        while (!st.isEmpty()) {
+            ListNode node = st.pop();
+            int newVal = node.val * 2 + carry;
+            node.val = newVal % 10;
+            carry = newVal / 10;
+        }
+        // If carry still remains, add new head
+        if (carry > 0) {
+            ListNode newNode = new ListNode(carry);
+            newNode.next = head;
+            head = newNode;
+        }
+        return head;
+    }
+}
+
+
+// Approach - 3 :  Single Traversal with Immediate Carry Handling (Forward Processing)
 // T.C : O(n)
-// S.C : O(n)
+// S.C : O(1)
+
+
+
+class Solution {
+    public ListNode doubleIt(ListNode head) {
+        
+        // prev will keep track of previous node (needed for carry handling)
+        ListNode prev = null;
+        
+        // curr is used to traverse the linked list
+        ListNode curr = head;
+        
+        // Traverse the entire linked list
+        while(curr != null){
+            
+            // Double the current node value
+            int val = curr.val * 2;
+            
+            // If doubling does not produce carry
+            if(val < 10){
+                curr.val = val;  // Directly assign doubled value
+            }
+            
+            // If carry is produced and previous node exists
+            else if(prev != null){
+                curr.val = val % 10;  // Keep only last digit
+                prev.val += 1;        // Add carry to previous node
+            }
+            
+            // If carry is produced and current node is head
+            else{
+                // Create new head node with carry value 1
+                ListNode newHead = new ListNode(1);
+                
+                // Point new head to current node
+                newHead.next = curr;
+                
+                // Update current node value
+                curr.val = val % 10;
+                
+                // Update head reference
+                head = newHead;
+            }
+            
+            // Move prev and curr forward
+            prev = curr;
+            curr = curr.next;
+        }
+        
+        // Return updated head
+        return head;
+    }
+}
+
+
+
+// Approach - 4 :  
+// T.C : O(n)
+// S.C : O(1)
