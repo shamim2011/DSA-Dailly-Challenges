@@ -3,16 +3,7 @@
 // S.C : O(n)
 
 
-/**
- * Definition for singly-linked list.
- * public class ListNode {
- *     int val;
- *     ListNode next;
- *     ListNode() {}
- *     ListNode(int val) { this.val = val; }
- *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
- * }
- */
+
 class Solution {
 
     // Function to reverse a singly linked list
@@ -70,3 +61,53 @@ class Solution {
         return reverse(head);
     }
 }
+
+
+// Approach - 2 Recursive Backtracking (Postorder Traversal on Linked List)
+// T.C : O(n)
+// S.C : O(n)
+
+
+class Solution {
+
+    // Recursive function to double each digit
+    // Returns carry generated after doubling
+    int doubleUnit(ListNode head){
+        
+        // Base case: if node is null, no carry
+        if(head == null) return 0;
+
+        // Recursively go to the last node
+        int carry = doubleUnit(head.next);
+
+        // Double current node value and add carry from next node
+        int newVal = head.val * 2 + carry;
+
+        // Store the unit digit in current node
+        head.val = newVal % 10;
+
+        // Return carry (tens digit)
+        return newVal / 10;
+    }
+
+    public ListNode doubleIt(ListNode head) {
+        
+        // Start recursion from head
+        int lastCarry = doubleUnit(head);
+
+        // If carry remains after processing first node
+        if(lastCarry > 0){
+            // Create new node at beginning
+            ListNode newNode = new ListNode(lastCarry);
+            newNode.next = head;
+            return newNode;
+        }
+        
+        return head;
+    }
+}
+
+
+// Approach - 3 :  
+// T.C : O(n)
+// S.C : O(n)
