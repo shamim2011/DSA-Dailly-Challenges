@@ -1,3 +1,45 @@
-// Approach - 
+// Approach 1 - Hashing (Using HashSet to detect cycle)
 // T.C - O(n)
-// S.C - O(1)
+// S.C - O(n)
+
+
+public class Solution {
+    public ListNode detectCycle(ListNode head) {
+        
+        // Create a HashSet to store visited nodes
+        // If we see a node again, it means a cycle exists
+        Set<ListNode> st = new HashSet<>();
+        
+        // Start traversing from head
+        ListNode curr = head;
+        
+        // Traverse the linked list
+        while(curr != null){
+            
+            // If current node is not already visited
+            if(!st.contains(curr)){
+                
+                // Add current node into the HashSet
+                st.add(curr);
+                
+                // Move to next node
+                curr = curr.next;
+            }
+            else{
+                // If node already exists in HashSet
+                // It means cycle detected
+                // Return the node where cycle begins
+                return curr;
+            }
+        }
+        
+        // If traversal completes without repetition
+        // No cycle exists
+        return null;
+    }
+}
+
+
+// Approach 2 - 
+// T.C - O(n)
+// S.C - O(n)
