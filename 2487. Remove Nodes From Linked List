@@ -149,3 +149,62 @@ class Solution {
     }
 }
 
+
+
+// Approach 3 -  Reverse + Max Tracking Technique
+// T.C - O(n)
+// S.C - O(1) 
+
+
+class Solution {
+
+    // Function to reverse a linked list
+    ListNode reverse(ListNode head){
+        ListNode prev = null;   // Previous node (initially null)
+        ListNode curr = head;   // Current node starts from head
+        ListNode next = null;   // To store next node temporarily
+
+        // Traverse the list
+        while(curr != null){
+            next = curr.next;   // Store next node
+            curr.next = prev;   // Reverse current node's pointer
+            prev = curr;        // Move prev forward
+            curr = next;        // Move curr forward
+        }
+
+        // prev will be the new head after reversal
+        return prev;
+    }
+
+    public ListNode removeNodes(ListNode head) {
+
+        // Step 1: Reverse the linked list
+        head = reverse(head);
+
+        // Step 2: Traverse reversed list and keep track of maximum value
+        int max = Integer.MIN_VALUE;  // To store maximum value seen so far
+
+        ListNode prev = null;
+        ListNode curr = head;
+
+        while(curr != null){
+
+            // If current value is >= max so far, keep the node
+            if(curr.val >= max){
+                max = curr.val;       // Update max
+                prev = curr;          // Move prev forward
+                curr = curr.next;     // Move curr forward
+            }
+            else{
+                // If current value is smaller than max,
+                // remove this node
+                prev.next = curr.next;  // Skip current node
+                curr = curr.next;       // Move curr forward
+            }
+        }
+
+        // Step 3: Reverse again to restore original order
+        return reverse(head);
+    }
+}
+
