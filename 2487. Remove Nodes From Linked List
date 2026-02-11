@@ -1,6 +1,6 @@
 // Approach 1 -  Stack + Reverse Traversal (Right Maximum Tracking)
 // T.C - O(n)
-// S.C - O(n)
+// S.C - O(n) 
 
 
 
