@@ -198,6 +198,45 @@ class Solution {
 
 
 
-// Approach - 4 :  
+// Approach - 4 :  Left-to-Right Carry Prediction Approach
 // T.C : O(n)
 // S.C : O(1)
+
+
+
+class Solution {
+    public ListNode doubleIt(ListNode head) {
+        
+        // If the first digit is >= 5,
+        // doubling it will generate a carry.
+        // So we create a new head with value 0
+        // to handle the carry properly.
+        if(head.val >= 5){
+            ListNode newHead = new ListNode(0);
+            newHead.next = head;
+            head = newHead;
+        }
+
+        ListNode curr = head;
+
+        // Traverse the linked list
+        while(curr != null){
+            
+            // Double the current digit
+            // Keep only the last digit using %10
+            curr.val = (curr.val * 2) % 10;
+
+            // If next node exists and its value >= 5,
+            // it means doubling next node will create a carry.
+            // So add 1 to current node.
+            if(curr.next != null && curr.next.val >= 5){
+                curr.val += 1;
+            }
+
+            curr = curr.next;
+        }
+
+        return head;
+    }
+}
+
