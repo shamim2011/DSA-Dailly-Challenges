@@ -1,0 +1,36 @@
+// Approach 2 - Floyd’s Cycle Detection Algorithm
+//T.C : O(n)
+//S.C : O(1)
+
+
+
+public class Solution {
+    public boolean hasCycle(ListNode head) {
+        
+        // Initialize two pointers: slow and fast
+        // Both start from the head of the linked list
+        ListNode slow = head;
+        ListNode fast = head;
+
+        // Traverse the list while fast pointer and its next are not null
+        // If fast becomes null, it means no cycle exists
+        while(fast != null && fast.next != null) {
+            
+            // Move slow pointer one step
+            slow = slow.next;
+            
+            // Move fast pointer two steps
+            fast = fast.next.next;
+
+            // If slow and fast meet at some point,
+            // it means there is a cycle in the linked list
+            if(slow == fast) {
+                return true;
+            }
+        }
+
+        // If loop exits, fast reached null
+        // That means no cycle exists
+        return false;
+    }
+}
