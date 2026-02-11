@@ -1,0 +1,72 @@
+// Approach-1 (Using Reverse of LinkedList)
+// T.C : O(n)
+// S.C : O(n)
+
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    // Function to reverse a singly linked list
+    ListNode reverse(ListNode head){
+        ListNode prev = null;      // Previous node (initially null)
+        ListNode curr = head;      // Current node starts from head
+        ListNode next = null;      // To store next node temporarily
+
+        // Traverse the list and reverse pointers
+        while(curr != null){
+            next = curr.next;      // Store next node
+            curr.next = prev;      // Reverse the link
+            prev = curr;           // Move prev forward
+            curr = next;           // Move curr forward
+        }
+
+        // prev becomes the new head after reversal
+        return prev;
+    }
+
+    public ListNode doubleIt(ListNode head) {
+
+        // Step 1: Reverse the linked list
+        // Because multiplication starts from least significant digit
+        head = reverse(head);
+
+        ListNode curr = head;
+        ListNode prev = null;
+        int carry = 0;
+
+        // Step 2: Traverse the reversed list and double each digit
+        while(curr != null){
+            int newVal = curr.val * 2 + carry;  // Double + previous carry
+            curr.val = newVal % 10;             // Store unit digit
+            
+            // Update carry
+            if(newVal >= 10){
+                carry = 1;
+            } else {
+                carry = 0;
+            }
+
+            prev = curr;        // Track last processed node
+            curr = curr.next;   // Move forward
+        }
+
+        // Step 3: If carry remains after full traversal,
+        // add a new node at the end
+        if(carry > 0){
+            ListNode newHead = new ListNode(carry);
+            prev.next = newHead;
+        }
+
+        // Step 4: Reverse again to restore original order
+        return reverse(head);
+    }
+}
