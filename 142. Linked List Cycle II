@@ -40,6 +40,58 @@ public class Solution {
 }
 
 
-// Approach 2 - 
+// Approach 2 - Floyd’s Cycle Detection Algorithm
 // T.C - O(n)
-// S.C - O(n)
+// S.C - O(1)
+
+
+public class Solution {
+
+    public ListNode detectCycle(ListNode head) {
+        
+        // Edge case:
+        // If list is empty or has only one node,
+        // cycle is impossible.
+        if (head == null || head.next == null) 
+            return null;
+
+        // Initialize two pointers
+        // slow moves 1 step
+        // fast moves 2 steps
+        ListNode slow = head;
+        ListNode fast = head;
+
+        // Step 1: Detect whether cycle exists
+        while (fast != null && fast.next != null) {
+            
+            fast = fast.next.next;  // Move 2 steps
+            slow = slow.next;       // Move 1 step
+
+            // If both meet, cycle exists
+            if (slow == fast) {
+                break;
+            }
+        }
+
+        // If slow and fast did not meet,
+        // no cycle exists
+        if (slow != fast) 
+            return null;
+
+        // Step 2: Find the starting node of the cycle
+        // Move one pointer to head
+        ListNode entry = head;
+
+        // Move both one step at a time
+        // They will meet at cycle starting node
+        while (slow != entry) {
+            slow = slow.next;
+            entry = entry.next;
+        }
+
+        // This is the node where cycle begins
+        return entry;
+    }
+}
+
+
