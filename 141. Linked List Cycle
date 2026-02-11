@@ -1,3 +1,49 @@
+// Approach 1 - Hashing / Visited Nodes Approach
+//T.C : O(n)
+//S.C : O(n)
+
+
+
+public class Solution {
+    public boolean hasCycle(ListNode head) {
+        
+        // If list is empty OR has only one node,
+        // it cannot have a cycle
+        if(head == null || head.next == null) 
+            return false;
+
+        // Create a HashSet to store visited nodes
+        Set<ListNode> st = new HashSet<>();
+
+        // Start traversing from head
+        ListNode curr = head;
+
+        // Traverse until end of list
+        while(curr != null){
+            
+            // If current node is already present in set,
+            // that means we have visited it before
+            // => cycle detected
+            if(st.contains(curr)){
+                return true;
+            }
+            else{
+                // Otherwise add the node to set
+                st.add(curr);
+            }
+
+            // Move to next node
+            curr = curr.next;
+        }
+
+        // If traversal ends without repetition,
+        // no cycle exists
+        return false;
+    }
+}
+
+
+
 // Approach 2 - Floyd’s Cycle Detection Algorithm
 //T.C : O(n)
 //S.C : O(1)
