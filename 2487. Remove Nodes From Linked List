@@ -114,6 +114,38 @@ class Solution {
 
 
 
-// Approach 2 -  
+// Approach 2 -  Recursive Right-to-Left Maximum Comparison
 // T.C - O(n)
-// S.C - O(n)
+// S.C - O(n) system stack
+
+
+
+class Solution {
+    public ListNode removeNodes(ListNode head) {
+        
+        // Base case:
+        // If list is empty OR only one node is present,
+        // nothing to remove → return head
+        if(head == null || head.next == null) 
+            return head;
+
+        // Recursive call:
+        // Process the rest of the linked list first
+        ListNode nextNode = removeNodes(head.next);
+
+        // If current node value is smaller than
+        // the maximum value on the right side,
+        // remove current node by skipping it
+        if(head.val < nextNode.val){
+            head = null;          // optional (for clarity)
+            return nextNode;      // skip current node
+        }
+
+        // Otherwise keep current node
+        // and attach processed next part
+        head.next = nextNode;
+
+        return head;
+    }
+}
+
