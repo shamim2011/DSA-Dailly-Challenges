@@ -1,3 +1,63 @@
-// Approach - 1:
-// T.C - 
-// S.C - 
+// Approach - 1 : Linked List Traversal with In-Place Node Insertion + Euclidean Algorithm (Subtraction Method)
+// T.C - O(n × log(maxValue))
+// S.C - O(1)
+
+
+
+class Solution {
+
+    // Function to calculate GCD of two nodes' values
+    ListNode gcd(ListNode prev, ListNode curr){
+        int pVal = prev.val; 
+        int cVal = curr.val;
+
+        // If one value is 0, GCD is the other value
+        if(pVal == 0) return new ListNode(cVal);
+        if(cVal == 0) return new ListNode(pVal);
+
+        // Using subtraction-based Euclidean algorithm
+        while (pVal != cVal) {
+            if(pVal > cVal) 
+                pVal -= cVal;   // Reduce larger value
+            else  
+                cVal -= pVal;   // Reduce larger value
+        }
+
+        // When both become equal, that is GCD
+        return new ListNode(pVal);
+    }
+
+    public ListNode insertGreatestCommonDivisors(ListNode head) {
+
+        // Pointer to previous node
+        ListNode prev = head;
+
+        // Pointer to next node
+        ListNode curr = head.next;
+
+        // Traverse the linked list
+        while(curr != null){
+
+            // Store original next connection
+            ListNode temp = prev.next;
+
+            // Calculate GCD node
+            ListNode gcdVal = gcd(prev, curr);
+
+            // Insert GCD node between prev and curr
+            prev.next = gcdVal;
+            gcdVal.next = temp;
+
+            // Move prev and curr forward
+            prev = curr;
+            curr = curr.next;
+        }
+
+        return head; // Return modified list
+    }
+}
+
+
+// Approach - 2 : 
+// T.C - O(n)
+// S.C - O(1)
