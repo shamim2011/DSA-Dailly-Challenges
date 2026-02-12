@@ -146,19 +146,10 @@ class Solution {
 
 // Approach - 4 : Recursive Summation Between Zero Nodes
 // T.C : O(n)
-// S.C : O(1)
+// S.C : O(n)     Recursion stack
 
 
-/**
- * Definition for singly-linked list.
- * public class ListNode {
- *     int val;
- *     ListNode next;
- *     ListNode() {}
- *     ListNode(int val) { this.val = val; }
- *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
- * }
- */
+
 class Solution {
     public ListNode mergeNodes(ListNode head) {
         
