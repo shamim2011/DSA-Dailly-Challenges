@@ -1,4 +1,73 @@
-//Approach-1 - 
+//Approach-1 - Single Pass Traversal with Index Tracking
 //T.C : O(n)
 //S.C : O(1)
 
+
+class Solution {
+    public int[] nodesBetweenCriticalPoints(ListNode head) {
+        
+        // prev points to previous node
+        ListNode prev = head;
+        
+        // curr starts from second node
+        ListNode curr = head.next;
+        
+        // i represents position (index) of current node
+        int i = 1;
+        
+        // To store index of first critical point
+        int firstCriDist = 0;
+        
+        // To store index of previous critical point
+        int prevCriDist = 0;
+        
+        // To store minimum distance between consecutive critical points
+        int minDist = Integer.MAX_VALUE;
+        
+        // Traverse list while curr and curr.next exist
+        // because critical point needs both previous and next nodes
+        while(curr != null && curr.next != null){
+            
+            // Check if current node is a critical point
+            // Case 1: Local minima
+            // Case 2: Local maxima
+            if((curr.val < prev.val && curr.val < curr.next.val) || 
+               (curr.val > prev.val && curr.val > curr.next.val)){
+                
+                // If this is the first critical point found
+                if(prevCriDist == 0){
+                    prevCriDist = i;
+                    firstCriDist = i;
+                } 
+                else{
+                    // Calculate minimum distance between consecutive critical points
+                    minDist = Math.min(minDist, i - prevCriDist);
+                    
+                    // Update previous critical point index
+                    prevCriDist = i;
+                }
+            }
+            
+            // Move to next node
+            i++;
+            prev = curr;
+            curr = curr.next;
+        }
+        
+        // If less than two critical points found
+        if(minDist == Integer.MAX_VALUE) {
+            return new int[]{-1,-1};
+        } 
+        
+        // Return:
+        // 1. Minimum distance between any two consecutive critical points
+        // 2. Maximum distance (distance between first and last critical points)
+        return new int[]{minDist, prevCriDist - firstCriDist};
+    }
+}
+
+
+
+//Approach-2 - 
+//T.C : O(n)
+//S.C : O(1)
