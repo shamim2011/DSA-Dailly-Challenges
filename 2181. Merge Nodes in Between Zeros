@@ -49,3 +49,8 @@ class Solution {
         return dummy.next;
     }
 }
+
+
+// Approach - 2 : 
+// T.C : O(n)
+// S.C : O(n)
