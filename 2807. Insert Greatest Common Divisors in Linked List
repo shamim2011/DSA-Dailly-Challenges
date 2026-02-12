@@ -91,6 +91,46 @@ class Solution {
 
 
 
-// Approach - 2 : 
+// Approach - 2 : Recursive Backtracking on Linked List
 // T.C - O(n)
-// S.C - O(1)
+// S.C - O(n) Recursion stack 
+
+
+class Solution {
+
+    // Helper function to calculate GCD using Euclidean Algorithm
+    int gcd(int a, int b){
+        // Base case: if second number becomes 0,
+        // first number is the GCD
+        if(b == 0) return a;
+
+        // Recursive call
+        return gcd(b, a % b);
+    }
+
+    public ListNode insertGreatestCommonDivisors(ListNode head) {
+
+        // Base case:
+        // If list is empty or only one node,
+        // nothing to insert
+        if(head == null || head.next == null) 
+            return head;
+
+        // Recursively process the remaining list
+        ListNode temp = insertGreatestCommonDivisors(head.next);
+
+        // Create a new node containing GCD of
+        // current node and next node
+        ListNode gcdNode = new ListNode(gcd(head.val, head.next.val));
+
+        // Attach the processed remaining list after gcd node
+        gcdNode.next = temp;
+
+        // Insert gcd node between head and head.next
+        head.next = gcdNode;
+
+        // Return current head
+        return head;
+    }
+}
+
