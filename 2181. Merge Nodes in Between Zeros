@@ -51,6 +51,53 @@ class Solution {
 }
 
 
-// Approach - 2 : 
+// Approach - 2 : Iterative Traversal with Running Sum (Simulation Approach)
 // T.C : O(n)
 // S.C : O(n)
+
+
+
+
+class Solution {
+    public ListNode mergeNodes(ListNode head) {
+        
+        // Dummy node to build the new resulting linked list
+        ListNode dummy = new ListNode(-1);
+        
+        // temp pointer will help us build the new list
+        ListNode temp = dummy;
+        
+        // We start from head.next because the first node is always 0
+        ListNode curr = head.next;
+
+        // Traverse the entire list
+        while(curr != null){
+            
+            int sum = 0;  // To store sum between two zero nodes
+            
+            // Keep adding values until we encounter 0
+            while(curr != null && curr.val != 0){
+                sum += curr.val;     // Add current node value
+                curr = curr.next;    // Move forward
+            }
+            
+            // Create a new node with the computed sum
+            temp.next = new ListNode(sum);
+            
+            // Move temp forward
+            temp = temp.next;
+            
+            // Skip the zero node
+            curr = curr.next;
+        }
+        
+        // Return head of the newly formed list
+        return dummy.next;
+    }
+}
+
+
+// Approach - 3 : 
+// T.C : O(n)
+// S.C : O(1)
+
