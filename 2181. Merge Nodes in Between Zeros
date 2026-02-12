@@ -1,5 +1,51 @@
-// Approach-1 : 
+// Approach-1 : Brute Force using ArrayList (Two-Pass Approach)
 // T.C : O(n)
 // S.C : O(n)
 
 
+
+class Solution {
+    public ListNode mergeNodes(ListNode head) {
+
+        // Pointer to traverse the original linked list
+        ListNode curr = head;
+
+        // List to store all nodes of the linked list
+        List<ListNode> li = new ArrayList<>();
+
+        // Step 1: Store all nodes into ArrayList
+        while(curr != null){
+            li.add(curr);
+            curr = curr.next;
+        }
+
+        // Dummy node to build the result list
+        ListNode dummy = new ListNode(-1);
+        ListNode temp = dummy;
+
+        // Start from index 1 because first node is always 0 (as per problem)
+        int i = 1;
+
+        // Step 2: Traverse stored nodes and calculate sum between zeros
+        while(i < li.size()){
+
+            int sum = 0;
+
+            // Keep adding values until we hit zero
+            while(i < li.size() && li.get(i).val != 0){
+                sum += li.get(i).val;
+                i++;
+            }
+
+            // Create new node with calculated sum
+            temp.next = new ListNode(sum);
+            temp = temp.next;
+
+            // Skip the zero node
+            i++;
+        }
+
+        // Return merged list (excluding dummy node)
+        return dummy.next;
+    }
+}
