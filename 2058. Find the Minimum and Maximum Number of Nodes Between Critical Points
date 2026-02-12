@@ -68,6 +68,74 @@ class Solution {
 
 
 
-//Approach-2 - 
+//Approach-2 - Single Pass Traversal with Sliding Window (3-pointer technique)
 //T.C : O(n)
 //S.C : O(1)
+
+
+
+class Solution {
+    public int[] nodesBetweenCriticalPoints(ListNode head) {
+        
+        // To store previous, current and next node values
+        int preVal = 0;
+        int currVal = 0;
+        int nextVal = 0;
+
+        // i → current index of linked list
+        int i = 0;
+
+        // Position of first critical point
+        int firstCriPos = 0;
+
+        // Position of previous critical point
+        int prevCriPos = 0;
+
+        // Minimum distance between consecutive critical points
+        int minDist = Integer.MAX_VALUE;
+
+        // Default answer if less than 2 critical points found
+        int[] ans = {-1, -1};
+
+        // Traverse the linked list
+        while (head != null) {
+
+            // Shift values for sliding window comparison
+            preVal = currVal;
+            currVal = nextVal;
+            nextVal = head.val;
+
+            // Check if current node is a critical point
+            // Critical point = local maxima OR local minima
+            if (preVal != 0 && currVal != 0 && nextVal != 0 &&
+                ((preVal < currVal && currVal > nextVal) ||   // Local maxima
+                 (currVal < preVal && currVal < nextVal))) { // Local minima
+
+                // If this is the first critical point
+                if (firstCriPos == 0) {
+                    firstCriPos = i;
+                } 
+                // If this is not the first critical point
+                else {
+                    // Update minimum distance between consecutive critical points
+                    minDist = Math.min(minDist, i - prevCriPos);
+                    ans[0] = minDist;
+
+                    // Maximum distance = current position - first critical position
+                    ans[1] = i - firstCriPos;
+                }
+
+                // Update previous critical point position
+                prevCriPos = i;
+            }
+
+            // Move to next index
+            i++;
+
+            // Move to next node
+            head = head.next;
+        }
+
+        return ans;
+    }
+}
