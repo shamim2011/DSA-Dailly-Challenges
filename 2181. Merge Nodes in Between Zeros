@@ -97,7 +97,96 @@ class Solution {
 }
 
 
-// Approach - 3 : 
+// Approach - 3 : Two Pointer Approach (In-place Modification)
 // T.C : O(n)
 // S.C : O(1)
 
+
+
+class Solution {
+    public ListNode mergeNodes(ListNode head) {
+        
+        // p1 will store the position where we place the sum
+        // Start from the first node after initial 0
+        ListNode p1 = head.next;
+        
+        // p2 is used to traverse and calculate the segment sum
+        ListNode p2 = p1;
+        
+        // Traverse until end of list
+        while(p2 != null){
+            
+            int sum = 0;  // To store sum between two zero nodes
+            
+            // Calculate sum until we encounter next 0
+            while(p2 != null && p2.val != 0){
+                sum += p2.val;
+                p2 = p2.next;
+            }
+            
+            // Store the computed sum at p1 node
+            p1.val = sum;
+            
+            // Move p2 one step ahead to skip the zero node
+            p2 = p2.next;
+            
+            // Link current sum node to next segment start
+            p1.next = p2;
+            
+            // Move p1 to next segment position
+            p1 = p1.next;
+        }
+        
+        // Return head.next because first node is always 0
+        return head.next;
+    }
+}
+
+
+
+// Approach - 4 : Recursive Summation Between Zero Nodes
+// T.C : O(n)
+// S.C : O(1)
+
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode mergeNodes(ListNode head) {
+        
+        // Move head to the next node because the first node is always 0
+        head = head.next;
+        
+        // Base case: if head becomes null, return null
+        if(head == null){
+            return head;
+        }
+
+        // Temporary pointer to traverse and calculate sum
+        ListNode temp = head;
+        int sum = 0;
+
+        // Traverse until we reach the next 0 node
+        while(temp != null && temp.val != 0){
+            sum += temp.val;      // Add values between zeros
+            temp = temp.next;    // Move forward
+        }
+
+        // Store the calculated sum in current head node
+        head.val = sum;
+
+        // Recursively process the remaining list after the zero
+        head.next = mergeNodes(temp);
+
+        // Return the modified head
+        return head;
+    }
+}
