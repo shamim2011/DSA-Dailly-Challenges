@@ -1,0 +1,24 @@
+//Approach-1 Brute Force using Array/List + Sorting
+//Time : O(nlogn)
+//Space : O(n)
+
+
+
+class Solution {
+    public ListNode sortList(ListNode head) {
+        List<Integer> li = new ArrayList<>();
+        ListNode curr = head;
+        while(curr!=null){
+            li.add(curr.val);
+            curr = curr.next;
+        }
+        Collections.sort(li);
+        ListNode dummy = new ListNode(-1);
+        ListNode temp = dummy;
+        for(int num:li){
+            temp.next = new ListNode(num);
+            temp = temp.next;
+        }
+        return dummy.next;
+    }
+}
