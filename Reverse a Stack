@@ -1,0 +1,82 @@
+// Approach 1 - Recursive Stack Reversal using Auxiliary Stack
+// T.C - O(n²)
+// S.C - O(n)
+
+
+class Solution {
+    
+    public static void reverseStack(Stack<Integer> st) {
+        // Base case: if stack becomes empty, stop recursion
+        if(st.isEmpty()) return;
+
+        // Remove the top element
+        int top = st.pop();
+
+        // Recursively reverse the remaining stack
+        reverseStack(st);
+
+        // Temporary stack to help place the popped element
+        // at the bottom of the stack
+        Stack<Integer> temp = new Stack<>();
+        
+        // Move all remaining elements to temp stack
+        while(!st.isEmpty()){
+            temp.add(st.pop());
+        }
+
+        // Push the previously removed element (top)
+        // This will now go to the bottom
+        st.push(top);
+
+        // Push back all elements from temp to original stack
+        while(!temp.isEmpty()){
+            st.push(temp.pop());
+        }
+    }
+}
+
+
+
+// Approach 2 - Recursion + Insert at Bottom Technique
+// T.C - O(n²)
+// S.C - O(1)
+
+
+class Solution {
+    
+    // Function to reverse the stack using recursion
+    public static void reverseStack(Stack<Integer> st) {
+        
+        // Base case: If stack becomes empty, stop recursion
+        if(st.isEmpty()) return;
+        
+        // Remove the top element
+        int top = st.pop();
+        
+        // Recursively reverse the remaining stack
+        reverseStack(st);
+        
+        // Insert the removed element at the bottom
+        insertButtom(st, top);
+    }
+    
+    // Helper function to insert an element at the bottom of stack
+    public static void insertButtom(Stack<Integer> st, int elem) {
+        
+        // If stack is empty, push the element
+        // (This ensures element goes to bottom)
+        if(st.isEmpty()){
+            st.push(elem);
+            return;
+        }
+        
+        // Remove the top element
+        int currTopElem = st.pop();
+        
+        // Recursive call to reach bottom
+        insertButtom(st, elem);
+        
+        // Push back the removed element
+        st.push(currTopElem);
+    }
+}
