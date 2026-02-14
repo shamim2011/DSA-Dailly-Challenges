@@ -1,0 +1,81 @@
+// Approach - Merge Sort (Divide and Conquer Algorithm)
+//T.C : O(nlogn)
+//S.C : O(n)
+
+
+class Solution {
+
+    // Function to merge two sorted halves of the array
+    void merge(int[] arr, int l, int mid, int r) {
+        
+        // Size of left and right subarrays
+        int n1 = mid - l + 1;
+        int n2 = r - mid;
+
+        int k = l;
+
+        // Temporary arrays to store left and right parts
+        int[] L = new int[n1];
+        int[] R = new int[n2];
+
+        // Copy elements from original array to left array
+        for (int i = 0; i < n1; i++) {
+            L[i] = arr[k];
+            k++;
+        }
+
+        // Copy elements from original array to right array
+        for (int i = 0; i < n2; i++) {
+            R[i] = arr[k];
+            k++;
+        }
+
+        int i = 0, j = 0;
+        k = l;  // Reset k to starting index of merged subarray
+
+        // Merge the two sorted arrays back into original array
+        while (i < n1 && j < n2) {
+            if (L[i] <= R[j]) {
+                arr[k] = L[i];
+                i++;
+            } else {
+                arr[k] = R[j];
+                j++;
+            }
+            k++;
+        }
+
+        // Copy remaining elements of L[] if any
+        while (i < n1) {
+            arr[k] = L[i];
+            i++;
+            k++;
+        }
+
+        // Copy remaining elements of R[] if any
+        while (j < n2) {
+            arr[k] = R[j];
+            j++;
+            k++;
+        }
+    }
+
+    // Main mergeSort function
+    void mergeSort(int arr[], int l, int r) {
+        
+        // Base condition: if single element
+        if (l >= r) return;
+
+        // Find middle index
+        int mid = l + (r - l) / 2;
+
+        // Recursively sort left half
+        mergeSort(arr, l, mid);
+
+        // Recursively sort right half
+        mergeSort(arr, mid + 1, r);
+
+        // Merge the sorted halves
+        merge(arr, l, mid, r);
+    }
+}
