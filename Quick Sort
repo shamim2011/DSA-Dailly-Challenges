@@ -1,5 +1,57 @@
-// Approach - 
-// T.C - 
-// S.C - 
+// Approach - Quick Sort using Lomuto Partition Scheme
+// T.C - O(nlogn) in Average case, O(n^2) in worst case
+// S.C - O(1) Auxiliary space
 
 
+class Solution {
+    
+    // Main QuickSort function
+    public void quickSort(int[] arr, int low, int high) {
+        
+        // Base condition: if subarray has 0 or 1 element, stop recursion
+        if(low > high) return;
+        
+        // Partition the array and get pivot index
+        int p = partition(arr, low, high);
+        
+        // Recursively sort left part
+        quickSort(arr, low, p - 1);
+        
+        // Recursively sort right part
+        quickSort(arr, p + 1, high);
+    }
+
+    // Partition function using last element as pivot
+    private int partition(int[] arr, int low, int high) {
+        
+        // Choose last element as pivot
+        int elem = arr[high];
+        
+        // Pointer for smaller element position
+        int p = low;
+        
+        // Traverse from low to high-1
+        for(int i = low; i < high; i++){
+            
+            // If current element is smaller than pivot
+            if(elem > arr[i]){
+                
+                // Swap arr[i] with arr[p]
+                int temp = arr[i];
+                arr[i] = arr[p];
+                arr[p] = temp;
+                
+                // Move pointer forward
+                p++;
+            }
+        }
+        
+        // Finally place pivot at correct position
+        int temp = arr[high];
+        arr[high] = arr[p];
+        arr[p] = temp;
+        
+        // Return pivot index
+        return p;
+    }
+}
