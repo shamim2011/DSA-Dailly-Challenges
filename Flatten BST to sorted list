@@ -1,3 +1,54 @@
-// Approach - 
-// T.C - 
-// S.C - 
+// Approach - Inorder Traversal based Recursive Flattening
+// T.C - O(n)
+// S.C - O(n)  recursion stack
+
+
+/*
+class Node {
+    int data;
+    Node left, right;
+
+    Node(int val) {
+        data = val;
+        left = right = null;
+    }
+}
+*/
+
+class Solution {
+    public Node flattenBST(Node root) {
+        
+        // Base case: if tree is empty
+        if(root == null) return null;
+        
+        // Recursively flatten the left subtree
+        Node head = flattenBST(root.left);
+        
+        // Since we are flattening into right-skewed list,
+        // left child should always be null
+        root.left = null;
+        
+        // Recursively flatten the right subtree
+        root.right = flattenBST(root.right);
+        
+        // If left flattened list exists
+        if(head != null){
+            
+            // Go to the last node of left flattened list
+            Node temp = head;
+            while(temp != null && temp.right != null){
+                temp = temp.right;
+            }
+            
+            // Attach current root after left list
+            temp.right = root;
+            
+        } else {
+            // If no left subtree, current root becomes head
+            head = root;
+        }
+        
+        // Return head of flattened tree
+        return head;
+    }
+}
