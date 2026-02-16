@@ -1,3 +1,73 @@
-// Approach - 
-// T.C - 
-// S.C - 
+// Approach - Backtracking using DFS (Depth First Search)
+// T.C - O(4^n^2)
+// S.C - O(n^2)
+
+
+class Solution {
+    
+    // List to store all possible paths
+    ArrayList<String> ans = new ArrayList<>();
+    
+    // Function to check whether current cell is valid to move
+    public boolean isSafe(int x, int y, int n, int[][] maze){
+        // Check:
+        // 1. Inside boundary
+        // 2. Cell value is 1 (not blocked)
+        return x >= 0 && x < n && y >= 0 && y < n && maze[x][y] == 1;
+    }
+    
+    // Recursive function to explore all paths
+    public void solve(int x, int y, int[][] maze, StringBuilder path, int n){
+        
+        // If cell is not valid, stop recursion
+        if(!isSafe(x, y, n, maze)) return;
+        
+        // If destination reached (bottom-right corner)
+        if(x == n-1 && y == n-1){
+            ans.add(path.toString());  // store current path
+            return;
+        }
+        
+        // Mark current cell as visited (avoid revisiting)
+        maze[x][y] = 0;
+        
+        // Move Down
+        path.append('D');
+        solve(x+1, y, maze, path, n);
+        path.deleteCharAt(path.length()-1);  // backtrack
+        
+        // Move Right
+        path.append('R');
+        solve(x, y+1, maze, path, n);
+        path.deleteCharAt(path.length()-1);  // backtrack
+        
+        // Move Up
+        path.append('U');
+        solve(x-1, y, maze, path, n);
+        path.deleteCharAt(path.length()-1);  // backtrack
+        
+        // Move Left
+        path.append('L');
+        solve(x, y-1, maze, path, n);
+        path.deleteCharAt(path.length()-1);  // backtrack
+        
+        // Unmark current cell (restore for other paths)
+        maze[x][y] = 1;
+    }
+    
+    public ArrayList<String> ratInMaze(int[][] maze) {
+        
+        // If starting cell is blocked
+        if(maze[0][0] == 0) return ans;
+        
+        StringBuilder path = new StringBuilder();
+        
+        // Start from (0,0)
+        solve(0, 0, maze, path, maze.length);
+        
+        // Sort paths lexicographically
+        Collections.sort(ans);
+        
+        return ans;
+    }
+}
