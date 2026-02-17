@@ -1,3 +1,64 @@
-// Approach - 
-//T.C : O(N*N*M) - See my detailed video above to understand this.
-//S.C : Auziliary Space = O(1) and O(N*M) – because of the recursion
+// Approach - Recursive Merge Approach (Divide and Conquer)
+//T.C :O(n × k) (Worst Case) , k = number of linked lists
+//S.C : O(k) (Recursive stack space)
+
+
+/*
+class Node {
+    int data;
+    Node next;
+    Node bottom;
+
+    Node(int x) {
+        data = x;
+        next = null;
+        bottom = null;
+    }
+}
+*/
+
+class Solution {
+    
+    // Function to merge two sorted linked lists (using bottom pointer)
+    public Node mergeTwoSortList(Node head1, Node head2){
+        
+        // If first list is empty, return second list
+        if(head1 == null) return head2;
+        
+        // If second list is empty, return first list
+        if(head2 == null) return head1;
+        
+        Node result;
+        
+        // Compare current nodes of both lists
+        if(head1.data < head2.data){
+            
+            // Choose head1 and recursively merge remaining nodes
+            result = head1;
+            result.bottom = mergeTwoSortList(head1.bottom, head2);
+            
+        } else {
+            
+            // Choose head2 and recursively merge remaining nodes
+            result = head2;
+            result.bottom = mergeTwoSortList(head1, head2.bottom);
+        }
+        
+        // Return merged list head
+        return result;
+    }
+    
+    
+    // Function to flatten the linked list
+    public Node flatten(Node root) {
+        
+        // Base case: if list is empty
+        if(root == null) return null;
+        
+        // Recursively flatten the next linked list
+        Node root2 = flatten(root.next);
+        
+        // Merge current list with already flattened next list
+        return mergeTwoSortList(root, root2);
+    }
+}
