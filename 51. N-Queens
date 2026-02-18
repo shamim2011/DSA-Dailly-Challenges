@@ -1,4 +1,98 @@
-// Approach - 
-// T.C - 
-// S.C - 
+// Approach 1 - Backtracking (Recursion + Constraint Checking)
+// T.C - O(N!) - Read the reason above
+// S.C - O(N) to store the result
 
+class Solution {
+
+    // Stores all valid board configurations
+    List<List<String>> result = new ArrayList<>();
+
+    // Size of the chessboard (N x N)
+    int N;
+
+    // Function to check whether placing a Queen at (row, col) is valid
+    boolean isValid(List<String> board, int row, int col) {
+
+        // 1️⃣ Check vertically upward (same column)
+        for (int r = row - 1; r >= 0; r--) {
+            if (board.get(r).charAt(col) == 'Q') {
+                return false;   // Another queen found in same column
+            }
+        }
+
+        // 2️⃣ Check left upward diagonal
+        for (int i = row - 1, j = col - 1; i >= 0 && j >= 0; i--, j--) {
+            if (board.get(i).charAt(j) == 'Q') {
+                return false;   // Another queen found on left diagonal
+            }
+        }
+
+        // 3️⃣ Check right upward diagonal
+        for (int i = row - 1, j = col + 1; i >= 0 && j < N; i--, j++) {
+            if (board.get(i).charAt(j) == 'Q') {
+                return false;   // Another queen found on right diagonal
+            }
+        }
+
+        // Safe to place queen
+        return true;
+    }
+
+    // Backtracking function to place queens row by row
+    void solve(List<String> board, int row) {
+
+        // Base case: If all queens are placed
+        if (row >= N) {
+            result.add(new ArrayList<>(board));  // Store deep copy of board
+            return;
+        }
+
+        // Try placing queen in every column of current row
+        for (int col = 0; col < N; col++) {
+
+            // Check if placing at (row, col) is safe
+            if (isValid(board, row, col)) {
+
+                // Convert current row string to StringBuilder to modify it
+                StringBuilder newRow = new StringBuilder(board.get(row));
+
+                // Place Queen
+                newRow.setCharAt(col, 'Q');
+                board.set(row, newRow.toString());
+
+                // Recurse for next row
+                solve(board, row + 1);
+
+                // Backtrack: Remove Queen
+                newRow.setCharAt(col, '.');
+                board.set(row, newRow.toString());
+            }
+        }
+    }
+
+    public List<List<String>> solveNQueens(int n) {
+
+        N = n;
+
+        // Edge case: If n = 0
+        if (N == 0) return result;
+
+        // Initialize empty board with '.'
+        List<String> board = new ArrayList<>();
+
+        // Example for n = 3:
+        // board = {"...", "...", "..."}
+        for (int i = 0; i < n; i++) {
+            StringBuilder row = new StringBuilder();
+            for (int j = 0; j < n; j++) {
+                row.append('.');
+            }
+            board.add(row.toString());
+        }
+
+        // Start solving from row 0
+        solve(board, 0);
+
+        return result;
+    }
+}
