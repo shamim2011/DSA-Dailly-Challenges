@@ -1,3 +1,60 @@
-// Approach - 
-// T.C - 
-// S.C - 
+// Approach 1 - Brute Force + Recursion (Generate All Combinations and Validate)
+// T.C - O(2^2^n * n)
+// S.C - O(4^n/n)
+
+
+class Solution {
+    
+    // This list will store all valid parenthesis combinations
+    List<String> ans = new ArrayList<>();
+    
+    // Function to check if a generated string is valid
+    boolean isValid(String s){
+        int count = 0;
+        
+        // Traverse each character of the string
+        for(int i = 0; i < s.length(); i++){
+            
+            // If opening bracket, increase count
+            if(s.charAt(i) == '('){
+                count++;
+            } 
+            // If closing bracket, decrease count
+            else{
+                count--;
+                
+                // If count becomes negative,
+                // it means more ')' than '(' → invalid
+                if(count < 0) return false;
+            }
+        }
+        
+        // At the end, count must be 0 for valid parentheses
+        return count == 0;
+    }
+    
+    // Recursive function to generate all possible combinations
+    void solve(String s, int n){
+        
+        // Base case:
+        // If length becomes 2*n, check validity
+        if(s.length() == 2 * n){
+            if(isValid(s)){
+                ans.add(s);
+            }
+            return;
+        }
+        
+        // Add '(' and recurse
+        solve(s + "(", n);
+        
+        // Add ')' and recurse
+        solve(s + ")", n);
+    }
+    
+    // Main function
+    public List<String> generateParenthesis(int n) {
+        solve("", n);
+        return ans;
+    }
+}
