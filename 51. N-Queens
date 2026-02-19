@@ -99,6 +99,89 @@ class Solution {
 
 
 
-// Approach 2 - 
-// T.C - 
-// S.C - 
+// Approach 2 - Recursion & Backtracking
+// T.C - O(N!) in worst case it explores all possible configurations
+//S.C : O(N) for result and also for storing, cols, diags and antidiags
+
+class Solution {
+    // Stores the final list of all valid N-Queens configurations.
+    List<List<String>> result = new ArrayList<>();
+    // Sets to keep track of occupied columns, diagonals (row + col), and anti-diagonals (row - col).
+    Set<Integer> cols = new HashSet<>();
+    Set<Integer> diag = new HashSet<>();
+    Set<Integer> antiDiag = new HashSet<>();
+    // The size of the board (N).
+    int N;
+
+    /**
+     * Recursive function to find all N-Queens solutions using backtracking.
+     * 
+     * @param board The current state of the board being built.
+     * @param row   The current row being processed.
+     */
+    void solve(List<String> board, int row) {
+        // Base case: All N queens have been placed successfully across all rows (0 to N-1).
+        if (row >= N) {
+            result.add(new ArrayList<>(board));
+            return;
+        }
+
+        // Iterate through each column in the current row to try placing a queen.
+        for (int col = 0; col < N; col++) {
+            int diagCons = row + col; // Calculate the diagonal constant (same for all cells on the same diagonal).
+            int antiDiagCons = row - col; // Calculate the anti-diagonal constant.
+
+            // Check if the current position (row, col) is attacked by an existing queen.
+            if (cols.contains(col) || diag.contains(diagCons) || antiDiag.contains(antiDiagCons)) {
+                continue; // If attacked, move to the next column.
+            }
+
+            // Place the queen: mark the column, diagonal, and anti-diagonal as occupied.
+            cols.add(col);
+            diag.add(diagCons);
+            antiDiag.add(antiDiagCons);
+            // Update the board representation to place 'Q' in the current cell.
+            StringBuilder newRow = new StringBuilder(board.get(row));
+            newRow.setCharAt(col, 'Q');
+            board.set(row, newRow.toString());
+
+            // Recurse: move to the next row (row + 1).
+            solve(board, row + 1);
+
+            // Backtrack: remove the queen to explore other possibilities.
+            cols.remove(col);
+            diag.remove(diagCons);
+            antiDiag.remove(antiDiagCons);
+            // Restore the board representation to '.'
+            newRow.setCharAt(col, '.');
+            board.set(row, newRow.toString());
+        }
+    }
+
+    /**
+     * Main function to initialize the board and start the N-Queens solver.
+     * 
+     * @param n The size of the board and the number of queens.
+     * @return A list of all distinct solutions.
+     */
+    public List<List<String>> solveNQueens(int n) {
+        N = n;
+        if (N == 0)
+            return result; // If N is 0, return an empty result list.
+
+        List<String> board = new ArrayList<>();
+        // Initialize an empty board with '.' characters.
+        // For n = 3, board = {"...", "...", "..."} initially
+        for (int i = 0; i < n; i++) {
+            StringBuilder row = new StringBuilder();
+            for (int j = 0; j < n; j++) {
+                row.append('.');
+            }
+            board.add(row.toString());
+        }
+
+        // Start the recursive solving process from the first row (row 0).
+        solve(board, 0);
+        return result;
+    }
+}
