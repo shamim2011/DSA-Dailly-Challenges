@@ -1,4 +1,52 @@
-// Approach - 
-// T.C - 
-// S.C - 
+// Approach - Backtracking (Power Set / Subsequence Generation Approach)
+// T.C - O(2ⁿ log 2ⁿ)
+// S.C - O(n × 2ⁿ)
 
+// User function Template for Java
+
+class Solution {
+    // List to store all subsequences
+    List<String> ans = new ArrayList<>();
+    
+    // Recursive function to generate subsequences
+    public void solve(String s, StringBuilder curr, int idx) {
+        
+        // Base case: if index reaches end of string
+        if (idx >= s.length()) {
+            // Add only non-empty subsequences
+            if (curr.length() != 0) {
+                ans.add(curr.toString());
+            }
+            return;
+        }
+
+        // ----------------- Include Current Character -----------------
+        
+        // Choose the current character
+        curr.append(s.charAt(idx));
+        
+        // Explore further with included character
+        solve(s, curr, idx + 1);
+        
+        // Backtrack (Undo the choice)
+        curr.deleteCharAt(curr.length() - 1);
+        
+        
+        // ----------------- Exclude Current Character -----------------
+        
+        // Explore without including current character
+        solve(s, curr, idx + 1);
+    }
+    
+    public List<String> AllPossibleStrings(String s) {
+        StringBuilder curr = new StringBuilder();
+        
+        // Start recursion from index 0
+        solve(s, curr, 0);
+        
+        // Sort lexicographically
+        Collections.sort(ans);
+        
+        return ans;
+    }
+}
