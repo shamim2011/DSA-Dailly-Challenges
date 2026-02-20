@@ -61,7 +61,47 @@ class Solution {
 
 
 
-// Approach 2 - 
-// T.C - 
-// S.C - 
+// Approach 2 - Backtracking
+// T.C - O(4ⁿ / √n)
+// S.C - O(4ⁿ / √n)
 
+
+class Solution {
+    // List to store all valid parenthesis combinations
+    List<String> ans = new ArrayList<>();
+
+    // Recursive function to build valid parenthesis strings
+    void solve(String s, int n, int open, int close) {
+        
+        // Base case: If the string length becomes 2*n,
+        // it means we have used n '(' and n ')'
+        if (s.length() == 2 * n) {
+            ans.add(s);    
+            return;
+        }
+
+        // If we can still add '(' (i.e., open < n)
+        if (open < n) {
+            s += '(';                       // Add '('
+            solve(s, n, open + 1, close);   // Recur with one more open bracket
+            s = s.substring(0, s.length() - 1);  // Backtrack (remove last character)
+        }
+
+        // If number of '(' is greater than ')',
+        // we can safely add ')'
+        if (open > close) {
+            s += ')';                       // Add ')'
+            solve(s, n, open, close + 1);   // Recur with one more close bracket
+        }
+    }
+
+    public List<String> generateParenthesis(int n) {
+        int open = 0;
+        int close = 0;
+
+        // Start recursion with empty string
+        solve("", n, open, close);
+
+        return ans;
+    }
+}
