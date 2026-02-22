@@ -50,3 +50,57 @@ class Solution {
         return solve(s, p);
     }
 }
+
+
+//Approach - 2 : Recursion with Backtracking
+//T.C : O(2^(m+n))
+//S.C : O(m + n)
+
+
+class Solution {
+
+    // Recursive function to match string s and pattern p
+    boolean solve(int i, int j, String s, String p) {
+
+        // Base Case:
+        // If pattern is exhausted, string must also be exhausted
+        if (j == p.length()) {
+            return i == s.length();
+        }
+
+        // Check if current characters match
+        boolean first_Char_match = false;
+
+        // Match condition:
+        // 1. i should be within string boundary
+        // 2. characters should match OR pattern has '.'
+        if (i < s.length() && 
+           (p.charAt(j) == s.charAt(i) || p.charAt(j) == '.')) {
+            first_Char_match = true;
+        }
+
+        // If next character in pattern is '*'
+        if (j + 1 < p.length() && p.charAt(j + 1) == '*') {
+
+            // Case 1: Ignore current char and '*' (0 occurrence)
+            boolean not_take = solve(i, j + 2, s, p);
+
+            // Case 2: Take current char if it matches (1 or more occurrence)
+            boolean take = first_Char_match && solve(i + 1, j, s, p);
+
+            return not_take || take;
+        }
+
+        // Normal matching case (no '*')
+        return first_Char_match && solve(i + 1, j + 1, s, p);
+    }
+
+    public boolean isMatch(String s, String p) {
+        return solve(0, 0, s, p);
+    }
+}
+
+
+//Approach - 3 : 
+//T.C : 
+//S.C : 
