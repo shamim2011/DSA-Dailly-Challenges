@@ -1,3 +1,52 @@
-//Approach-1
-//T.C : 
-//S.C : 
+//Approach - 1 : Recursive Backtracking (Brute Force Recursion)
+//T.C : O(2^(m+n))
+//S.C : O(m + n)
+
+
+class Solution {
+
+    // Recursive function to check if string s matches pattern p
+    boolean solve(String s, String p) {
+
+        // Base Case:
+        // If pattern becomes empty,
+        // string must also be empty for a valid match
+        if (p.length() == 0) {
+            return s.length() == 0;
+        }
+
+        // Check if first character matches
+        boolean first_Char_match = false;
+
+        // Match condition:
+        // 1. String should not be empty
+        // 2. Characters should be same OR pattern has '.'
+        if (s.length() > 0 &&
+            (p.charAt(0) == s.charAt(0) || p.charAt(0) == '.')) {
+            first_Char_match = true;
+        }
+
+        // If second character of pattern is '*'
+        if (p.length() > 1 && p.charAt(1) == '*') {
+
+            // Case 1: Do not use '*' (ignore current char and '*')
+            boolean not_take = solve(s, p.substring(2));
+
+            // Case 2: Use '*' if first char matches
+            // Consume one character from string but keep pattern same
+            boolean take = first_Char_match &&
+                           solve(s.substring(1), p);
+
+            return not_take || take;
+        }
+
+        // Normal character match case
+        // Move both string and pattern forward
+        return first_Char_match &&
+               solve(s.substring(1), p.substring(1));
+    }
+
+    public boolean isMatch(String s, String p) {
+        return solve(s, p);
+    }
+}
