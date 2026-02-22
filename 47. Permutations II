@@ -49,8 +49,40 @@ class Solution {
 
 
 
-// Approach - 2 : 
-// T.C - 
-// S.C - 
+// Approach - 2 : Backtracking (Include / Exclude Pattern)
+// T.C - O(2^n)
+// S.C - O(2^n * n)
 
 
+class Solution {
+    // This list will store all subsets (final answer)
+    List<List<Integer>> result = new ArrayList<>();
+
+    public void backTracking(int[] nums, int i, List<Integer> temp) {
+
+        // Base Case:
+        // If we have processed all elements, add the current subset to result
+        if (i >= nums.length) {
+            result.add(new ArrayList<>(temp)); // Add a copy of temp
+            return;
+        }
+
+        // -----------------------------
+        // Choice 1: Include nums[i]
+        // -----------------------------
+        temp.add(nums[i]);              // Do
+        backTracking(nums, i + 1, temp); // Explore
+        temp.remove(temp.size() - 1);   // Undo (Backtrack)
+
+        // -----------------------------
+        // Choice 2: Exclude nums[i]
+        // -----------------------------
+        backTracking(nums, i + 1, temp); // Explore without including
+    }
+
+    public List<List<Integer>> subsets(int[] nums) {
+        List<Integer> li = new ArrayList<>(); // Temporary list to build subsets
+        backTracking(nums, 0, li);            // Start recursion from index 0
+        return result;
+    }
+}
