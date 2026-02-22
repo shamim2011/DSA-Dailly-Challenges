@@ -46,3 +46,11 @@ class Solution {
         nums[j]=temp;
     }
 }
+
+
+
+// Approach - 2 : 
+// T.C - 
+// S.C - 
+
+
