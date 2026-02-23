@@ -58,6 +58,59 @@ class Solution {
 }
 
 
-// Approach 2 - Brute Force + HashSet + Binary to Decimal Conversion
-// T.C - O(nk+2^k)
-// S.C - O(2^k)
+// Approach 2 - Sliding Window + HashSet (Brute Force Set Based Approach)
+// T.C - O(n * k)
+// S.C - O(2^k * k)
+
+class Solution {
+    public boolean hasAllCodes(String s, int k) {
+        
+        // HashSet to store all unique substrings of length k
+        Set<String> st = new HashSet<>();
+        
+        // Total possible binary codes of length k = 2^k
+        int power = (int) Math.pow(2, k);
+        
+        // Traverse the string and extract all substrings of length k
+        for (int i = 0; i <= s.length() - k; i++) {
+            
+            // Add substring of length k starting from index i
+            st.add(s.substring(i, i + k));
+        }
+        
+        // If number of unique substrings equals total possible codes
+        // then string contains all binary codes of length k
+        return power == st.size();
+    }
+}
+
+
+
+// Approach 3 - Sliding Window + HashSet
+// T.C - O(n × k)
+// S.C - O(2^k * k)
+
+
+class Solution {
+    public boolean hasAllCodes(String s, int k) {
+        
+        // Set to store all unique substrings of length k
+        Set<String> st = new HashSet<>();
+        
+        // Total possible binary codes of length k = 2^k
+        int power = (int) Math.pow(2, k);
+        
+        // Traverse all substrings of length k
+        for(int i = 0; i <= s.length() - k; i++){
+            
+            // Extract substring of length k
+            st.add(s.substring(i, i + k));
+            
+            // If we already found all possible binary codes, return true
+            if(power == st.size()) return true;
+        }
+        
+        // If total unique substrings != 2^k, return false
+        return false;
+    }
+}
