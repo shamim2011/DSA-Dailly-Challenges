@@ -1,4 +1,63 @@
-// Approach - 
-// T.C - 
-// S.C - 
+// Approach 1 - Brute Force + HashSet + Binary to Decimal Conversion
+// T.C - O(nk+2^k)
+// S.C - O(2^k)
 
+
+class Solution {
+    public boolean hasAllCodes(String s, int k) {
+        
+        // Set to store all possible binary values from 0 to (2^k - 1)
+        Set<Integer> st = new HashSet<>();
+        
+        // Set to track unique substrings of size k that we have already counted
+        Set<String> check = new HashSet<>();
+        
+        // Total possible binary combinations of length k = 2^k
+        int power = (int) Math.pow(2, k);
+        
+        // Add all possible integers from 0 to (2^k - 1) into set
+        for(int i = 0; i < power; i++){
+            st.add(i);
+        }
+        
+        int ans = 0;  // Counter for valid unique substrings
+        
+        // Traverse all substrings of length k
+        for(int i = 0; i <= s.length() - k; i++){
+            
+            // Extract substring of length k
+            String sub = s.substring(i, i + k);
+            
+            // Check:
+            // 1) If its decimal value exists in st (valid binary)
+            // 2) If we haven't counted it before
+            if(isValid(sub, st) && !check.contains(sub)){
+                check.add(sub);   // Mark as visited
+                ans++;            // Increase count
+            }
+        }
+        
+        // If counted substrings == total possible substrings, return true
+        return ans == st.size() ? true : false;
+    }
+    
+    // Converts binary string to decimal and checks if it exists in set
+    boolean isValid(String s, Set<Integer> st){
+        int len = s.length() - 1;
+        int sum = 0;
+        
+        // Convert binary string to decimal manually
+        for(int i = 0; i < s.length(); i++){
+            sum += (int)(Math.pow(2, len) * (s.charAt(i) - '0'));
+            len--;
+        }
+        
+        // Check if decimal representation exists in set
+        return st.contains(sum);
+    }
+}
+
+
+// Approach 2 - Brute Force + HashSet + Binary to Decimal Conversion
+// T.C - O(nk+2^k)
+// S.C - O(2^k)
