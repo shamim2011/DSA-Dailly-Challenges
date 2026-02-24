@@ -1,0 +1,49 @@
+//Approach - Recursion
+//T.C : O(n)
+//S.C : O(1) Auxiliary space (But O(n) system recursion stack space)
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+
+class Solution {
+    
+    // Helper function to calculate sum of all root-to-leaf paths
+    int solve(TreeNode root, int val) {
+        
+        // Base case: if node is null, return 0
+        if (root == null) return 0;
+        
+        // Update current path value
+        // Multiply previous value by 2 (left shift in binary)
+        // Add current node value (0 or 1)
+        val = (2 * val) + 1 * root.val;
+        
+        // If it's a leaf node, return the computed value
+        if (root.left == null && root.right == null) {
+            return val;
+        }
+        
+        // Recursively calculate sum from left and right subtree
+        return solve(root.left, val) + solve(root.right, val);
+    }
+    
+    // Main function
+    public int sumRootToLeaf(TreeNode root) {
+        // Start recursion with initial value 0
+        return solve(root, 0);
+    }
+}
