@@ -1,4 +1,59 @@
-// Approach - 
-// T.C - 
-// S.C - 
+// Approach - Recursive Preorder Traversal (DFS)
+// T.C - O(n)
+// S.C - O(h) (Recursive stack space)
 
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+
+class Solution {
+    
+    public String tree2str(TreeNode root) {
+        
+        // Base Case:
+        // If the current node is null, return empty string
+        if(root == null) return "";
+        
+        // Convert current node value to string
+        String ans = Integer.toString(root.val);
+        
+        // If both left and right children are null,
+        // simply return the node value (leaf node case)
+        if(root.left == null && root.right == null) return ans;
+        
+        // Recursively get string representation of left subtree
+        String left = tree2str(root.left);
+        
+        // Recursively get string representation of right subtree
+        String right = tree2str(root.right);
+
+        // If left child is null but right child exists,
+        // we must add empty parentheses for left child
+        // to maintain correct structure
+        if(root.left == null){
+            return ans + "()" + "(" + right + ")";
+        }
+        
+        // If right child is null but left child exists,
+        // we only add left subtree in parentheses
+        if(root.right == null){
+            return ans + "(" + left + ")";
+        }
+        
+        // If both children exist,
+        // include both left and right subtrees
+        return ans + "(" + left + ")" + "(" + right + ")";
+    }
+}
