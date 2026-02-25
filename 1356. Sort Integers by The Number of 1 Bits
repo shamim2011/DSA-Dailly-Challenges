@@ -1,0 +1,67 @@
+// Approach 1 - Bit Manipulation + Bucket Sorting (Using TreeMap)
+// T.C - O(nlogn)
+// S.C - O(n)
+
+
+class Solution {
+
+    // Function to count number of set bits (1s) in binary representation
+    int bitsCount(int num){
+        int count = 0;
+
+        // Traverse until number becomes 0
+        while(num > 0){
+
+            // Check if last bit is 1 using bitwise AND
+            if((num & 1) > 0){
+                count++;  // Increment count if last bit is 1
+            }
+
+            // Right shift number by 1 (divide by 2)
+            num = num >> 1;
+        }
+
+        return count;  // Return total set bits
+    }
+
+    public int[] sortByBits(int[] arr) {
+
+        int[] ans = new int[arr.length];
+
+        // TreeMap keeps keys sorted automatically
+        // Key   -> number of set bits
+        // Value -> list of numbers having same set bits
+        Map<Integer, List<Integer>> mp = new TreeMap<>();
+
+        // Step 1: Group numbers by their set bit count
+        for(int i = 0; i < arr.length; i++){
+            int countBits = bitsCount(arr[i]);
+
+            // If key not present, create new list
+            mp.computeIfAbsent(countBits, k -> new ArrayList<>()).add(arr[i]);
+        }
+
+        // This list will store final sorted result
+        List<Integer> li = new ArrayList<>();
+
+        // Step 2: Traverse map in ascending order of set bits
+        for(Map.Entry<Integer, List<Integer>> entry : mp.entrySet()){
+
+            // Sort numbers having same set bits
+            Collections.sort(entry.getValue());
+
+            // Add them to final list
+            for(int num : entry.getValue()){
+                li.add(num);
+            }
+        }
+
+        // Step 3: Convert list to array
+        int i = 0;
+        for(int num : li){
+            ans[i++] = num;
+        }
+
+        return ans;
+    }
+}
