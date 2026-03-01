@@ -1,0 +1,61 @@
+// Approach 1 - Simulation (Greedy Observation based on Digit Reduction)
+// T.C - O(n × d)    ,   d = maximum digit in the string (at most 9)
+// S.C - O(n)
+
+
+class Solution {
+    public int minPartitions(String n) {
+        // Convert the string into a character array
+        char[] arr = n.toCharArray();
+        
+        int count = 0;  // This will store the number of deci-binary numbers required
+        
+        // Keep reducing digits until all become '0'
+        while(true){
+            boolean change = false;  // To check if any digit was reduced in this iteration
+            
+            // Traverse every digit
+            for(int i = 0; i < arr.length; i++){
+                
+                // If digit is not zero, reduce it by 1
+                if(arr[i] != '0'){
+                    arr[i]--;     // Decrement the digit
+                    change = true; // Mark that at least one change happened
+                }
+            }
+            
+            // If no digit was reduced, all digits are zero → stop
+            if(!change) break;
+            
+            // One full subtraction round completed
+            count++;
+        }
+        
+        // Return total rounds required
+        return count;
+    }
+}
+
+
+
+// Approach 2 - Greedy Approach (Maximum Digit Observation)
+// T.C - O(N)
+// S.C - O(1)
+
+
+
+class Solution {
+    public int minPartitions(String n) {
+        // Initialize maxChar with smallest possible digit
+        char maxChar = '0';
+
+        // Traverse each character (digit) in the string
+        for(char ch : n.toCharArray()){
+            // Update maxChar with the maximum digit found so far
+            maxChar = (char) Math.max(ch, maxChar);
+        }       
+
+        // Convert the maximum character digit to integer and return
+        return maxChar - '0';
+    }
+}
