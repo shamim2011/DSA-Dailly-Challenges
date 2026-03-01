@@ -74,6 +74,33 @@ class Solution {
 }
 
 
-// Approach 3 - 
-// T.C - O(n × k)
+// Approach 3 - Josephus Problem – Recursive Approach
+// T.C - O(n)
 // S.C - O(n)
+
+
+class Solution {
+    
+    // Function to find the winner of the Josephus problem
+    public int findTheWinner(int n, int k) {
+        
+        // Base case:
+        // If only one person is left, that person is the winner
+        if (n == 1)
+            return 1;
+
+        /*
+         Recursive relation:
+         - First we solve the problem for (n-1) people
+         - Then adjust the position using:
+           (previous_position + k - 1) % n + 1
+           
+         Explanation of formula:
+         + k - 1  -> shift by k positions
+         % n      -> make it circular
+         + 1      -> convert from 0-based index to 1-based index
+        */
+        
+        return (findTheWinner(n - 1, k) + k - 1) % n + 1;
+    }
+}
