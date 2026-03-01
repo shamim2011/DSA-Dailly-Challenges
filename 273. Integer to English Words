@@ -1,5 +1,74 @@
-// Approach - 
-// T.C - 
-// S.C - 
+// Approach - Recursive Divide and Conquer Approach
+// T.C - O(log₁₀ n)
+// S.C - O(log₁₀ n)
 
 
+class Solution {
+
+    // Map for numbers less than 10
+    Map<Integer,String> bellowTen = Map.of(
+        0,"",1,"One",2,"Two",3,"Three",4,"Four",5,"Five",
+        6,"Six",7,"Seven",8,"Eight",9,"Nine"
+    );
+
+    // Map for numbers from 10 to 19
+    Map<Integer,String> bellowTwenty = Map.of(
+        10, "Ten", 11, "Eleven", 12, "Twelve", 13, "Thirteen", 14, "Fourteen", 
+        15, "Fifteen", 16, "Sixteen", 17, "Seventeen", 18, "Eighteen", 19, "Nineteen"
+    );
+
+    // Map for multiples of 10 (20,30,...,90)
+    Map<Integer,String> bellowHundred = Map.of(
+        2, "Twenty", 3, "Thirty", 4, "Forty", 5, "Fifty", 
+        6, "Sixty", 7, "Seventy", 8, "Eighty", 9, "Ninety"
+    );
+
+    // Recursive helper function to convert number into words
+    String solve(int num){
+
+        // Case 1: If number is less than 10
+        if(num < 10){
+            return bellowTen.get(num);
+        }
+
+        // Case 2: If number is between 10 and 19
+        if(num < 20){
+            return bellowTwenty.get(num);
+        }
+
+        // Case 3: If number is less than 100
+        if(num < 100){
+            return bellowHundred.get(num/10) 
+                   + (num%10 != 0 ? " " + bellowTen.get(num%10) : "");
+        }
+
+        // Case 4: If number is less than 1000
+        if(num < 1000){
+            return solve(num/100) + " Hundred"
+                   + (num%100 != 0 ? " " + solve(num%100) : "");
+        }
+
+        // Case 5: If number is less than 1 Million
+        if(num < 1000000){
+            return solve(num/1000) + " Thousand"
+                   + (num%1000 != 0 ? " " + solve(num%1000) : "");
+        }
+
+        // Case 6: If number is less than 1 Billion
+        if(num < 1000000000){
+            return solve(num/1000000) + " Million"
+                   + (num%1000000 != 0 ? " " + solve(num%1000000) : "");
+        }
+
+        // Case 7: For numbers >= 1 Billion
+        return solve(num/1000000000) + " Billion"
+               + (num%1000000000 != 0 ? " " + solve(num%1000000000) : "");
+    }
+
+    public String numberToWords(int num) {
+        // Edge case for 0
+        if(num == 0) return "Zero";
+
+        return solve(num);
+    }
+}
