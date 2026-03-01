@@ -39,6 +39,41 @@ class Solution {
 }
 
 
-// Approach 2 - 
-// T.C - O(n)
+// Approach 2 - Simulation using Queue (Josephus Problem – Circular Elimination)
+// T.C - O(n × k)
+// S.C - O(n)
+
+
+class Solution {
+    public int findTheWinner(int n, int k) {
+        
+        // Create a Queue to simulate circular game
+        Queue<Integer> q = new LinkedList<>();
+        
+        // Add players numbered from 1 to n into the queue
+        for(int i = 1; i <= n; i++){
+            q.offer(i);
+        }
+        
+        // Continue the process until only one player remains
+        while(q.size() > 1){
+            
+            // Move first (k-1) players to the back of the queue
+            // This simulates counting k people in a circle
+            for(int count = 1; count <= k - 1; count++){
+                q.offer(q.poll());   // remove from front and add to back
+            }
+            
+            // Remove the kth player (eliminated)
+            q.poll();
+        }
+        
+        // The last remaining player is the winner
+        return q.poll();
+    }
+}
+
+
+// Approach 3 - 
+// T.C - O(n × k)
 // S.C - O(n)
