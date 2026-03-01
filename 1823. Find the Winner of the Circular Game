@@ -1,0 +1,44 @@
+// Approach 1 - Simulation using Recursion (Josephus Problem - Brute Force using List)
+// T.C - O(n*n)
+// S.C - O(n)
+
+
+class Solution {
+    
+    // Recursive function to simulate the elimination process
+    int solve(List<Integer> li, int k, int idx){
+        
+        // Base case: if only one person remains, return that person
+        if(li.size() == 1){
+            return li.get(0);
+        }
+        
+        // Calculate the index of the person to remove
+        // (current index + k - 1) % current size
+        // -1 because counting includes the current person
+        idx = (idx + k - 1) % li.size();
+        
+        // Remove the person at calculated index
+        li.remove(idx);
+        
+        // Recursively call the function with updated list and index
+        return solve(li, k, idx);
+    }
+    
+    public int findTheWinner(int n, int k) {
+        
+        // Create list of players from 1 to n
+        List<Integer> li = new ArrayList<>();
+        for(int i = 1; i <= n; i++){
+            li.add(i);
+        }
+        
+        // Start recursion from index 0
+        return solve(li, k, 0);
+    }
+}
+
+
+// Approach 2 - 
+// T.C - O(n)
+// S.C - O(n)
