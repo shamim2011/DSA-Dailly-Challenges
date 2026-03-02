@@ -1,5 +1,56 @@
-// Approach - 
-// T.C - 
-// S.C - 
+// Approach - Greedy Approach with Bubble-Up Swapping
+// T.C - O(n²)
+// S.C - O(n)
 
 
+class Solution {
+    public int minSwaps(int[][] grid) {
+        int n = grid.length;
+        
+        // Step 1: Count trailing zeros in each row
+        int[] arr = new int[n];
+        for(int i = 0; i < n; i++){
+            int count = 0;
+            int j = n - 1;
+            
+            // Count consecutive zeros from the end of the row
+            while(j >= 0 && grid[i][j] == 0){
+                count++;
+                j--;
+            }
+            arr[i] = count;   // Store trailing zero count
+        }
+
+        int steps = 0;
+
+        // Step 2: Try to place rows in correct position
+        for(int i = 0; i < n; i++){
+            
+            // For row i, we need at least (n - i - 1) trailing zeros
+            int need = n - i - 1;
+            
+            int j = i;
+            
+            // Find a row below which satisfies the requirement
+            while(j < n && arr[j] < need){
+                j++;
+            }
+
+            // If no such row found, arrangement is impossible
+            if(j == n) return -1;
+
+            // Add number of swaps required to bring row j to position i
+            steps += (j - i);
+
+            // Bubble the row upwards (adjacent swaps)
+            while(j > i){
+                int temp = arr[j];
+                arr[j] = arr[j - 1];
+                arr[j - 1] = temp;
+                j--;
+            }
+        }
+
+        return steps;
+    }
+}
