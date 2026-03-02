@@ -1,3 +1,58 @@
-// Approach 1:
-// T . C- O(n)
-// S . C - O(1)
+// Approach : Divide and Conquer (Recursion)
+// T . C - O(2ⁿ)
+// S . C - O(2ⁿ)
+
+
+class Solution {
+    
+    // Recursive function to compute all possible results
+    // for the given expression string
+    List<Integer> solve(String s){
+        
+        // This list will store all possible results
+        List<Integer> ans = new ArrayList<>();
+        
+        // Traverse the string character by character
+        for(int i = 0; i < s.length(); i++){
+            
+            char ch = s.charAt(i);
+            
+            // If current character is an operator
+            if(ch == '+' || ch == '-' || ch == '*'){
+                
+                // Divide the expression into left and right parts
+                List<Integer> left = solve(s.substring(0, i));
+                List<Integer> right = solve(s.substring(i + 1, s.length()));
+                
+                // Combine results of left and right parts
+                for(int x : left){
+                    for(int y : right){
+                        
+                        // Perform operation based on operator
+                        if(ch == '+'){
+                            ans.add(x + y);
+                        }
+                        else if(ch == '-'){
+                            ans.add(x - y);
+                        }
+                        else{
+                            ans.add(x * y);
+                        }
+                    }
+                }
+            }
+        }
+        
+        // Base case:
+        // If no operator found, it means string is a number
+        if(ans.isEmpty()){
+            ans.add(Integer.parseInt(s));
+        }
+        
+        return ans;
+    }
+    
+    public List<Integer> diffWaysToCompute(String expression) {
+        return solve(expression);
+    }
+}
