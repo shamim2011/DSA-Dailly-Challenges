@@ -1,5 +1,39 @@
-// Approach - 
-// T.C - 
-// S.C - 
+// Approach - Divide and Conquer (Recursive Pattern Recognition)
+// T.C - O(n)
+// S.C - O(n) , Recursive stack
 
 
+class Solution {
+    public char findKthBit(int n, int k) {
+
+        // Base case:
+        // When n = 1, S1 = "0"
+        if(n == 1) return '0';
+
+        // Length of Sn = 2^n - 1
+        int len =  (1 << n) - 1;
+
+        // Middle position of the string
+        // Middle index = (len + 1) / 2
+        // Using Math.ceil(len/2.0) to get middle
+        if(k < Math.ceil(len/2.0)){
+            // If k is in the left half,
+            // it is same as kth bit of S(n-1)
+            return findKthBit(n-1,k);
+        }
+        else if(k ==  Math.ceil(len/2.0)){
+            // If k is exactly the middle element,
+            // middle element is always '1'
+            return '1';
+        }else{
+            // If k is in right half:
+            // Right half = reverse(invert(S(n-1)))
+            
+            // Find mirrored position in left half
+            char ch = findKthBit(n-1,len - (k-1));
+
+            // Invert the character
+            return ch == '0' ? '1' : '0';
+        }
+    }
+}
