@@ -1,3 +1,47 @@
-// Approach : - 
-// T . C - 
-// S . C - 
+// Approach : - Row & Column Frequency Counting (Two-Pass Traversal)
+// T . C - O(m × n)
+// S . C - O(m + n)
+
+
+class Solution {
+    public int numSpecial(int[][] mat) {
+
+        // Array to store count of 1's in each row
+        int[] rowArr = new int[mat.length];
+
+        // Array to store count of 1's in each column
+        int[] colArr = new int[mat[0].length];
+
+        // First pass: Count number of 1's in every row and column
+        for(int i = 0; i < mat.length; i++){
+            for(int j = 0; j < mat[0].length; j++){
+                if(mat[i][j] == 1){
+                    rowArr[i]++;   // Increase row count
+                    colArr[j]++;   // Increase column count
+                }
+            }
+        }
+
+        int ans = 0;
+
+        // Second pass: Check for special positions
+        for(int i = 0; i < mat.length; i++){
+            for(int j = 0; j < mat[0].length; j++){
+
+                // Skip if current element is 0
+                if(mat[i][j] == 0) continue;
+
+                // A position is special if:
+                // 1. It is 1
+                // 2. That row has exactly one 1
+                // 3. That column has exactly one 1
+                if(mat[i][j] == 1 && rowArr[i] == 1 && colArr[j] == 1){
+                    ans++;
+                }
+            }
+        }
+
+        // Return total special positions
+        return ans;
+    }
+}
