@@ -46,3 +46,40 @@ class Solution {
         return Math.min(start_with_0, start_with_1);
     }
 }
+
+
+// Approach - 2 - Pattern Matching (Two Alternating Pattern Comparison)
+// T.C - O(n)
+// S.C - O(1)
+
+
+class Solution {
+    public int minOperations(String s) {
+        int n = s.length();          // Length of the string
+        int start_with_1 = 0;        // Count mismatches if pattern starts with '1'
+
+        for (int i = 0; i < n; i++) {
+            
+            // If index is even
+            if (i % 2 == 0) {
+                // In pattern starting with '1',
+                // even index should contain '1'
+                if (s.charAt(i) == '0') {
+                    start_with_1++;  // Count mismatch
+                }
+            } 
+            else {
+                // In pattern starting with '1',
+                // odd index should contain '0'
+                if (s.charAt(i) == '1') {
+                    start_with_1++;  // Count mismatch
+                }
+            }
+        }
+
+        // If mismatches for pattern starting with '1' = start_with_1
+        // Then mismatches for pattern starting with '0' = n - start_with_1
+        // Return minimum of both
+        return Math.min(n - start_with_1, start_with_1);
+    }
+}
