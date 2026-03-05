@@ -1,5 +1,48 @@
-// Approach - 1 -
-// T.C - 
-// S.C - 
+// Approach - 1 - Greedy – Two Pattern Comparison (Alternating String Check)
+// T.C - O(n)
+// S.C - O(1)
 
 
+class Solution {
+    public int minOperations(String s) {
+        int n = s.length();
+        
+        // Count operations if string starts with '0' -> pattern "010101..."
+        int start_with_0 = 0;
+        
+        // Count operations if string starts with '1' -> pattern "101010..."
+        int start_with_1 = 0;
+
+        for (int i = 0; i < n; i++) {
+            
+            // If index is even
+            if (i % 2 == 0) {
+                
+                // For pattern starting with '0', even index should be '0'
+                // If it's '1', we need one change
+                if (s.charAt(i) == '0') {
+                    // If it's '0', then pattern starting with '1' needs change
+                    start_with_1++;
+                } else {
+                    // If it's '1', then pattern starting with '0' needs change
+                    start_with_0++;
+                }
+                
+            } else { // If index is odd
+                
+                // For pattern starting with '0', odd index should be '1'
+                // If it's '0', we need one change
+                if (s.charAt(i) == '1') {
+                    // If it's '1', then pattern starting with '1' needs change
+                    start_with_1++;
+                } else {
+                    // If it's '0', then pattern starting with '0' needs change
+                    start_with_0++;
+                }
+            }
+        }
+        
+        // Return minimum operations required
+        return Math.min(start_with_0, start_with_1);
+    }
+}
