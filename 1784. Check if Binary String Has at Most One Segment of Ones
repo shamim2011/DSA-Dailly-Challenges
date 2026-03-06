@@ -1,8 +1,40 @@
-// Approach 1 : 
+// Approach 1 : Linear Scan / One Pass Traversal
 // T . C- O(n)
 // S . C - O(1)
 
+class Solution {
+    public boolean checkOnesSegment(String s) {
 
+        int count = 0;          // counts number of segments of '1'
+        int n = s.length();     // length of string
+        int i = 0;              // pointer to traverse the string
+
+        // traverse the string
+        while(i < n){
+
+            // if current character is '1', a segment of 1's starts
+            if(s.charAt(i) == '1'){
+                count++;        // increase segment count
+
+                // move forward while characters are '1'
+                // this skips the whole continuous segment of '1'
+                while(i < n && s.charAt(i) == '1'){
+                    i++;
+                }
+            }
+            else{
+                // if character is '0', just move to next index
+                i++;
+            }
+
+            // if more than one segment of '1' is found, return false
+            if(count > 1) return false;
+        }
+
+        // if at most one segment exists, return true
+        return true;
+    }
+}
 
 
 // Approach 2 : Single Pass Traversal / String Scanning
@@ -31,5 +63,15 @@ class Solution {
 
         // If "01" never appears, then there is at most one segment of '1'
         return true;
+    }
+}
+
+
+----------------------------------------------------------------------------------------------
+
+
+class Solution {
+    public boolean checkOnesSegment(String s) {
+        return (s.contains("01"))? false : true;
     }
 }
