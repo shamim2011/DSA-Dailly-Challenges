@@ -1,3 +1,35 @@
-// Approach : 
+// Approach 1 : 
 // T . C- O(n)
 // S . C - O(1)
+
+
+
+
+// Approach 2 : Single Pass Traversal / String Scanning
+// T . C- O(n)
+// S . C - O(1)
+
+
+class Solution {
+    public boolean checkOnesSegment(String s) {
+
+        int i = 0;
+
+        // Traverse the string and check adjacent characters
+        while(i + 1 < s.length()) {
+
+            // If we find pattern "01"
+            // It means a new segment of '1' is starting after '0'
+            // So there are more than one segment of '1's
+            if(s.charAt(i) == '0' && s.charAt(i + 1) == '1') {
+                return false;
+            }
+
+            // Move to next index
+            i++;
+        }
+
+        // If "01" never appears, then there is at most one segment of '1'
+        return true;
+    }
+}
