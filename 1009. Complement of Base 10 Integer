@@ -1,0 +1,52 @@
+// Approach - Binary Conversion + Bit Flip (XOR with 1)
+// T.C - O(log n)
+// S.C - O(log n)
+
+class Solution {
+    public int bitwiseComplement(int n) {
+
+        // Edge case: complement of 0 is 1
+        if(n == 0) return 1;
+
+        // StringBuilder to store binary representation
+        StringBuilder sb = new StringBuilder();
+
+        // Convert number to binary string
+        String binary = convertString(n,sb);
+
+        // pro represents power index for 2^pro
+        int pro = sb.length()-1;
+
+        // Variable to store final decimal answer
+        int ans = 0;
+
+        // Traverse binary string
+        for(int i=0;i<sb.length();i++){
+
+            // Flip the bit using XOR with 1
+            // '0'^1 -> 1
+            // '1'^1 -> 0
+            // Multiply by corresponding power of 2
+            ans += (int)(Math.pow(2,pro)) * ((sb.charAt(i) - '0')^1);
+
+            // Decrease power
+            pro--;
+        }
+
+        // Return complement number
+        return ans;
+    }
+
+    // Function to convert integer to binary string
+    String convertString(int n,StringBuilder sb){
+
+        // Generate binary digits
+        while(n>0){
+            sb.append(n%2);   // append remainder (0 or 1)
+            n = n/2;          // divide by 2
+        }
+
+        // Reverse because binary digits were generated from LSB to MSB
+        return sb.reverse().toString();
+    }
+}
