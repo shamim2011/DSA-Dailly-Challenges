@@ -1,0 +1,24 @@
+// Approach - Two Pointer Approach (Symmetric Comparison)
+// T.C - O(n)
+// S.C - O(1)
+
+
+class Solution {
+    public int firstMatchingIndex(String s) {
+        int n = s.length();          // Length of the string
+        int i = 0;                   // Start pointer
+
+        // Traverse from start to middle of the string
+        while (i <= n / 2) {
+
+            // Check if characters at symmetric positions are equal
+            if (s.charAt(i) == s.charAt(n - i - 1)) {
+                return i;            // Return the first matching index
+            }
+
+            i++;                    // Move pointer forward
+        }
+
+        return -1;                  // Return -1 if no matching index found
+    }
+}
