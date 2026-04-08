@@ -1,0 +1,37 @@
+// Approach  - Brute Force Simulation / Direct Query Processing
+// T.C - O(q*n)
+// S.C - O(1)
+
+
+class Solution {
+    // Define modulo value (10^9 + 7) to prevent overflow
+    int mod = (int) Math.pow(10,9) + 7;
+
+    public int xorAfterQueries(int[] nums, int[][] queries) {
+        int ans = 0; // Final XOR result
+
+        // Iterate over each query
+        for(int[] q : queries){
+            int l = q[0]; // starting index
+            int r = q[1]; // ending index
+            int k = q[2]; // step size
+            int v = q[3]; // multiplier value
+
+            // Traverse from l to r with step k
+            while(l <= r){
+                // Multiply current element with v and take modulo
+                nums[l] = (int)(((long) nums[l] * v) % mod);
+
+                // Move to next index with step k
+                l += k;
+            }
+        }
+
+        // Compute XOR of all elements in array
+        for(int num : nums){
+            ans = ans ^ num;
+        }
+
+        return ans; // Return final XOR result
+    }
+}
