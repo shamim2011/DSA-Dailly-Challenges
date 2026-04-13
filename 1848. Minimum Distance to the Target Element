@@ -1,3 +1,24 @@
-//Approach - 
-//T.C :
-//S.C : 
+//Approach - Linear Search (Brute Force)
+//T.C : O(n)
+//S.C : O(1)
+
+
+
+class Solution {
+    public int getMinDistance(int[] nums, int target, int start) {
+        int n = nums.length;          // Length of the array
+        int ans = n;                 // Initialize answer with max possible distance
+
+        // Traverse the entire array
+        for(int i = 0; i < n; i++){
+            // Check if current element matches target
+            if(nums[i] == target){
+                // Update minimum distance
+                ans = Math.min(ans, Math.abs(i - start));
+            }
+        }
+
+        // Return the minimum distance found
+        return ans;
+    }
+}
