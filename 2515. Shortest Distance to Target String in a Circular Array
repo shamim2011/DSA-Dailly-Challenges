@@ -1,0 +1,32 @@
+//Approach - Linear Search with Circular Distance Calculation
+//T.C : O(n)
+//S.C : O(1)
+
+
+
+class Solution {
+    public int closestTarget(String[] words, String target, int startIndex) {
+        int n = words.length; // total number of elements
+        int ans = Integer.MAX_VALUE; // initialize answer with max value
+        
+        // iterate through the array
+        for(int i = 0; i < n; i++){
+            
+            // check if current word matches the target
+            if(words[i].equals(target)){
+                
+                // calculate direct (straight) distance
+                int straightDi = Math.abs(i - startIndex);
+                
+                // calculate circular distance (wrap-around)
+                int circularDi = n - straightDi;
+                
+                // take minimum of both distances and update answer
+                ans = Math.min(ans, Math.min(straightDi, circularDi));
+            }
+        }
+        
+        // if target not found, return -1
+        return ans == Integer.MAX_VALUE ? -1 : ans;
+    }
+}
