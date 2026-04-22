@@ -1,0 +1,45 @@
+//Approach (Iterate and check)
+//T.C : O(q * d * n), q = queries.size(), d = dictionary.size(), n = query[i].length()
+//S.C : O(1)
+
+
+class Solution {
+    public List<String> twoEditWords(String[] queries, String[] dictionary) {
+        
+        // List to store valid query words
+        List<String> ans = new ArrayList<>();
+
+        // Traverse each query word
+        for(String query : queries){
+
+            // Compare current query with every dictionary word
+            for(String s : dictionary){
+
+                // Count number of different characters
+                int diff = 0;
+
+                // Compare characters one by one
+                for(int i = 0; i < query.length(); i++){
+
+                    // If characters are different, increase diff count
+                    if(query.charAt(i) != s.charAt(i)){
+                        diff++;
+                    }
+
+                    // If differences become more than 2, stop checking
+                    if(diff > 2){
+                        break;
+                    }
+                }
+
+                // If difference is at most 2, add query to answer
+                if(diff <= 2){
+                    ans.add(query);
+                    break; // No need to check other dictionary words
+                }
+            }
+        }
+        
+        return ans;
+    }
+}
