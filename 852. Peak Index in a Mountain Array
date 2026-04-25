@@ -1,0 +1,28 @@
+// Approach - Binary Search on Mountain Array
+// T.C - O(log n)
+// S.C - O(1)
+
+
+class Solution {
+    public int peakIndexInMountainArray(int[] arr) {
+        int l = 0;                      // Left pointer
+        int r = arr.length - 1;        // Right pointer
+
+        while(l < r){                  // Continue until both pointers meet
+            int mid = (l + r) / 2;     // Find middle index
+
+            if(arr[mid] < arr[mid + 1]){
+                // We are in the increasing part of mountain array
+                // So peak lies on the right side
+                l = mid + 1;
+            }
+            else{
+                // We are in the decreasing part or at peak
+                // So peak lies on the left side including mid
+                r = mid;
+            }
+        }
+
+        return l;                      // l (or r) will point to peak index
+    }
+}
