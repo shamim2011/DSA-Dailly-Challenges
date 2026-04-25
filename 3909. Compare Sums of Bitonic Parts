@@ -1,0 +1,51 @@
+// Approach - Binary Search + Sum Comparison
+// T.C - O(n)
+// S.C - O(1)
+
+
+class Solution {
+    public int compareBitonicSums(int[] nums) {
+        
+        // Find the index of the peak element in the bitonic array
+        int idx = peakIdx(nums);
+
+        // Calculate sum of descending part (from peak to end)
+        long desc = 0;
+        for(int i = idx; i < nums.length; i++){
+            desc += nums[i];
+        }
+
+        // Calculate sum of ascending part (from start to peak)
+        long asc = 0;
+        for(int i = 0; i <= idx; i++){
+            asc += nums[i];
+        }
+        
+        // Compare both sums
+        if(asc < desc) return 1;   // Descending sum is greater
+        else if(asc > desc) return 0; // Ascending sum is greater
+        else return -1;           // Both sums are equal
+    }
+
+    int peakIdx(int[] nums){
+        int left = 0;
+        int right = nums.length - 1;
+
+        // Binary Search to find peak element
+        while(left < right){
+            int mid = (left + right) / 2;
+
+            // If mid is in ascending part, move right
+            if(nums[mid] < nums[mid + 1]){
+                left = mid + 1;
+            }
+            else{
+                // If mid is in descending part or at peak
+                right = mid;
+            }
+        }
+
+        // left will point to peak index
+        return left;
+    }
+}
