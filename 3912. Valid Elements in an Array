@@ -1,0 +1,58 @@
+// Approach 1 - Brute Force with Prefix and Suffix Maximum Calculation
+// T.C -O(n²)
+// S.C - O(n)
+
+
+
+class Solution {
+    public List<Integer> findValidElements(int[] nums) {
+        // List to store the result
+        List<Integer> ans = new ArrayList<>();
+
+        // If only one element, return it directly
+        if(nums.length == 1) {
+            ans.add(nums[0]);
+            return ans;
+        }
+
+        // First element is always added
+        ans.add(nums[0]);
+
+        // Iterate through middle elements
+        for(int i = 1; i < nums.length - 1; i++){
+            // Find maximum on the left side
+            int left = leftMax(nums, i - 1);
+
+            // Find maximum on the right side
+            int right = rightMax(nums, i + 1);
+
+            // If current element is greater than either left max OR right max
+            if(nums[i] > left || nums[i] > right){
+                ans.add(nums[i]);
+            }
+        }
+
+        // Last element is always added
+        ans.add(nums[nums.length - 1]);
+
+        return ans;
+    }
+
+    // Function to find maximum from index 0 to idx
+    int leftMax(int[] nums, int idx){
+        int max = Integer.MIN_VALUE;
+        for(int i = 0; i <= idx; i++){
+            max = Math.max(nums[i], max);
+        }
+        return max;
+    }
+
+    // Function to find maximum from idx to end
+    int rightMax(int[] nums, int idx){
+        int max = Integer.MIN_VALUE;
+        for(int i = idx; i < nums.length; i++){
+            max = Math.max(max, nums[i]);
+        }
+        return max;
+    }
+}
