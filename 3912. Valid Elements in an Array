@@ -56,3 +56,58 @@ class Solution {
         return max;
     }
 }
+
+
+
+// Approach 2 - Prefix Maximum & Suffix Maximum (Preprocessing Technique)
+// T.C -O(n)
+// S.C - O(n)
+
+
+
+class Solution {
+    public List<Integer> findValidElements(int[] nums) {
+        List<Integer> ans = new ArrayList<>();
+        int n = nums.length;
+
+        // If only one element, it is always valid
+        if(nums.length == 1) {
+            ans.add(nums[0]);
+            return ans;
+        }
+
+        // First element is always considered valid
+        ans.add(nums[0]);
+
+        // Array to store maximum value from left side till index i
+        int[] leftMax = new int[n];
+        leftMax[0] = nums[0];
+
+        // Fill leftMax array
+        for(int i = 1; i < n; i++){
+            leftMax[i] = Math.max(leftMax[i-1], nums[i]);
+        }
+
+        // Array to store maximum value from right side till index i
+        int[] rightMax = new int[n];
+        rightMax[n-1] = nums[n-1];
+
+        // Fill rightMax array
+        for(int i = n-2; i >= 0; i--){
+            rightMax[i] = Math.max(rightMax[i+1], nums[i]);
+        }
+
+        // Check for valid elements (excluding first and last)
+        for(int i = 1; i < n-1; i++){
+            // If current element is greater than max on left OR right
+            if(nums[i] > leftMax[i-1] || nums[i] > rightMax[i+1]){
+                ans.add(nums[i]);
+            }
+        }
+
+        // Last element is always considered valid
+        ans.add(nums[nums.length-1]);
+
+        return ans;
+    }
+}
