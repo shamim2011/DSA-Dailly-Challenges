@@ -3,3 +3,74 @@
 //S.C : O(m*n)
 
 
+class Solution {
+    int m; 
+    int n;
+
+    // Map to store valid movement directions for each street type
+    Map<Integer, int[][]> direction = new HashMap<>();
+
+    public Solution() {
+        // Type 1: left ↔ right
+        direction.put(1, new int[][]{{0,-1},{0,1}});
+
+        // Type 2: up ↕ down
+        direction.put(2, new int[][]{{-1,0},{1,0}});
+
+        // Type 3: left + down
+        direction.put(3, new int[][]{{0,-1},{1,0}});
+
+        // Type 4: right + down
+        direction.put(4, new int[][]{{0,1},{1,0}});
+
+        // Type 5: left + up
+        direction.put(5, new int[][]{{0,-1},{-1,0}});
+
+        // Type 6: up + right
+        direction.put(6, new int[][]{{-1,0},{0,1}});
+    }
+
+    public boolean hasValidPath(int[][] grid) {
+        m = grid.length;
+        n = grid[0].length;
+
+        // Track visited cells to avoid infinite loops
+        boolean[][] visited = new boolean[m][n];
+
+        // Start DFS from top-left cell
+        return dfs(grid, 0, 0, visited);
+    }
+
+    boolean dfs(int[][] grid, int i, int j, boolean[][] visited) {
+        // If destination reached
+        if(i == m-1 && j == n-1) return true;
+
+        // Mark current cell as visited
+        visited[i][j] = true;
+
+        // Explore all possible directions from current cell
+        for(int[] dir : direction.get(grid[i][j])) {
+            int new_i = i + dir[0];
+            int new_j = j + dir[1];
+
+            // Skip invalid or already visited cells
+            if(new_i < 0 || new_i >= m || new_j < 0 || new_j >= n || visited[new_i][new_j]) {
+                continue;
+            }
+
+            // Check if next cell has a valid connection back to current cell
+            for(int[] backDir : direction.get(grid[new_i][new_j])) {
+                if(new_i + backDir[0] == i && new_j + backDir[1] == j) {
+
+                    // Continue DFS if connection is valid
+                    if(dfs(grid, new_i, new_j, visited)) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        // No valid path found
+        return false;
+    }
+}
