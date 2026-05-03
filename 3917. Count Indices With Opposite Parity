@@ -1,0 +1,40 @@
+// Approach - Reverse Traversal with Parity Counting
+// T.C - O(n)
+// S.C - O(n)
+
+
+class Solution {
+    public int[] countOppositeParity(int[] nums) {
+        int n = nums.length;
+
+        // If only one element, no opposite parity exists
+        if(n == 1) return new int[]{0};
+
+        int[] ans = new int[n];
+
+        // Counters to track number of even and odd elements seen so far (from right)
+        int even = 0;
+        int odd = 0;
+
+        // Traverse the array from right to left
+        for(int i = n - 1; i >= 0; i--) {
+
+            // If current number is even
+            if(nums[i] % 2 == 0) {
+                // Store count of odd numbers to the right (opposite parity)
+                ans[i] = odd;
+
+                // Increment even count
+                even++;
+            } else {
+                // Store count of even numbers to the right (opposite parity)
+                ans[i] = even;
+
+                // Increment odd count
+                odd++;
+            }
+        }
+
+        return ans;
+    }
+}
