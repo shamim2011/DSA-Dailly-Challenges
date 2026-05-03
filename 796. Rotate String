@@ -26,3 +26,26 @@ class Solution {
         return false;
     }
 }
+
+
+
+// Approach 2 - (Concatenation with itself contains all possible rotations)
+// T.C - O(n)
+// S.C - O(1)
+
+
+class Solution {
+    public boolean rotateString(String s, String goal) {
+        int m = s.length();     // Length of string s
+        int n = goal.length();  // Length of string goal
+
+        // Check:
+        // 1. Lengths must be equal
+        // 2. goal should be a substring of (s + s)
+        // If both conditions are true, rotation is possible
+        if (m == n && (s + s).contains(goal)) return true;
+
+        // Otherwise, rotation is not possible
+        return false;
+    }
+}
