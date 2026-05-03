@@ -1,0 +1,44 @@
+// Approach - Brute Force with Prime Checking (Trial Division) + Digit Reversal
+// T.C - O(N * √N)
+// S.C - O(1)
+
+
+class Solution {
+    public int sumOfPrimesInRange(int n) {
+        int reverse = 0;
+        int original = n;
+
+        // Step 1: Reverse the number
+        while(n > 0){
+            reverse = reverse * 10 + n % 10; // extract last digit and build reverse
+            n = n / 10; // remove last digit
+        }
+
+        // Step 2: Find range (min to max)
+        int min = Math.min(original, reverse);
+        int max = Math.max(original, reverse);
+
+        int sum = 0;
+
+        // Step 3: Iterate through range and sum primes
+        for(int i = min; i <= max; i++){
+            if(isValid(i)){ // check if number is prime
+                sum += i;
+            }
+        }
+
+        return sum;
+    }
+
+    // Function to check if a number is prime
+    boolean isValid(int num){
+        if(num <= 1) return false; // 0 and 1 are not prime
+
+        // Check divisibility up to sqrt(num)
+        for(int i = 2; i * i <= num; i++){
+            if(num % i == 0) return false; // not prime
+        }
+
+        return true; // prime number
+    }
+}
