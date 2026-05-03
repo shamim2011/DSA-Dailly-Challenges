@@ -1,3 +1,28 @@
-// Approach 1 - 
-// T.C - 
-// S.C - 
+// Approach 1 - (Brute Force Check all rotations)
+// T.C - O(n^2)
+// S.C - O(1)
+
+
+class Solution {
+    public boolean rotateString(String s, String goal) {
+        int m = s.length();   // length of string s
+        int n = goal.length(); // length of string goal
+
+        // If lengths are not equal, rotation is not possible
+        if(m != n) return false;
+
+        // Try all possible rotations
+        for(int i = 1; i <= m; i++){
+            // Rotate string by moving first character to the end
+            s = s.substring(1) + s.charAt(0);
+
+            // Check if rotated string matches goal
+            if(s.equals(goal)){
+                return true;
+            }
+        }
+
+        // If no rotation matches
+        return false;
+    }
+}
