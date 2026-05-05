@@ -1,5 +1,56 @@
-//Approach (Straight forward)
+//Approach Circular Linked List Approach (or Cyclic Rotation Technique)
 //T.C : O(n) 
 //S.C : O(1)
 
 
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;           // Value of the node
+ *     ListNode next;     // Pointer to next node
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { 
+ *         this.val = val; 
+ *         this.next = next; 
+ *     }
+ * }
+ */
+
+class Solution {
+    public ListNode rotateRight(ListNode head, int k) {
+        
+        // Edge cases: empty list, single node, or no rotation needed
+        if(head == null || head.next == null || k == 0) return head;
+
+        // Step 1: Find length of list and last node (tail)
+        int len = 1;
+        ListNode tail = head;
+        while(tail.next != null){
+            tail = tail.next;
+            len++;
+        }
+
+        // Step 2: Reduce k to avoid unnecessary rotations
+        k = k % len;
+
+        // If k becomes 0, list remains unchanged
+        if(k == 0) return head;
+
+        // Step 3: Make the list circular
+        tail.next = head;
+
+        // Step 4: Find new tail position
+        int step = len - k;
+        ListNode newTail = head;
+        for(int i = 1; i < step; i++){
+            newTail = newTail.next;
+        }
+
+        // Step 5: Break the circle and set new head
+        ListNode newHead = newTail.next;
+        newTail.next = null;
+
+        return newHead;
+    }
+}
