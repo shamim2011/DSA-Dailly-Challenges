@@ -1,5 +1,59 @@
-// Approach - 
-// T.C - 
-// S.C - 
+// Approach 1 - Dynamic Programming + Recursion + Memoization (Top-Down DP)
+// T.C - O(n^2)
+// S.C - O(n)
 
 
+class Solution {
+
+    public int maximumJumps(int[] nums, int target) {
+
+        int n = nums.length;
+
+        // DP array for memoization
+        // t[i] stores the maximum jumps possible starting from index i
+        int[] t = new int[n + 1];
+
+        // Initialize with very small value to indicate "not computed yet"
+        Arrays.fill(t, Integer.MIN_VALUE);
+
+        // Start recursion from index 0
+        int ans = solve(0, nums, target, t);
+
+        // If answer is negative, reaching last index is impossible
+        return ans < 0 ? -1 : ans;
+    }
+
+    int solve(int i, int[] nums, int target, int[] t) {
+
+        // Base case:
+        // If we reach last index, no more jumps are needed
+        if (i == nums.length - 1) {
+            return t[i] = 0;
+        }
+
+        // Return already computed result
+        if (t[i] != Integer.MIN_VALUE) {
+            return t[i];
+        }
+
+        // Store maximum jumps possible from current index
+        int res = Integer.MIN_VALUE;
+
+        // Try jumping to every next index
+        for (int j = i + 1; j < nums.length; j++) {
+
+            // Valid jump condition
+            if (Math.abs(nums[j] - nums[i]) <= target) {
+
+                // 1 jump + jumps possible from next index
+                int temp = 1 + solve(j, nums, target, t);
+
+                // Take maximum among all possible jumps
+                res = Math.max(temp, res);
+            }
+        }
+
+        // Memoize and return result
+        return t[i] = res;
+    }
+}
