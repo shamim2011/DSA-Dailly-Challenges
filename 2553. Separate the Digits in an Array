@@ -1,0 +1,37 @@
+// Approach - String Conversion + ArrayList Approach
+// T.C - O(N × D)         N = number of elements in array   , D = average number of digits in each number
+// S.C - O(N × D)
+
+
+class Solution {
+    public int[] separateDigits(int[] nums) {
+
+        // List to store all separated digits
+        List<Integer> li = new ArrayList<>();
+
+        // Traverse each number in the array
+        for(int i = 0; i < nums.length; i++) {
+
+            // Convert current number into string
+            String s = Integer.toString(nums[i]);
+
+            // Traverse each character (digit) of the string
+            for(int j = 0; j < s.length(); j++) {
+
+                // Convert character digit into integer and add to list
+                li.add(s.charAt(j) - '0');
+            }
+        }
+
+        // Create answer array of required size
+        int[] ans = new int[li.size()];
+
+        // Copy list elements into array
+        for(int i = 0; i < li.size(); i++) {
+            ans[i] = li.get(i);
+        }
+
+        // Return final separated digits array
+        return ans;
+    }
+}
