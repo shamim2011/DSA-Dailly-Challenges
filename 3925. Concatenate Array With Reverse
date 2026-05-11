@@ -1,0 +1,34 @@
+// Approach - Two-Pass Array Construction
+// T.C - O(n)
+// S.C - O(n)
+
+
+class Solution {
+    public int[] concatWithReverse(int[] nums) {
+
+        // Store the length of the input array
+        int n = nums.length;
+
+        // Create a new array of size 2*n
+        // First half will store original array
+        // Second half will store reversed array
+        int[] ans = new int[2 * n];
+
+        // Index pointer for inserting elements into ans array
+        int idx = 0;
+
+        // Copy all elements of original array into ans
+        for (int num : nums) {
+            ans[idx++] = num;
+        }
+
+        // Traverse original array from end to start
+        // and append elements in reverse order
+        for (int i = n - 1; i >= 0; i--) {
+            ans[idx++] = nums[i];
+        }
+
+        // Return final concatenated array
+        return ans;
+    }
+}
