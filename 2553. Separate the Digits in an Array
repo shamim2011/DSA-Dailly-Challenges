@@ -43,3 +43,33 @@ class Solution {
 // S.C - O(N × D)
 
 
+class Solution {
+    public int[] separateDigits(int[] nums) {
+
+        // Calculate total number of digits required
+        int totalDigits = 0;
+
+        for (int num : nums) {
+            totalDigits += String.valueOf(num).length();
+        }
+
+        // Result array
+        int[] ans = new int[totalDigits];
+
+        int index = 0;
+
+        // Traverse each number
+        for (int num : nums) {
+
+            // Convert number to string
+            String s = String.valueOf(num);
+
+            // Store each digit into result array
+            for (int i = 0; i < s.length(); i++) {
+                ans[index++] = s.charAt(i) - '0';
+            }
+        }
+
+        return ans;
+    }
+}
