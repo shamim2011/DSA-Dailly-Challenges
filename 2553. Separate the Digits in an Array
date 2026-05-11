@@ -1,4 +1,4 @@
-// Approach - String Conversion + ArrayList Approach
+// Approach 1 - String Conversion + ArrayList Approach
 // T.C - O(N × D)         N = number of elements in array   , D = average number of digits in each number
 // S.C - O(N × D)
 
@@ -35,3 +35,11 @@ class Solution {
         return ans;
     }
 }
+
+
+
+// Approach 2 -Optimized String Traversal Approach
+// T.C - O(N × D)         N = number of elements in array   , D = average number of digits in each number
+// S.C - O(N × D)
+
+
