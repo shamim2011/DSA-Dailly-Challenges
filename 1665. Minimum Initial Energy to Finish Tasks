@@ -1,5 +1,84 @@
-// Approach - 
-// T.C - 
-// S.C - 
+// Approach - Greedy Sorting + Binary Search
+// T.C -  O(n*logn)
+// S.C - O(1)
 
 
+class Solution {
+
+    // Helper function to check whether it is possible
+    // to complete all tasks with initial energy = mid
+    boolean isPossible(int[][] tasks, int mid) {
+
+        // Traverse every task
+        for (int[] task : tasks) {
+
+            // actual energy required to complete task
+            int actual = task[0];
+
+            // minimum energy needed before starting task
+            int minimum = task[1];
+
+            // If current energy is less than required minimum
+            // then this initial energy is not sufficient
+            if (minimum > mid) {
+                return false;
+            }
+
+            // Perform task and reduce energy
+            mid -= actual;
+        }
+
+        // All tasks completed successfully
+        return true;
+    }
+
+    public int minimumEffort(int[][] tasks) {
+
+        int n = tasks.length;
+
+        // Binary search range
+        int l = 0;
+        int r = (int) 1e9;
+
+        // Store minimum possible answer
+        int res = Integer.MIN_VALUE;
+
+        /*
+         Sort tasks based on:
+         (minimum - actual) in descending order
+
+         Tasks with larger extra energy requirement
+         are performed first.
+        */
+        Arrays.sort(tasks, (task1, task2) -> {
+
+            int diff1 = task1[1] - task1[0];
+            int diff2 = task2[1] - task2[0];
+
+            return diff2 - diff1;
+        });
+
+        // Binary search for minimum initial energy
+        while (l <= r) {
+
+            int mid = l + (r - l) / 2;
+
+            // Check if current mid energy works
+            if (isPossible(tasks, mid)) {
+
+                // Store answer
+                res = mid;
+
+                // Try smaller value
+                r = mid - 1;
+
+            } else {
+
+                // Need more energy
+                l = mid + 1;
+            }
+        }
+
+        return res;
+    }
+}
