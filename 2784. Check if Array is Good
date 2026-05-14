@@ -1,5 +1,38 @@
-// Approach - 
-// T.C - 
-// S.C - 
+// Approach 1 - Sorting + Validation Approach
+// T.C - O(n log n) → due to sorting
+// S.C - O(1)
 
 
+class Solution {
+    public boolean isGood(int[] nums) {
+
+        // Sort the array so elements come in increasing order
+        Arrays.sort(nums);
+
+        // Store the maximum element
+        int max = nums[nums.length - 1];
+
+        // Expected size should be max + 1
+        // because one number (max-1) appears twice
+        int n = max + 1;
+
+        // Check:
+        // 1. Array size should be equal to max + 1
+        // 2. Last two elements should be equal to max
+        if (n != nums.length || max != nums[n - 2]) {
+            return false;
+        }
+
+        // Verify numbers from 1 to max-1 are present correctly
+        for (int i = 0; i <= n - 2; i++) {
+
+            // Expected value at index i is i + 1
+            if ((i + 1) != nums[i]) {
+                return false;
+            }
+        }
+
+        // If all conditions satisfy, array is good
+        return true;
+    }
+}
