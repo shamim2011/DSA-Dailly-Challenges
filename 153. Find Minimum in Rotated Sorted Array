@@ -1,5 +1,33 @@
-// Approach - 
-// T.C - 
-// S.C - 
+// Approach - Binary Search on Rotated Sorted Array
+// T.C - O(log n)
+// S.C - O(1)
 
 
+class Solution {
+    public int findMin(int[] nums) {
+
+        int n = nums.length;
+
+        // Initialize two pointers
+        int l = 0, r = n - 1;
+
+        // Binary Search
+        while(l < r){
+
+            // Find middle index
+            int mid = l + (r - l) / 2;
+
+            // Minimum element lies in right half
+            if(nums[mid] > nums[r]){
+                l = mid + 1;
+            }
+            else{
+                // Minimum element lies in left half including mid
+                r = mid;
+            }
+        }
+
+        // l points to the minimum element
+        return nums[l];
+    }
+}
