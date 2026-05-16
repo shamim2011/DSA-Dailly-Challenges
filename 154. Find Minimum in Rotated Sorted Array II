@@ -3,3 +3,41 @@
 //S.C : O(1)
 
 
+class Solution {
+    public int findMin(int[] nums) {
+        int l = 0, r = nums.length - 1;
+        int resIdx = 0; // stores index of minimum element found so far
+        
+        while (l <= r) {
+            
+            // Skip duplicate elements from left side
+            while (l < r && nums[l] == nums[l + 1]) {
+                l++;
+            }
+            
+            // Skip duplicate elements from right side
+            while (l < r && nums[r] == nums[r - 1]) {
+                r--;
+            }
+            
+            int mid = l + (r - l) / 2;
+            
+            // Update result index if a smaller element is found
+            if (nums[mid] < nums[resIdx]) {
+                resIdx = mid;
+            }
+            
+            // If mid element is greater than rightmost,
+            // minimum lies in right half
+            if (nums[mid] > nums[r]) {
+                l = mid + 1;
+            } 
+            else {
+                // Otherwise, minimum lies in left half
+                r = mid - 1;
+            }
+        }
+        
+        return nums[resIdx]; // return minimum element
+    }
+}
