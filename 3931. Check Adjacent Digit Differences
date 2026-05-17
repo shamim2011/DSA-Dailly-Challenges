@@ -1,0 +1,26 @@
+// Approach - Linear Scan / Adjacent Comparison
+// T.C - O(n)
+// S.C - O(1)
+
+
+
+class Solution {
+    public boolean isAdjacentDiffAtMostTwo(String s) {
+        // Loop through the string till second last character
+        for(int i = 0; i < s.length() - 1; i++){
+            
+            // Convert current character to integer
+            int a = s.charAt(i) - '0';
+            
+            // Convert next character to integer
+            int b = s.charAt(i + 1) - '0';
+            
+            // Check if absolute difference is greater than 2
+            if(Math.abs(a - b) > 2){
+                return false; // Condition fails
+            }
+        }
+        
+        return true; // All adjacent differences are <= 2
+    }
+}
