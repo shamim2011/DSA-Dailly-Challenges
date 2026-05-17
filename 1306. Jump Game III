@@ -1,0 +1,34 @@
+// Approach - Depth-First Search (DFS) with in-place visited marking
+// T.C - O(n)
+// S.C - O(n) (recursion stack in worst case)
+
+
+class Solution {
+    public boolean canReach(int[] arr, int start) {
+        // Start DFS recursion from the given index
+        return solve(arr, start);
+    }
+
+    boolean solve(int[] arr, int i){
+        // Base case:
+        // If index is out of bounds OR already visited (marked negative)
+        if(i < 0 || i >= arr.length || arr[i] < 0){
+            return false;
+        }
+
+        // If we reach a cell with value 0 → success
+        if(arr[i] == 0) return true;
+
+        // Mark current index as visited by making it negative
+        arr[i] *= -1;
+
+        // Move forward (i + arr[i])
+        boolean a = solve(arr, i + arr[i]);
+
+        // Move backward (i - arr[i])
+        boolean b = solve(arr, i - arr[i]);
+
+        // Return true if any path reaches 0
+        return a || b;
+    }
+}
