@@ -1,4 +1,4 @@
-// Approach - Depth-First Search (DFS) with in-place visited marking
+// Approach 1 - Depth-First Search (DFS) with in-place visited marking
 // T.C - O(n)
 // S.C - O(n) (recursion stack in worst case)
 
@@ -30,5 +30,53 @@ class Solution {
 
         // Return true if any path reaches 0
         return a || b;
+    }
+}
+
+
+
+// Approach 2 - Breadth-First Search (BFS)
+// T.C - O(n)
+// S.C - O(n) For queue + visited array.
+
+
+
+import java.util.*;
+
+class Solution {
+    public boolean canReach(int[] arr, int start) {
+        int n = arr.length;
+
+        // Queue for BFS
+        Queue<Integer> q = new LinkedList<>();
+        q.add(start);
+
+        // Visited array to avoid revisiting
+        boolean[] visited = new boolean[n];
+        visited[start] = true;
+
+        while(!q.isEmpty()){
+            int i = q.poll();
+
+            // If we reach value 0 → success
+            if(arr[i] == 0) return true;
+
+            // Forward jump
+            int forward = i + arr[i];
+            if(forward >= 0 && forward < n && !visited[forward]){
+                q.add(forward);
+                visited[forward] = true;
+            }
+
+            // Backward jump
+            int backward = i - arr[i];
+            if(backward >= 0 && backward < n && !visited[backward]){
+                q.add(backward);
+                visited[backward] = true;
+            }
+        }
+
+        // If no path leads to 0
+        return false;
     }
 }
