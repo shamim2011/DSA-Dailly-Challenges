@@ -56,8 +56,40 @@ class Solution {
 }
 
 
+// Approach 2 - Brute Force / Enumeration
+// T.C - O(n^1/k)
+// S.C - O(1)
 
-// Approach 2 - Mathematical Range Reduction (Root Transformation)
+
+class Solution {
+    public int countKthRoots(int l, int r, int k) {
+        
+        // If k = 1, every number in [l, r] is a valid root
+        if (k == 1) return (r - l) + 1;
+        
+        int count = 0;
+        
+        // Try all possible bases 'a'
+        for (int a = 1; a <= r; a++) {
+            
+            // Compute a^k
+            long val = (long)Math.pow(a, k);
+            
+            // Stop if value exceeds upper range
+            if (val > r) break;
+            
+            // Check if value lies within [l, r]
+            if (val >= l) {
+                count++;
+            }
+        }
+        
+        // Special case: if range includes 0, count it separately
+        return l == 0 ? count + 1 : count;
+    }
+}
+
+// Approach 3 - Mathematical Range Reduction (Root Transformation)
 // T.C - O(1)
 // S.C - O(1)
 
