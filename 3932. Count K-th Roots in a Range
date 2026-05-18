@@ -1,0 +1,96 @@
+// Approach 1 - Linear Scan + Binary Search -         TLE
+// T.C - O(n log n)
+// S.C - O(1)
+
+
+class Solution {
+    public int countKthRoots(int l, int r, int k) {
+
+        // If k = 1, every number is a valid k-th power
+        if(k == 1){
+            return (r - l) + 1;
+        }
+
+        int count = 0;
+
+        // Traverse all numbers in range
+        for(int i = l; i <= r; i++){
+
+            // Check if current number is perfect k-th power
+            if(isPower(i, k)){
+                count++;
+            }
+        }
+
+        return count;
+    }
+
+    // Binary Search to check if n is perfect k-th power
+    boolean isPower(int n, int k){
+
+        // Edge case: 0 is a valid k-th power (0^k = 0)
+        if(n == 0) return true;
+
+        int l = 1, r = n;
+
+        while(l <= r){
+
+            int mid = l + (r - l) / 2;
+
+            // Compute mid^k
+            long p = (long)Math.pow(mid, k); // use long to avoid overflow
+
+            if(p == n){
+                return true;
+            }
+            else if(p > n){
+                r = mid - 1;
+            }
+            else{
+                l = mid + 1;
+            }
+        }
+
+        return false;
+    }
+}
+
+
+
+// Approach 2 - Mathematical Range Reduction (Root Transformation)
+// T.C - O(1)
+// S.C - O(1)
+
+
+
+class Solution {
+    public int countKthRoots(int l, int r, int k) {
+        if(k == 1){
+            return (r-l)+1;
+        }
+        int low = kthRootCeil(l,k);
+        int high = kthRootFloor(r,k);
+        int ans = high - low +1;
+        return Math.max(ans,0);
+    }
+    int kthRootFloor(int n,int k){
+        int l = 1, r = n, ans = 0;
+        while(l<=r){
+            int mid = l + (r-l)/2;
+            long val = (long)Math.pow(mid,k);
+            if(val<=n){
+                ans = mid;
+                l = mid + 1;
+            }
+            else{
+                r = mid - 1;
+            }
+        }
+        return ans;
+    }
+    int kthRootCeil(int n,int k){
+        int root = kthRootFloor(n,k);
+        if((int)Math.pow(root,k) == n) return root;
+        return root + 1;
+    }
+}
