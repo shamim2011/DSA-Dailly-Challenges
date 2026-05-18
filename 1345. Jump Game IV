@@ -1,0 +1,82 @@
+// Approach - Breadth-First Search (BFS) on Graph
+// T.C - O(n)
+// S.C - O(n)
+
+
+
+class Solution {
+    public int minJumps(int[] arr) {
+        int n = arr.length;
+
+        // Track visited indices to avoid revisiting
+        boolean[] visited = new boolean[n];
+
+        // Edge case: if only one element, no jumps needed
+        if(n == 1) return 0;
+
+        // Map value -> list of indices having that value
+        HashMap<Integer, List<Integer>> mp = new HashMap<>();
+        for(int i = 0; i < n; i++){
+            mp.putIfAbsent(arr[i], new ArrayList<>());
+            mp.get(arr[i]).add(i);
+        }
+
+        // BFS queue
+        Queue<Integer> q = new LinkedList<>();
+
+        int steps = 0;
+
+        // Start from index 0
+        q.offer(0);
+        visited[0] = true;
+
+        // BFS traversal
+        while(!q.isEmpty()){
+            int size = q.size();
+
+            // Process current level
+            while(size-- > 0){
+                int curr = q.poll();
+
+                // If reached last index, return steps
+                if(curr == n - 1){
+                    return steps;
+                }
+
+                int left = curr - 1;
+                int right = curr + 1;
+
+                // Move to left index
+                if(left >= 0 && !visited[left]){
+                    visited[left] = true;
+                    q.offer(left);
+                }
+
+                // Move to right index
+                if(right < n && !visited[right]){
+                    visited[right] = true;
+                    q.offer(right);
+                }
+
+                // Jump to all indices having same value
+                List<Integer> sameValueIndices = mp.get(arr[curr]);
+
+                if(sameValueIndices != null){
+                    for(int idx : sameValueIndices){
+                        if(!visited[idx]){
+                            visited[idx] = true;
+                            q.offer(idx);
+                        }
+                    }
+                    // Important optimization:
+                    // Remove the list after processing to avoid reprocessing
+                    mp.remove(arr[curr]);
+                }
+            }
+            // Increment steps after processing one level
+            steps++;
+        }
+
+        return -1; // If not reachable
+    }
+}
