@@ -1,0 +1,35 @@
+// Approach - Hashing (Using HashSet)
+// T.C - O(n + m)    ,   n = size of nums1 (insertion into set),   m = size of nums2 (lookup in set)
+// S.C - O(n)
+
+
+class Solution {
+    public int getCommon(int[] nums1, int[] nums2) {
+        
+        // Initialize answer with maximum possible value
+        int ans = Integer.MAX_VALUE;
+
+        // Create a HashSet to store elements of nums1
+        Set<Integer> st1 = new HashSet<>();
+
+        // Add all elements of nums1 into the set
+        for(int num : nums1){
+            st1.add(num);
+        }
+
+        // Traverse nums2 array
+        for(int i = 0; i < nums2.length; i++){
+            
+            // Check if current element exists in nums1 (via set)
+            if(st1.contains(nums2[i])){
+                
+                // Update the minimum common element found so far
+                ans = Math.min(nums2[i], ans);
+            }
+        }
+
+        // If no common element found, return -1
+        // otherwise return the smallest common element
+        return ans == Integer.MAX_VALUE ? -1 : ans;
+    }
+}
