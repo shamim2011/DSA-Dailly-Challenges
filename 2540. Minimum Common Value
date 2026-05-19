@@ -1,4 +1,4 @@
-// Approach - Hashing (Using HashSet)
+// Approach 1 - Hashing (Using HashSet)
 // T.C - O(n + m)    ,   n = size of nums1 (insertion into set),   m = size of nums2 (lookup in set)
 // S.C - O(n)
 
@@ -31,5 +31,39 @@ class Solution {
         // If no common element found, return -1
         // otherwise return the smallest common element
         return ans == Integer.MAX_VALUE ? -1 : ans;
+    }
+}
+
+
+
+// Approach 2 - Two Pointer Technique (on sorted arrays)
+// T.C - O(n + m),  (where n = length of nums1, m = length of nums2)
+// S.C - O(1)
+
+
+class Solution {
+    public int getCommon(int[] nums1, int[] nums2) {
+        // Initialize two pointers for both arrays
+        int i = 0, j = 0;
+
+        // Traverse both arrays until one ends
+        while (i < nums1.length && j < nums2.length) {
+
+            // If common element is found, return it immediately
+            if (nums1[i] == nums2[j]) {
+                return nums1[i];
+            }
+            // If current element of nums1 is smaller, move pointer i forward
+            else if (nums1[i] < nums2[j]) {
+                i++;
+            }
+            // If current element of nums2 is smaller, move pointer j forward
+            else {
+                j++;
+            }
+        }
+
+        // If no common element is found, return -1
+        return -1;
     }
 }
