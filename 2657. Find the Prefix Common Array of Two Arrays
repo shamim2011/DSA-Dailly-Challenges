@@ -1,0 +1,40 @@
+// Approach - HashSet + Prefix Counting
+// T.C - O(n)
+// S.C - O(n)
+
+
+class Solution {
+    public int[] findThePrefixCommonArray(int[] A, int[] B) {
+        int n = A.length;                  // Length of arrays
+        int[] ans = new int[n];            // Result array to store prefix common counts
+        Set<Integer> st = new HashSet<>(); // Set to track visited elements
+        int count = 0;                     // Count of common elements
+
+        for(int i = 0; i < n; i++){
+            
+            // Case 1: If both elements at index i are same, increment count
+            if(A[i] == B[i]){
+                count++;
+            }
+
+            // Case 2: If A[i] already appeared before (in B or A), it's common
+            if(st.contains(A[i])){
+                count++;
+            }
+
+            // Case 3: If B[i] already appeared before, it's common
+            if(st.contains(B[i])){
+                count++;
+            }
+
+            // Add both elements to the set for future checks
+            st.add(A[i]);
+            st.add(B[i]);
+
+            // Store current count in result
+            ans[i] = count;
+        }
+
+        return ans; // Return the prefix common array
+    }
+}
