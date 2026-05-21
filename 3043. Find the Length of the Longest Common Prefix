@@ -42,9 +42,82 @@ class Solution {
 
 
 
-// Approach - 2 : Prefix Hashing (Using Set + Digit Truncation) 
-// T.C - 
-// S.C - 
+// Approach - 2 : Trie (Prefix Tree) Based Digit Matching
+// T.C - O((n + m) × d)
+// S.C - O(n × d)
 
 
+// Trie Node definition
+class TrieNode{
+    TrieNode[] children = new TrieNode[10];  // children for digits 0–9
+}
 
+class Solution {
+
+    // Function to create a new TrieNode
+    TrieNode getTrieNode(){
+        return new TrieNode();
+    }
+
+    // Insert a number into Trie (digit by digit)
+    void insert(int num, TrieNode root){
+        TrieNode crawl = root;
+
+        // Convert number to string to process each digit
+        String numStr = Integer.toString(num);
+
+        for(char ch : numStr.toCharArray()){
+            int idx = ch - '0';  // convert char digit to index (0–9)
+
+            // If node doesn't exist, create it
+            if(crawl.children[idx] == null){
+                crawl.children[idx] = getTrieNode();
+            }
+
+            // Move to next node
+            crawl = crawl.children[idx];
+        }
+    }
+
+    // Search for longest prefix match of a number in Trie
+    int search(int num, TrieNode root){
+        TrieNode crawl = root;
+
+        String numStr = Integer.toString(num);
+        int len = 0;  // stores length of common prefix
+
+        for(char ch : numStr.toCharArray()){
+            int idx = ch - '0';
+
+            // If path exists, increase prefix length
+            if(crawl.children[idx] != null){
+                len++;
+                crawl = crawl.children[idx];
+            }else{
+                break;  // stop when mismatch occurs
+            }
+        }
+
+        return len;
+    }
+
+    // Main function to find longest common prefix length
+    public int longestCommonPrefix(int[] arr1, int[] arr2) {
+
+        TrieNode root = getTrieNode();
+
+        // Insert all numbers from arr1 into Trie
+        for(int num : arr1){
+            insert(num, root);
+        }
+
+        int ans = 0;
+
+        // For each number in arr2, find max prefix match
+        for(int num : arr2){
+            ans = Math.max(ans, search(num, root));
+        }
+
+        return ans;  // return maximum prefix length
+    }
+}
