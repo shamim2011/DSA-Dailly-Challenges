@@ -1,6 +1,6 @@
 // Approach -1 : Prefix Hashing (Using Set + Digit Truncation) 
-// T.C - O((N + M) × log₁₀M)
-// S.C - O(K)
+// T.C - O((N + M) × log₁₀M)    ,   (where M = max value in arrays)
+// S.C - O(K) ,,         (K = total number of prefixes from arr1)
 
 
 class Solution {
