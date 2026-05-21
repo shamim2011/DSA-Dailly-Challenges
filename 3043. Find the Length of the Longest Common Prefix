@@ -38,3 +38,13 @@ class Solution {
         return ans; // return maximum prefix length found
     }
 }
+
+
+
+
+// Approach - 2 : Prefix Hashing (Using Set + Digit Truncation) 
+// T.C - 
+// S.C - 
+
+
+
