@@ -1,0 +1,40 @@
+// Approach -1 : Prefix Hashing (Using Set + Digit Truncation) 
+// T.C - O((N + M) × log₁₀M)
+// S.C - O(K)
+
+
+class Solution {
+    public int longestCommonPrefix(int[] arr1, int[] arr2) {
+        
+        // Set to store all prefixes of numbers from arr1
+        Set<Integer> st = new HashSet<>();
+        
+        // Generate all possible prefixes from arr1
+        for(int num : arr1){
+            // Keep dividing until prefix already exists OR number becomes 0
+            while(!st.contains(num) && num > 0){
+                st.add(num);   // store current prefix
+                num /= 10;     // remove last digit (shorten prefix)
+            }
+        }
+
+        int ans = 0;  // stores maximum length of common prefix
+        
+        // Check each number in arr2
+        for(int num : arr2){
+            
+            // Reduce number until we find a matching prefix in set
+            while(!st.contains(num) && num > 0){
+                num /= 10;  // remove last digit
+            }
+            
+            // If a valid prefix is found
+            if(num > 0){
+                // Calculate number of digits = length of prefix
+                ans = Math.max(ans, (int)(Math.log10(num) + 1));
+            }
+        }
+
+        return ans; // return maximum prefix length found
+    }
+}
