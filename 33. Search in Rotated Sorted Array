@@ -1,5 +1,77 @@
-// Approach - 
-// T.C - 
-// S.C - 
+// Approach - Binary Search on Rotated Sorted Array (Pivot + Binary Search)
+// T.C - O(log n)
+// S.C - O(1)
 
 
+class Solution {
+
+    // Function to find the index of the smallest element (pivot)
+    int findPivotIdx(int[] nums){
+        int l = 0, r = nums.length - 1;
+
+        // Binary search to find the pivot (minimum element)
+        while(l < r){
+            int mid = l + (r - l) / 2;
+
+            // If mid element is greater than rightmost element,
+            // pivot must be in the right half
+            if(nums[mid] > nums[r]){
+                l = mid + 1;
+            } 
+            // Otherwise, pivot is in left half including mid
+            else{
+                r = mid;
+            }
+        }
+        // At the end, l == r → pivot index
+        return r;
+    }
+
+    // Standard binary search function
+    int binaarySearch(int[] nums, int l, int r, int target){
+        while(l <= r){
+            int mid = l + (r - l) / 2;
+
+            // Target found
+            if(nums[mid] == target){
+                return mid;
+            }
+            // Search in right half
+            else if(nums[mid] < target){
+                l = mid + 1;
+            }
+            // Search in left half
+            else{
+                r = mid - 1;
+            }
+        }
+        // Target not found
+        return -1;
+    }
+
+    public int search(int[] nums, int target) {
+
+        // Step 1: Find pivot index (smallest element)
+        int pivotIdx = findPivotIdx(nums);
+
+        // If pivot itself is target
+        if(nums[pivotIdx] == target){
+            return pivotIdx;
+        }
+
+        // Step 2: Search in right sorted half
+        int right = binaarySearch(nums, pivotIdx + 1, nums.length - 1, target);
+        if(right != -1){
+            return right;
+        }
+
+        // Step 3: Search in left sorted half
+        int left = binaarySearch(nums, 0, pivotIdx - 1, target);
+        if(left != -1){
+            return left;
+        }
+
+        // Target not found
+        return -1;
+    }
+}
