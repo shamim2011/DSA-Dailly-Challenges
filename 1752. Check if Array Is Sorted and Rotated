@@ -1,0 +1,21 @@
+// Approach 3 - Circular Sorted Array Check (Count of Inversions / Drops) 
+// T.C - O(n)
+// S.C - O(1)
+
+
+class Solution {
+    public boolean check(int[] nums) {
+        int n = nums.length;   // length of the array
+        int peek = 0;          // counts number of "drops" (violations of sorted order)
+
+        for(int i = 0; i < n; i++){
+            // check if current element is greater than next element (circularly)
+            if(nums[i] > nums[(i + 1) % n]){
+                peek++;        // increment drop count
+            }
+        }
+
+        // if drops are more than 1, it's not a sorted & rotated array
+        return peek <= 1;
+    }
+}
