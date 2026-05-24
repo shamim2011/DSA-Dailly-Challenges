@@ -46,6 +46,46 @@ class Solution {
 
 
 
-// Approach 2 - Frequency Counting + Sorted Map (TreeMap Traversal)
-// T.C  - O(n log n)
+// Approach 2 - Hashing + Greedy Filtering (Frequency Control)
+// T.C  - O(n)
 // S.C - O(n)
+
+
+class Solution {
+    public int[] limitOccurrences(int[] nums, int k) {
+        
+        // List to store the final filtered elements
+        List<Integer> li = new ArrayList<>();
+        
+        // HashMap to store frequency of each number
+        Map<Integer,Integer> mp = new HashMap<>();
+        
+        // Traverse each element in the array
+        for(int num : nums){
+            
+            // Get current count of the number (default = 0)
+            int count = mp.getOrDefault(num,0);
+            
+            // Only allow the number if its count is less than k
+            if(count < k){
+                li.add(num);              // Add to result list
+                mp.put(num, count + 1);  // Update frequency in map
+            }
+        }
+        
+        // Convert List to Array
+        int[] ans = new int[li.size()];
+        int i = 0;
+        
+        // Optional reverse (currently commented out)
+        // Collections.reverse(li);
+        
+        // Copy elements from list to array
+        for(int num : li){
+            ans[i++] = num;
+        }
+        
+        // Return final array
+        return ans;
+    }
+}
