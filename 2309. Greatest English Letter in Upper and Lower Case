@@ -1,0 +1,42 @@
+// Approach - Frequency Array + Reverse Greedy Traversal
+// T.C - O(n)
+// S.C - O(1)
+
+
+class Solution {
+    public String greatestLetter(String s) {
+        // Array to store frequency of uppercase letters (A-Z)
+        int[] cLetter = new int[26];
+        
+        // Array to store frequency of lowercase letters (a-z)
+        int[] sLetter = new int[26];
+        
+        // Traverse the string
+        for(int i = 0; i < s.length(); i++){
+            char ch = s.charAt(i);
+            
+            // If character is uppercase
+            if(ch >= 'A' && ch <= 'Z'){
+                cLetter[ch - 'A']++;  // Increment corresponding index
+            }
+            else{
+                // If character is lowercase
+                sLetter[ch - 'a']++;  // Increment corresponding index
+            }
+        }
+        
+        // StringBuilder to store result
+        StringBuilder sb = new StringBuilder();
+        
+        // Traverse from 'Z' to 'A' (largest to smallest)
+        for(int i = cLetter.length - 1; i >= 0; i--){
+            // Check if both uppercase and lowercase exist
+            if(cLetter[i] >= 1 && sLetter[i] >= 1){
+                sb.append((char)(i + 'A')); // Add uppercase letter
+                break; // Only need the greatest one
+            }
+        }
+        
+        return sb.toString(); // Return result (empty if none found)
+    }
+}
