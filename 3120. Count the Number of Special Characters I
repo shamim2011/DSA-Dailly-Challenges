@@ -1,0 +1,40 @@
+// Approach - Frequency Array / Counting Approach
+// T.C - O(n)
+// S.C - O(1)
+
+
+class Solution {
+    public int numberOfSpecialChars(String word) {
+        
+        // Array to count occurrences of lowercase letters (a-z)
+        int[] lower = new int[26];
+        
+        // Array to count occurrences of uppercase letters (A-Z)
+        int[] upper = new int[26];
+        
+        // Traverse the string
+        for(int i = 0; i < word.length(); i++){
+            char ch = word.charAt(i);
+            
+            // If character is lowercase
+            if(ch >= 'a' && ch <= 'z'){
+                lower[ch - 'a']++;  // Map 'a'->0, 'b'->1, ..., 'z'->25
+            }
+            else{
+                // If character is uppercase
+                upper[ch - 'A']++;  // Map 'A'->0, 'B'->1, ..., 'Z'->25
+            }
+        }
+        
+        int count = 0;
+        
+        // Check for characters that appear in both lowercase and uppercase
+        for(int i = 0; i < 26; i++){
+            if(lower[i] >= 1 && upper[i] >= 1){
+                count++;  // Count as special character
+            }
+        }
+        
+        return count;  // Return total special characters
+    }
+}
