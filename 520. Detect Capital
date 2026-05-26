@@ -1,0 +1,38 @@
+// Approach - Counting Approach (Character Frequency Check)
+// T.C - O(n)
+// S.C - O(1)
+
+
+
+class Solution {
+    public boolean detectCapitalUse(String word) {
+        int n = word.length();   // length of the word
+        
+        int lower = 0;  // count of lowercase letters
+        int upper = 0;  // count of uppercase letters
+        
+        // loop through each character
+        for(int i = 0; i < word.length(); i++){
+            char ch = word.charAt(i);
+            
+            // check if character is lowercase
+            if(ch >= 'a' && ch <= 'z'){
+                lower++;
+            }
+            // check if character is uppercase
+            else if(ch >= 'A' && ch <= 'Z'){
+                upper++;
+            }
+        }
+        
+        // valid cases:
+        // 1. all letters are lowercase (lower == n)
+        // 2. all letters are uppercase (upper == n)
+        // 3. only first letter uppercase and rest lowercase
+        //    (first char uppercase AND lowercase count = n-1)
+        return (lower == n || 
+                upper == n || 
+                (word.charAt(0) >= 'A' && word.charAt(0) <= 'Z' && lower == n - 1))
+                ? true : false;
+    }
+}
