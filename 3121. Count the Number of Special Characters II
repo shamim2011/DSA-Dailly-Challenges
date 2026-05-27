@@ -1,6 +1,53 @@
-// Approach - 
-// T.C - 
-// S.C - 
+// Approach - Index Tracking (First Uppercase & Last Lowercase Method)
+// T.C - O(n)
+// S.C - O(1)
 
 
 
+class Solution {
+    public int numberOfSpecialChars(String s) {
+
+        // Array to store the last occurrence index of each lowercase letter
+        int[] lowerLast = new int[26];
+
+        // Array to store the first occurrence index of each uppercase letter
+        int[] upperFirst = new int[26];
+
+        // Initialize both arrays with -1 (means not found yet)
+        Arrays.fill(lowerLast, -1);
+        Arrays.fill(upperFirst, -1);
+
+        // Traverse the string
+        for(int i = 0; i < s.length(); i++){
+            char ch = s.charAt(i);
+
+            // If character is lowercase, update its last occurrence
+            if(Character.isLowerCase(ch)){
+                lowerLast[ch - 'a'] = i;
+            }
+            else{
+                // If character is uppercase, store only its first occurrence
+                if(upperFirst[ch - 'A'] == -1){
+                    upperFirst[ch - 'A'] = i;
+                }
+            }
+        }
+
+        int count = 0;
+
+        // Check for each character from 'a' to 'z'
+        for(int i = 0; i < 26; i++){
+            // Condition:
+            // 1. Lowercase exists
+            // 2. Uppercase exists
+            // 3. Lowercase appears before uppercase
+            if(lowerLast[i] != -1 && upperFirst[i] != -1 && 
+                lowerLast[i] < upperFirst[i]){
+                    count++;
+                }
+        }
+
+        // Return total count of special characters
+        return count;
+    }
+}
