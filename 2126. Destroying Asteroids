@@ -4,3 +4,31 @@
 
 
 
+import java.util.Arrays;
+
+class Solution {
+    public boolean asteroidsDestroyed(int mass, int[] asteroids) {
+        
+        // Step 1: Sort the asteroids in increasing order
+        // This ensures we always try to destroy the smallest asteroid first
+        Arrays.sort(asteroids);
+
+        // Step 2: Use long to avoid overflow when mass increases
+        long totalMass = mass;
+
+        // Step 3: Traverse through each asteroid
+        for(int asteroid : asteroids){
+            
+            // If current mass is less than asteroid, we cannot destroy it
+            if(totalMass < asteroid){
+                return false;
+            }
+
+            // Otherwise, destroy it and gain its mass
+            totalMass += asteroid;
+        }
+
+        // If all asteroids are destroyed successfully
+        return true;
+    }
+}
