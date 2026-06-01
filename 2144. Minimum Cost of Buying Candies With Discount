@@ -1,6 +1,37 @@
-// Approach - 
-// T.C - 
-// S.C - 
+// Approach - Greedy Approach (Sorting + Skipping Every Third Item)
+// T.C - O(n log n)
+// S.C - O(1)
 
 
 
+class Solution {
+    public int minimumCost(int[] cost) {
+        int n = cost.length;
+
+        // Step 1: Sort the array in ascending order
+        Arrays.sort(cost);
+
+        // Step 2: Reverse the array to make it descending
+        // (so that highest prices come first)
+        for(int l = 0, r = n - 1; l < r; l++, r--) {
+            int temp = cost[l];
+            cost[l] = cost[r];
+            cost[r] = temp;
+        }
+        
+        int sum = 0;
+
+        // Step 3: Traverse the array
+        for(int i = 0; i < n; i++) {
+
+            // For every group of 3 items,
+            // skip the 3rd one (i % 3 == 2) → it's free
+            if(i % 3 != 2) {
+                sum += cost[i];
+            }
+        }
+
+        // Step 4: Return total minimum cost
+        return sum;
+    }
+}
