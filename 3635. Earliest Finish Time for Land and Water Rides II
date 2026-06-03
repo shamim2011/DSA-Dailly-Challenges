@@ -47,6 +47,42 @@ class Solution {
 
 
 
-// Approach 2 - 
+// Approach 2 - Greedy + Two-Pass Simulation (Order-Based Optimization)
 // T.C - O(n + m)
 // S.C - O(1)
+
+
+
+class Solution {
+    public int earliestFinishTime(int[] landStartTime, int[] landDuration, int[] waterStartTime, int[] waterDuration) {
+        
+        // Case 1: Do land first, then water
+        int firstLand_firWater = findFinishTime(landStartTime, landDuration, waterStartTime, waterDuration);
+        
+        // Case 2: Do water first, then land
+        int firstWater_firLand = findFinishTime(waterStartTime, waterDuration, landStartTime, landDuration);
+        
+        // Return the minimum finish time from both possible orders
+        return Math.min(firstLand_firWater, firstWater_firLand);
+    }
+
+    int findFinishTime(int[] start1, int[] duration1, int[] start2, int[] duration2){
+        
+        // Step 1: Find earliest finish time for first activity
+        int finish1 = Integer.MAX_VALUE;
+        for(int i = 0; i < start1.length; i++){
+            // finish time = start time + duration
+            finish1 = Math.min(finish1, start1[i] + duration1[i]);
+        }
+
+        // Step 2: Find earliest finish time for second activity
+        int finish2 = Integer.MAX_VALUE;
+        for(int i = 0; i < start2.length; i++){
+            // You can only start second activity after finishing first
+            // so take max(finish1, start2[i])
+            finish2 = Math.min(finish2, Math.max(finish1, start2[i]) + duration2[i]);
+        }
+
+        return finish2;
+    }
+}
