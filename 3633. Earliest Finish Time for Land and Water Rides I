@@ -1,5 +1,45 @@
-// Approach - 
-// T.C - 
-// S.C - 
+// Approach - Brute Force / Exhaustive Pair Checking
+// T.C - O(n × m)
+// S.C - O(1)
 
 
+class Solution {
+    public int earliestFinishTime(int[] landStartTime, int[] landDuration, int[] waterStartTime, int[] waterDuration) {
+        
+        int n = landStartTime.length;   // number of land rides
+        int m = waterStartTime.length;  // number of water rides
+        
+        int ans = Integer.MAX_VALUE;    // store minimum finish time
+        
+        // Try every pair of land and water ride
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < m; j++){
+                
+                // Case 1: Do land ride first, then water ride
+                
+                // Finish time of land ride
+                int land = landStartTime[i] + landDuration[i];
+                
+                // Start water ride after finishing land OR when water ride becomes available
+                int firstLand_firWater = Math.max(land, waterStartTime[j]) + waterDuration[j];
+                
+                // Update minimum answer
+                ans = Math.min(ans, firstLand_firWater);
+
+                
+                // Case 2: Do water ride first, then land ride
+                
+                // Finish time of water ride
+                int water = waterStartTime[j] + waterDuration[j];
+                
+                // Start land ride after finishing water OR when land ride becomes available
+                int firstWater_firLand = Math.max(water, landStartTime[i]) + landDuration[i];
+                
+                // Update minimum answer
+                ans = Math.min(ans, firstWater_firLand);
+            }
+        }
+        
+        return ans;  // return earliest possible finish time
+    }
+}
