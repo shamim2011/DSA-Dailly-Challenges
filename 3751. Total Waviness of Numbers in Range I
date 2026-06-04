@@ -1,5 +1,45 @@
-// Approach - 
-// T.C - 
-// S.C - 
+// Approach - Brute Force Simulation (Digit Peak & Valley Counting)
+// T.C - O(N × D)            Let N = num2 - num1 + 1,              Let D = number of digits in a number
+// S.C - O(D)
 
 
+class Solution {
+    int findWaveScore(String s){
+        int score = 0;
+        int l = s.length();
+
+        // Numbers with less than 3 digits cannot have a peak or valley
+        if(l < 3) return 0;
+
+        for(int i = 1; i <= l - 2; i++){
+
+            // peak
+            if(s.charAt(i) - '0' > s.charAt(i - 1) - '0' &&
+               s.charAt(i) - '0' > s.charAt(i + 1) - '0'){
+                score++;
+            }
+
+            // valley
+            if(s.charAt(i) - '0' < s.charAt(i - 1) - '0' &&
+               s.charAt(i) - '0' < s.charAt(i + 1) - '0'){
+                score++;
+            }
+        }
+
+        return score;
+    }
+
+    public int totalWaviness(int num1, int num2) {
+        int cnt = 0;
+
+        // Check every number in the given range
+        for(int i = num1; i <= num2; i++){
+            String s = Integer.toString(i);
+
+            // Add wave score of current number
+            cnt += findWaveScore(s);
+        }
+
+        return cnt;
+    }
+}
