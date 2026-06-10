@@ -1,6 +1,130 @@
-// Aproach - 
-// T.C - 
-// S.C - 
+// Aproach - (Segment Tree + Max Heap)
+// T.C - O(n*logn + k*logn)
+// S.C - O(n)
 
 
 
+// Segment Tree implementation for Range Min Query and Range Max Query
+class SegmentTree {
+    int[] segmentTree;
+    boolean isMinTree;
+
+    // Constructor
+    SegmentTree(int[] nums, boolean flag) {
+        int n = nums.length;
+        this.isMinTree = flag;
+        segmentTree = new int[4 * n];
+
+        // Build the segment tree
+        buildSegmentTree(0, 0, n - 1, nums);
+    }
+
+    // Build segment tree recursively
+    void buildSegmentTree(int i, int l, int r, int[] nums) {
+        // Leaf node
+        if (l == r) {
+            segmentTree[i] = nums[l];
+            return;
+        }
+
+        int mid = l + (r - l) / 2;
+
+        // Build left subtree
+        buildSegmentTree(2 * i + 1, l, mid, nums);
+
+        // Build right subtree
+        buildSegmentTree(2 * i + 2, mid + 1, r, nums);
+
+        // Store min/max based on tree type
+        if (isMinTree) {
+            segmentTree[i] = Math.min(segmentTree[2 * i + 1], segmentTree[2 * i + 2]);
+        } else {
+            segmentTree[i] = Math.max(segmentTree[2 * i + 1], segmentTree[2 * i + 2]);
+        }
+    }
+
+    // Query helper function
+    int querySegmentTree(int start, int end, int i, int l, int r) {
+
+        // No overlap
+        if (l > end || r < start) {
+            return isMinTree ? Integer.MAX_VALUE : Integer.MIN_VALUE;
+        }
+
+        // Complete overlap
+        if (l >= start && r <= end) {
+            return segmentTree[i];
+        }
+
+        // Partial overlap
+        int mid = l + (r - l) / 2;
+
+        int a = querySegmentTree(start, end, 2 * i + 1, l, mid);
+        int b = querySegmentTree(start, end, 2 * i + 2, mid + 1, r);
+
+        if (isMinTree) {
+            return Math.min(a, b);
+        }
+
+        return Math.max(a, b);
+    }
+
+    // Public query function
+    int query(int l, int r, int n) {
+        return querySegmentTree(l, r, 0, 0, n - 1);
+    }
+}
+
+class Solution {
+
+    // Returns (maximum element - minimum element) in subarray [l, r]
+    long getValue(int l, int r, SegmentTree minST, SegmentTree maxST, int n) {
+        int minEL = minST.query(l, r, n);
+        int maxEL = maxST.query(l, r, n);
+
+        return (long) maxEL - minEL;
+    }
+
+    public long maxTotalValue(int[] nums, int k) {
+        int n = nums.length;
+
+        // Segment tree for range minimum queries
+        SegmentTree minST = new SegmentTree(nums, true);
+
+        // Segment tree for range maximum queries
+        SegmentTree maxST = new SegmentTree(nums, false);
+
+        // Max Heap:
+        // [value, leftIndex, rightIndex]
+        PriorityQueue<long[]> pq =
+                new PriorityQueue<>((a, b) -> Long.compare(b[0], a[0]));
+
+        // Initially insert all subarrays ending at n-1
+        for (int l = 0; l < n; l++) {
+            long value = getValue(l, n - 1, minST, maxST, n);
+            pq.offer(new long[]{value, l, n - 1});
+        }
+
+        long ans = 0;
+
+        // Extract k maximum values
+        while (k-- > 0) {
+            long[] top = pq.poll();
+
+            long value = top[0];
+            int l = (int) top[1];
+            int r = (int) top[2];
+
+            // Add current best value
+            ans += value;
+
+            // Generate next candidate by shrinking right boundary
+            long nextBestValue =
+                    getValue(l, r - 1, minST, maxST, n);
+
+            pq.offer(new long[]{nextBestValue, l, r - 1});
+        }
+
+        return ans;
+    }
+}
