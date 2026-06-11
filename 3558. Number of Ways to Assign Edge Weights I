@@ -1,0 +1,69 @@
+// Approach - Tree Height + Fast Modular Exponentiation
+// T.C - O(N)
+// S.C - O(N)
+
+
+
+class Solution {
+
+    // Modulo value to prevent overflow and keep answer within limits
+    long mod = 1_000_000_007L;
+
+    public int assignEdgeWeights(int[][] edges) {
+
+        // Build adjacency list representation of the tree
+        Map<Integer, List<Integer>> adj = new HashMap<>();
+
+        for (int[] edge : edges) {
+            int u = edge[0];
+            int v = edge[1];
+
+            // Add both directions since the tree is undirected
+            adj.computeIfAbsent(u, k -> new ArrayList<>()).add(v);
+            adj.computeIfAbsent(v, k -> new ArrayList<>()).add(u);
+        }
+
+        // Find maximum depth (height) of the tree starting from node 1
+        int maxDepth = getDepth(adj, 1, 0);
+
+        // Return 2^(maxDepth - 1) % mod
+        return (int) power(2, maxDepth - 1);
+    }
+
+    // Fast Binary Exponentiation
+    long power(long base, long exponent) {
+
+        // Base case
+        if (exponent == 0) return 1;
+
+        // Compute power for half exponent
+        long half = power(base, exponent / 2);
+
+        // Square the result
+        long res = (half * half) % mod;
+
+        // If exponent is odd, multiply one extra base
+        if (exponent % 2 == 1) {
+            res = (res * base) % mod;
+        }
+
+        return res;
+    }
+
+    // DFS to find maximum depth from current node
+    int getDepth(Map<Integer, List<Integer>> adj, int node, int parent) {
+
+        int depth = 0;
+
+        for (int neighbour : adj.getOrDefault(node, new ArrayList<>())) {
+
+            // Skip parent to avoid revisiting
+            if (neighbour == parent) continue;
+
+            // Take maximum depth among all children
+            depth = Math.max(depth, getDepth(adj, neighbour, node) + 1);
+        }
+
+        return depth;
+    }
+}
