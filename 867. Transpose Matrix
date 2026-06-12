@@ -1,0 +1,31 @@
+// Approach - Matrix Transposition (Row-Column Swap)
+// T.C - O(r × c)
+// S.C - O(r × c)
+
+
+
+class Solution {
+    public int[][] transpose(int[][] matrix) {
+
+        // Number of rows in the original matrix
+        int r = matrix.length;
+
+        // Number of columns in the original matrix
+        int c = matrix[0].length;
+
+        // Create a new matrix with dimensions swapped (c x r)
+        int[][] ans = new int[c][r];
+
+        // Traverse every element of the original matrix
+        for (int i = 0; i < r; i++) {
+            for (int j = 0; j < c; j++) {
+
+                // Swap row and column indices
+                ans[j][i] = matrix[i][j];
+            }
+        }
+
+        // Return the transposed matrix
+        return ans;
+    }
+}
