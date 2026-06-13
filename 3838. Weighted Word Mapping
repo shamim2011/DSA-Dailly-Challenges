@@ -1,6 +1,43 @@
-// Approach - 
-// T.C - 
-// S.C - 
+// Approach - Character Weight Mapping + Reverse Alphabet Transformation
+// T.C - O(M)
+// S.C - O(1)
 
 
 
+class Solution {
+    public String mapWordWeights(String[] words, int[] weights) {
+
+        // Stores the final result string
+        String ans = "";
+
+        // Traverse each word in the input array
+        for (String s : words) {
+
+            // Calculate total weight of the current word
+            int sum = 0;
+
+            // Traverse every character of the word
+            for (char ch : s.toCharArray()) {
+
+                // Convert character to lowercase and find its alphabet index (0-25)
+                int idx = Character.toLowerCase(ch) - 'a';
+
+                // Add corresponding weight from weights array
+                sum += weights[idx];
+            }
+
+            // Get mapped index using modulo 26
+            int Idx = sum % 26;
+
+            // Reverse the alphabet index
+            // Example: 0 -> 25 ('z'), 1 -> 24 ('y'), etc.
+            int rIdx = 26 - Idx - 1;
+
+            // Append corresponding character to answer
+            ans += (char) ('a' + rIdx);
+        }
+
+        // Return final encoded string
+        return ans;
+    }
+}
