@@ -1,0 +1,23 @@
+// Approach - Digit Sum and Square Sum Difference Approach
+// T.C - O(d)   where D is the number of digits in n.
+// S.C - O(1)
+
+
+class Solution {
+    public boolean checkGoodInteger(int n) {
+        int dSum = 0; // Stores the sum of digits
+        int sSum = 0; // Stores the sum of squares of digits
+
+        while(n > 0) {
+            int d = n % 10; // Extract the last digit
+
+            dSum += d; // Add digit to digit sum
+            sSum += (int) Math.pow(d, 2); // Add square of digit to square sum
+
+            n = n / 10; // Remove the last digit
+        }
+
+        // Return true if the difference is at least 50, otherwise false
+        return sSum - dSum >= 50 ? true : false;
+    }
+}
