@@ -113,3 +113,42 @@ class Solution {
         return maxSubStr.length(); // Return length of longest substring
     }
 }
+
+
+
+--------------------------------Approach 2 same code Using Map --------------------------------------------------
+
+
+class Solution {
+    public int lengthOfLongestSubstring(String s) {
+
+        // Stores character and its latest index
+        Map<Character, Integer> mp = new HashMap<>();
+
+        int left = 0;      // Left boundary of sliding window
+        int maxLen = 0;    // Maximum length found so far
+        int sIdx = 0;      // Starting index of longest substring (optional)
+
+        for (int r = 0; r < s.length(); r++) {
+
+            char ch = s.charAt(r);
+
+            // If character already exists in current window,
+            // move left pointer after its previous occurrence
+            if (mp.containsKey(ch) && mp.get(ch) >= left) {
+                left = mp.get(ch) + 1;
+            }
+
+            // Update latest index of current character
+            mp.put(ch, r);
+
+            // Update maximum length if current window is larger
+            if (r - left + 1 > maxLen) {
+                maxLen = r - left + 1;
+                sIdx = left; // Stores starting index of longest substring
+            }
+        }
+
+        return maxLen;
+    }
+}
