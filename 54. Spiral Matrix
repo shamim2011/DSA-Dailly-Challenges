@@ -1,0 +1,58 @@
+// Approach - Boundary Traversal (Spiral Matrix Traversal)
+// T.C - O(R × C)
+// S.C - O(R × C)
+
+
+
+class Solution {
+    public List<Integer> spiralOrder(int[][] matrix) {
+        List<Integer> ans = new ArrayList<>();
+
+        // Total rows and columns
+        int r = matrix.length;
+        int c = matrix[0].length;
+
+        // Total elements in matrix
+        int total = r * c;
+
+        // Initialize boundaries
+        int sRow = 0, sCol = 0;
+        int eRow = r - 1, eCol = c - 1;
+
+        // Count of elements added to answer
+        int count = 0;
+
+        while (count < total) {
+
+            // Traverse Starting Row (Left -> Right)
+            for (int i = sCol; count < total && i <= eCol; i++) {
+                ans.add(matrix[sRow][i]);
+                count++;
+            }
+            sRow++;
+
+            // Traverse Ending Column (Top -> Bottom)
+            for (int i = sRow; count < total && i <= eRow; i++) {
+                ans.add(matrix[i][eCol]);
+                count++;
+            }
+            eCol--;
+
+            // Traverse Ending Row (Right -> Left)
+            for (int i = eCol; count < total && i >= sCol; i--) {
+                ans.add(matrix[eRow][i]);
+                count++;
+            }
+            eRow--;
+
+            // Traverse Starting Column (Bottom -> Top)
+            for (int i = eRow; count < total && i >= sRow; i--) {
+                ans.add(matrix[i][sCol]);
+                count++;
+            }
+            sCol++;
+        }
+
+        return ans;
+    }
+}
