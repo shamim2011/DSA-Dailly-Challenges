@@ -1,0 +1,38 @@
+// Approach 1 - String Simulation (Character-by-Character Processing)
+// T.C - O(n²).
+// S.C - O(n)
+
+
+class Solution {
+    public String processStr(String s) {
+        String ans = ""; // Stores the resulting string
+
+        // Traverse each character of the input string
+        for (int i = 0; i < s.length(); i++) {
+            char ch = s.charAt(i);
+
+            // If lowercase letter, append it to ans
+            if (ch >= 'a' && ch <= 'z') {
+                ans += ch;
+            }
+
+            // If '#', duplicate the current string
+            else if (ch == '#') {
+                ans += ans;
+            }
+
+            // If '*', remove the last character (if ans is not empty)
+            else if (ch == '*' && !ans.isEmpty()) {
+                ans = ans.substring(0, ans.length() - 1);
+            }
+
+            // For any other character, reverse the current string
+            else {
+                ans = new StringBuilder(ans).reverse().toString();
+            }
+        }
+
+        // Return the final processed string
+        return ans;
+    }
+}
