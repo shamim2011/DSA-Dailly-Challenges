@@ -17,7 +17,7 @@ class Solution {
             }
 
             // If '#', duplicate the current string
-            else if (ch == '#') {
+            else if (ch == '#' && !ans.isEmpty()) {
                 ans += ans;
             }
 
