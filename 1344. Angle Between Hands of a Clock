@@ -1,0 +1,30 @@
+// Approach - Math / Clock Angle Calculation
+// T.C - O(1)
+// S.C - O(1)
+
+
+
+class Solution {
+    public double angleClock(int hour, int minutes) {
+
+        // Calculate the hour hand position.
+        // Each hour mark represents 30 degrees (360 / 12).
+        double h = 30 * hour;
+
+        // Calculate the relative angle difference using minutes.
+        // 5.5 = (30 - 0.5), based on the relationship between
+        // hour hand and minute hand movement.
+        double m = 5.5 * minutes;
+
+        // Find the absolute angle between the two hands.
+        double ans = Math.abs(h - m);
+
+        // The smaller angle between the hands cannot exceed 180 degrees.
+        // If it does, take the complementary angle.
+        if (ans > 180) {
+            return 360 - ans;
+        }
+
+        return ans;
+    }
+}
