@@ -1,0 +1,20 @@
+// Approach - Prefix Sum / Running Sum
+// T.C - O(n)
+// S.C - O(1)
+
+
+
+class Solution {
+    public int largestAltitude(int[] gain) {
+        int curr = 0; // Stores the current altitude
+        int ans = 0;  // Stores the maximum altitude reached
+
+        // Traverse through each altitude gain/loss
+        for (int num : gain) {
+            curr += num;              // Update current altitude
+            ans = Math.max(ans, curr); // Update maximum altitude if needed
+        }
+
+        return ans; // Return the highest altitude reached
+    }
+}
