@@ -1,0 +1,44 @@
+// Approach - Stack with Sentinel Index
+// T.C - O(N)
+// S.C - O(N)
+
+
+
+class Solution {
+    public int longestValidParentheses(String s) {
+
+        // Stack stores indices of parentheses
+        Stack<Integer> st = new Stack<>();
+
+        // Push -1 as a sentinel (base index)
+        // Helps in calculating length of valid substring
+        st.push(-1);
+
+        int ans = 0;
+
+        // Traverse the string
+        for (int i = 0; i < s.length(); i++) {
+
+            // If opening bracket, push its index
+            if (s.charAt(i) == '(') {
+                st.push(i);
+            } else {
+
+                // Pop matching opening bracket index
+                st.pop();
+
+                // If stack becomes empty,
+                // push current index as new base
+                if (st.isEmpty()) {
+                    st.push(i);
+                } else {
+
+                    // Current valid length = current index - top index
+                    ans = Math.max(ans, i - st.peek());
+                }
+            }
+        }
+
+        return ans;
+    }
+}
