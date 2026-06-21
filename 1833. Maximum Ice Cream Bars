@@ -1,0 +1,36 @@
+// Approach 1 - Greedy + Sorting
+// T.C - O(n log n)
+// S.C - O(1)
+
+
+
+class Solution {
+    public int maxIceCream(int[] costs, int coins) {
+        
+        // Sort the costs in ascending order
+        Arrays.sort(costs);
+
+        // Stores the number of ice creams bought
+        int ans = 0;
+
+        // Traverse through the sorted costs array
+        for (int i = 0; i < costs.length; i++) {
+
+            // If remaining coins are less than current cost,
+            // we cannot buy any more ice creams
+            if (coins < costs[i]) {
+                return ans;
+            } 
+            else {
+                // Buy the current ice cream
+                ans++;
+
+                // Deduct its cost from available coins
+                coins -= costs[i];
+            }
+        }
+
+        // Return total ice creams bought
+        return ans;
+    }
+}
