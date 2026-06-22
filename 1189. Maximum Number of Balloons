@@ -1,0 +1,46 @@
+// Approach - Frequency Counting (Character Frequency Array)
+// T.C - O(n)
+// S.C - O(1)
+
+
+
+
+class Solution {
+    public int maxNumberOfBalloons(String text) {
+
+        // Array to store frequency of each lowercase letter
+        int[] freq = new int[26];
+
+        // Count occurrences of every character in the string
+        for (int i = 0; i < text.length(); i++) {
+            freq[text.charAt(i) - 'a']++;
+        }
+
+        // Variables to store frequencies of characters
+        // needed to form the word "balloon"
+        int a = 0, b = 0, l = 0, n = 0, o = 0;
+
+        // Extract frequencies of required characters
+        for (int i = 0; i < 26; i++) {
+            if (i == 'a' - 'a') a = freq[i];
+            else if (i == 'b' - 'a') b = freq[i];
+            else if (i == 'l' - 'a') l = freq[i];
+            else if (i == 'n' - 'a') n = freq[i];
+            else if (i == 'o' - 'a') o = freq[i];
+        }
+
+        // "balloon" requires:
+        // b -> 1, a -> 1, l -> 2, o -> 2, n -> 1
+        // Find the limiting character count
+        return Math.min(
+                a,
+                Math.min(
+                        b,
+                        Math.min(
+                                l / 2,
+                                Math.min(n, o / 2)
+                        )
+                )
+        );
+    }
+}
