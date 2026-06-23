@@ -1,0 +1,80 @@
+// Approach - Dynamic Programming with Prefix/Suffix Sum Optimization
+// T.C - O(n×k)
+// S.C - O(k)
+
+
+
+class Solution {
+    public int zigZagArrays(int n, int l, int r) {
+
+        // Total number of distinct values available
+        int k = r - l + 1;
+
+        int mod = 1_000_000_007;
+
+        /*
+         * dp[v][0] = Number of zig-zag arrays ending at value v
+         *            where the last movement was DOWN (previous value > current value)
+         *
+         * dp[v][1] = Number of zig-zag arrays ending at value v
+         *            where the last movement was UP (previous value < current value)
+         */
+        int[][] dp = new int[k + 1][2];
+
+        // Base case for arrays of length 2
+        for (int v = 1; v <= k; v++) {
+
+            // To end at v with last move DOWN,
+            // previous value must be greater than v
+            dp[v][0] = k - v;
+
+            // To end at v with last move UP,
+            // previous value must be smaller than v
+            dp[v][1] = v - 1;
+        }
+
+        // Build DP for lengths 3 to n
+        for (int i = 3; i <= n; i++) {
+
+            int[][] nextDp = new int[k + 1][2];
+
+            /*
+             * Compute states where last move is UP.
+             * Current value v can come from any smaller value
+             * whose last move was DOWN.
+             */
+            long runSum0 = 0;
+
+            for (int v = 1; v <= k; v++) {
+                nextDp[v][1] = (int) runSum0;
+
+                runSum0 = (runSum0 + dp[v][0]) % mod;
+            }
+
+            /*
+             * Compute states where last move is DOWN.
+             * Current value v can come from any larger value
+             * whose last move was UP.
+             */
+            long runSum1 = 0;
+
+            for (int v = k; v >= 1; v--) {
+                nextDp[v][0] = (int) runSum1;
+
+                runSum1 = (runSum1 + dp[v][1]) % mod;
+            }
+
+            dp = nextDp;
+        }
+
+        // Sum all valid states
+        long total = 0;
+
+        for (int v = 1; v <= k; v++) {
+            total = (total + dp[v][0]) % mod;
+            total = (total + dp[v][1]) % mod;
+        }
+
+        return (int) total;
+    }
+}
