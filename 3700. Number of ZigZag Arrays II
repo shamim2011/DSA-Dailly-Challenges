@@ -140,6 +140,148 @@ class Solution {
 
 
 
-// Approach 3 - 
+// Approach 3 - (Bottom Up + Prefix Sum)  (TLE
 // T.C - O(N × M)
 // S.C - O(N × M)
+
+
+class Solution {
+    int MOD = 1_000_000_007;
+
+    public int zigZagArrays(int n, int l, int r) {
+        int N = n;
+        int M = r - l + 1;
+
+        long[][][] t = new long[N + 1][M + 1][2];
+
+        //Base Case
+        for (int prevVal = 1; prevVal <= M; prevVal++) {
+            t[N][prevVal][0] = 1;
+            t[N][prevVal][1] = 1;
+        }
+
+        for (int i = N - 1; i >= 0; i--) {
+
+            long[] prefDir0 = new long[M + 1];
+            long[] prefDir1 = new long[M + 1];
+
+            for (int prevVal = 1; prevVal <= M; prevVal++) {
+                prefDir0[prevVal] = (prefDir0[prevVal - 1] + t[i + 1][prevVal][0]) % MOD;
+                prefDir1[prevVal] = (prefDir1[prevVal - 1] + t[i + 1][prevVal][1]) % MOD;
+            }
+
+            for (int prevVal = 1; prevVal <= M; prevVal++) {
+                t[i][prevVal][1] = (prefDir0[M] - prefDir0[prevVal] + MOD) % MOD;
+                t[i][prevVal][0] = prefDir1[prevVal - 1];
+            }
+        }
+
+        long result = 0;
+        for (int startVal = 1; startVal <= M; startVal++) {
+            //a < b > c < d ...
+            result = (result + t[1][startVal][1]) % MOD;
+            //a > b < c > d...
+            result = (result + t[1][startVal][0]) % MOD;
+        }
+        return (int) result;
+    }
+} 
+
+
+---------------------------------   Other submitted ---------------------------------
+
+class Solution {
+    private static final long MOD = 1_000_000_007L;
+
+    // Multiplies two square matrices under modulo MOD
+    private long[][] multiply(long[][] A, long[][] B) {
+        int sz = A.length;
+
+        long[][] C = new long[sz][sz];
+
+        for (int i = 0; i < sz; i++) {
+            for (int k = 0; k < sz; k++) {
+
+                // Skip unnecessary computations
+                if (A[i][k] == 0) continue;
+
+                long cur = A[i][k];
+
+                for (int j = 0; j < sz; j++) {
+
+                    // Skip zero entries
+                    if (B[k][j] == 0) continue;
+
+                    C[i][j] = (C[i][j] + cur * B[k][j]) % MOD;
+                }
+            }
+        }
+
+        return C;
+    }
+
+    public int zigZagArrays(int n, int l, int r) {
+
+        // Number of distinct values available
+        int m = r - l + 1;
+
+        // Two states for every value:
+        // 0..m-1     -> expecting next move to be down
+        // m..2m-1    -> expecting next move to be up
+        int sz = 2 * m;
+
+        // Transition matrix
+        long[][] T = new long[sz][sz];
+
+        for (int x = 0; x < m; x++) {
+
+            // Current value x can go to any larger value y
+            // and switch direction
+            for (int y = x + 1; y < m; y++) {
+                T[x][m + y] = 1;
+            }
+
+            // Current value x can go to any smaller value y
+            // and switch direction
+            for (int y = 0; y < x; y++) {
+                T[m + x][y] = 1;
+            }
+        }
+
+        // Identity matrix for binary exponentiation
+        long[][] result = new long[sz][sz];
+        for (int i = 0; i < sz; i++) {
+            result[i][i] = 1;
+        }
+
+        // Need transitions for remaining (n - 1) positions
+        long power = n - 1;
+
+        // Fast matrix exponentiation
+        while (power > 0) {
+
+            if ((power & 1) == 1) {
+                result = multiply(result, T);
+            }
+
+            T = multiply(T, T);
+            power >>= 1;
+        }
+
+        // Sum all entries of T^(n-1)
+        // Each state can be a valid starting state
+        long answer = 0;
+
+        for (int i = 0; i < sz; i++) {
+            long rowSum = 0;
+
+            for (int j = 0; j < sz; j++) {
+                rowSum = (rowSum + result[i][j]) % MOD;
+            }
+
+            answer = (answer + rowSum) % MOD;
+        }
+
+        return (int) answer;
+    }
+}
