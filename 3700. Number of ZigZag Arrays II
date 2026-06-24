@@ -1,0 +1,75 @@
+// approach 1 - Top-Down Dynamic Programming (Memoization) + Recursion(TLE
+// T.C - O(N × M²)
+// S.C - O(N × M)
+
+
+class Solution {
+    int mod = 1_000_000_007;
+    int M;
+    int N;
+    int[][][] t;
+
+    public int zigZagArrays(int n, int l, int r) {
+        N = n;
+        M = r - l + 1;
+
+        // Memo table:
+        // t[i][prevVal][dir]
+        // dir = 1 -> next move should be increasing
+        // dir = 0 -> next move should be decreasing
+        t = new int[2001][2001][2];
+
+        for (int[][] a : t) {
+            for (int[] b : a) {
+                Arrays.fill(b, -1);
+            }
+        }
+
+        long ans = 0;
+
+        for (int startVal = 1; startVal <= M; startVal++) {
+
+            // Start with increasing relation
+            ans = (ans + solve(1, startVal, true)) % mod;
+
+            // Start with decreasing relation
+            ans = (ans + solve(1, startVal, false)) % mod;
+        }
+
+        return (int) ans;
+    }
+
+    int solve(int i, int prevVal, boolean increase) {
+
+        // Completed a valid zig-zag array
+        if (i == N) {
+            return 1;
+        }
+
+        int dir = increase ? 1 : 0;
+
+        // Memoized result
+        if (t[i][prevVal][dir] != -1) {
+            return t[i][prevVal][dir];
+        }
+
+        long ans = 0;
+
+        if (increase) {
+
+            // Next value must be greater than previous value
+            for (int nextVal = prevVal + 1; nextVal <= M; nextVal++) {
+                ans = (ans + solve(i + 1, nextVal, false)) % mod;
+            }
+
+        } else {
+
+            // Next value must be smaller than previous value
+            for (int nextVal = 1; nextVal < prevVal; nextVal++) {
+                ans = (ans + solve(i + 1, nextVal, true)) % mod;
+            }
+        }
+
+        return t[i][prevVal][dir] = (int) ans;
+    }
+}
