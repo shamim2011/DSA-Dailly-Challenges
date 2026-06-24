@@ -73,3 +73,73 @@ class Solution {
         return t[i][prevVal][dir] = (int) ans;
     }
 }
+
+
+
+// Approach 2 - Bottom-Up Dynamic Programming (Tabulation) for Zig-Zag Arrays(TLE)
+// T.C - O(N × M²)
+// S.C - O(N × M)
+
+class Solution {
+    int mod = 1_000_000_007;
+
+    public int zigZagArrays(int n, int l, int r) {
+
+        int N = n;
+        int M = r - l + 1; // Total distinct values available in range [l, r]
+
+        // t[i][prevVal][dir]
+        // dir = 0 -> previous relation was decreasing, so next must be increasing
+        // dir = 1 -> previous relation was increasing, so next must be decreasing
+        int[][][] t = new int[2001][2001][2];
+
+        // Base Case:
+        // When we have already formed an array of length N,
+        // there is exactly one valid way (do nothing further).
+        for (int prevVal = 1; prevVal <= M; prevVal++) {
+            t[N][prevVal][0] = 1;
+            t[N][prevVal][1] = 1;
+        }
+
+        // Build DP table from back to front
+        for (int i = n - 1; i >= 0; i--) {
+
+            for (int prevVal = 1; prevVal <= M; prevVal++) {
+
+                // Case 1: Need an increasing move
+                // Choose nextVal > prevVal
+                for (int nextVal = prevVal + 1; nextVal <= M; nextVal++) {
+                    t[i][prevVal][1] =
+                        (t[i][prevVal][1] + t[i + 1][nextVal][0]) % mod;
+                }
+
+                // Case 2: Need a decreasing move
+                // Choose nextVal < prevVal
+                for (int nextVal = 1; nextVal < prevVal; nextVal++) {
+                    t[i][prevVal][0] =
+                        (t[i][prevVal][0] + t[i + 1][nextVal][1]) % mod;
+                }
+            }
+        }
+
+        long ans = 0;
+
+        // Try every possible starting value
+        for (int startVal = 1; startVal <= M; startVal++) {
+
+            // Start with an increasing relation
+            ans = (ans + t[1][startVal][1]) % mod;
+
+            // Start with a decreasing relation
+            ans = (ans + t[1][startVal][0]) % mod;
+        }
+
+        return (int) ans;
+    }
+}
+
+
+
+// Approach 3 - 
+// T.C - O(N × M)
+// S.C - O(N × M)
