@@ -1,0 +1,47 @@
+// Approach - Prefix Sum + HashMap Frequency Counting
+// T.C - O(n)
+// S.C - O(n)
+
+
+
+class Solution {
+    public int countMajoritySubarrays(int[] nums, int target) {
+        int ans = 0;
+
+        // Stores frequency of each prefix sum
+        Map<Integer, Integer> mp = new HashMap<>();
+        mp.put(0, 1);
+
+        int cumSum = 0;
+
+        // Number of valid starting points for current position
+        int validLeftPoints = 0;
+
+        for (int x : nums) {
+
+            if (x == target) {
+
+                // All previous same prefix sums create new valid subarrays
+                validLeftPoints += mp.getOrDefault(cumSum, 0);
+
+                // Treat target as +1
+                cumSum++;
+            } else {
+
+                // Treat non-target as -1
+                cumSum--;
+
+                // Remove invalid starting points
+                validLeftPoints -= mp.getOrDefault(cumSum, 0);
+            }
+
+            // Store current prefix sum frequency
+            mp.merge(cumSum, 1, Integer::sum);
+
+            // Add all valid subarrays ending at current index
+            ans += validLeftPoints;
+        }
+
+        return ans;
+    }
+}
