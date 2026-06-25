@@ -1,0 +1,36 @@
+// Approach - Brute Force - Enumerating All Subarrays
+// T.C - O(n*n)
+// S.C - O(1)
+
+
+
+class Solution {
+    public int countMajoritySubarrays(int[] nums, int target) {
+        int ans = 0; // Stores the count of valid subarrays
+
+        // Iterate through all possible starting indices
+        for (int i = 0; i < nums.length; i++) {
+
+            int tarCount = 0;    // Count of target elements in current subarray
+            int otherCount = 0;  // Count of non-target elements in current subarray
+
+            // Extend the subarray from index i to j
+            for (int j = i; j < nums.length; j++) {
+
+                // Update counts based on current element
+                if (nums[j] == target) {
+                    tarCount++;
+                } else {
+                    otherCount++;
+                }
+
+                // Check if target is the majority element
+                if (tarCount > otherCount) {
+                    ans++;
+                }
+            }
+        }
+
+        return ans; // Return total number of majority subarrays
+    }
+}
