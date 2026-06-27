@@ -1,6 +1,75 @@
-// Approach - 
-// T.C - 
-// S.C - 
+// Approach - HashMap + Greedy Simulation
+// T.C - O(n)
+// S.C - O(n)
 
 
 
+class Solution {
+    public int maximumLength(int[] nums) {
+        // Stores the maximum valid sequence length
+        int ans = 1;
+
+        // Frequency map of all numbers
+        HashMap<Long, Integer> mp = new HashMap<>();
+
+        // Count the frequency of each number
+        for (int i = 0; i < nums.length; i++) {
+            mp.put((long) nums[i], mp.getOrDefault((long) nums[i], 0) + 1);
+        }
+
+        // Try every unique number as the starting element
+        for (long key : mp.keySet()) {
+
+            // Special handling for number 1
+            // Since 1^2 = 1, all occurrences remain the same
+            if (key == 1) {
+                int count = mp.get(1L);
+
+                // Sequence length must be odd
+                if (count % 2 == 0) {
+                    ans = Math.max(ans, count - 1);
+                } else {
+                    ans = Math.max(ans, count);
+                }
+                continue;
+            }
+
+            long curr = key;
+            int len = 0;
+
+            // Keep moving to curr^2 while possible
+            while (true) {
+
+                // Frequency of current number
+                int count = mp.getOrDefault(curr, 0);
+
+                // If at least two copies exist,
+                // use both and move to the square
+                if (count >= 2) {
+                    len += 2;
+                    curr = curr * curr;
+                }
+
+                // If exactly one copy exists,
+                // it can only be placed at the end
+                else if (count == 1) {
+                    len++;
+                    break;
+                }
+
+                // Current number not present
+                else {
+                    // Remove one previously counted element
+                    // to maintain a valid odd-length sequence
+                    if (len > 0) len--;
+                    break;
+                }
+            }
+
+            // Update answer
+            ans = Math.max(ans, len);
+        }
+
+        return ans;
+    }
+}
