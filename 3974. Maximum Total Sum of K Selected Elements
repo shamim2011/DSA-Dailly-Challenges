@@ -1,0 +1,37 @@
+// Approach - Sorting + Greedy Selection
+// T.C - O(n log n)
+// S.C - O(1)
+
+
+class Solution {
+    public long maxSum(int[] nums, int k, int mul) {
+
+        // Sort the array in ascending order
+        Arrays.sort(nums);
+
+        // Variable to store the final maximum sum
+        long ans = 0;
+
+        // Traverse the k largest elements from the end of the sorted array
+        for (int i = nums.length - 1; i >= nums.length - k; i--) {
+
+            // If multiplier is still available
+            if (mul > 0) {
+
+                // Multiply the current largest element by the current multiplier
+                ans += ((long) nums[i] * mul);
+
+                // Decrease the multiplier for the next element
+                mul--;
+
+            } else {
+
+                // Add the remaining elements normally
+                ans += nums[i];
+            }
+        }
+
+        // Return the maximum sum
+        return ans;
+    }
+}
