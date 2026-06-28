@@ -1,6 +1,66 @@
-// Approach - 
-// T.C - 
-// S.C - 
+// Approach - Merge Intervals + Trim Overlapping Part
+// T.C - O(n log n)
+// S.C - O(n)
 
 
 
+class Solution {
+    public List<List<Integer>> filterOccupiedIntervals(int[][] occupiedIntervals, int freeStart, int freeEnd) {
+        List<List<Integer>> ans = new ArrayList<>();
+
+        // Sort intervals based on starting time
+        Arrays.sort(occupiedIntervals, (a, b) -> Integer.compare(a[0], b[0]));
+
+        // Store merged intervals
+        List<int[]> merged = new ArrayList<>();
+
+        // Initialize first interval
+        int s = occupiedIntervals[0][0];
+        int e = occupiedIntervals[0][1];
+
+        // Merge all overlapping or adjacent intervals
+        for (int i = 1; i < occupiedIntervals.length; i++) {
+            int cStart = occupiedIntervals[i][0];
+            int cEnd = occupiedIntervals[i][1];
+
+            // If intervals overlap or touch, merge them
+            if (cStart <= e + 1) {
+                e = Math.max(e, cEnd);
+            } else {
+                // Store previous merged interval
+                merged.add(new int[]{s, e});
+
+                // Start a new interval
+                s = cStart;
+                e = cEnd;
+            }
+        }
+
+        // Add the last merged interval
+        merged.add(new int[]{s, e});
+
+        // Remove the portion lying inside [freeStart, freeEnd]
+        for (int[] interval : merged) {
+            s = interval[0];
+            e = interval[1];
+
+            // No overlap with free interval
+            if (e < freeStart || s > freeEnd) {
+                ans.add(Arrays.asList(s, e));
+                continue;
+            }
+
+            // Left remaining portion
+            if (s < freeStart) {
+                ans.add(Arrays.asList(s, freeStart - 1));
+            }
+
+            // Right remaining portion
+            if (e > freeEnd) {
+                ans.add(Arrays.asList(freeEnd + 1, e));
+            }
+        }
+
+        return ans;
+    }
+}
