@@ -1,5 +1,27 @@
-// Approach - 
-// T.C - 
-// S.C - 
+// Approach - Substring Search using Built-in contains() Method
+// T.C - O(n × m) (approximately), n = number of patterns, m = length of word
+// S.C - O(1)
 
 
+class Solution {
+    public int numOfStrings(String[] patterns, String word) {
+
+        // Variable to store the count of patterns present in the word
+        int ans = 0;
+
+        // Traverse through each pattern in the array
+        for (int i = 0; i < patterns.length; i++) {
+
+            // Check if the current pattern is a substring of the given word
+            if (word.contains(patterns[i])) {
+                ans++; // Increment count if found
+            }
+            else {
+                continue; // Skip to the next pattern if not found
+            }
+        }
+
+        // Return the total count of matching patterns
+        return ans;
+    }
+}
