@@ -43,6 +43,36 @@ class Solution {
 
 
 
-// Approach 2 - 
+// Approach 2 - HashSet Approach
 // T.C - O(n)
-// S.C - O(1)
+// S.C - O(n)
+
+
+
+class Solution {
+    public int firstMissingPositive(int[] nums) {
+
+        // Create a HashSet to store all positive numbers
+        Set<Integer> hs = new HashSet<>();
+
+        // Traverse the array
+        for (int x : nums) {
+
+            // Store only positive numbers in the HashSet
+            if (x > 0) {
+                hs.add(x);
+            }
+        }
+
+        // Start checking from the smallest positive integer
+        int miss = 1;
+
+        // Keep incrementing until a missing positive number is found
+        while (hs.contains(miss)) {
+            miss++;
+        }
+
+        // Return the first missing positive integer
+        return miss;
+    }
+}
