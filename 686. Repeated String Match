@@ -1,0 +1,37 @@
+// Approach - Simulation + String Concatenation
+// T.C - O((m + n)²)
+// S.C - O((m + n)) i
+
+
+
+class Solution {
+    public int repeatedStringMatch(String a, String b) {
+        // Initialize StringBuilder with the first occurrence of string 'a'
+        StringBuilder sb = new StringBuilder(a);
+
+        // Count keeps track of how many times 'a' has been repeated
+        int count = 1;
+
+        // Keep appending 'a' until the length is at least the length of 'b'
+        while (sb.length() < b.length()) {
+            sb.append(a);
+            count++;
+        }
+
+        // Check if 'b' is now a substring
+        if (sb.indexOf(b) != -1) {
+            return count;
+        }
+
+        // Append one more time to handle overlap cases
+        sb.append(a);
+
+        // Check again after one extra repetition
+        if (sb.indexOf(b) != -1) {
+            return count + 1;
+        }
+
+        // If 'b' is still not found, it's impossible
+        return -1;
+    }
+}
