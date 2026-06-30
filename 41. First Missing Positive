@@ -1,0 +1,48 @@
+// Approach 1 - Sorting + Remove Duplicates + Linear Scan
+// T.C - O(n log n)
+// S.C - O(m)
+
+
+
+class Solution {
+    public int firstMissingPositive(int[] nums) {
+        int n = nums.length;
+
+        // Sort the array
+        Arrays.sort(nums);
+
+        // List to store unique positive numbers
+        List<Integer> li = new ArrayList<>();
+
+        // Traverse the sorted array
+        for (int i = 0; i < n; i++) {
+
+            // Ignore non-positive numbers
+            if (nums[i] <= 0)
+                continue;
+
+            // Add only unique positive numbers
+            else if (li.isEmpty() || li.get(li.size() - 1) != nums[i]) {
+                li.add(nums[i]);
+            }
+        }
+
+        // Find the first missing positive
+        for (int i = 0; i < li.size(); i++) {
+            if (i + 1 != li.get(i)) {
+                return (i + 1);
+            }
+        }
+
+        // If all positives from 1 to size exist,
+        // then answer is the next positive number
+        return li.size() + 1;
+    }
+}
+
+
+
+
+// Approach 2 - 
+// T.C - O(n)
+// S.C - O(1)
