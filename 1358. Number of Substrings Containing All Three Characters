@@ -50,3 +50,57 @@ class Solution {
         return result;
     }
 }
+
+
+
+//Approach 3 - Sliding Window (Two Pointers) + HashMap
+//T.C : O(n)
+//S.C : O(1)
+
+
+
+class Solution {
+    public int numberOfSubstrings(String s) {
+        // Stores the final count of valid substrings
+        int ans = 0;
+
+        // i -> left pointer, j -> right pointer
+        int i = 0, j = 0;
+
+        // Length of the string
+        int n = s.length();
+
+        // HashMap to store frequency of characters inside the current window
+        Map<Character, Integer> mp = new HashMap<>();
+
+        // Expand the window using the right pointer
+        while (j < n) {
+
+            // Add current character to the window
+            char ch = s.charAt(j);
+            mp.put(ch, mp.getOrDefault(ch, 0) + 1);
+
+            // Shrink the window while it contains at least one 'a', 'b', and 'c'
+            while (mp.getOrDefault('a', 0) > 0 &&
+                   mp.getOrDefault('b', 0) > 0 &&
+                   mp.getOrDefault('c', 0) > 0) {
+
+                // Every substring starting from i and ending at j or beyond is valid
+                ans += (n - j);
+
+                // Remove the leftmost character from the window
+                char left = s.charAt(i);
+                mp.put(left, mp.getOrDefault(left, 0) - 1);
+
+                // Move the left pointer forward
+                i++;
+            }
+
+            // Expand the window
+            j++;
+        }
+
+        // Return the total count of valid substrings
+        return ans;
+    }
+}
